@@ -1,11 +1,23 @@
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import "./App.css";
+import HomePage from "./pages/Home";
+import RootLayout from "./pages/Root.jsx";
+import RulesPage from "./pages/Rules.jsx";
+
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    children: [
+      { index: true, element: <HomePage /> },
+      { path: "/rules", element: <RulesPage /> },
+    ],
+  },
+]);
 
 function App() {
-  return (
-    <div>
-      <h1 className="text-3xl font-bold underline">Survivor Fantasy League</h1>
-    </div>
-  );
+  return <RouterProvider router={router} />
 }
 
 export default App;
