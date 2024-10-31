@@ -4,7 +4,7 @@
 
 @font-face {
     font-family: 'SurvivorFont';
-    src: url('./fonts/survivant.ttf') format('truetype');
+    src: url('../assets/fonts/survivant.ttf') format('truetype');
 }
 
 .menu-bar-button {
