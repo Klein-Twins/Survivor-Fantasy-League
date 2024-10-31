@@ -6,7 +6,7 @@ const User = sequelize.define('USR_USERS', {
         type: DataTypes.INTEGER,
         primaryKey: true,
         autoIncrement: true,
-        field: 'USER_ID'
+        field: 'USER_ID',
     },
     USER_NAME: {
         type: DataTypes.STRING(100),
@@ -15,7 +15,7 @@ const User = sequelize.define('USR_USERS', {
     },
     USER_PROFILE_ID: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
         field: "USER_PROFILE_ID"
     }
 }, {

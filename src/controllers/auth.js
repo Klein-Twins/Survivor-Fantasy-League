@@ -21,8 +21,13 @@ const signup = async (req, res) => {
         const user = await User.create({ USER_NAME, USER_PROFILE_ID: userProfileId});
 
         //Hash password and store in Passwords Table
-        const hashedPassword = await bcrypt.hash(password, 10);
-        await Password.create({ USER_ID: user.USER_ID, PASSWORD: hashedPassword, ACTIVE: true });
+        const hashedPassword = await bcrypt.hash(PASSWORD, 10);
+
+        const currentMaxPasswordSeq = await Password.max('PASSWORD_SEQ', {
+            where: {USER_ID: user.USER_ID}
+        });
+
+        await Password.create({ USER_ID: user.USER_ID, PASSWORD: hashedPassword, ACTIVE: true, PASSWORD_SEQ: ((currentMaxPasswordSeq || 0) + 1)});
 
         res.status(201).json({ message: 'User created successfully', userProfileId: userProfileId });
     } catch (error) {
@@ -66,7 +71,7 @@ const login = async (req, res) => {
         }
 
         //Compare password from request and password in database.
-        const isPasswordValid = await bcrypt.compare(password, userPassword.PASSWORD);
+        const isPasswordValid = await bcrypt.compare(PASSWORD, userPassword.PASSWORD);
         if (!isPasswordValid) {
             return res.status(401).json({ message: 'Invalid Password' });
         }
