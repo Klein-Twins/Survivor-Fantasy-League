@@ -19,5 +19,5 @@ function isPasswordStrongEnough(password) {
 }
 
 module.exports = {
-  isPasswordStrongEnough,
+  isPasswordStrongEnough
 };
