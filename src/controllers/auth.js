@@ -6,7 +6,6 @@ const { v4: uuidv4 } = require("uuid");
 
 //Signup API
 const signup = async (req, res) => {
-  console.log("Request Body:", req.body);
   const { USER_NAME, PASSWORD } = req.body;
   try {
     //Check if user already exists
@@ -24,7 +23,7 @@ const signup = async (req, res) => {
       USER_NAME,
       USER_PROFILE_ID: userProfileId,
     });
-
+    
     //Hash password and store in Passwords Table
     const hashedPassword = await bcrypt.hash(PASSWORD, 10);
 
@@ -32,7 +31,7 @@ const signup = async (req, res) => {
       where: { USER_ID: user.USER_ID },
     });
 
-    await Password.create({
+    const password = await Password.create({
       USER_ID: user.USER_ID,
       PASSWORD: hashedPassword,
       ACTIVE: true,

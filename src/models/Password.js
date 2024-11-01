@@ -7,10 +7,12 @@ class Password extends Model {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
+        autoIncrement: true,
         field: 'PASSWORD_SEQ',
       },
       USER_ID: {
         type: DataTypes.UUID,
+        primaryKey: true,
         allowNull: false,
         field: 'USER_ID',
         references: {
