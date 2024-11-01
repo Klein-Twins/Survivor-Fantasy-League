@@ -20,6 +20,8 @@ const startServer = async () => {
 };
 
 // Start the server
-startServer();
+if(process.env.NODE_ENV !== 'test') {
+  startServer();
+}
 
 module.exports = app; // Export the app for testing

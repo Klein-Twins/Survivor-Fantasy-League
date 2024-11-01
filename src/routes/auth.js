@@ -36,7 +36,7 @@ const { AUTH_ERROR_MESSAGES } = require('./ResponseMessageConstants');
  *          201:
  *              description: User created successfully
  *          400:
- *              description: Bad request - "User name is already taken." | "User password is not strong enough." | "Email already in use." | "Email is invalid" | "No email provided in request." | "No username provided in request." | "No password provided in request."
+ *              description: Bad request - "User name is already taken" | "User password is not strong enough" | "Email already in use" | "Email is invalid" | "No email provided in request" | "No username provided in request" | "No password provided in request"
  *              content:
  *                  application/json:
  *                      schema:
@@ -45,13 +45,13 @@ const { AUTH_ERROR_MESSAGES } = require('./ResponseMessageConstants');
  *                              message:
  *                                  type: string
  *                                  enum:
- *                                      - "User name is already taken."
- *                                      - "User password is not strong enough."
- *                                      - "Email already in use."
+ *                                      - "User name is already taken"
+ *                                      - "User password is not strong enough"
+ *                                      - "Email already in use"
  *                                      - "Email is invalid"
- *                                      - "No email provided in request."
- *                                      - "No username provided in request."
- *                                      - "No password provided in request."
+ *                                      - "No email provided in request"
+ *                                      - "No username provided in request"
+ *                                      - "No password provided in request"
  *          500:
  *              description: Failed to create User, Internal Server Error
  *          
@@ -86,11 +86,11 @@ router.post('/signup', authController.signup);
  *          200:
  *              description: User authenticated successfully
  *          404:
- *              description: Email is not tied to a registered user.
+ *              description: Email is not tied to a registered user
  *          401:
- *              description: Unauthorized, invalid user credentials.
+ *              description: Unauthorized, invalid user credentials
  *          400:
- *              description: Bad Request - "Email is invalid" | "No email provided in request." | "No password provided in request."
+ *              description: Bad Request - "Email is invalid" | "No email provided in request" | "No password provided in request"
  *              content:
  *                  application/json:
  *                      schema:
@@ -100,8 +100,8 @@ router.post('/signup', authController.signup);
  *                                  type: string
  *                                  enum:
  *                                      - "Email is invalid"
- *                                      - "No email provided in request."
- *                                      - "No password provided in request."
+ *                                      - "No email provided in request"
+ *                                      - "No password provided in request"
  *          500:
  *              description: Failed to log in User, Internal Server Error
  */

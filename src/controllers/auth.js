@@ -16,6 +16,7 @@ const {
 
 //Signup API
 const signup = async (req, res) => {
+  console.log("Signup Request: ", req.body);
   const { email, username, password } = req.body;
 
   if(!email || email.length === 0) {
@@ -48,7 +49,7 @@ const signup = async (req, res) => {
 
     //Check if user email aready tied to an account
     const existingEmail = await UserModel.findOne({
-      where: { EMAIL: email }
+      where: { USER_EMAIL: email }
     });
     if(existingEmail) {
       return res
@@ -114,7 +115,7 @@ const login = async (req, res) => {
     }
 
     //Find user by username
-    const userRecordTiedToEmail = await UserModel.findOne({ where: { EMAIL: email } });
+    const userRecordTiedToEmail = await UserModel.findOne({ where: { USER_EMAIL: email } });
     if (!userRecordTiedToEmail) {
       return res.status(404).json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_FOUND });
     }
