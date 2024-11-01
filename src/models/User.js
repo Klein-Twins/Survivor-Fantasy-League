@@ -19,10 +19,15 @@ class User extends Model {
         allowNull: true,
         field: 'USER_PROFILE_ID',
       },
+      USER_EMAIL: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        field: 'EMAIL'
+      }
     }, {
       sequelize, // Pass the sequelize instance
       tableName: 'USR_USERS',
-      timestamps: false,
+      timestamps: true,
     });
   }
 

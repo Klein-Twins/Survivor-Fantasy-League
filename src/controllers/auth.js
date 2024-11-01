@@ -1,106 +1,152 @@
-const express = require("express");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
-const Password = require("../models/Password");
+const UserModel = require("../models/User");
+const PasswordModel = require("../models/Password");
 const { v4: uuidv4 } = require("uuid");
+
+const {
+  AUTH_RESPONSE_MESSAGES,
+} = require("../routes/ResponseMessageConstants");
+
+const {
+  isPasswordStrongEnough,
+} = require('../utils/auth/PasswordUtils');
+const {
+  isValidEmail
+} = require('../utils/auth/EmailUtils');
 
 //Signup API
 const signup = async (req, res) => {
-  const { USER_NAME, PASSWORD } = req.body;
+  const { email, username, password } = req.body;
+
+  if(!email || email.length === 0) {
+    return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED});
+  }
+  if(!username || username.length === 0) {
+    return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.NO_USER_NAME_PROVIDED});
+  }
+  if(!password || password.length === 0) {
+    return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED});
+  }
+
   try {
-    //Check if user already exists
-    const existingUser = await User.findOne({ where: { USER_NAME } });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+    //Check if username already exists
+    const existingUserName = await UserModel.findOne({
+      where: { USER_NAME: username },
+    });
+    if (existingUserName) {
+      return res
+        .status(400)
+        .json({ message: AUTH_RESPONSE_MESSAGES.USERNAME_TAKEN });
+    }
+
+    //Check if Email is valid
+    if (!isValidEmail(email)) {
+      return res
+        .status(400)
+        .json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_VALID})
+    }
+
+    //Check if user email aready tied to an account
+    const existingEmail = await UserModel.findOne({
+      where: { EMAIL: email }
+    });
+    if(existingEmail) {
+      return res
+        .status(400)
+        .json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_IN_USE });
+    }
+
+    if(!isPasswordStrongEnough(password)) {
+      return res
+        .status(400)
+        .json({ message: AUTH_RESPONSE_MESSAGES.WEAK_PASSWORD });
     }
 
     //Generate a userProfileId
-    //TODO: Need to guarantee a unique value will be set.
     const userProfileId = uuidv4();
 
     //Create a new user
-    const user = await User.create({
-      USER_NAME,
+    const userRecord = await UserModel.create({
+      USER_NAME: username,
       USER_PROFILE_ID: userProfileId,
+      USER_EMAIL: email
     });
-    
+
     //Hash password and store in Passwords Table
-    const hashedPassword = await bcrypt.hash(PASSWORD, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-    const currentMaxPasswordSeq = await Password.max("PASSWORD_SEQ", {
-      where: { USER_ID: user.USER_ID },
-    });
-
-    const password = await Password.create({
-      USER_ID: user.USER_ID,
+    const passwordRecord = await PasswordModel.create({
+      USER_ID: userRecord.USER_ID,
       PASSWORD: hashedPassword,
       ACTIVE: true,
-      PASSWORD_SEQ: (currentMaxPasswordSeq || 0) + 1,
+      PASSWORD_SEQ: 1,
     });
 
-    res
-      .status(201)
-      .json({
-        message: "User created successfully",
-        userProfileId: userProfileId,
-      });
+    res.status(201).json({
+      message: AUTH_RESPONSE_MESSAGES.SIGNUP_SUCCESS,
+      user: {
+        username: userRecord.USER_NAME,
+        userProfileId: userRecord.USER_PROFILE_ID,
+      },
+    });
+    
   } catch (error) {
-    console.error("Error in signup", error);
-    res.status(500).json({ message: "Internal server error" });
+    console.error("Internal Server Error", error);
+    res.status(500).json({ message: AUTH_RESPONSE_MESSAGES.SIGNUP_SERVER_ERROR });
   }
 };
 
 //Login API
 const login = async (req, res) => {
-  const { USER_NAME, PASSWORD } = req.body;
+  const { email, password } = req.body;
+
+  if(!email || email.length === 0) {
+    return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED});
+  }
+  if(!password || password.length === 0) {
+    return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED});
+  }
 
   try {
+
+    if(!isValidEmail(email)) {
+      return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_VALID})
+    }
+
     //Find user by username
-    const user = await User.findOne({ where: { USER_NAME } });
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
+    const userRecordTiedToEmail = await UserModel.findOne({ where: { EMAIL: email } });
+    if (!userRecordTiedToEmail) {
+      return res.status(404).json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_FOUND });
     }
 
     //Find active password for the user
-    let userPassword = await Password.findOne({
+    const userPasswordRecord = await PasswordModel.findOne({
       where: {
-        USER_ID: user.USER_ID,
+        USER_ID: userRecordTiedToEmail.USER_ID,
         ACTIVE: true,
       },
     });
 
-    if (!userPassword) {
-      const userPasswords = await Password.findAll({
-        where: {
-          USER_ID: user.USER_ID,
-        },
+    if (!userPasswordRecord) {
+      return res.status(500).json({
+        message: AUTH_RESPONSE_MESSAGES.LOGIN_SERVER_ERROR,
       });
-
-      if (!userPasswords || userPasswords.length === 0) {
-        return res
-          .status(500)
-          .json({
-            message: `Internal Server Error: No password tied to username ${user.USER_NAME} in database.`,
-          });
-      }
-
-      userPasswords.sort((a, b) => a.PASSWORD_SEQ - b.PASSWORD_SEQ);
-      userPassword = userPasswords[userPasswords.length - 1];
     }
 
     //Compare password from request and password in database.
-    const isPasswordValid = await bcrypt.compare(
-      PASSWORD,
-      userPassword.PASSWORD
+    const isPasswordCorrect = await bcrypt.compare(
+      password,
+      userPasswordRecord.PASSWORD
     );
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: "Invalid Password" });
+
+    if (!isPasswordCorrect) {
+      return res.status(401).json({ message: AUTH_RESPONSE_MESSAGES.INCORRECT_PASSWORD });
     }
 
-    res.status(200).json({ message: "Login successful" });
+    res.status(200).json({ message: AUTH_RESPONSE_MESSAGES.LOGIN_SUCCESS });
   } catch (error) {
     console.error("Error in login:", error);
-    res.status(500).json({ message: "Internal server error" });
+    res.status(500).json({ message: AUTH_RESPONSE_MESSAGES.LOGIN_SERVER_ERROR });
   }
 };
 

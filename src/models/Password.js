@@ -33,7 +33,7 @@ class Password extends Model {
     }, {
       sequelize, // Pass the sequelize instance
       tableName: 'USR_PASSWORDS',
-      timestamps: false,
+      timestamps: true,
     });
   }
 
