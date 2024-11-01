@@ -1,26 +1,34 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
+const { DataTypes, Model } = require('sequelize');
 
-const User = sequelize.define('USR_USERS', {
-    USER_ID: {
-        type: DataTypes.INTEGER,
+class User extends Model {
+  static init(sequelize) {
+    return super.init({
+      USER_ID: {
+        type: DataTypes.UUID,
         primaryKey: true,
-        autoIncrement: true,
+        defaultValue: DataTypes.UUIDV4,
         field: 'USER_ID',
-    },
-    USER_NAME: {
+      },
+      USER_NAME: {
         type: DataTypes.STRING(100),
         allowNull: false,
-        field: "USER_NAME"
-    },
-    USER_PROFILE_ID: {
-        type: DataTypes.INTEGER,
+        field: 'USER_NAME',
+      },
+      USER_PROFILE_ID: {
+        type: DataTypes.UUID,
         allowNull: true,
-        field: "USER_PROFILE_ID"
-    }
-}, {
-    tableName: 'USR_USERS',
-    timestamps: false
-});
+        field: 'USER_PROFILE_ID',
+      },
+    }, {
+      sequelize, // Pass the sequelize instance
+      tableName: 'USR_USERS',
+      timestamps: false,
+    });
+  }
+
+  static associate(models) {
+    this.hasMany(models.USR_PASSWORDS, { foreignKey: 'USER_ID' }); // Use model name as key
+  }
+}
 
 module.exports = User;

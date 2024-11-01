@@ -1,41 +1,43 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/db');
-const User = require('./User');  // Ensure User model is imported for associations
+const { DataTypes, Model } = require('sequelize');
 
-const Password = sequelize.define('USR_PASSWORDS', {
-  PASSWORD_SEQ: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    allowNull: false,
-    field: "PASSWORD_SEQ"
-  },
-  USER_ID: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    field: "USER_ID",
-    primaryKey: true,
-    references: {
-      model: User,
-      key: 'USER_ID'
-    }
-  },
-  PASSWORD: {
-    type: DataTypes.STRING(100),
-    allowNull: false,
-    field: "PASSWORD"
-  },
-  ACTIVE: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false,
-    field: "ACTIVE"
-  },
-}, {
-  tableName: 'USR_PASSWORDS',
-  timestamps: false
-});
+class Password extends Model {
+  static init(sequelize) {
+    return super.init({
+      PASSWORD_SEQ: {
+        type: DataTypes.INTEGER,
+        primaryKey: true,
+        allowNull: false,
+        field: 'PASSWORD_SEQ',
+      },
+      USER_ID: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        field: 'USER_ID',
+        references: {
+          model: 'USR_USERS',
+          key: 'USER_ID',
+        },
+      },
+      PASSWORD: {
+        type: DataTypes.STRING(100),
+        allowNull: false,
+        field: 'PASSWORD',
+      },
+      ACTIVE: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        field: 'ACTIVE',
+      },
+    }, {
+      sequelize, // Pass the sequelize instance
+      tableName: 'USR_PASSWORDS',
+      timestamps: false,
+    });
+  }
 
-Password.associate = (models) => {
-  Password.primaryKey = ['USER_ID', 'PASSWORD_SEQ'];
-};
+  static associate(models) {
+    this.belongsTo(models.USR_USERS, { foreignKey: 'USER_ID' });
+  }
+}
 
 module.exports = Password;
