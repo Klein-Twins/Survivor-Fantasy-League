@@ -16,7 +16,6 @@ const {
 
 //Signup API
 const signup = async (req, res) => {
-  console.log("Signup Request: ", req.body);
   const { email, username, password } = req.body;
 
   if(!email || email.length === 0) {

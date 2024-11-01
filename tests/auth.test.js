@@ -6,6 +6,8 @@ const Password = require('../src/models/Password');
 
 const { sequelize } = require('../src/config/dbConfig');
 
+const { AUTH_RESPONSE_MESSAGES } = require('../src/routes/ResponseMessageConstants');
+
 const PORT = process.env.PORT || 3000;
 describe('Authentication Tests', () => {
 
@@ -172,6 +174,87 @@ describe('Authentication Tests', () => {
 
     // Login Tests
     describe('Login Tests', () => {
+        beforeAll(async () => {
+            await request(app)
+                .post('/api/auth/signup')
+                .send({ email: 'test@mail.com', username: 'testusername1', password: 'Test@123' }); 
+            
+        });
 
+        afterAll(async () => {
+            await User.destroy({ where: { USER_NAME: 'testusername1' }});
+        });
+
+        it('should authenticate user', async () => {
+            const response = await request(app)
+                .post('/api/auth/login')
+                .send({ email: 'test@mail.com', password: 'Test@123' }); 
+            
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveProperty('message', 'User authenticated successfully');
+        });
+
+        it('should return 404 if email is not tied to a registered user', async () => {
+            const response = await request(app)
+                .post('/api/auth/login')
+                .send({ email: 'noaccount@mail.com', password: 'Test@123' }); 
+            
+            expect(response.status).toBe(404);
+            expect(response.body).toHaveProperty('message', 'Email is not tied to a registered user');
+        });
+
+        it('should return 401 if unauthorized', async () => {
+            const response = await request(app)
+                .post('/api/auth/login')
+                .send({ email: 'test@mail.com', password: 'wrongpassword123' }); 
+            
+            expect(response.status).toBe(401);
+            expect(response.body).toHaveProperty('message', 'Unauthorized, invalid user credentials');
+        });
+
+        describe('Login status 400 errors', () => {
+            it('should return 400 if email is invalid', async () => {
+                const response = await request(app)
+                    .post('/api/auth/login')
+                    .send({ email: 'invalidemail.com', password: 'Test@123' }); 
+                
+                expect(response.status).toBe(400);
+                expect(response.body).toHaveProperty('message', 'Email is invalid');
+            });
+
+            it('should return 400 if email is provided in request is empty', async () => {
+                const response = await request(app)
+                    .post('/api/auth/login')
+                    .send({ email: '', password: 'Test@123' }); 
+                
+                expect(response.status).toBe(400);
+                expect(response.body).toHaveProperty('message', 'No email provided in request');
+            });
+            it('should return 400 if no email provided in request', async () => {
+                const response = await request(app)
+                    .post('/api/auth/login')
+                    .send({ password: 'Test@123' }); 
+                
+                expect(response.status).toBe(400);
+                expect(response.body).toHaveProperty('message', 'No email provided in request');
+            });
+
+            it('should return 400 if password is provided in request is empty', async () => {
+                const response = await request(app)
+                    .post('/api/auth/login')
+                    .send({ email: 'test@mail.com', password: '' }); 
+                
+                expect(response.status).toBe(400);
+                expect(response.body).toHaveProperty('message', 'No password provided in request');
+            });
+            it('should return 400 if no password provided in request', async () => {
+                const response = await request(app)
+                    .post('/api/auth/login')
+                    .send({ email: 'test@mail.com' });  
+                
+                expect(response.status).toBe(400);
+                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED);
+            });
+        });
     });
 });
