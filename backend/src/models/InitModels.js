@@ -1,4 +1,3 @@
-const { Sequelize } = require('sequelize');
 const User = require('./User'); // Adjust path as needed
 const Password = require('./Password'); // Adjust path as needed
 const Survivors = require('./Survivors');

@@ -1,18 +1,18 @@
 const bcrypt = require("bcrypt");
-const UserModel = require("../models/User");
-const PasswordModel = require("../models/Password");
+const UserModel = require("../../models/User");
+const PasswordModel = require("../../models/Password");
 const { v4: uuidv4 } = require("uuid");
 
 const {
   AUTH_RESPONSE_MESSAGES,
-} = require("../routes/ResponseMessageConstants");
+} = require("../../routes/ResponseMessageConstants");
 
 const {
   isPasswordStrongEnough,
-} = require('../utils/auth/PasswordUtils');
+} = require('../../utils/auth/PasswordUtils');
 const {
   isValidEmail
-} = require('../utils/auth/EmailUtils');
+} = require('../../utils/auth/EmailUtils');
 
 //Signup API
 const signup = async (req, res) => {

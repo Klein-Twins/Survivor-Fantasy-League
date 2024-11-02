@@ -1,8 +1,6 @@
 const express = require('express');
-const authController = require('../controllers/auth');
+const authController = require('../../controllers/auth/auth.js');
 const router = express.Router();
-
-const { AUTH_ERROR_MESSAGES } = require('./ResponseMessageConstants');
 
 /**
  * @swagger
