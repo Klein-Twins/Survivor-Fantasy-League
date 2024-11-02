@@ -30,7 +30,7 @@ describe('Authentication Tests', () => {
         await sequelize.close();
         if(server) {
             server.close(() => {
-                console.log("App closed after tests completed.");
+                
             });
         }
     });

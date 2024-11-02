@@ -1,9 +1,8 @@
 const express = require('express');
-require('dotenv').config();
-const { sequelize } = require('./src/config/dbConfig');
-const { swaggerUi, swaggerSpec } = require('./src/config/swagger');
-const routes = require('./src/routes');  // Import routes
 const cors = require('cors');
+const routes = require('./src/routes/index.js');
+const { swaggerUi, swaggerSpec } = require('./src/config/swagger.js');
+
 
 const app = express();
 app.use(cors());

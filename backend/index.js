@@ -1,7 +1,9 @@
 const app = require('./app');
 const { sequelize } = require('./src/config/dbConfig');
 const initModels = require('./src/models/InitModels');
+
 const { runSqlFile } = require('./src/utils/runSqlFile');
+
 const path = require('path');
 const PORT = process.env.PORT || 3000;
 

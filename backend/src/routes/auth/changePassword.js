@@ -1,5 +1,5 @@
 const express = require('express');
-const passwordController = require('../../controllers/auth/password.js');
+const authController = require('../../controllers/authController.js');
 const router = express.Router();
 
 /**
@@ -55,6 +55,6 @@ const router = express.Router();
  *              description: Internal Server Error - Failed to update password
  *          
  */
-router.post('/changePassword', passwordController.changePassword);
+router.post('/changePassword', authController.changePassword);
 
 module.exports = router;
