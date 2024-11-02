@@ -3,8 +3,8 @@ const UserModel = require("../../models/User");
 const PasswordModel = require("../../models/Password");
 
 const {
-  AUTH_RESPONSE_MESSAGES,
-} = require("../../routes/ResponseMessageConstants");
+  LOGIN_RESPONSE_MESSAGES,
+} = require("../../routes/auth/authResponseMessageConstants");
 
 const { isValidEmail } = require("../../utils/auth/EmailUtils");
 
@@ -15,12 +15,12 @@ const login = async (req, res) => {
   if (!email || email.length === 0) {
     return res
       .status(400)
-      .json({ message: AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED });
+      .json({ message: LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL });
   }
   if (!password || password.length === 0) {
     return res
       .status(400)
-      .json({ message: AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED });
+      .json({ message: LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD });
   }
 
   try {
@@ -29,7 +29,7 @@ const login = async (req, res) => {
     if (!isValidEmail(email)) {
       return res
         .status(400)
-        .json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_VALID });
+        .json({ message: LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.INVALID_EMAIL });
     }
 
     //Find user by username
@@ -39,7 +39,7 @@ const login = async (req, res) => {
     if (!userRecordTiedToEmail) {
       return res
         .status(404)
-        .json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_FOUND });
+        .json({ message: LOGIN_RESPONSE_MESSAGES.NOT_FOUND });
     }
 
     //Find active password for the user
@@ -52,7 +52,7 @@ const login = async (req, res) => {
 
     if (!userPasswordRecord) {
       return res.status(500).json({
-        message: AUTH_RESPONSE_MESSAGES.LOGIN_SERVER_ERROR,
+        message: LOGIN_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR,
       });
     }
 
@@ -65,15 +65,15 @@ const login = async (req, res) => {
     if (!isPasswordCorrect) {
       return res
         .status(401)
-        .json({ message: AUTH_RESPONSE_MESSAGES.INCORRECT_PASSWORD });
+        .json({ message: LOGIN_RESPONSE_MESSAGES.UNAUTHORIZED });
     }
 
-    res.status(200).json({ message: AUTH_RESPONSE_MESSAGES.LOGIN_SUCCESS });
+    res.status(200).json({ message: LOGIN_RESPONSE_MESSAGES.OK });
   } catch (error) {
     console.error("Error in login:", error);
     res
       .status(500)
-      .json({ message: AUTH_RESPONSE_MESSAGES.LOGIN_SERVER_ERROR });
+      .json({ message: LOGIN_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
 

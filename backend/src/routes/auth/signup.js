@@ -32,9 +32,9 @@ const router = express.Router();
  *                              example: SurvivorFan69
  *      responses:
  *          201:
- *              description: User created successfully
+ *              description: Created - User created successfully
  *          400:
- *              description: Bad request - "User name is already taken" | "User password is not strong enough" | "Email already in use" | "Email is invalid" | "No email provided in request" | "No username provided in request" | "No password provided in request"
+ *              description: Bad request - No email provided | No username provided | No password provided | Username is unavailable | Email is unavailable | User password is not strong enough | Email is invalid
  *              content:
  *                  application/json:
  *                      schema:
@@ -43,15 +43,15 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  enum:
- *                                      - "User name is already taken"
- *                                      - "User password is not strong enough"
- *                                      - "Email already in use"
- *                                      - "Email is invalid"
- *                                      - "No email provided in request"
- *                                      - "No username provided in request"
- *                                      - "No password provided in request"
+ *                                      - Bad Request - No email provided
+ *                                      - Bad Request - No username provided
+ *                                      - Bad Request - No password provided
+ *                                      - Bad Request - Username is unavailable
+ *                                      - Bad Request - Email is unavailable
+ *                                      - Bad Request - User password is not strong enough
+ *                                      - Bad Request - Email is invalid
  *          500:
- *              description: Failed to create User, Internal Server Error
+ *              description: Internal Server Error - Failed to sign up and create user
  *          
  */
 router.post('/signup', authController.signup);

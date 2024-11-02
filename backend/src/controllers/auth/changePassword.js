@@ -5,9 +5,8 @@ const PasswordModel = require("../../models/Password.js");
 const { isPasswordStrongEnough } = require("../../utils/auth/PasswordUtils.js");
 
 const {
-  AUTH_RESPONSE_MESSAGES,
-  CHANGE_PASSWORD_RESPONSE_MESSAGES,
-} = require("../../routes/ResponseMessageConstants.js");
+  CHANGE_PASSWORD_RESPONSE_MESSAGES
+} = require("../../routes/auth/authResponseMessageConstants.js");
 
 const changePassword = async (req, res) => {
   let { email } = req.body;
@@ -17,7 +16,7 @@ const changePassword = async (req, res) => {
     return res
       .status(400)
       .json({
-        message: CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.MISSING_EMAIL,
+        message: CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL,
       });
   }
   if (!oldPassword || oldPassword.length === 0) {
@@ -25,7 +24,7 @@ const changePassword = async (req, res) => {
       .status(400)
       .json({
         message:
-          CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.MISSING_OLD_PASSWORD,
+        CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.NO_OLD_PASSWORD,
       });
   }
   if (!newPassword || newPassword.length === 0) {
@@ -33,7 +32,7 @@ const changePassword = async (req, res) => {
       .status(400)
       .json({
         message:
-          CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.MISSING_NEW_PASSWORD,
+        CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.NO_NEW_PASSWORD,
       });
   }
 
@@ -56,7 +55,7 @@ const changePassword = async (req, res) => {
     if (!userRecord) {
       return res
         .status(404)
-        .json({ message: CHANGE_PASSWORD_RESPONSE_MESSAGES.EMAIL_NOT_FOUND });
+        .json({ message: CHANGE_PASSWORD_RESPONSE_MESSAGES.NOT_FOUND });
     }
 
     const userActivePasswordRecord = await PasswordModel.findOne({
@@ -99,7 +98,7 @@ const changePassword = async (req, res) => {
 
     return res
       .status(202)
-      .json({ message: CHANGE_PASSWORD_RESPONSE_MESSAGES.SUCCESS });
+      .json({ message: CHANGE_PASSWORD_RESPONSE_MESSAGES.OK });
   } catch (error) {
     console.error(error);
     return res

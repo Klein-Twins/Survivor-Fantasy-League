@@ -4,8 +4,8 @@ const PasswordModel = require("../../models/Password");
 const { v4: uuidv4 } = require("uuid");
 
 const {
-  AUTH_RESPONSE_MESSAGES,
-} = require("../../routes/ResponseMessageConstants");
+  SIGNUP_RESPONSE_MESSAGES,
+} = require("../../routes/auth/authResponseMessageConstants");
 
 const { isPasswordStrongEnough } = require("../../utils/auth/PasswordUtils");
 const { isValidEmail } = require("../../utils/auth/EmailUtils");
@@ -17,17 +17,17 @@ const signup = async (req, res) => {
   if (!email || email.length === 0) {
     return res
       .status(400)
-      .json({ message: AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED });
+      .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL });
   }
   if (!username || username.length === 0) {
     return res
       .status(400)
-      .json({ message: AUTH_RESPONSE_MESSAGES.NO_USER_NAME_PROVIDED });
+      .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_USERNAME });
   }
   if (!password || password.length === 0) {
     return res
       .status(400)
-      .json({ message: AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED });
+      .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD });
   }
 
   try {
@@ -40,14 +40,14 @@ const signup = async (req, res) => {
     if (existingUserName) {
       return res
         .status(400)
-        .json({ message: AUTH_RESPONSE_MESSAGES.USERNAME_TAKEN });
+        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.UNAVAILABLE_USERNAME });
     }
 
     //Check if Email is valid
     if (!isValidEmail(email)) {
       return res
         .status(400)
-        .json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_VALID });
+        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.INVALID_EMAIL });
     }
 
     //Check if user email aready tied to an account
@@ -57,13 +57,13 @@ const signup = async (req, res) => {
     if (existingEmail) {
       return res
         .status(400)
-        .json({ message: AUTH_RESPONSE_MESSAGES.EMAIL_IN_USE });
+        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.UNAVAILABLE_EMAIL });
     }
 
     if (!isPasswordStrongEnough(password)) {
       return res
         .status(400)
-        .json({ message: AUTH_RESPONSE_MESSAGES.WEAK_PASSWORD });
+        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.WEAK_PASSWORD });
     }
 
     //Generate a userProfileId
@@ -87,7 +87,7 @@ const signup = async (req, res) => {
     });
 
     res.status(201).json({
-      message: AUTH_RESPONSE_MESSAGES.SIGNUP_SUCCESS,
+      message: SIGNUP_RESPONSE_MESSAGES.CREATED,
       user: {
         username: userRecord.USER_NAME,
         userProfileId: userRecord.USER_PROFILE_ID,
@@ -97,7 +97,7 @@ const signup = async (req, res) => {
     console.error("Internal Server Error", error);
     res
       .status(500)
-      .json({ message: AUTH_RESPONSE_MESSAGES.SIGNUP_SERVER_ERROR });
+      .json({ message: SIGNUP_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR });
   }
 };
 

@@ -28,13 +28,13 @@ const router = express.Router();
  *                              example: StrongPassword123
  *      responses:
  *          200:
- *              description: User authenticated successfully
+ *              description: OK - User authenticated successfully
  *          404:
- *              description: Email is not tied to a registered user
+ *              description: Not Found - Email is not tied to a registered user
  *          401:
- *              description: Unauthorized, invalid user credentials
+ *              description: Unauthorized - password invalid
  *          400:
- *              description: Bad Request - "Email is invalid" | "No email provided in request" | "No password provided in request"
+ *              description: Bad Request - Email is invalid | No email provided | No password provided
  *              content:
  *                  application/json:
  *                      schema:
@@ -43,11 +43,11 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  enum:
- *                                      - "Email is invalid"
- *                                      - "No email provided in request"
- *                                      - "No password provided in request"
+ *                                      - Bad Request - Email is invalid
+ *                                      - Bad Request - No email provided
+ *                                      - Bad Request - No password provided
  *          500:
- *              description: Failed to log in User, Internal Server Error
+ *              description: Internal Server Error - Failed to login user
  */
 router.post('/login', authController.login);
 

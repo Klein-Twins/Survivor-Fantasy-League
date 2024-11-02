@@ -6,7 +6,7 @@ const Password = require('../src/models/Password');
 
 const { sequelize } = require('../src/config/dbConfig');
 
-const { AUTH_RESPONSE_MESSAGES } = require('../src/routes/ResponseMessageConstants');
+const { LOGIN_RESPONSE_MESSAGES, SIGNUP_RESPONSE_MESSAGES, CHANGE_PASSWORD_RESPONSE_MESSAGES } = require('../src/routes/auth/authResponseMessageConstants.js');
 
 let server;
 
@@ -44,7 +44,7 @@ describe('Authentication Tests', () => {
                 .send({ email: 'test@mail.com', username: 'testusername1', password: 'Test@123' }); 
             
             expect(response.status).toBe(201);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.SIGNUP_SUCCESS);
+            expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.CREATED);
         
             await User.destroy({ where: { USER_NAME: 'testusername1' } });
         });
@@ -59,7 +59,7 @@ describe('Authentication Tests', () => {
                 .send({ email: 'test2@mail.com', username: 'testusername1', password: 'Test@123' }); // Use PASSWORD not password
         
             expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.USERNAME_TAKEN);
+            expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.UNAVAILABLE_USERNAME);
 
             await User.destroy({ where: { USER_NAME: 'testusername1' }});
         });
@@ -71,7 +71,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test2@mail.com', username: 'testusername1', password: 'test@123' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.WEAK_PASSWORD);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.WEAK_PASSWORD);
             });
     
             it('should return 400 if password is not strong enough - no number', async () => {
@@ -80,7 +80,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test2@mail.com', username: 'testusername1', password: 'Testttttttt' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.WEAK_PASSWORD);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.WEAK_PASSWORD);
             });
     
             it('should return 400 if password is not strong enough - no lowercase', async () => {
@@ -89,7 +89,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test2@mail.com', username: 'testusername1', password: 'TEST@123' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.WEAK_PASSWORD);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.WEAK_PASSWORD);
             });
     
             it(`should return 400 if password is not strong enough - not >= 8`, async () => {
@@ -98,7 +98,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test2@mail.com', username: 'testusername1', password: 'Test1' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.WEAK_PASSWORD);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.WEAK_PASSWORD);
             });
 
         }) 
@@ -113,7 +113,7 @@ describe('Authentication Tests', () => {
                 .send({ email: 'test@mail.com', username: 'testusername12', password: 'Test@123' }); // Use PASSWORD not password
         
             expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.EMAIL_IN_USE);
+            expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.UNAVAILABLE_EMAIL);
 
             await User.destroy({ where: { USER_NAME: 'testusername1' }});
         });
@@ -125,7 +125,7 @@ describe('Authentication Tests', () => {
                     .send({ email: '', username: 'testusername1', password: 'test@123' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL);
             });
             it('should return 400 if email not provided in request', async () => {
                 const response = await request(app)
@@ -133,7 +133,7 @@ describe('Authentication Tests', () => {
                     .send({ username: 'testusername1', password: 'test@123' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL);
             });
 
             it('should return 400 if password provided in request is empty', async () => {
@@ -142,7 +142,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test@example.com', username: 'testusername1', password: '' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD);
             });
             it('should return 400 if password not provided in request', async () => {
                 const response = await request(app)
@@ -150,7 +150,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test@example.com', username: 'testusername1' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD);
             });
 
             it('should return 400 if username provided in request is empty', async () => {
@@ -159,7 +159,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test@example.com', username: '', password: 'test@123' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_USER_NAME_PROVIDED);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_USERNAME);
             });
             it('should return 400 if username not provided in request', async () => {
                 const response = await request(app)
@@ -167,7 +167,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test@example.com', password: 'test@123' }); // Use PASSWORD not password
             
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_USER_NAME_PROVIDED);
+                expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_USERNAME);
             });
         });
 
@@ -177,7 +177,7 @@ describe('Authentication Tests', () => {
             .send({ email: 'testmail.com', username: 'testusername1', password: 'Test@123' }); // Use PASSWORD not password
     
             expect(response.status).toBe(400);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.EMAIL_NOT_VALID);
+            expect(response.body).toHaveProperty('message', SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.INVALID_EMAIL);
 
         })
 
@@ -202,7 +202,7 @@ describe('Authentication Tests', () => {
                 .send({ email: 'test@mail.com', password: 'Test@123' }); 
             
             expect(response.status).toBe(200);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.LOGIN_SUCCESS);
+            expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.OK);
         });
 
         it('should authenticate user with different capitalization of email', async() => {
@@ -210,7 +210,7 @@ describe('Authentication Tests', () => {
                 .post('/api/auth/login')
                 .send({ email : 'TeSt@MAIl.com', password: 'Test@123'});
             expect(response.status).toBe(200);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.LOGIN_SUCCESS);
+            expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.OK);
         })
 
         it('should return 404 if email is not tied to a registered user', async () => {
@@ -219,7 +219,7 @@ describe('Authentication Tests', () => {
                 .send({ email: 'noaccount@mail.com', password: 'Test@123' }); 
             
             expect(response.status).toBe(404);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.EMAIL_NOT_FOUND);
+            expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.NOT_FOUND);
         });
 
         it('should return 401 if unauthorized', async () => {
@@ -228,7 +228,7 @@ describe('Authentication Tests', () => {
                 .send({ email: 'test@mail.com', password: 'wrongpassword123' }); 
             
             expect(response.status).toBe(401);
-            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.INCORRECT_PASSWORD);
+            expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.UNAUTHORIZED);
         });
 
         describe('Login status 400 errors', () => {
@@ -238,7 +238,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'invalidemail.com', password: 'Test@123' }); 
                 
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.EMAIL_NOT_VALID);
+                expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.INVALID_EMAIL);
             });
 
             it('should return 400 if email is provided in request is empty', async () => {
@@ -247,7 +247,7 @@ describe('Authentication Tests', () => {
                     .send({ email: '', password: 'Test@123' }); 
                 
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED);
+                expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL);
             });
             it('should return 400 if no email provided in request', async () => {
                 const response = await request(app)
@@ -255,7 +255,7 @@ describe('Authentication Tests', () => {
                     .send({ password: 'Test@123' }); 
                 
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED);
+                expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL);
             });
 
             it('should return 400 if password is provided in request is empty', async () => {
@@ -264,7 +264,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test@mail.com', password: '' }); 
                 
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED);
+                expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD);
             });
             it('should return 400 if no password provided in request', async () => {
                 const response = await request(app)
@@ -272,7 +272,7 @@ describe('Authentication Tests', () => {
                     .send({ email: 'test@mail.com' });  
                 
                 expect(response.status).toBe(400);
-                expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.NO_PASSWORD_PROVIDED);
+                expect(response.body).toHaveProperty('message', LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD);
             });
         });
     });

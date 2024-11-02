@@ -31,14 +31,14 @@ const router = express.Router();
  *                              type: string
  *                              example: NewStrongPassword123
  *      responses:
- *          202:
- *              description: Accepted - User password updated successfully
+ *          200:
+ *              description: OK - User password updated successfully
  *          401:
  *              description: Unauthorized - Old password invalid
  *          404:
  *              description: Not Found - Email is not tied to a registered user
  *          400:
- *              description: Bad request - No old password provided | No new password provided | No email provided | Email is not tied to a registered user | New password is not strong enough
+ *              description: Bad request - No email provided | No old password provided | No new password provided | New password is not strong enough | Email is invalid
  *              content:
  *                  application/json:
  *                      schema:
@@ -47,10 +47,11 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  enum:
- *                                      - Bad request - No old password provided
- *                                      - Bad request - No new password provided
- *                                      - Bad request - No email provided
- *                                      - Bad request - New password is not strong enough
+ *                                      - Bad Request - No email provided
+ *                                      - Bad Request - No old password provided
+ *                                      - Bad Request - No new password provided
+ *                                      - Bad Request - New password is not strong enough
+ *                                      - Bad Request - Email is invalid
  *          500:
  *              description: Internal Server Error - Failed to update password
  *          
