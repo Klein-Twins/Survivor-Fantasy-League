@@ -1,5 +1,5 @@
 const app = require('./app');
-const { sequelize } = require('./src/config/dbConfig');
+const { sequelize } = require('./src/config/db.js');
 const initModels = require('./src/models/InitModels');
 
 const { runSqlFile } = require('./src/utils/runSqlFile');

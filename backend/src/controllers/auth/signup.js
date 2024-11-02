@@ -7,10 +7,9 @@ const {
   STATUS_CODES
 } = require("../../routes/ResponseMessageConstants.js");
 
-const { isPasswordStrongEnough } = require("../../utils/auth/PasswordUtils");
 const { validateRequiredRequestFields, validateEmail } = require('./utils/validateRequest.js');
 
-const { getHashedPassword } = require("./utils/checkPassword.js");
+const { getHashedPassword, isPasswordStrong } = require("./utils/passwordUtils.js");
 const errorHandler = require("../../middleware/errorHandler.js");
 
 //Signup API
@@ -48,7 +47,7 @@ const signup = async (req, res) => {
       return errorHandler(RESPONSE_MESSAGES.SIGNUP.BAD_REQUEST_UNAVAILABLE_EMAIL, req, res);
     }
 
-    if (!isPasswordStrongEnough(password)) {
+    if (!isPasswordStrong(password)) {
       return errorHandler(RESPONSE_MESSAGES.SIGNUP.BAD_REQUEST_WEAK_PASSWORD, req ,res);
     }
 

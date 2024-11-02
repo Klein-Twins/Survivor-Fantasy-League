@@ -1,9 +1,8 @@
 const UserModel = require("../../models/User.js");
 const PasswordModel = require("../../models/Password.js");
 
-const { isPasswordStrongEnough } = require("../../utils/auth/PasswordUtils.js");
 const { validateRequiredRequestFields } = require('./utils/validateRequest.js');
-const { checkPasswordsMatch, getHashedPassword } = require('./utils/checkPassword.js');
+const { checkPasswordsMatch, getHashedPassword, isPasswordStrong } = require('./utils/passwordUtils.js');
 const errorHandler = require("../../middleware/errorHandler.js");
 
 const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
@@ -20,7 +19,7 @@ const changePassword = async (req, res) => {
 
   try {
 
-    const isValidPassword = isPasswordStrongEnough(newPassword);
+    const isValidPassword = isPasswordStrong(newPassword);
     if (!isValidPassword) {
       return errorHandler(RESPONSE_MESSAGES.CHANGE_PASSWORD.BAD_REQUEST_WEAK_PASSWORD, req, res);
     }

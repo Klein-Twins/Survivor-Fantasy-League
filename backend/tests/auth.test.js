@@ -1,10 +1,10 @@
 const request = require('supertest');
-const app = require('../index'); // Adjust the path as needed
-const db = require('../src/config/dbConfig');
-const User = require('../src/models/User'); // Adjust the path as needed
-const Password = require('../src/models/Password');
+const app = require('../index.js'); // Adjust the path as needed
+const db = require('../src/config/db.js');
+const User = require('../src/models/User.js'); // Adjust the path as needed
+const Password = require('../src/models/Password.js');
 
-const { sequelize } = require('../src/config/dbConfig');
+const { sequelize } = require('../src/config/db.js');
 
 const { RESPONSE_MESSAGES } = require('../src/routes/ResponseMessageConstants.js');
 

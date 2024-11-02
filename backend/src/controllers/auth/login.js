@@ -4,7 +4,7 @@ const PasswordModel = require("../../models/Password");
 const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
 
 const { validateRequiredRequestFields, validateEmail } = require('./utils/validateRequest.js');
-const { checkPasswordsMatch } = require('./utils/checkPassword.js');
+const { checkPasswordsMatch } = require('./utils/passwordUtils.js');
 const errorHandler = require("../../middleware/errorHandler.js");
 
 const login = async (req, res) => {
