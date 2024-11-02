@@ -1,74 +1,59 @@
-const bcrypt = require("bcrypt");
 const UserModel = require("../../models/User");
 const PasswordModel = require("../../models/Password");
 const { v4: uuidv4 } = require("uuid");
 
 const {
-  SIGNUP_RESPONSE_MESSAGES,
-} = require("../../routes/auth/authResponseMessageConstants");
+  RESPONSE_MESSAGES,
+  STATUS_CODES
+} = require("../../routes/ResponseMessageConstants.js");
 
 const { isPasswordStrongEnough } = require("../../utils/auth/PasswordUtils");
-const { isValidEmail } = require("../../utils/auth/EmailUtils");
+const { validateRequiredRequestFields, validateEmail } = require('./utils/validateRequest.js');
+
+const { getHashedPassword } = require("./utils/checkPassword.js");
+const errorHandler = require("../../middleware/errorHandler.js");
 
 //Signup API
 const signup = async (req, res) => {
-  let { email, username, password } = req.body;
+  const requiredFields = ["email", "username", "password"]
+  if(!validateRequiredRequestFields(req, res, requiredFields, RESPONSE_MESSAGES.SIGNUP)) {
+    return res;
+  }
 
-  if (!email || email.length === 0) {
-    return res
-      .status(400)
-      .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL });
-  }
-  if (!username || username.length === 0) {
-    return res
-      .status(400)
-      .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_USERNAME });
-  }
-  if (!password || password.length === 0) {
-    return res
-      .status(400)
-      .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD });
-  }
+  const { username, password } = req.body;
+  let email = req.body.email.toLowerCase();
 
   try {
-    email = email.toLowerCase();
 
-    //Check if username already exists
+    //Check if invalid email
+    if (!validateEmail(email)) {
+      return errorHandler(RESPONSE_MESSAGES.SIGNUP.BAD_REQUEST_INVALID_EMAIL, req, res);
+    }
+    
+    //Check if username already taken
     const existingUserName = await UserModel.findOne({
       where: { USER_NAME: username },
     });
     if (existingUserName) {
-      return res
-        .status(400)
-        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.UNAVAILABLE_USERNAME });
-    }
-
-    //Check if Email is valid
-    if (!isValidEmail(email)) {
-      return res
-        .status(400)
-        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.INVALID_EMAIL });
+      return errorHandler(RESPONSE_MESSAGES.SIGNUP.BAD_REQUEST_UNAVAILABLE_USERNAME, req, res);
     }
 
     //Check if user email aready tied to an account
     const existingEmail = await UserModel.findOne({
       where: { USER_EMAIL: email },
     });
+
+    //Check if email is already used for a user
     if (existingEmail) {
-      return res
-        .status(400)
-        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.UNAVAILABLE_EMAIL });
+      return errorHandler(RESPONSE_MESSAGES.SIGNUP.BAD_REQUEST_UNAVAILABLE_EMAIL, req, res);
     }
 
     if (!isPasswordStrongEnough(password)) {
-      return res
-        .status(400)
-        .json({ message: SIGNUP_RESPONSE_MESSAGES.BAD_REQUEST.WEAK_PASSWORD });
+      return errorHandler(RESPONSE_MESSAGES.SIGNUP.BAD_REQUEST_WEAK_PASSWORD, req ,res);
     }
 
     //Generate a userProfileId
     const userProfileId = uuidv4();
-
     //Create a new user
     const userRecord = await UserModel.create({
       USER_NAME: username,
@@ -77,17 +62,17 @@ const signup = async (req, res) => {
     });
 
     //Hash password and store in Passwords Table
-    const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await getHashedPassword(password)
 
-    const passwordRecord = await PasswordModel.create({
+    await PasswordModel.create({
       USER_ID: userRecord.USER_ID,
       PASSWORD: hashedPassword,
       ACTIVE: true,
       PASSWORD_SEQ: 1,
     });
 
-    res.status(201).json({
-      message: SIGNUP_RESPONSE_MESSAGES.CREATED,
+    res.status(RESPONSE_MESSAGES.SIGNUP.CREATED.statusCode).json({
+      message: RESPONSE_MESSAGES.SIGNUP.CREATED.message,
       user: {
         username: userRecord.USER_NAME,
         userProfileId: userRecord.USER_PROFILE_ID,
@@ -95,9 +80,7 @@ const signup = async (req, res) => {
     });
   } catch (error) {
     console.error("Internal Server Error", error);
-    res
-      .status(500)
-      .json({ message: SIGNUP_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR });
+    return errorHandler(RESPONSE_MESSAGES.SIGNUP.INTERNAL_SERVER_ERROR, req, res);
   }
 };
 

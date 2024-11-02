@@ -1,48 +1,34 @@
-const bcrypt = require("bcrypt");
 const UserModel = require("../../models/User");
 const PasswordModel = require("../../models/Password");
 
-const {
-  LOGIN_RESPONSE_MESSAGES,
-} = require("../../routes/auth/authResponseMessageConstants");
+const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
 
-const { isValidEmail } = require("../../utils/auth/EmailUtils");
+const { validateRequiredRequestFields, validateEmail } = require('./utils/validateRequest.js');
+const { checkPasswordsMatch } = require('./utils/checkPassword.js');
+const errorHandler = require("../../middleware/errorHandler.js");
 
 const login = async (req, res) => {
-  const { password } = req.body;
-  let { email } = req.body;
+  const requiredFields = ["email", "password"];
 
-  if (!email || email.length === 0) {
-    return res
-      .status(400)
-      .json({ message: LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL });
+  if(!validateRequiredRequestFields(req, res, requiredFields, RESPONSE_MESSAGES.LOGIN)) {
+    return res;
   }
-  if (!password || password.length === 0) {
-    return res
-      .status(400)
-      .json({ message: LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.NO_PASSWORD });
-  }
+  
+  const { password } = req.body;
+  let email = req.body.email.toLowerCase();
 
   try {
-    email = email.toLowerCase();
-
-    if (!isValidEmail(email)) {
-      return res
-        .status(400)
-        .json({ message: LOGIN_RESPONSE_MESSAGES.BAD_REQUEST.INVALID_EMAIL });
+    if(!validateEmail(email)) {
+      return errorHandler(RESPONSE_MESSAGES.LOGIN.BAD_REQUEST_INVALID_EMAIL, req, res)
     }
 
-    //Find user by username
     const userRecordTiedToEmail = await UserModel.findOne({
       where: { USER_EMAIL: email },
     });
     if (!userRecordTiedToEmail) {
-      return res
-        .status(404)
-        .json({ message: LOGIN_RESPONSE_MESSAGES.NOT_FOUND });
+      return errorHandler(RESPONSE_MESSAGES.LOGIN.NOT_FOUND_EMAIL, req, res);
     }
 
-    //Find active password for the user
     const userPasswordRecord = await PasswordModel.findOne({
       where: {
         USER_ID: userRecordTiedToEmail.USER_ID,
@@ -51,29 +37,18 @@ const login = async (req, res) => {
     });
 
     if (!userPasswordRecord) {
-      return res.status(500).json({
-        message: LOGIN_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR,
-      });
+      return errorHandler(RESPONSE_MESSAGES.LOGIN.INTERNAL_SERVER_ERROR, req, res);
     }
 
-    //Compare password from request and password in database.
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      userPasswordRecord.PASSWORD
-    );
-
-    if (!isPasswordCorrect) {
-      return res
-        .status(401)
-        .json({ message: LOGIN_RESPONSE_MESSAGES.UNAUTHORIZED });
+    if (!await checkPasswordsMatch(password, userPasswordRecord.PASSWORD)) {
+      return errorHandler(RESPONSE_MESSAGES.LOGIN.UNAUTHORIZED, req ,res);
     }
 
-    res.status(200).json({ message: LOGIN_RESPONSE_MESSAGES.OK });
+    res.status(RESPONSE_MESSAGES.LOGIN.OK.statusCode).json({ message: RESPONSE_MESSAGES.LOGIN.OK.message });
+
   } catch (error) {
     console.error("Error in login:", error);
-    res
-      .status(500)
-      .json({ message: LOGIN_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR });
+    return errorHandler(RESPONSE_MESSAGES.LOGIN.INTERNAL_SERVER_ERROR, req, res);
   }
 };
 

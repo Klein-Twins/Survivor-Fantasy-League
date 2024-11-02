@@ -1,94 +1,52 @@
-const bcrypt = require("bcrypt");
 const UserModel = require("../../models/User.js");
 const PasswordModel = require("../../models/Password.js");
 
 const { isPasswordStrongEnough } = require("../../utils/auth/PasswordUtils.js");
+const { validateRequiredRequestFields } = require('./utils/validateRequest.js');
+const { checkPasswordsMatch, getHashedPassword } = require('./utils/checkPassword.js');
+const errorHandler = require("../../middleware/errorHandler.js");
 
-const {
-  CHANGE_PASSWORD_RESPONSE_MESSAGES
-} = require("../../routes/auth/authResponseMessageConstants.js");
+const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
+
 
 const changePassword = async (req, res) => {
-  let { email } = req.body;
-  const { oldPassword, newPassword } = req.body;
+  const requiredFields = ["email", "oldPassword", "newPassword"]
+  if(!validateRequiredRequestFields(req, res, requiredFields, RESPONSE_MESSAGES.CHANGE_PASSWORD)) {
+    return res;
+  }
 
-  if (!email || email.length === 0) {
-    return res
-      .status(400)
-      .json({
-        message: CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.NO_EMAIL,
-      });
-  }
-  if (!oldPassword || oldPassword.length === 0) {
-    return res
-      .status(400)
-      .json({
-        message:
-        CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.NO_OLD_PASSWORD,
-      });
-  }
-  if (!newPassword || newPassword.length === 0) {
-    return res
-      .status(400)
-      .json({
-        message:
-        CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.NO_NEW_PASSWORD,
-      });
-  }
+  const { oldPassword, newPassword } = req.body;
+  let email = req.body.email.toLowerCase();
 
   try {
-    email = email.toLowerCase();
 
     const isValidPassword = isPasswordStrongEnough(newPassword);
     if (!isValidPassword) {
-      return res
-        .status(400)
-        .json({
-          message: CHANGE_PASSWORD_RESPONSE_MESSAGES.BAD_REQUEST.WEAK_PASSWORD,
-        });
+      return errorHandler(RESPONSE_MESSAGES.CHANGE_PASSWORD.BAD_REQUEST_WEAK_PASSWORD, req, res);
     }
 
     const userRecord = await UserModel.findOne({
       where: { EMAIL: email },
     });
-
     if (!userRecord) {
-      return res
-        .status(404)
-        .json({ message: CHANGE_PASSWORD_RESPONSE_MESSAGES.NOT_FOUND });
+      return errorHandler(RESPONSE_MESSAGES.CHANGE_PASSWORD.NOT_FOUND_EMAIL, req, res);
     }
 
     const userActivePasswordRecord = await PasswordModel.findOne({
       where: { USER_ID: userRecord.USER_ID, ACTIVE: true },
     });
-
     if (!userActivePasswordRecord) {
-      return res
-        .status(500)
-        .json({
-          message: CHANGE_PASSWORD_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR,
-        });
+      return errorHandler(RESPONSE_MESSAGES.CHANGE_PASSWORD.INTERNAL_SERVER_ERROR, req, res);
     }
     const oldPasswordSequence = userActivePasswordRecord.PASSWORD_SEQ;
-
-    const isPasswordCorrect = await bcrypt.compare(
-      oldPassword,
-      userActivePasswordRecord.PASSWORD
-    );
-
-    if (!isPasswordCorrect) {
-      return res
-        .status(401)
-        .json({ message: CHANGE_PASSWORD_RESPONSE_MESSAGES.UNAUTHORIZED });
+    if (!await checkPasswordsMatch(oldPassword, userActivePasswordRecord.PASSWORD)) {
+      return errorHandler(RESPONSE_MESSAGES.CHANGE_PASSWORD.UNAUTHORIZED, req, res);
     }
-
-    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
-
+    const hashedNewPassword = await getHashedPassword(newPassword);
     await PasswordModel.update(
       { ACTIVE: false },
       { where: { USER_ID: userRecord.USER_ID, ACTIVE: true } }
     );
-
     await PasswordModel.create({
       PASSWORD_SEQ: oldPasswordSequence + 1,
       USER_ID: userRecord.USER_ID,
@@ -97,15 +55,11 @@ const changePassword = async (req, res) => {
     });
 
     return res
-      .status(202)
-      .json({ message: CHANGE_PASSWORD_RESPONSE_MESSAGES.OK });
+      .status(RESPONSE_MESSAGES.CHANGE_PASSWORD.OK.statusCode)
+      .json({ message: RESPONSE_MESSAGES.CHANGE_PASSWORD.OK.message });
   } catch (error) {
     console.error(error);
-    return res
-      .status(500)
-      .json({
-        message: CHANGE_PASSWORD_RESPONSE_MESSAGES.INTERNAL_SERVER_ERROR,
-      });
+    return errorHandler(RESPONSE_MESSAGES.CHANGE_PASSWORD.INTERNAL_SERVER_ERROR, req, res);
   }
 };
 
