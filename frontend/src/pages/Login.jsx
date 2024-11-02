@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 export default function LoginPage() {
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
@@ -14,13 +14,14 @@ export default function LoginPage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            USER_NAME: username,
-            PASSWORD: password,
+            email: email,
+            password: password,
+
           }),
         });
   
         if (!response.ok) {
-          throw new Error('Invalid username or password');
+          throw new Error('Invalid email or password');
         }
   
         const data = await response.json();
@@ -28,7 +29,7 @@ export default function LoginPage() {
         // Handle successful login (e.g., redirect, store token, etc.)
       } catch (err) {
         console.error('Login failed:', err);
-        setError('Invalid username or password');
+        setError('Invalid email or password');
       }
   }
 
@@ -39,16 +40,16 @@ export default function LoginPage() {
         {error && <p className="text-red-500 mb-4">{error}</p> }
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
-            <label htmlFor="username" className="block text-sm font-bold mb-2">
-              Username
+            <label htmlFor="email" className="block text-sm font-bold mb-2">
+              Email
             </label>
             <input
               type="text"
-              id="username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-              placeholder="Enter your username"
+              placeholder="Enter your Email"
               required
             />
           </div>
