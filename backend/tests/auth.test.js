@@ -205,6 +205,14 @@ describe('Authentication Tests', () => {
             expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.LOGIN_SUCCESS);
         });
 
+        it('should authenticate user with different capitalization of email', async() => {
+            const response = await request(app)
+                .post('/api/auth/login')
+                .send({ email : 'TeSt@MAIl.com', password: 'Test@123'});
+            expect(response.status).toBe(200);
+            expect(response.body).toHaveProperty('message', AUTH_RESPONSE_MESSAGES.LOGIN_SUCCESS);
+        })
+
         it('should return 404 if email is not tied to a registered user', async () => {
             const response = await request(app)
                 .post('/api/auth/login')
