@@ -1,7 +1,8 @@
 import { useState } from "react";
 export default function SignupPage() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [username, setUsername] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
@@ -24,8 +25,9 @@ export default function SignupPage() {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            USER_NAME: username,
-            PASSWORD: password,
+            email: email,
+            password: password,
+            username: username
           }),
         });
   
@@ -51,6 +53,20 @@ export default function SignupPage() {
           {success && <p className="text-green-500 mb-4">{success}</p>}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
+              <label className="block text-sm font-bold mb-2" htmlFor="email">
+                Email
+              </label>
+              <input
+                type="text"
+                id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
+                placeholder="Enter your Email"
+                required
+              />
+            </div>
+            <div className="mb-4">
               <label className="block text-sm font-bold mb-2" htmlFor="username">
                 Username
               </label>
@@ -60,7 +76,7 @@ export default function SignupPage() {
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 focus:outline-none focus:shadow-outline"
-                placeholder="Enter your username"
+                placeholder="Enter your Username"
                 required
               />
             </div>
