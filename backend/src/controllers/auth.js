@@ -16,7 +16,7 @@ const {
 
 //Signup API
 const signup = async (req, res) => {
-  const { email, username, password } = req.body;
+  let { email, username, password } = req.body;
 
   if(!email || email.length === 0) {
     return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED});
@@ -29,6 +29,8 @@ const signup = async (req, res) => {
   }
 
   try {
+    email = email.toLowerCase();
+
     //Check if username already exists
     const existingUserName = await UserModel.findOne({
       where: { USER_NAME: username },
@@ -98,7 +100,7 @@ const signup = async (req, res) => {
 
 //Login API
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  let { email, password } = req.body;
 
   if(!email || email.length === 0) {
     return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.NO_EMAIL_PROVIDED});
@@ -108,7 +110,8 @@ const login = async (req, res) => {
   }
 
   try {
-
+    email = email.toLowerCase();
+    
     if(!isValidEmail(email)) {
       return res.status(400).json({message: AUTH_RESPONSE_MESSAGES.EMAIL_NOT_VALID})
     }
