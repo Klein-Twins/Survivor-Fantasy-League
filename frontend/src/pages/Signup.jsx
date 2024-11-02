@@ -1,56 +1,43 @@
 import { useState } from "react";
+
+import { signup } from "../api/authHttp";
 export default function SignupPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [username, setUsername] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
-  
+
+    const [error, setError] = useState();
+    const [success, setSuccess] = useState();
+
     const handleSubmit = async (e) => {
+      setError();
+      setSuccess();
       e.preventDefault();
-      setError(''); // Clear previous errors
-      setSuccess(''); // Clear previous success messages
-  
-      // Check if passwords match
-      if (password !== confirmPassword) {
-        setError("Passwords don't match");
+
+      if(password !== confirmPassword) {
+        setError("Passwords do not match.");
         return;
       }
-  
+
       try {
-        const response = await fetch('http://localhost:3000/api/auth/signup', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: email,
-            password: password,
-            username: username
-          }),
-        });
-  
-        if (!response.ok) {
-          throw new Error('User already exists or server error');
-        }
-  
-        const data = await response.json();
-        console.log('Signup successful:', data);
-        setSuccess('User created successfully!');
-        // Handle successful signup (e.g., redirect to login)
+
+          const userData = { email, username, password };
+          const response = await signup(userData);
+          console.log('User created successfully:', response);
+          setSuccess(true);
+          // Handle successful signup (e.g., redirect or show a message)
       } catch (err) {
-        console.error('Signup failed:', err);
-        setError(err.message || 'Signup failed, please try again.');
+          setError(err.message || 'An error occurred during signup');
       }
-    };
+  };
   
     return (
       <div className="flex items-center justify-center">
         <div className="bg-gradient-to-b to-slate-800 from-yellow-500 p-8 rounded-lg shadow-md w-96">
           <h2 className="text-2xl font-bold mb-6 text-center">Sign Up</h2>
           {error && <p className="text-red-500 mb-4">{error}</p>}
-          {success && <p className="text-green-500 mb-4">{success}</p>}
+          {success && <p className="text-green-500 mb-4">User Created!</p>}
           <form onSubmit={handleSubmit}>
             <div className="mb-4">
               <label className="block text-sm font-bold mb-2" htmlFor="email">
