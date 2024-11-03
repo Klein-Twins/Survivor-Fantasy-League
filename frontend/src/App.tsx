@@ -1,10 +1,11 @@
 import './App.css'
+import Signup from './components/Signup.tsx'
 
 function App() {
 
   return (
     <>
-      <h1 className='text-9xl'>Survivor Fantasy League</h1>
+      <Signup />
     </>
   )
 }
