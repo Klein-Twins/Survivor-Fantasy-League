@@ -1,0 +1,1 @@
+Assets such as images and fonts.
