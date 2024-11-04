@@ -1,4 +1,3 @@
-// src/controllers/auth/changePassword.js
 const { changePasswordService } = require("../../services/auth/changePassword.js");
 const { validateRequiredRequestFields } = require("./utils/validateRequest.js");
 const errorHandler = require("../../middleware/errorHandler.js");

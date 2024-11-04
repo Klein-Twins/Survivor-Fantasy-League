@@ -41,6 +41,16 @@ const RESPONSE_MESSAGES = {
     },
     GENERAL: {
         INTERNAL_SERVER_ERROR: {statusCode: STATUS_CODES.INTERNAL_SERVER_ERROR, message: "Internal Server Error"},
+    },
+
+    SURVIVORS: {
+        GETSURVIVORS : {
+            OK: {statusCode: STATUS_CODES.OK, message: "Found survivors for provided season "},
+            NOT_FOUND_SEASON: {statusCode: STATUS_CODES.NOT_FOUND, message: "Season does not exist"},
+            BAD_REQUEST_INVALID_SEASON_ID: {statusCode: STATUS_CODES.BAD_REQUEST, message: "Invalid season ID"},
+            BAD_REQUEST_MISSING_SEASON_ID: {statusCode: STATUS_CODES.BAD_REQUEST, message: "Missing season ID"},
+            INTERNAL_SERVER_ERROR: {statusCode: STATUS_CODES.INTERNAL_SERVER_ERROR, message: "Failed to fetch survivors by season"},
+        }
     }
 };
 
