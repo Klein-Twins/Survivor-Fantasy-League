@@ -63,6 +63,7 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
+            //sign up action
             .addCase(signupUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -75,14 +76,13 @@ const authSlice = createSlice({
             .addCase(signupUser.rejected, (state, action) => {
                 state.loading = false;
                 if (action.payload) {
-                    // Ensure payload is defined before accessing its properties
                     state.error = action.payload.message; // or customize as needed
                     console.error(`Error ${action.payload.status}: ${action.payload.message}`);
                 } else {
                     state.error = 'Unexpected error...'; // Fallback error message
                 }
             })
-            
+            //Log in user custom action
             .addCase(loginUser.pending, (state) => {
                 state.loading = true;
                 state.error = null;
@@ -95,7 +95,6 @@ const authSlice = createSlice({
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
                 if (action.payload) {
-                    // Ensure payload is defined before accessing its properties
                     state.error = action.payload.message; // or customize as needed
                     console.error(`Error ${action.payload.status}: ${action.payload.message}`);
                 } else {
