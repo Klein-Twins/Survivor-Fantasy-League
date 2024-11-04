@@ -1,9 +1,15 @@
 // src/components/auth/forms/SignupForm.tsx
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import FormInput from "../../ui/forms/FormInput";
 import useForm from "../../../hooks/useForm";
+import { signupUser } from "../../../store/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../../store/store";
+import { closeModal } from "../../../store/slices/modalSlice";
 
-interface FormData {
+export interface SignUpFormData {
     username: string;
     email: string;
     password: string;
@@ -13,37 +19,57 @@ interface FormData {
 }
 
 const SignupForm: React.FC = () => {
-    const validate = (values: FormData) => {
-        const errors: Partial<Record<keyof FormData, string>> = {};
+    const [responseError, setResponseError] = useState<{ message: string; status: number } | null>(null);
+    const loading = useSelector((state: RootState) => state.auth.loading);
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
 
-        if (values.username.length < 8) {
-            errors.username = "Username must be at least 8 characters long";
+    const validate = (values: SignUpFormData) => {
+        const errors: Partial<Record<keyof SignUpFormData, string>> = {};
+
+        if (!/^[A-Za-z0-9]+$/.test(values.username)) {
+            errors.username = "Username can only contain letters and numbers";
+        }
+        if (values.username.length < 7) {
+            errors.username = "Username must be at least 7 characters long";
         }
         if (!/\S+@\S+\.\S+/.test(values.email)) {
             errors.email = "Please enter a valid email address";
         }
-        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{9,}$/.test(values.password)) {
-            errors.password = "Password must be at least 9 characters long, include at least 1 uppercase letter, 1 lowercase letter, and 1 number";
+        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(values.password)) {
+            errors.password = "Password must be at least 8 characters long, include at least 1 uppercase letter, 1 lowercase letter, and 1 number, and can include special characters";
         }
         if (values.password !== values.confirmPassword) {
             errors.confirmPassword = "Passwords do not match";
         }
-        if (!/^[A-Za-z]*$/.test(values.firstName)) {
+        if (values.firstName && !/^[A-Za-z]*$/.test(values.firstName)) {
             errors.firstName = "First Name can only contain letters";
         }
-        if (!/^[A-Za-z]*$/.test(values.lastName)) {
+        if (values.lastName && !/^[A-Za-z]*$/.test(values.lastName)) {
             errors.lastName = "Last Name can only contain letters";
         }
 
         return errors;
     };
 
-    const onSubmit = (values: FormData) => {
+    const onSubmit = async (values: SignUpFormData) => {
         console.log("Form submitted successfully", values);
-        // Handle form submission, e.g., send to API.
+        try {
+            const resultAction = await dispatch(signupUser(values));
+            if(signupUser.fulfilled.match(resultAction)) {
+                console.log('Signup successful', resultAction.payload);
+                dispatch(closeModal());
+                navigate("/");
+            } else {
+                console.error(resultAction.payload);
+                setResponseError(resultAction.payload as {message: string; status: number})
+            }
+        } catch (error) {
+            console.error("An unexpected error occurred");
+        }
     };
 
-    const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitDisabled } = useForm<FormData>({
+    const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitDisabled } = useForm<SignUpFormData>({
         initialValues: {
             username: "",
             email: "",
@@ -54,6 +80,7 @@ const SignupForm: React.FC = () => {
         },
         validate,
         onSubmit,
+        requiredFields: ["username", "email", "password", "confirmPassword"]
     });
 
     return (
@@ -116,12 +143,13 @@ const SignupForm: React.FC = () => {
                 onBlur={() => handleBlur("lastName")}
                 error={errors.lastName}
             />
+            {responseError && <p className="text-red-500 text-center py-2">{responseError.message}</p>}
             <button
                 type="submit"
-                disabled={isSubmitDisabled}
+                disabled={isSubmitDisabled || loading}
                 className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-400 disabled:hover:bg-blue-500 disabled:opacity-20"
             >
-                Sign Up
+                {loading ? "Please Wait..." : "Sign Up"}
             </button>
         </form>
     );

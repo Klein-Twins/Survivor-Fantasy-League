@@ -29,6 +29,7 @@ const LoginForm: React.FC = () => {
         initialValues: { email: "", password: "" },
         validate,
         onSubmit,
+        requiredFields: ["email", "password"]
     });
 
     return (

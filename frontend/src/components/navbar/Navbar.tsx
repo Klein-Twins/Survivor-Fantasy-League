@@ -18,28 +18,6 @@ const Navbar: React.FC = () => {
 
 
     return (
-        // <header className="bg-stone-400 w-screen px-2 py-2">
-        //     <nav className="flex items-center justify-between">
-        //         <NavLink className="" to="/">Survivor Fantasy League</NavLink>
-        //         <ul className="flex space-x-4 items-center justify-end">
-        //             <li>
-        //                 <NavLink to="/survivor-cast">Survivor Cast</NavLink>
-        //             </li>
-        //             <li>
-        //             <button
-        //                     onClick={handleLogInClick}
-        //                     className="text-white hover:text-blue-600"
-        //                 >Log In</button>
-        //             </li>
-        //             <li>
-        //                 <button
-        //                     onClick={handleSignUpClick}
-        //                     className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-        //                 >Sign Up</button>
-        //             </li>
-        //         </ul>
-        //     </nav>
-        // </header>
         <header className="nav-bar">
             {/* Navbar Flex Container */}
             <nav className="flex items-center justify-between">

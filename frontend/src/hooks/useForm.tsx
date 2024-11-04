@@ -5,6 +5,7 @@ interface UseFormOptions<T extends Record<string, any>> {
     initialValues: T;
     validate: (values: T) => Partial<Record<keyof T, string>>;
     onSubmit: (values: T) => void;
+    requiredFields: Array<keyof T>;
 }
 
 interface UseFormReturn<T extends Record<string, any>> {
@@ -21,6 +22,7 @@ function useForm<T extends Record<string, any>>({
     initialValues,
     validate,
     onSubmit,
+    requiredFields
 }: UseFormOptions<T>): UseFormReturn<T> {
     const [values, setValues] = useState<T>(initialValues);
     const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
@@ -60,7 +62,7 @@ function useForm<T extends Record<string, any>>({
 
     const isSubmitDisabled = 
         Object.values(errors).some((error) => error !== undefined) ||
-        Object.values(values).some((value) => value === "");
+        requiredFields?.some((field) => values[field] === "");
 
     return {
         values,

@@ -19,7 +19,7 @@ const signup = async (req, res) => {
     return res;
   }
 
-  const { username, password } = req.body;
+  const { username, password, firstName, lastName } = req.body;
   let email = req.body.email.toLowerCase();
 
   try {
