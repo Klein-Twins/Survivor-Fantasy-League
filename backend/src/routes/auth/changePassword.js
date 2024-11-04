@@ -33,10 +33,34 @@ const router = express.Router();
  *      responses:
  *          200:
  *              description: OK - User password updated successfully
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: "User password changed successfully"
  *          401:
  *              description: Unauthorized - Old password invalid
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: Unauthorized - password invalid
  *          404:
  *              description: Not Found - Email is not tied to a registered user
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: Not Found - Email is not tied to a registered user
  *          400:
  *              description: Bad request - No email provided | No old password provided | No new password provided | New password is not strong enough | Email is invalid
  *              content:
@@ -54,6 +78,14 @@ const router = express.Router();
  *                                      - Bad Request - Email is invalid
  *          500:
  *              description: Internal Server Error - Failed to update password
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: Internal Server Error - Failed to update password
  *          
  */
 router.post('/changePassword', authController.changePassword);

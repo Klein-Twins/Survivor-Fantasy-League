@@ -55,7 +55,7 @@ const router = express.Router();
  *                                          example: "SurvivorFan69"
  *                                      userProfileId:
  *                                          type: integer
- *                                          example: 123456433
+ *                                          example: 535c5e40-a4bb-4b9b-b6d8-289e8e813b83
  *          400:
  *              description: Bad request - No email provided | No username provided | No password provided | Username is unavailable | Email is unavailable | User password is not strong enough | Email is invalid
  *              content:

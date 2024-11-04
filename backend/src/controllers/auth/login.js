@@ -5,11 +5,10 @@ const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js"
 
 const login = async (req, res) => {
   const requiredFields = ["email", "password"];
-
   if (!validateRequiredRequestFields(req, res, requiredFields, RESPONSE_MESSAGES.LOGIN)) {
     return res;
   }
-
+  
   const { password } = req.body;
   let email = req.body.email.toLowerCase();
 
