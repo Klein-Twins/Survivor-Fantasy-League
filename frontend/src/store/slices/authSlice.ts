@@ -13,16 +13,17 @@ interface LoginError {
     status: number;
 }
 
-const token = sessionStorage.getItem('token');
+const storedToken = sessionStorage.getItem('token');
+const storedUser = sessionStorage.getItem('user');
 const initialState: AuthState = {
-    user: null,
-    isAuthenticated: !!token,
+    user: storedUser ? JSON.parse(storedUser) : null,
+    isAuthenticated: !!storedToken,
     loading: false,
     error: null
 }
 
 export const signupUser = createAsyncThunk<
-    User,
+    { user: User, token: string },
     SignUpFormData,
     { rejectValue: SignupError }
 >('auth/signupUser', async (userData, { rejectWithValue }) => {
@@ -30,7 +31,8 @@ export const signupUser = createAsyncThunk<
         const response = await axios.post('http://localhost:3000/api/auth/signup', userData );
         const { token, user } = response.data;
         sessionStorage.setItem('token', token);
-        return user;
+        sessionStorage.setItem('user', JSON.stringify(user));
+        return { user, token };
     } catch (error: any) {
         return rejectWithValue({
             message: error.response?.data?.message || 'Signup failed',
@@ -40,7 +42,7 @@ export const signupUser = createAsyncThunk<
 });
 
 export const loginUser = createAsyncThunk<
-    User,
+    { user: User, token: string },
     LogInFormData,
     { rejectValue: LoginError }
 >('auth/loginUser', async (userData, { rejectWithValue }) => {
@@ -48,7 +50,8 @@ export const loginUser = createAsyncThunk<
         const response = await axios.post('http://localhost:3000/api/auth/login', userData );
         const { token, user } = response.data;
         sessionStorage.setItem('token', token);
-        return user; //assumes response includes User Object
+        sessionStorage.setItem('user', JSON.stringify(user));
+        return { user, token };
     } catch (error: any) {
         return rejectWithValue({
             message: error.response?.data?.message || 'Signup failed',
@@ -64,7 +67,7 @@ const authSlice = createSlice({
         logout: (state) => {
             state.user = null;
             state.isAuthenticated = false;
-
+            sessionStorage.removeItem('user');
             sessionStorage.removeItem('token');
         }
     },
@@ -77,7 +80,7 @@ const authSlice = createSlice({
             })
             .addCase(signupUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload;
+                state.user = action.payload.user;
                 state.isAuthenticated = true;
             })
             .addCase(signupUser.rejected, (state, action) => {
@@ -96,7 +99,7 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload;
+                state.user = action.payload.user;
                 state.isAuthenticated = true;
             })
             .addCase(loginUser.rejected, (state, action) => {
