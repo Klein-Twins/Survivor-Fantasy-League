@@ -7,11 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../../../store/slices/authSlice";
 import { closeModal } from "../../../store/slices/modalSlice";
+import { LogInFormData, validateLogin } from "../../../utils/auth/formValidation";
+import SubmitButton from "../../ui/forms/SubmitButton";
 
-export interface LogInFormData {
-    email: string;
-    password: string;
-}
 
 const LoginForm: React.FC = () => {
 
@@ -19,17 +17,6 @@ const LoginForm: React.FC = () => {
     const loading = useSelector((state: RootState) => state.auth.loading);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-
-    const validate = (values: LogInFormData) => {
-        const errors: Partial<Record<keyof LogInFormData, string>> = {};
-        if (!/\S+@\S+\.\S+/.test(values.email)) {
-            errors.email = "Please enter a valid email address";
-        }
-        if (values.password.length === 0) {
-            errors.password = "Please enter password";
-        }
-        return errors;
-    };
 
     const onSubmit = async (values: LogInFormData) => {
         console.log("Form submitted successfully", values);
@@ -50,7 +37,7 @@ const LoginForm: React.FC = () => {
 
     const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitDisabled } = useForm<LogInFormData>({
         initialValues: { email: "", password: "" },
-        validate,
+        validate : validateLogin,
         onSubmit,
         requiredFields: ["email", "password"]
     });
@@ -78,13 +65,7 @@ const LoginForm: React.FC = () => {
                 required
             />
             {responseError && <p className="text-red-500 text-center py-2">{responseError.message}</p>}
-            <button
-                type="submit"
-                disabled={isSubmitDisabled}
-                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-400 disabled:hover:bg-blue-500 disabled:opacity-20"
-            >
-                Log In
-            </button>
+            <SubmitButton loading={loading} disabled={isSubmitDisabled} label="Log In" />
         </form>
     );
 };

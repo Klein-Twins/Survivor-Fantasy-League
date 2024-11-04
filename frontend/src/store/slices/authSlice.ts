@@ -1,8 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { AuthState, User } from "../../types/auth.ts";
-import { SignUpFormData } from "../../components/auth/forms/SignupForm.tsx";
-import { LogInFormData } from "../../components/auth/forms/LoginForm.tsx";
+import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
 
 interface SignupError {
     message: string;

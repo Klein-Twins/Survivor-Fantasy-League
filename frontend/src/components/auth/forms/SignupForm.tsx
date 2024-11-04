@@ -8,49 +8,14 @@ import { signupUser } from "../../../store/slices/authSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../../store/store";
 import { closeModal } from "../../../store/slices/modalSlice";
-
-export interface SignUpFormData {
-    username: string;
-    email: string;
-    password: string;
-    confirmPassword: string;
-    firstName: string;
-    lastName: string;
-}
+import SubmitButton from "../../ui/forms/SubmitButton";
+import { SignUpFormData, validateSignUp } from "../../../utils/auth/formValidation";
 
 const SignupForm: React.FC = () => {
     const [responseError, setResponseError] = useState<{ message: string; status: number } | null>(null);
     const loading = useSelector((state: RootState) => state.auth.loading);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
-
-    const validate = (values: SignUpFormData) => {
-        const errors: Partial<Record<keyof SignUpFormData, string>> = {};
-
-        if (!/^[A-Za-z0-9]+$/.test(values.username)) {
-            errors.username = "Username can only contain letters and numbers";
-        }
-        if (values.username.length < 7) {
-            errors.username = "Username must be at least 7 characters long";
-        }
-        if (!/\S+@\S+\.\S+/.test(values.email)) {
-            errors.email = "Please enter a valid email address";
-        }
-        if (!/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(values.password)) {
-            errors.password = "Password must be at least 8 characters long, include at least 1 uppercase letter, 1 lowercase letter, and 1 number, and can include special characters";
-        }
-        if (values.password !== values.confirmPassword) {
-            errors.confirmPassword = "Passwords do not match";
-        }
-        if (values.firstName && !/^[A-Za-z]*$/.test(values.firstName)) {
-            errors.firstName = "First Name can only contain letters";
-        }
-        if (values.lastName && !/^[A-Za-z]*$/.test(values.lastName)) {
-            errors.lastName = "Last Name can only contain letters";
-        }
-
-        return errors;
-    };
 
     const onSubmit = async (values: SignUpFormData) => {
         console.log("Form submitted successfully", values);
@@ -78,7 +43,7 @@ const SignupForm: React.FC = () => {
             firstName: "",
             lastName: ""
         },
-        validate,
+        validate: validateSignUp,
         onSubmit,
         requiredFields: ["username", "email", "password", "confirmPassword"]
     });
@@ -144,13 +109,7 @@ const SignupForm: React.FC = () => {
                 error={errors.lastName}
             />
             {responseError && <p className="text-red-500 text-center py-2">{responseError.message}</p>}
-            <button
-                type="submit"
-                disabled={isSubmitDisabled || loading}
-                className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-400 disabled:hover:bg-blue-500 disabled:opacity-20"
-            >
-                {loading ? "Please Wait..." : "Sign Up"}
-            </button>
+            <SubmitButton loading={loading} disabled={isSubmitDisabled} label="Sign Up" />
         </form>
     );
 };
