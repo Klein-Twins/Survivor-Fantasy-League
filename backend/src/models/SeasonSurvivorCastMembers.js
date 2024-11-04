@@ -36,6 +36,11 @@ class SeasonSurvivorCastMembers extends Model {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'JOB',
+      },
+      IMAGE_URL: {
+        type: DataTypes.STRING(100),
+        allowNull:false,
+        field: 'IMAGE_URL'
       }
     }, {
       sequelize, // Pass the sequelize instance

@@ -51,7 +51,8 @@ const getSurvivorsBySeasonService = async (seasonId) => {
             job: survivor.JOB,
             fromCity: survivor.Survivor.FROM_CITY,
             fromState: survivor.Survivor.FROM_STATE,
-            fromCountry: survivor.Survivor.FROM_COUNTRY
+            fromCountry: survivor.Survivor.FROM_COUNTRY,
+            imageUrl: survivor.IMAGE_URL
         })
     })
 

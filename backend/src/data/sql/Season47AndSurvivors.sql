@@ -26,22 +26,23 @@ DELETE FROM "SSN_SEASONS";
 INSERT INTO "SSN_SEASONS" ("SEASON_ID", "THEME", "LOCATION", "NAME") VALUES (47, 'The New Era 2.0', 'Fiji, Oceania', null);
 
 DELETE FROM "SSN_SURVIVORS";
-Insert Into "SSN_SURVIVORS" ("SURVIVOR_ID", "SEASON_ID", "ORIGINAL_TRIBE_ID", "AGE", "DESCRIPTION", "JOB") VALUES 
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Andy' LIMIT 1), 47, null, 31, '', 'AI Research Assistant'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Anika' LIMIT 1), 47, null, 26, '', 'Marketing Manager'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Aysha' LIMIT 1), 47, null, 32, '', 'Lavo'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Caroline' LIMIT 1), 47, null, 27, '', 'Strategy Consultant'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Gabe' LIMIT 1), 47, null, 26, '', 'Radio Host'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Genevieve' LIMIT 1), 47, null, 33, '', 'Corporate Lawyer'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Rome' LIMIT 1), 47, null, 30, '', 'E-Sports Commentator'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Jon' LIMIT 1), 47, null, 42, '', 'Podcast Host'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Kishan' LIMIT 1), 47, null, 28, '', 'Emergency Room Doctor'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Kyle' LIMIT 1), 47, null, 31, '', 'Construction Worker'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Rachel' LIMIT 1), 47, null, 34, '', 'Graphic Designer'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Sam' LIMIT 1), 47, null, 24, '', 'Sports Recruiter'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Sierra' LIMIT 1), 47, null, 27, '', 'Nurse'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Solomon' LIMIT 1), 47, null, 43, '', 'Medical Device Sales'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Sue' LIMIT 1), 47, null, 59, '', 'Flight School Owner'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Teeny' LIMIT 1), 47, null, 23, '', 'Freelance Writer'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Terran' LIMIT 1), 47, null, 31, '', 'Athlete Marketing Manager'),
-   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Tiyana' LIMIT 1), 47, null, 27, '', 'Flight Attendant');
+
+INSERT INTO "SSN_SURVIVORS" ("SURVIVOR_ID", "SEASON_ID", "ORIGINAL_TRIBE_ID", "AGE", "DESCRIPTION", "JOB", "IMAGE_URL") VALUES 
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Andy' LIMIT 1), 47, null, 31, '', 'AI Research Assistant', 'images/survivors/AndyRueda47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Anika' LIMIT 1), 47, null, 26, '', 'Marketing Manager', 'images/survivors/AnikaDhar47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Aysha' LIMIT 1), 47, null, 32, '', 'Lavo', 'images/survivors/AyshaWelch47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Caroline' LIMIT 1), 47, null, 27, '', 'Strategy Consultant', 'images/survivors/CarolineVidmar47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Gabe' LIMIT 1), 47, null, 26, '', 'Radio Host', 'images/survivors/GabeOrtis47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Genevieve' LIMIT 1), 47, null, 33, '', 'Corporate Lawyer', 'images/survivors/GenevieveMushaluk47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Rome' LIMIT 1), 47, null, 30, '', 'E-Sports Commentator', 'images/survivors/RomeCooney47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Jon' LIMIT 1), 47, null, 42, '', 'Podcast Host', 'images/survivors/JonLovett47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Kishan' LIMIT 1), 47, null, 28, '', 'Emergency Room Doctor', 'images/survivors/KishanPatel47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Kyle' LIMIT 1), 47, null, 31, '', 'Construction Worker', 'images/survivors/KyleOstwald47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Rachel' LIMIT 1), 47, null, 34, '', 'Graphic Designer', 'images/survivors/RachelLaMont47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Sam' LIMIT 1), 47, null, 24, '', 'Sports Recruiter', 'images/survivors/SamPhalen47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Sierra' LIMIT 1), 47, null, 27, '', 'Nurse', 'images/survivors/SierraWright47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Solomon' LIMIT 1), 47, null, 43, '', 'Medical Device Sales', 'images/survivors/SolomonYi47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Sue' LIMIT 1), 47, null, 59, '', 'Flight School Owner', 'images/survivors/SueSmey47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Teeny' LIMIT 1), 47, null, 23, '', 'Freelance Writer', 'images/survivors/TeenyChirichillo47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Terran' LIMIT 1), 47, null, 31, '', 'Athlete Marketing Manager', 'images/survivors/TerranFoster47.jpeg'),
+   ((SELECT "SURVIVOR_ID" FROM "CST_SURVIVORS" WHERE "FIRST_NAME"='Tiyana' LIMIT 1), 47, null, 27, '', 'Flight Attendant', 'images/survivors/TiyanaHallums47.jpeg');
