@@ -38,7 +38,14 @@ class CustomError extends Error {
       throw new CustomError(RESPONSE_MESSAGES.LOGIN.UNAUTHORIZED.statusCode, RESPONSE_MESSAGES.LOGIN.UNAUTHORIZED.message);
     }
   
-    return RESPONSE_MESSAGES.LOGIN.OK;
+    return {
+      statusCode: RESPONSE_MESSAGES.LOGIN.OK.statusCode,
+      message: RESPONSE_MESSAGES.LOGIN.OK.message,
+      user: {
+        username: userRecordTiedToEmail.USER_NAME,
+        userProfileId: userRecordTiedToEmail.USER_PROFILE_ID
+      }
+    };
   };
   
   module.exports = { loginService };

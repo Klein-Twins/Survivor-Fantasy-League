@@ -5,6 +5,7 @@ import { closeModal } from "../../store/slices/modalSlice.ts";
 import SignupForm from "../auth/forms/SignupForm.tsx";
 import LoginForm from "../auth/forms/LoginForm.tsx"
 import Form from "./forms/Form.tsx";
+import LogoutConfirmation from "../auth/LogoutConfirmation.tsx";
 
 interface ModalProps {
     isOpen: boolean;
@@ -30,6 +31,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
             
             {modalType === 'signup' && <Form title={"Sign Up"}><SignupForm /></Form>}
             {modalType === 'login' && <Form title={"Log In"}><LoginForm /></Form>}
+            {modalType === 'logout' && <LogoutConfirmation />}
             </div>
         </div>
     );

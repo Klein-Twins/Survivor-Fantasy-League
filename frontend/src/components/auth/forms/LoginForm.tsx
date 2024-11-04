@@ -1,16 +1,27 @@
 // src/components/auth/forms/LoginForm.tsx
-import React from "react";
+import React, {useState} from "react";
 import FormInput from "../../ui/forms/FormInput";
 import useForm from "../../../hooks/useForm";
+import { AppDispatch, RootState } from "../../../store/store";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../../../store/slices/authSlice";
+import { closeModal } from "../../../store/slices/modalSlice";
 
-interface FormData {
+export interface LogInFormData {
     email: string;
     password: string;
 }
 
 const LoginForm: React.FC = () => {
-    const validate = (values: FormData) => {
-        const errors: Partial<Record<keyof FormData, string>> = {};
+
+    const [responseError, setResponseError] = useState<{message: String; status: number} | null>(null);
+    const loading = useSelector((state: RootState) => state.auth.loading);
+    const navigate = useNavigate();
+    const dispatch = useDispatch<AppDispatch>();
+
+    const validate = (values: LogInFormData) => {
+        const errors: Partial<Record<keyof LogInFormData, string>> = {};
         if (!/\S+@\S+\.\S+/.test(values.email)) {
             errors.email = "Please enter a valid email address";
         }
@@ -20,12 +31,24 @@ const LoginForm: React.FC = () => {
         return errors;
     };
 
-    const onSubmit = (values: FormData) => {
+    const onSubmit = async (values: LogInFormData) => {
         console.log("Form submitted successfully", values);
-        // Handle form submission, e.g., send to API.
+        try {
+            const resultAction = await dispatch(loginUser(values));
+            if(loginUser.fulfilled.match(resultAction)) {
+                console.log('Signin successful', resultAction.payload);
+                dispatch(closeModal());
+                navigate("/");
+            } else {
+                console.error(resultAction.payload);
+                setResponseError(resultAction.payload as {message: string; status: number})
+            }
+        } catch (error) {
+            console.error("An unexpected error occurred");
+        }
     };
 
-    const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitDisabled } = useForm<FormData>({
+    const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitDisabled } = useForm<LogInFormData>({
         initialValues: { email: "", password: "" },
         validate,
         onSubmit,
@@ -54,6 +77,7 @@ const LoginForm: React.FC = () => {
                 error={errors.password}
                 required
             />
+            {responseError && <p className="text-red-500 text-center py-2">{responseError.message}</p>}
             <button
                 type="submit"
                 disabled={isSubmitDisabled}

@@ -14,8 +14,8 @@ const login = async (req, res) => {
   let email = req.body.email.toLowerCase();
 
   try {
-    const responseMessage = await loginService(email, password);
-    res.status(responseMessage.statusCode).json({ message: responseMessage.message });
+    const {statusCode, message, user} = await loginService(email, password);
+    res.status(statusCode).json({message, user});
   } catch (error) {
     console.error("Error in login:", error);
     return errorHandler(error, req, res);
