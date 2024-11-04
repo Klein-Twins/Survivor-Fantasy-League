@@ -58,6 +58,9 @@ paths:
                                   username:
                                       type: string
                                       example: "SurvivorFan69"
+                                  token:
+                                      type: string
+                                      example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3Vydml...
                                   userProfileId:
                                       type: integer
                                       example: 123456433
@@ -127,6 +130,9 @@ paths:
                                       username:
                                           type: string
                                           example: "SurvivorFan69"
+                                      token:
+                                          type: string
+                                          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3Vydml...
                                       userProfileId:
                                           type: integer
                                           example: 535c5e40-a4bb-4b9b-b6d8-289e8e813b83
