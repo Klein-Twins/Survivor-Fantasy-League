@@ -8,7 +8,7 @@ const login = async (req, res) => {
   if (!validateRequiredRequestFields(req, res, requiredFields, RESPONSE_MESSAGES.LOGIN)) {
     return res;
   }
-  
+
   const { password } = req.body;
   let email = req.body.email.toLowerCase();
 
@@ -16,7 +16,7 @@ const login = async (req, res) => {
     const {statusCode, message, user} = await loginService(email, password);
     res.status(statusCode).json({message, user});
   } catch (error) {
-    console.error("Error in login:", error);
+    //console.error("Error in login:", error);
     return errorHandler(error, req, res);
   }
 };
