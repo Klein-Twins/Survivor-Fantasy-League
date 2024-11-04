@@ -27,7 +27,9 @@ export const signupUser = createAsyncThunk<
 >('auth/signupUser', async (userData, { rejectWithValue }) => {
     try {
         const response = await axios.post('http://localhost:3000/api/auth/signup', userData );
-        return response.data.user; //assumes response includes User Object
+        const { token, user } = response.data;
+        sessionStorage.setItem('token', token);
+        return user;
     } catch (error: any) {
         return rejectWithValue({
             message: error.response?.data?.message || 'Signup failed',
@@ -43,7 +45,9 @@ export const loginUser = createAsyncThunk<
 >('auth/loginUser', async (userData, { rejectWithValue }) => {
     try {
         const response = await axios.post('http://localhost:3000/api/auth/login', userData );
-        return response.data.user; //assumes response includes User Object
+        const { token, user } = response.data;
+        sessionStorage.setItem('token', token);
+        return user; //assumes response includes User Object
     } catch (error: any) {
         return rejectWithValue({
             message: error.response?.data?.message || 'Signup failed',
