@@ -1,8 +1,10 @@
-// src/controllers/auth/signup.js
+require('dotenv').config();
 const { signupService } = require("../../services/auth/signup.js");
 const { validateRequiredRequestFields } = require("./utils/validateRequest.js");
 const errorHandler = require("../../middleware/errorHandler.js");
 const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
+
+const { generateToken } = require("../../utils/jwt.js");
 
 const signup = async (req, res) => {
     const requiredFields = ["email", "username", "password"];
@@ -15,7 +17,8 @@ const signup = async (req, res) => {
 
     try {
         const { statusCode, message, user } = await signupService({ username, email, password, firstName, lastName });
-        res.status(statusCode).json({ message, user });
+        const token = generateToken({ user })
+        res.status(statusCode).json({ message, token, user });
     } catch (error) {
         return errorHandler(error, req, res);
     }

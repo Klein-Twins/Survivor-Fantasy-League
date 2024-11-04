@@ -1,7 +1,10 @@
+require('dotenv').config();
 const { loginService } = require("../../services/auth/login.js");
 const { validateRequiredRequestFields } = require('./utils/validateRequest.js');
 const errorHandler = require("../../middleware/errorHandler.js");
 const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
+
+const { generateToken } = require("../../utils/jwt.js");
 
 const login = async (req, res) => {
   const requiredFields = ["email", "password"];
@@ -14,7 +17,8 @@ const login = async (req, res) => {
 
   try {
     const {statusCode, message, user} = await loginService(email, password);
-    res.status(statusCode).json({message, user});
+    const token = generateToken({ user })
+    res.status(statusCode).json({ message, token, user });
   } catch (error) {
     //console.error("Error in login:", error);
     return errorHandler(error, req, res);
