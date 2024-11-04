@@ -13,9 +13,10 @@ interface LoginError {
     status: number;
 }
 
+const token = sessionStorage.getItem('token');
 const initialState: AuthState = {
     user: null,
-    isAuthenticated: false,
+    isAuthenticated: !!token,
     loading: false,
     error: null
 }
@@ -63,6 +64,8 @@ const authSlice = createSlice({
         logout: (state) => {
             state.user = null;
             state.isAuthenticated = false;
+
+            sessionStorage.removeItem('token');
         }
     },
     extraReducers: (builder) => {
