@@ -1,17 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-import { AuthState, User } from "../../types/auth.ts";
+import { AuthState, User, ResponseError } from "../../types/auth.ts";
 import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
-
-interface SignupError {
-    message: string;
-    status: number;
-}
-
-interface LoginError {
-    message: string;
-    status: number;
-}
 
 const storedToken = sessionStorage.getItem('token');
 const storedUser = sessionStorage.getItem('user');
@@ -25,7 +15,7 @@ const initialState: AuthState = {
 export const signupUser = createAsyncThunk<
     { user: User, token: string },
     SignUpFormData,
-    { rejectValue: SignupError }
+    { rejectValue: ResponseError }
 >('auth/signupUser', async (userData, { rejectWithValue }) => {
     try {
         const response = await axios.post('http://localhost:3000/api/auth/signup', userData );
@@ -36,7 +26,7 @@ export const signupUser = createAsyncThunk<
     } catch (error: any) {
         return rejectWithValue({
             message: error.response?.data?.message || 'Signup failed',
-            status: error.response?.status || 500 // Fallback to 500 if no status is available
+            statusCode: error.response?.status || 500 // Fallback to 500 if no status is available
         });
     }
 });
@@ -44,7 +34,7 @@ export const signupUser = createAsyncThunk<
 export const loginUser = createAsyncThunk<
     { user: User, token: string },
     LogInFormData,
-    { rejectValue: LoginError }
+    { rejectValue: ResponseError }
 >('auth/loginUser', async (userData, { rejectWithValue }) => {
     try {
         const response = await axios.post('http://localhost:3000/api/auth/login', userData );
@@ -55,7 +45,7 @@ export const loginUser = createAsyncThunk<
     } catch (error: any) {
         return rejectWithValue({
             message: error.response?.data?.message || 'Signup failed',
-            status: error.response?.status || 500 // Fallback to 500 if no status is available
+            statusCode: error.response?.status || 500 // Fallback to 500 if no status is available
         });
     }
 });
@@ -82,15 +72,17 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.isAuthenticated = true;
+                state.error = null;
             })
             .addCase(signupUser.rejected, (state, action) => {
                 state.loading = false;
-                if (action.payload) {
-                    state.error = action.payload.message; // or customize as needed
-                    console.error(`Error ${action.payload.status}: ${action.payload.message}`);
-                } else {
-                    state.error = 'Unexpected error...'; // Fallback error message
-                }
+                state.error = action.payload ? {
+                    message: action.payload.message,
+                    statusCode: action.payload.statusCode
+                } : {
+                    message: 'Unexpected error...',
+                    statusCode: 500
+                };
             })
             //Log in user custom action
             .addCase(loginUser.pending, (state) => {
@@ -101,15 +93,17 @@ const authSlice = createSlice({
                 state.loading = false;
                 state.user = action.payload.user;
                 state.isAuthenticated = true;
+                state.error = null;
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                if (action.payload) {
-                    state.error = action.payload.message; // or customize as needed
-                    console.error(`Error ${action.payload.status}: ${action.payload.message}`);
-                } else {
-                    state.error = 'Unexpected error...'; // Fallback error message
-                }
+                state.error = action.payload ? {
+                    message: action.payload.message,
+                    statusCode: action.payload.statusCode
+                } : {
+                    message: 'Unexpected error...',
+                    statusCode: 500
+                };
             });
     },
 });
