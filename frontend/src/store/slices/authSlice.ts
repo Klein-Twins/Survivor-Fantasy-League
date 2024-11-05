@@ -3,6 +3,8 @@ import { AuthState, User, ResponseError } from "../../types/auth.ts";
 import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
 import { loginUserService, logoutUserService, signupUserService } from "../../services/auth/authService.ts";
 
+import { closeModal } from "./modalSlice.ts";
+
 enum AuthActionTypes {
     Signup = 'auth/signupUser',
     Login = 'auth/loginUser',
@@ -129,8 +131,10 @@ const authSlice = createSlice({
                 state.isAuthenticated = false;
                 state.error = null;
             })
-            .addCase(logoutUser.rejected, (state, action) => setRejectedState(state, action, 'Logout'));
-            
+            .addCase(logoutUser.rejected, (state, action) => setRejectedState(state, action, 'Logout'))
+            .addCase(closeModal, (state) => {
+                state.error = null;
+            });
     },
 });
 
