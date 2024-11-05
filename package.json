@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "install-dependencies": "npm install && npm run install-dependencies --prefix backend && npm run install-dependencies --prefix frontend",
     "backend": "npm run dev --prefix backend",
     "frontend": "npm start --prefix frontend",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
