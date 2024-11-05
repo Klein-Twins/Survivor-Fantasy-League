@@ -3,6 +3,7 @@ const PasswordModel = require("../../models/Password");
 const { validateEmail } = require('../../controllers/auth/utils/validateRequest.js');
 const { checkPasswordsMatch } = require('../../controllers/auth/utils/passwordUtils.js');
 const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
+const { generateToken } = require("./tokenService.js");
 
 class CustomError extends Error {
     constructor(statusCode, message) {
@@ -37,6 +38,8 @@ class CustomError extends Error {
     if (!await checkPasswordsMatch(password, userPasswordRecord.PASSWORD)) {
       throw new CustomError(RESPONSE_MESSAGES.LOGIN.UNAUTHORIZED.statusCode, RESPONSE_MESSAGES.LOGIN.UNAUTHORIZED.message);
     }
+
+    const token = generateToken({ user: userRecordTiedToEmail.USER_ID });
   
     return {
       statusCode: RESPONSE_MESSAGES.LOGIN.OK.statusCode,
@@ -44,7 +47,8 @@ class CustomError extends Error {
       user: {
         username: userRecordTiedToEmail.USER_NAME,
         userProfileId: userRecordTiedToEmail.USER_PROFILE_ID
-      }
+      },
+      token,
     };
   };
   

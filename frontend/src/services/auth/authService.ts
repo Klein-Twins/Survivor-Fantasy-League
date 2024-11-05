@@ -5,12 +5,16 @@ const API_URL = 'http://localhost:3000/api/auth';
 
 export const loginUserService = async (userData: LogInFormData) => {
     const response = await axios.post(`${API_URL}/login`, userData);
-    return response.data;
+    const token = response.headers['authorization']?.split(' ')[1];
+    const user = response.data.user;
+    return { token, user };
 };
 
 export const signupUserService = async (userData: SignUpFormData) => {
     const response = await axios.post(`${API_URL}/signup`, userData);
-    return response.data;
+    const token = response.headers['authorization']?.split(' ')[1];
+    const user = response.data.user;
+    return { token, user };
 };
 
 export const logoutUserService = async (token: string) => {

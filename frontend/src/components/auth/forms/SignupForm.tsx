@@ -20,7 +20,6 @@ const SignupForm: React.FC = () => {
     const onSubmit = async (values: SignUpFormData) => {
         const resultAction = await dispatch(signupUser(values));
         if(signupUser.fulfilled.match(resultAction)) {
-            console.log('Signup successful', resultAction.payload);
             dispatch(closeModal());
             navigate("/");
         }

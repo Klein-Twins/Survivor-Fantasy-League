@@ -16,7 +16,6 @@ const changePassword = async (req, res) => {
         const { statusCode, message } = await changePasswordService(email, oldPassword, newPassword);
         res.status(statusCode).json({ message });
     } catch (error) {
-        //console.error("Error in changePassword:", error);
         return errorHandler(error, req, res);
     }
 };

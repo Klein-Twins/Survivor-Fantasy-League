@@ -1,4 +1,4 @@
-const { verifyToken, blacklistToken } = require('./tokenService');
+const { verifyToken, blacklistToken } = require('./tokenService.js');
 
 const logout = async (token) => {
     verifyToken(token); // Ensure token is valid

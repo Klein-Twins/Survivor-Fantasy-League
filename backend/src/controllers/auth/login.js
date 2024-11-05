@@ -4,8 +4,6 @@ const { validateRequiredRequestFields } = require('./utils/validateRequest.js');
 const errorHandler = require("../../middleware/errorHandler.js");
 const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
 
-const { generateToken } = require("../../utils/jwt.js");
-
 const login = async (req, res) => {
   const requiredFields = ["email", "password"];
   if (!validateRequiredRequestFields(req, res, requiredFields, RESPONSE_MESSAGES.LOGIN)) {
@@ -16,11 +14,11 @@ const login = async (req, res) => {
   let email = req.body.email.toLowerCase();
 
   try {
-    const {statusCode, message, user} = await loginService(email, password);
-    const token = generateToken({ user })
-    res.status(statusCode).json({ message, token, user });
+    const {statusCode, message, user, token} = await loginService(email, password);
+    //res.setHeader('Authorization', `Bearer ${token}`);
+    res.set('Authorization', `Bearer ${token}`);
+    res.status(statusCode).json({ message, user });
   } catch (error) {
-    //console.error("Error in login:", error);
     return errorHandler(error, req, res);
   }
 };
