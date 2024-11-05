@@ -1,11 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthState, User, ResponseError } from "../../types/auth.ts";
 import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
-import { loginUserService, signupUserService } from "../../services/auth/authService.ts";
+import { loginUserService, logoutUserService, signupUserService } from "../../services/auth/authService.ts";
 
 enum AuthActionTypes {
     Signup = 'auth/signupUser',
     Login = 'auth/loginUser',
+    Logout = 'auth/logoutUser'
 }
 
 const storedToken = sessionStorage.getItem('token');
@@ -62,6 +63,20 @@ export const loginUser = createAsyncThunk<UserActionPayload, LogInFormData, { re
         }
     }
 );
+export const logoutUser = createAsyncThunk<void, void, { rejectValue: ResponseError }>(
+    AuthActionTypes.Logout,
+    async(_, { rejectWithValue}) => {
+        const token = sessionStorage.getItem('token');
+        try {
+            if(token) {
+                await logoutUserService(token);
+            }
+            sessionManager.clear();
+        } catch (error : any) {
+            return rejectWithValue(handleError(error));
+        }
+    }
+)
 
 const setUserState = (state: AuthState, action: { payload?: UserActionPayload }) => {
     state.loading = false;
@@ -105,7 +120,17 @@ const authSlice = createSlice({
             //Log in action
             .addCase(loginUser.pending, setLoadingState)
             .addCase(loginUser.fulfilled, setUserState)
-            .addCase(loginUser.rejected, (state, action) => setRejectedState(state, action, 'Login'));
+            .addCase(loginUser.rejected, (state, action) => setRejectedState(state, action, 'Login'))
+            //Log out action
+            .addCase(logoutUser.pending, setLoadingState)
+            .addCase(logoutUser.fulfilled, (state) => {
+                state.loading = false;
+                state.user = null;
+                state.isAuthenticated = false;
+                state.error = null;
+            })
+            .addCase(logoutUser.rejected, (state, action) => setRejectedState(state, action, 'Logout'));
+            
     },
 });
 

@@ -12,3 +12,12 @@ export const signupUserService = async (userData: SignUpFormData) => {
     const response = await axios.post(`${API_URL}/signup`, userData);
     return response.data;
 };
+
+export const logoutUserService = async (token: string) => {
+    const response = await axios.post(`${API_URL}/logout`, {}, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return response.data;
+}

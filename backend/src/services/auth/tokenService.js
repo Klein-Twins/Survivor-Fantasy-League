@@ -2,10 +2,9 @@ require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const { JWT_SECRET, JWT_EXPIRATION } = process.env;
 
-const generateToken = (payload) => {
+const blacklistedTokens = new Set(); // Use Set for quick lookups - eventually move to database...
 
-    //Should be generated at login and signup.
-    //It should use the user object (user = {userId, userProfileId} and date)
+const generateToken = (payload) => {
     return jwt.sign(
         {
             ...payload,
@@ -24,14 +23,10 @@ const verifyToken = (token) => {
     }
 };
 
-// tokenService.js
-const blacklistedTokens = new Set(); // Use a Set for quick lookups
-
 const blacklistToken = (token) => {
     blacklistedTokens.add(token);
 };
 
-// Function to check if a token is blacklisted
 const isTokenBlacklisted = (token) => {
     return blacklistedTokens.has(token);
 };

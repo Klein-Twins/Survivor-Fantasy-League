@@ -14,6 +14,15 @@ const swaggerDefinition = {
             url: `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}`
         },
     ],
+    components: {
+        securitySchemes: {
+            bearerAuth: {
+                type: 'http',
+                scheme: 'bearer',
+                bearerFormat: 'JWT', // Optional, but good to specify
+            },
+        },
+    },
 };
 
 //Options for swagger-jsdoc
