@@ -1,5 +1,5 @@
 // src/components/auth/forms/SignupForm.tsx
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import FormInput from "../../ui/forms/FormInput";
@@ -12,25 +12,16 @@ import SubmitButton from "../../ui/forms/SubmitButton";
 import { SignUpFormData, validateSignUp } from "../../../utils/auth/formValidation";
 
 const SignupForm: React.FC = () => {
-    const [responseError, setResponseError] = useState<{ message: string; status: number } | null>(null);
+    const responseError = useSelector((state: RootState) => state.auth.error);
     const loading = useSelector((state: RootState) => state.auth.loading);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     const onSubmit = async (values: SignUpFormData) => {
-        console.log("Form submitted successfully", values);
-        try {
-            const resultAction = await dispatch(signupUser(values));
-            if(signupUser.fulfilled.match(resultAction)) {
-                console.log('Signup successful', resultAction.payload);
-                dispatch(closeModal());
-                navigate("/");
-            } else {
-                console.error(resultAction.payload);
-                setResponseError(resultAction.payload as {message: string; status: number})
-            }
-        } catch (error) {
-            console.error("An unexpected error occurred");
+        const resultAction = await dispatch(signupUser(values));
+        if(signupUser.fulfilled.match(resultAction)) {
+            dispatch(closeModal());
+            navigate("/");
         }
     };
 

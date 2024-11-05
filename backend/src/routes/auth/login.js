@@ -37,6 +37,9 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  example: "User authenticated successfully"
+ *                              token:
+ *                                  type: string
+ *                                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3Vydml...
  *                              user:
  *                                  type: object
  *                                  properties:

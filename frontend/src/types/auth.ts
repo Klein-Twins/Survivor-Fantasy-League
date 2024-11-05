@@ -7,5 +7,10 @@ export interface AuthState {
     user: User | null;
     isAuthenticated: boolean;
     loading: boolean;
-    error: string | null
+    error: ResponseError | null
+}
+
+export interface ResponseError {
+    message: string;
+    statusCode: number;
 }

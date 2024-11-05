@@ -47,6 +47,9 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  example: "User created successfully"
+ *                              token:
+ *                                  type: string
+ *                                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3Vydml...
  *                              user:
  *                                  type: object
  *                                  properties:
@@ -56,6 +59,7 @@ const router = express.Router();
  *                                      userProfileId:
  *                                          type: integer
  *                                          example: 535c5e40-a4bb-4b9b-b6d8-289e8e813b83
+ *
  *          400:
  *              description: Bad request - No email provided | No username provided | No password provided | Username is unavailable | Email is unavailable | User password is not strong enough | Email is invalid
  *              content:

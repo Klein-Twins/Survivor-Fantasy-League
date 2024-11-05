@@ -4,9 +4,13 @@ const routes = require('./src/routes/index.js');
 const { swaggerUi, swaggerSpec } = require('./src/config/swagger.js');
 const path = require('path');
 
+const corsOptions = {
+    origin: '*', //Replace with front end  URL in production
+    exposedHeaders: ['Authorization'],
+}
 
 const app = express();
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Load routes
