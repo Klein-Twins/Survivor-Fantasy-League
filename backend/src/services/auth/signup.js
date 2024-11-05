@@ -5,6 +5,7 @@ const { v4: uuidv4 } = require("uuid");
 const { validateEmail } = require("../../controllers/auth/utils/validateRequest.js");
 const { getHashedPassword, isPasswordStrong } = require("../../controllers/auth/utils/passwordUtils.js");
 const { RESPONSE_MESSAGES } = require("../../routes/ResponseMessageConstants.js");
+const { generateToken } = require("./tokenService.js");
 
 class CustomError extends Error {
     constructor(statusCode, message) {
@@ -61,6 +62,8 @@ const signupService = async ({ username, email, password, firstName, lastName })
         PASSWORD_SEQ: 1,
     });
 
+    const token = generateToken({ user: userRecord.USER_ID });
+
     return {
         statusCode: RESPONSE_MESSAGES.SIGNUP.CREATED.statusCode,
         message: RESPONSE_MESSAGES.SIGNUP.CREATED.message,
@@ -68,6 +71,7 @@ const signupService = async ({ username, email, password, firstName, lastName })
             username: userRecord.USER_NAME,
             userProfileId: userRecord.USER_PROFILE_ID,
         },
+        token,
     };
 };
 

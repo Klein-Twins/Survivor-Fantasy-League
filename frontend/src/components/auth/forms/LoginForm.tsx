@@ -1,37 +1,28 @@
 // src/components/auth/forms/LoginForm.tsx
-import React, {useState} from "react";
+import React from "react";
 import FormInput from "../../ui/forms/FormInput";
 import useForm from "../../../hooks/useForm";
-import { AppDispatch, RootState } from "../../../store/store";
+import { AppDispatch, RootState } from "../../../store/store.ts";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../../store/slices/authSlice";
-import { closeModal } from "../../../store/slices/modalSlice";
-import { LogInFormData, validateLogin } from "../../../utils/auth/formValidation";
-import SubmitButton from "../../ui/forms/SubmitButton";
+import { loginUser } from "../../../store/slices/authSlice.ts";
+import { closeModal } from "../../../store/slices/modalSlice.ts";
+import { LogInFormData, validateLogin } from "../../../utils/auth/formValidation.ts";
+import SubmitButton from "../../ui/forms/SubmitButton.tsx";
 
 
 const LoginForm: React.FC = () => {
 
-    const [responseError, setResponseError] = useState<{message: String; status: number} | null>(null);
+    const responseError = useSelector((state: RootState) => state.auth.error);
     const loading = useSelector((state: RootState) => state.auth.loading);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
 
     const onSubmit = async (values: LogInFormData) => {
-        console.log("Form submitted successfully", values);
-        try {
-            const resultAction = await dispatch(loginUser(values));
-            if(loginUser.fulfilled.match(resultAction)) {
-                console.log('Signin successful', resultAction.payload);
-                dispatch(closeModal());
-                navigate("/");
-            } else {
-                console.error(resultAction.payload);
-                setResponseError(resultAction.payload as {message: string; status: number})
-            }
-        } catch (error) {
-            console.error("An unexpected error occurred");
+        const resultAction = await dispatch(loginUser(values));
+        if(loginUser.fulfilled.match(resultAction)) {
+            dispatch(closeModal());
+            navigate("/");
         }
     };
 

@@ -1,18 +1,27 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { closeModal } from "../../store/slices/modalSlice.ts";
-import { logout } from "../../store/slices/authSlice.ts";
+import { logoutUser } from "../../store/slices/authSlice.ts";
+import { useNavigate } from "react-router-dom";
+import { AppDispatch } from "../../store/store.ts";
 
 const LogoutConfirmation: React.FC = () => {
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
+    const navigate = useNavigate();
 
     function handleNoClick() {
         dispatch(closeModal());
     }
 
-    function handleYesClick() {
-        dispatch(logout());
-        dispatch(closeModal());
+    async function handleYesClick() {
+        const resultAction = await dispatch(logoutUser());
+        if(logoutUser.fulfilled.match(resultAction)) {
+            console.log('Logout successful', resultAction.payload);
+            dispatch(closeModal());
+            navigate("/");
+        } else {
+            dispatch(closeModal());
+        }
     }
 
     return (
