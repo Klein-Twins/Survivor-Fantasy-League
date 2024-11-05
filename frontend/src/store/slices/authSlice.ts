@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
 import { AuthState, User, ResponseError } from "../../types/auth.ts";
 import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
+import { loginUserService, signupUserService } from "../../services/auth/authService.ts";
 
 const storedToken = sessionStorage.getItem('token');
 const storedUser = sessionStorage.getItem('user');
@@ -12,22 +12,32 @@ const initialState: AuthState = {
     error: null
 }
 
+const setSession = (token: string, user: User) => {
+    sessionStorage.setItem('token', token);
+    sessionStorage.setItem('user', JSON.stringify(user));
+}
+
+const clearSession = () => {
+    sessionStorage.removeItem('token');
+    sessionStorage.removeItem('user')
+}
+
+const handleError = (error: any) => ({
+    message: error.response?.data?.message || 'Unexpected error...',
+    statusCode: error.response?.status || 500
+});
+
 export const signupUser = createAsyncThunk<
     { user: User, token: string },
     SignUpFormData,
     { rejectValue: ResponseError }
 >('auth/signupUser', async (userData, { rejectWithValue }) => {
     try {
-        const response = await axios.post('http://localhost:3000/api/auth/signup', userData );
-        const { token, user } = response.data;
-        sessionStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(user));
+        const { token, user } = await signupUserService(userData);
+        setSession(token, user);
         return { user, token };
     } catch (error: any) {
-        return rejectWithValue({
-            message: error.response?.data?.message || 'Signup failed',
-            statusCode: error.response?.status || 500 // Fallback to 500 if no status is available
-        });
+        return rejectWithValue(handleError(error));
     }
 });
 
@@ -37,16 +47,11 @@ export const loginUser = createAsyncThunk<
     { rejectValue: ResponseError }
 >('auth/loginUser', async (userData, { rejectWithValue }) => {
     try {
-        const response = await axios.post('http://localhost:3000/api/auth/login', userData );
-        const { token, user } = response.data;
-        sessionStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(user));
+        const { token, user } = await loginUserService(userData);
+        setSession(token, user);
         return { user, token };
     } catch (error: any) {
-        return rejectWithValue({
-            message: error.response?.data?.message || 'Signup failed',
-            statusCode: error.response?.status || 500 // Fallback to 500 if no status is available
-        });
+        return rejectWithValue(handleError(error));
     }
 });
 
@@ -57,8 +62,8 @@ const authSlice = createSlice({
         logout: (state) => {
             state.user = null;
             state.isAuthenticated = false;
-            sessionStorage.removeItem('user');
-            sessionStorage.removeItem('token');
+            state.error = null;
+            clearSession();
         }
     },
     extraReducers: (builder) => {
@@ -76,13 +81,10 @@ const authSlice = createSlice({
             })
             .addCase(signupUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload ? {
-                    message: action.payload.message,
-                    statusCode: action.payload.statusCode
-                } : {
-                    message: 'Unexpected error...',
+                state.error = action.payload || {
+                    message: 'Signup Failed',
                     statusCode: 500
-                };
+                }
             })
             //Log in user custom action
             .addCase(loginUser.pending, (state) => {
@@ -97,13 +99,10 @@ const authSlice = createSlice({
             })
             .addCase(loginUser.rejected, (state, action) => {
                 state.loading = false;
-                state.error = action.payload ? {
-                    message: action.payload.message,
-                    statusCode: action.payload.statusCode
-                } : {
-                    message: 'Unexpected error...',
+                state.error = action.payload || {
+                    message: 'Signup Failed',
                     statusCode: 500
-                };
+                }
             });
     },
 });
