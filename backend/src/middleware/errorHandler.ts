@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { RESPONSE_MESSAGES } from "../routes/ResponseMessageConstants";
 
-interface CustomError extends Error {
+export interface CustomError extends Error {
   statusCode?: number;
 }
 
