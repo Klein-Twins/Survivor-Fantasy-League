@@ -1,48 +1,54 @@
 import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
 import initModels from '../models/InitModels';
-dotenv.config();
+import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME, NODE_ENV } from './config';
 
 interface DbConfig {
-  username: string | undefined;
-  password: string | undefined;
-  database: string | undefined;
-  host: string | undefined;
+  username: string
+  password: string
+  database: string
+  host: string
+  port: number
   dialect: 'postgres';
 }
+
 type Environment = 'development' | 'test' | 'production';
 
 const dbConfig: Record<Environment, DbConfig> = {
   development: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    host: process.env.DB_HOST,
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
+    database: DB_NAME,
+    host: DB_HOST,
+    port: DB_PORT,
     dialect: 'postgres',
   },
   test: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: `${process.env.DB_NAME}_tests`,
-    host: process.env.DB_HOST,
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
+    database: `${DB_HOST}_tests`,
+    host: DB_HOST,
+    port: DB_PORT,
     dialect: 'postgres',
   },
   production: {
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: `${process.env.DB_NAME}_production`,
-    host: process.env.DB_HOST,
+    username: DB_USERNAME,
+    password: DB_PASSWORD,
+    database: `${DB_HOST}_production`,
+    host: DB_HOST,
+    port: DB_PORT,
     dialect: 'postgres',
   },
 };
 
-const currentConfig: DbConfig = dbConfig[process.env.NODE_ENV as Environment || 'development'];
+const currentConfig: DbConfig = dbConfig[NODE_ENV as Environment || 'development'];
 
 // Create a new Sequelize instance
 const sequelize = new Sequelize(currentConfig.database!, currentConfig.username!, currentConfig.password!, {
   host: currentConfig.host,
+  port: currentConfig.port,
   dialect: currentConfig.dialect,
-  logging: true, // Set to true for visibility of SQL queries
+  logging: false, // Set to true for visibility of SQL queries
 });
 
 // Testing the connection
