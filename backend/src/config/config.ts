@@ -11,7 +11,7 @@ const requiredEnvVars = [
     'JWT_SECRET',
     'APP_HOST',
     'APP_PORT',
-    'PROTOCOL',
+    'APP_PROTOCOL',
     'NODE_ENV'
 ]
 

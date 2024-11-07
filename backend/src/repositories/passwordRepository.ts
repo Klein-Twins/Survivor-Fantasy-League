@@ -57,7 +57,7 @@ const passwordRepository = {
     getActivePassword: async (user: UserAttributes) : Promise<PasswordAttributes | null> => {
         const userPasswords = await models.Password.findAll({
             where: { USER_ID : user.USER_ID, ACTIVE : true},
-            order: ['createdAt', 'DESC']
+            order: [['createdAt', 'DESC']]
         })
 
         if(userPasswords.length == 0) return null;

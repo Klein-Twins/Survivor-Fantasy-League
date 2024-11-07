@@ -1,6 +1,6 @@
-import { SeasonSurvivorWithDetails, SurvivorObject } from "../../types/survivorTypes";
+import { SeasonSurvivorWithDetailsAttributes, SurvivorWithDetailsObject} from "../../types/survivor/survivorTypes"
 
-export const transformSurvivorWithDetailsData = (member: SeasonSurvivorWithDetails): SurvivorObject => ({
+export const transformSurvivorWithDetailsData = (member: SeasonSurvivorWithDetailsAttributes): SurvivorWithDetailsObject => ({
     survivorId: member.SURVIVOR_ID,
     seasonId: member.SEASON_ID,
     originalTribeId: member.ORIGINAL_TRIBE_ID,

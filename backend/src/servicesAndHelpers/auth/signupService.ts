@@ -52,7 +52,7 @@ const signupService = {
      */
     signup: async (fields: SignupFields): Promise<AuthSignupResponseData> => {
         // Step 1: Check if the email is already tied to an existing account
-        if (await userRepository.findUserByEmail(fields.email)) {
+        if (await userRepository.findUserByEmail(fields.email.toLowerCase())) {
             throw errorFactory({
                 message: 'Email already tied to account',
                 statusCode: 400

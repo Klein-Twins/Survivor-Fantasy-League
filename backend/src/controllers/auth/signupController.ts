@@ -39,17 +39,14 @@ const signupController = {
      * The signup service is responsible for creating the user and generating the JWT token.
      */
     signup: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { username, password, firstName, lastName, email } = req.body;
-
-        const requestData: SignupFields = {
-            username,
-            password,
-            firstName,
-            lastName,
-            email: email.toLowerCase()
-        };
-
         try {
+            const requestData : SignupFields = {
+                username: req.body.username,
+                password: req.body.password,
+                firstName: req.body.firstName,
+                lastName: req.body.lastName,
+                email: req.body.email
+            }
             validateSignupRequestData(requestData);
 
             // Create a new user and generate a JWT token using the signup service

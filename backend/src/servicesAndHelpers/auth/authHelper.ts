@@ -41,7 +41,7 @@ export const validateLoginRequestData = (fields: LoginFields) => {
  * const signupData: SignupFields = { email: 'test@example.com', username: 'user123', password: 'Password123!', firstName: 'John', lastName: 'Doe' };
  * await validateSignupRequestData(signupData); // Throws an error if any field is invalid.
  */
-export const validateSignupRequestData = async ({ email, username, password, firstName, lastName }: SignupFields) => {
+export const validateSignupRequestData = ({ email, username, password, firstName, lastName }: SignupFields) => {
     if (!email || email.length === 0) throw errorFactory({ message: 'Missing email', statusCode: 400 });
     if (!password || password.length === 0) throw errorFactory({ message: 'Missing password', statusCode: 400 });
     if (!username || username.length === 0) throw errorFactory({ message: 'Missing username', statusCode: 400 });

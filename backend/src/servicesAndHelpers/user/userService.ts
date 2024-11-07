@@ -74,7 +74,7 @@ const userService = {
       userId,
       userProfileId,
       fields.username,
-      fields.email,
+      fields.email.toLowerCase(),
       fields.firstName,
       fields.lastName
     );
@@ -87,10 +87,7 @@ const userService = {
     }
   
     // Create the password in the password repository
-    const passwordRecord = await passwordRepository.createPassword(
-      userRecord, 
-      fields.password
-    );
+    const passwordRecord = passwordService.createPassword(userRecord, fields.password);
   
     if (!passwordRecord) {
       throw errorFactory({

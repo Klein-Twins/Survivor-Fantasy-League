@@ -42,7 +42,7 @@ const loginService = {
         }
 
         // Step 2: Find User by Email
-        const userRecord = await userRepository.findUserByEmail(email);
+        const userRecord = await userRepository.findUserByEmail(email.toLowerCase());
         if (!userRecord) {
             throw errorFactory({
                 message: "No account tied to the provided email.",

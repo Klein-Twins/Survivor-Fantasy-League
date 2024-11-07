@@ -23,13 +23,13 @@ import { NODE_ENV } from '../config/config';
  */
 const errorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
   // Log the error stack to the console in development environments for debugging
-  console.log(err.stack);
+  console.log(err);
 
   // Send the error response back to the client
   res.status(err.statusCode || 500).json({
     message: err.message || 'Internal Server Error', // Error message to be sent in the response
     statusCode: err.statusCode || 500, // HTTP status code, defaults to 500 if not specified
-    stack: NODE_ENV === 'production' ? null : err.stack, // Include stack trace only in non-production environments
+    stack: (NODE_ENV !== 'production' && err.status === 500) || NODE_ENV === 'production' ? undefined : err.stack, // Include stack trace only in non-production environments
   });
 };
 

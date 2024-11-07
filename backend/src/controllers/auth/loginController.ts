@@ -44,15 +44,8 @@ const loginController = {
      * The login process involves checking the user's credentials and generating a JWT token upon successful login.
      */
     login: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { email, password } = req.body;
-        
-        // Prepare login data, ensuring the email is lowercase
-        const requestData: LoginFields = {
-            email: email.toLowerCase(),
-            password
-        };
-
         try {
+            const requestData = {email: req.body.email, password : req.body.password};
             validateLoginRequestData(requestData);
 
             const responseData: AuthLoginResponseData = await authService.loginService.login(requestData);
