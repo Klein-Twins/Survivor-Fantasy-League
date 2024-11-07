@@ -1,17 +1,24 @@
-import { SeasonSurvivorWithDetailsAttributes, SurvivorWithDetailsObject} from "../../types/survivor/survivorTypes"
+import { SeasonSurvivorWithDetailsAttributes, SeasonSurvivorCastMembersInstance, SurvivorWithDetailsObject} from "../../types/survivor/survivorTypes"
+import { SurvivorsAttributes } from "../../models/Survivors";
 
-export const transformSurvivorWithDetailsData = (member: SeasonSurvivorWithDetailsAttributes): SurvivorWithDetailsObject => ({
-    survivorId: member.SURVIVOR_ID,
-    seasonId: member.SEASON_ID,
-    originalTribeId: member.ORIGINAL_TRIBE_ID,
-    age: member.AGE,
-    description: member.DESCRIPTION,
-    job: member.JOB,
-    imageUrl: member.IMAGE_URL,
-    firstName: member.Survivor?.FIRST_NAME,
-    lastName: member.Survivor?.LAST_NAME,
-    nickName: member.Survivor?.NICK_NAME,
-    fromCity: member.Survivor?.FROM_CITY,
-    fromState: member.Survivor?.FROM_STATE,
-    fromCountry: member.Survivor?.FROM_COUNTRY,
-});
+export function transformSurvivorWithDetailsData(
+    input: SeasonSurvivorWithDetailsAttributes
+): SurvivorWithDetailsObject {
+    const survivor: SurvivorsAttributes = input.Survivor || {} as SurvivorsAttributes;  // Cast empty object as `SurvivorsAttributes`
+    
+    return {
+        survivorId: input.SURVIVOR_ID,
+        seasonId: input.SEASON_ID,
+        originalTribeId: input.ORIGINAL_TRIBE_ID || null,
+        age: input.AGE,
+        description: input.DESCRIPTION || '',
+        job: input.JOB,
+        imageUrl: input.IMAGE_URL,
+        firstName: survivor.FIRST_NAME,
+        lastName: survivor.LAST_NAME,
+        nickName: survivor.NICK_NAME ?? null,
+        fromCity: survivor.FROM_CITY ?? null,
+        fromState: survivor.FROM_STATE,
+        fromCountry: survivor.FROM_COUNTRY,
+    };
+}

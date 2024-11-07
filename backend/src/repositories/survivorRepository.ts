@@ -28,26 +28,17 @@ const survivorRepository = {
      * const survivors = await survivorRepository.getSurvivorsWithDetailsInSeason(seasonId);
      */
     getSurvivorsWithDetailsInSeason: async (seasonId: number): Promise<SeasonSurvivorWithDetailsAttributes[]> => {
-        return await models.SeasonSurvivorCastMembers.findAll({
+        const results = await models.SeasonSurvivorCastMembers.findAll({
             where: { SEASON_ID: seasonId },
             include: [
                 {
                     model: models.Survivors,
-                    attributes: [
-                        "FIRST_NAME",
-                        "LAST_NAME",
-                        "NICK_NAME",
-                        "FROM_CITY",
-                        "FROM_STATE",
-                        "FROM_COUNTRY",
-                    ],
-                },
-                {
-                    model: models.Seasons,
-                    attributes: [],
-                },
+                    required: true,
+                }
             ],
         });
+        
+        return results as unknown as SeasonSurvivorWithDetailsAttributes[];
     },
 };
 
