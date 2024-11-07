@@ -2,9 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { Sequelize, DataTypes } from 'sequelize';
 import process from 'process';
+import { NODE_ENV } from './config';
 
 const basename = path.basename(__filename);
-const env = process.env.NODE_ENV || 'development';
+const env = NODE_ENV || 'development';
 const config = require(path.join(__dirname, '/../config/config.json'))[env];
 const db: { [key: string]: any } = {}; // Using `any` for model types, adjust as necessary
 

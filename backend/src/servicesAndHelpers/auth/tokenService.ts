@@ -2,7 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import errorFactory from "../../utils/errors/errorFactory";
 
 // Load secret and expiration time from environment variables
-const { JWT_SECRET, JWT_EXPIRATION } = process.env;
+import { JWT_SECRET, JWT_EXPIRATION } from '../../config/config';
 
 // Set to store blacklisted tokens
 const blacklistedTokens = new Set<string>();

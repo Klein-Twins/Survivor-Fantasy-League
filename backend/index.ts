@@ -1,10 +1,11 @@
 // src/index.ts
 import app from './app.ts';
+import { APP_PORT, NODE_ENV } from './src/config/config.ts';
 import { sequelize } from './src/config/db.ts'; // Import the initialized models
 import { runSqlFile } from './src/utils/runSqlFile.ts';
 import path from 'path';
 
-const PORT: number = Number(process.env.PORT) || 3000;
+const PORT: number = Number(APP_PORT) || 3000;
 
 // Sync the database and then start the server
 const startServer = async (): Promise<void> => {
@@ -24,7 +25,7 @@ const startServer = async (): Promise<void> => {
 };
 
 // Start the server
-if(process.env.NODE_ENV !== 'test') {
+if(NODE_ENV !== 'test') {
   startServer();
 }
 
