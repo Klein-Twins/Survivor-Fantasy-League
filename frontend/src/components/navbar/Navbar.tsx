@@ -1,82 +1,43 @@
-import React from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
-import { openModal } from "../../store/slices/modalSlice";
-import { RootState } from "../../store/store";
+import styles from './Navbar.module.css';
+import HamburgerButton from "./HamburgerButton";
+import NavLinkButtons from "./NavLinkButtons";
+import NavAuthButtons from "./NavAuthButtons";
 
 const Navbar: React.FC = () => {
-    const dispatch = useDispatch();
-    const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+    const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
 
-    const handleSignUpClick = () => {
-        dispatch(openModal({ type: 'signup' }));
-    }
+    const handleHamburgerClick = () => {
+        setIsHamburgerOpen(!isHamburgerOpen);
+    };
 
-    const handleLogInClick = () => {
-        dispatch(openModal({ type: 'login' }));
-    }
-
-    const handleLogOutClick = () => {
-        dispatch(openModal({ type: 'logout' }));
+    const handleLinkClick = () => {
+        setIsHamburgerOpen(false);
     }
 
     return (
-        <header className="p-4 bg-gray-100 shadow-md">
-            <nav className="flex flex-col md:flex-row items-center justify-between">
-                {/* Title and Links */}
-                <div className="flex flex-col md:flex-row items-center space-x-8">
-                    <NavLink className="title text-lg font-semibold text-blue-700" to="/">Survivor Fantasy League</NavLink>
-                    <ul className="flex space-x-4">
-                        <li>
-                            <NavLink 
-                                to="/" 
-                                className={({ isActive }) => 
-                                    isActive ? "link-button text-blue-500 font-semibold" : "link-button"
-                                }
-                            >
-                                Home
-                            </NavLink>
-                        </li>
-                        <li>
-                            <NavLink 
-                                to="/survivor-cast" 
-                                className={({ isActive }) => 
-                                    isActive ? "link-button text-blue-500 font-semibold" : "link-button"
-                                }
-                            >
-                                Survivor Cast
-                            </NavLink>
-                        </li>
-                    </ul>
+        <header className={styles.header}>
+            <div className="flex items-center justify-between lg:space-x-8 relative">
+                <div className="flex items-center justify-between flex-grow lg:flex-none">
+                    <div className="flex-grow lg:flex text-left">
+                        <NavLink className={styles.title} onClick={handleLinkClick} to="/">Survivor Fantasy League</NavLink>
+                    </div>
+                    <div className="absolute right-4 lg:hidden">
+                        <HamburgerButton isOpen={isHamburgerOpen} onClick={handleHamburgerClick} />
+                    </div>
                 </div>
-
-                {/* Auth Buttons */}
-                <div className="flex space-x-4 mt-4 md:mt-0">
-                    {!isAuthenticated ? (
-                        <>
-                            <button
-                                onClick={handleLogInClick}
-                                className="text-blue-700 hover:text-blue-900"
-                            >
-                                Log In
-                            </button>
-                            <button
-                                onClick={handleSignUpClick}
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                            >
-                                Sign Up
-                            </button>
-                        </>
-                    ) : (
-                        <button
-                            onClick={handleLogOutClick}
-                            className="text-red-500 hover:text-red-700"
-                        >
-                            Log Out
-                        </button>
-                    )}
+                <div className="hidden lg:flex lg: w-full justify-between items-center">
+                    <NavLinkButtons onClick={handleLinkClick}/>
+                    <NavAuthButtons onClick={handleLinkClick}/>
                 </div>
-            </nav>
+            </div>
+            {isHamburgerOpen && (
+                <div className="flex flex-col my-4 lg:my-0 lg:hidden space-y-6">
+                    <NavLinkButtons onClick={handleLinkClick}/>
+                    <NavAuthButtons onClick={handleLinkClick}/>
+                </div>
+            )}
         </header>
     );
 }

@@ -1,0 +1,7 @@
+.header {
+    @apply bg-[#1C1C1C] px-4 py-4 relative;
+}
+
+.title {
+    @apply text-white text-xl font-bold;
+}
