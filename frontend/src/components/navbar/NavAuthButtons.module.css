@@ -6,6 +6,6 @@
     @apply bg-stone-50 text-black px-4 py-1 rounded-md border-none border-r-4 cursor-pointer transition hover:bg-stone-300
 }
 
-.loginButton {
+.loginButton, .logoutButton {
     @apply text-white px-1 py-1 no-underline transition duration-300 ease-in-out transform border-b-2 border-transparent hover:border-white hover:text-white;
 }

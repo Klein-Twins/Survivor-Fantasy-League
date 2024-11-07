@@ -1,8 +1,6 @@
-import dotenv from 'dotenv';
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
-
-dotenv.config();
+import { APP_HOST, APP_PORT, APP_PROTOCOL } from './config';
 
 // Define the swagger definition with proper TypeScript types
 const swaggerDefinition: {
@@ -33,7 +31,7 @@ const swaggerDefinition: {
     },
     servers: [
         {
-            url: `${process.env.PROTOCOL}://${process.env.HOST}:${process.env.PORT}`
+            url: `${APP_PROTOCOL}://${APP_HOST}:${APP_PORT}`
         },
     ],
     components: {
@@ -53,7 +51,7 @@ const options: {
     apis: string[];
 } = {
     swaggerDefinition,
-    apis: ['./src/routes/auth/*.ts', './src/routes/survivors/*.ts'], // Changed to .ts for TypeScript files
+    apis: ['./src/routes/auth/*.ts', './src/routes/survivors/*.ts'],
 };
 
 // Initialize swagger-jsdoc
