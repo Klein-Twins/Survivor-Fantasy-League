@@ -39,7 +39,7 @@ const router = express.Router();
  *                              example: Probst
  *      responses:
  *          201:
- *              description: Created - User created successfully
+ *              description: User created successfully
  *              content:
  *                  application/json:
  *                      schema:
@@ -47,7 +47,7 @@ const router = express.Router();
  *                          properties:
  *                              message:
  *                                  type: string
- *                                  example: "User created successfully"
+ *                                  example: User created successfully
  *                              token:
  *                                  type: string
  *                                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3Vydml...
@@ -56,13 +56,13 @@ const router = express.Router();
  *                                  properties:
  *                                      username:
  *                                          type: string
- *                                          example: "SurvivorFan69"
+ *                                          example: SurvivorFan69
  *                                      userProfileId:
- *                                          type: integer
+ *                                          type: string
  *                                          example: 535c5e40-a4bb-4b9b-b6d8-289e8e813b83
  *
  *          400:
- *              description: Bad request - No email provided | No username provided | No password provided | Username is unavailable | Email is unavailable | User password is not strong enough | Email is invalid
+ *              description: Missing email | Missing password | Missing username | Invalid first name | Invalid last name | Invalid email | Email already tied to account | Username already tied to account | Password is too weak
  *              content:
  *                  application/json:
  *                      schema:
@@ -71,15 +71,16 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  enum:
- *                                      - Bad Request - No email provided
- *                                      - Bad Request - No username provided
- *                                      - Bad Request - No password provided
- *                                      - Bad Request - Username is unavailable
- *                                      - Bad Request - Email is unavailable
- *                                      - Bad Request - User password is not strong enough
- *                                      - Bad Request - Email is invalid
+ *                                      - Missing email
+ *                                      - Missing password
+ *                                      - Missing username
+ *                                      - Invalid first name
+ *                                      - Invalid last name
+ *                                      - Email already tied to account
+ *                                      - Username already tied to account
+ *                                      - Password is too weak
  *          500:
- *              description: Internal Server Error - Failed to sign up and create user
+ *              description: Could not create user
  *              content:
  *                  application/json:
  *                      schema:
@@ -87,7 +88,7 @@ const router = express.Router();
  *                          properties:
  *                              message:
  *                                  type: string
- *                                  example: Internal Server Error - Failed to sign up and create user
+ *                                  example: Could not create user
  *          
  */
 router.post('/signup', authController.signup);

@@ -1,7 +1,7 @@
 import request from 'supertest';
 import app from '../index.ts'; // Adjust the path as needed
 import { sequelize, models } from '../src/config/db.ts';
-import { RESPONSE_MESSAGES } from '../src/routes/ResponseMessageConstants.ts';
+import { RESPONSE_MESSAGES } from '../src/constants/ResponseMessages.ts';
 import { Server } from 'http';
 
 let server: Server;

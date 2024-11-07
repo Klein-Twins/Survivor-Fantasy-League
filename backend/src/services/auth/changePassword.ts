@@ -1,17 +1,8 @@
-import {models} from '../../config/db.ts';
-//import UserModel from "../../models/User.ts";
-//import PasswordModel from "../../models/Password.ts";
-import { checkPasswordsMatch, getHashedPassword, isPasswordStrong } from "../../controllers/auth/utils/passwordUtils.ts";
-import { RESPONSE_MESSAGES } from "../../routes/ResponseMessageConstants.ts";
-
-class CustomError extends Error {
-    statusCode: number;
-
-    constructor(statusCode: number, message: string) {
-        super(message);
-        this.statusCode = statusCode;
-    }
-}
+// services/auth/changePassword.ts
+import { models } from '../../config/db';
+import { checkPasswordsMatch, getHashedPassword, isPasswordStrong } from '../../utils/auth/passwordUtils';
+import CustomError from '../../utils/CustomError';
+import { RESPONSE_MESSAGES } from '../../constants/responseMessages';
 
 interface ChangePasswordServiceResponse {
     statusCode: number;
@@ -44,7 +35,6 @@ const changePasswordService = async (email: string, oldPassword: string, newPass
         );
     }
 
-    const oldPasswordSequence = userActivePasswordRecord.PASSWORD_SEQ;
     if (!await checkPasswordsMatch(oldPassword, userActivePasswordRecord.PASSWORD)) {
         throw new CustomError(
             RESPONSE_MESSAGES.CHANGE_PASSWORD.UNAUTHORIZED.statusCode,
@@ -58,10 +48,10 @@ const changePasswordService = async (email: string, oldPassword: string, newPass
         { where: { USER_ID: userRecord.USER_ID, ACTIVE: true } }
     );
     await models.Password.create({
-        PASSWORD_SEQ: oldPasswordSequence + 1,
         USER_ID: userRecord.USER_ID,
         PASSWORD: hashedNewPassword,
         ACTIVE: true,
+        PASSWORD_SEQ: userActivePasswordRecord.PASSWORD_SEQ + 1,
     });
 
     return {
@@ -70,4 +60,4 @@ const changePasswordService = async (email: string, oldPassword: string, newPass
     };
 };
 
-export { changePasswordService };
+export default changePasswordService;

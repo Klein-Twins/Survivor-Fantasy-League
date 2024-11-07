@@ -1,37 +1,23 @@
+// services/auth/tokenService.ts
 import dotenv from 'dotenv';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-
+import errorFactory from '../../utils/errorFactory';
 dotenv.config();
-
 const { JWT_SECRET, JWT_EXPIRATION } = process.env;
 
 const blacklistedTokens = new Set<string>();
 
-interface UserPayload extends JwtPayload {
-    user: string;
+const tokenService = {
+    generateToken : (payload: JwtPayload): string => {
+        return jwt.sign(payload, JWT_SECRET as jwt.Secret, { expiresIn: JWT_EXPIRATION });
+    },
+    verifyToken : (token: string): JwtPayload => {
+        if (blacklistedTokens.has(token)) throw errorFactory({message: 'Token Blacklisted', statusCode: 401})
+        return jwt.verify(token, JWT_SECRET as jwt.Secret) as JwtPayload;
+    },
+    blacklistToken : (token: string): void => {
+        blacklistedTokens.add(token);
+    },
 }
 
-const generateToken = (payload: JwtPayload): string => {
-    return jwt.sign(
-        {
-            ...payload,
-            iat: Math.floor(Date.now() / 1000),
-        },
-        JWT_SECRET as jwt.Secret,
-        { expiresIn: JWT_EXPIRATION }
-    );
-};
-
-const verifyToken = (token: string): UserPayload => {
-    return jwt.verify(token, JWT_SECRET as jwt.Secret) as UserPayload;
-};
-
-const blacklistToken = (token: string): void => {
-    blacklistedTokens.add(token);
-};
-
-const isTokenBlacklisted = (token: string): boolean => {
-    return blacklistedTokens.has(token);
-};
-
-export { generateToken, verifyToken, blacklistToken, isTokenBlacklisted, UserPayload };
+export default tokenService;

@@ -1,17 +1,17 @@
 import { Request, Response, NextFunction } from 'express';
-import { RESPONSE_MESSAGES } from "../routes/ResponseMessageConstants";
 
-interface CustomError extends Error {
-  statusCode?: number;
-}
+import dotenv from 'dotenv';
+dotenv.config();
 
-const errorHandler = (err: unknown, req: Request, res: Response, next: NextFunction): void => {
-  console.log(err);
-  const error = err as CustomError;
-  const statusCode = error.statusCode || RESPONSE_MESSAGES.GENERAL.INTERNAL_SERVER_ERROR.statusCode;
-  const message = error.message || RESPONSE_MESSAGES.GENERAL.INTERNAL_SERVER_ERROR.message;
+const errorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
+  console.log(err.stack);
 
-  res.status(statusCode).json({ message });
+  res.status(err.statusCode || 500).json({
+    message: err.message || 'Internal Server Error',
+    statusCode: err.statusCode || 500,
+    stack: process.env.NODE_ENV === 'production' ? null : err.stack,
+  });
+
 };
 
 export default errorHandler;

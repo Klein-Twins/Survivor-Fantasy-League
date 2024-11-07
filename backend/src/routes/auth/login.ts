@@ -28,7 +28,7 @@ const router = express.Router();
  *                              example: StrongPassword123
  *      responses:
  *          200:
- *              description: OK - User authenticated successfully
+ *              description: User authenticated successfully
  *              content:
  *                  application/json:
  *                      schema:
@@ -37,6 +37,9 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  example: "User authenticated successfully"
+ *                              statusCode:
+ *                                  type: number
+ *                                  example: 200
  *                              token:
  *                                  type: string
  *                                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3Vydml...
@@ -47,10 +50,10 @@ const router = express.Router();
  *                                          type: string
  *                                          example: "SurvivorFan69"
  *                                      userProfileId:
- *                                          type: integer
+ *                                          type: string
  *                                          example: 535c5e40-a4bb-4b9b-b6d8-289e8e813b83
  *          404:
- *              description: Not Found - Email is not tied to a registered user
+ *              description: No account tied to email
  *              content:
  *                  application/json:
  *                      schema:
@@ -58,19 +61,9 @@ const router = express.Router();
  *                          properties:
  *                              message:
  *                                  type: string
- *                                  example: Not Found - Email is not tied to a registered user
+ *                                  example: No account tied to email
  *          401:
- *              description: Unauthorized - password invalid
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              message:
- *                                  type: string
- *                                  example: Unauthorized - password invalid
- *          400:
- *              description: Bad Request - Email is invalid | No email provided | No password provided
+ *              description: Unauthorized - Incorrect password | Please reset your password
  *              content:
  *                  application/json:
  *                      schema:
@@ -79,11 +72,10 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  enum:
- *                                      - Bad Request - Email is invalid
- *                                      - Bad Request - No email provided
- *                                      - Bad Request - No password provided
- *          500:
- *              description: Internal Server Error - Failed to login user
+ *                                      - Incorrect password
+ *                                      - Please reset your password
+ *          400:
+ *              description: Invalid Email | Missing email | Missing password
  *              content:
  *                  application/json:
  *                      schema:
@@ -91,7 +83,20 @@ const router = express.Router();
  *                          properties:
  *                              message:
  *                                  type: string
- *                                  example: Internal Server Error - Failed to login user
+ *                                  enum:
+ *                                      - Invalid Email
+ *                                      - Missing email
+ *                                      - Missing password
+ *          500:
+ *              description: Failed to login user
+ *              content:
+ *                  application/json:
+ *                      schema:
+ *                          type: object
+ *                          properties:
+ *                              message:
+ *                                  type: string
+ *                                  example: Failed to login user
  */
 router.post('/login', authController.login);
 
