@@ -1,4 +1,4 @@
-import CustomError, { NotFoundError, ValidationError, InternalServerError, UnauthorizedError, ForbiddenError } from '../../../../src/utils/errors/errors';
+import CustomError, { NotFoundError, ValidationError, InternalServerError, UnauthorizedError, ForbiddenError } from '../../../src/utils/errors/errors';
 
 describe('CustomError and its subclasses', () => {
 

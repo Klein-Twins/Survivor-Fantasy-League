@@ -1,6 +1,6 @@
-import errorFactory from '../../../../src/utils/errors/errorFactory';
-import CustomError, { ValidationError, NotFoundError, InternalServerError, UnauthorizedError, ForbiddenError } from '../../../../src/utils/errors/errors';
-import { APIResponseError } from '../../../../src/types/api/apiResponseTypes';
+import errorFactory from '../../../src/utils/errors/errorFactory';
+import CustomError, { ValidationError, NotFoundError, InternalServerError, UnauthorizedError, ForbiddenError } from '../../../src/utils/errors/errors';
+import { APIResponseError } from '../../../src/types/api/apiResponseTypes';
 
 describe('errorFactory', () => {
 
