@@ -36,7 +36,7 @@ const loginService = {
 
         if (!email || !password) {
             throw errorFactory({
-                message: "Email and password are required.",
+                message: "Email and password are required",
                 statusCode: 400
             });
         }
@@ -45,7 +45,7 @@ const loginService = {
         const userRecord = await userRepository.findUserByEmail(email.toLowerCase());
         if (!userRecord) {
             throw errorFactory({
-                message: "No account tied to the provided email.",
+                message: "No account tied to the provided email",
                 statusCode: 404
             });
         }
@@ -54,7 +54,7 @@ const loginService = {
         const isAuthenticated = await userService.authenticateUser(userRecord, password);
         if (!isAuthenticated) {
             throw errorFactory({
-                message: "Incorrect password. Please try again.",
+                message: "Incorrect password. Please try again",
                 statusCode: 401
             });
         }

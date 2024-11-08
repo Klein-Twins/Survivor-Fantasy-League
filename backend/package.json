@@ -50,10 +50,13 @@
     "testEnvironment": "node",
     "testMatch": ["**/tests/**/*.test.ts"],
     "moduleFileExtensions": ["ts", "tsx", "js", "jsx", "json", "node"],
-    "globals": {
-      "ts-jest": {
+    "transform": {
+      "^.+\\.(ts|tsx)$": ["ts-jest", {
         "isolatedModules": true
-      }
-    }
+      }]
+    },
+    "setupFilesAfterEnv": [
+      "./tests/setupTests.ts"
+    ]
   }
 }
