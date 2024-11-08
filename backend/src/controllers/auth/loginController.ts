@@ -5,6 +5,7 @@ import { AuthLoginResponseData, LoginFields } from '../../types/auth/authTypes';
 import authService from '../../servicesAndHelpers/auth/authService';
 import { validateLoginRequestData } from '../../servicesAndHelpers/auth/authHelper';
 import { formatEmail } from '../../utils/apiFormatters/apiFieldFormatter';
+import logger from '../../config/logger';
 
 /**
  * loginController
@@ -46,8 +47,11 @@ const loginController = {
      */
     login: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.debug("LoginController called");
             const requestData = {email: formatEmail(req.body.email), password : req.body.password};
+            logger.debug("validating requestData = ", JSON.stringify(requestData));
             validateLoginRequestData(requestData);
+            logger.debug("Successfully validated login request data");
 
             const responseData: AuthLoginResponseData = await authService.loginService.login(requestData);
 
