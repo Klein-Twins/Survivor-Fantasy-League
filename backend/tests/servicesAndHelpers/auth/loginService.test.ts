@@ -2,7 +2,7 @@ import loginService from "../../../src/servicesAndHelpers/auth/loginService";
 import userRepository from "../../../src/repositories/userRepository";
 import userService from "../../../src/servicesAndHelpers/user/userService";
 import errorFactory from "../../../src/utils/errors/errorFactory";
-import authResponseFormatter from "../../../src/utils/apiResponseFormatters/authResponseFormatter";
+import authResponseFormatter from "../../../src/utils/apiFormatters/authResponseFormatter";
 import authService from "../../../src/servicesAndHelpers/auth/authService";
 import CustomError, { NotFoundError, UnauthorizedError, ValidationError } from "../../../src/utils/errors/errors";
 import { UserAttributes } from "../../../src/models/User";
@@ -11,7 +11,7 @@ import tokenService from "../../../src/servicesAndHelpers/auth/tokenService";
 jest.mock("../../../src/repositories/userRepository");
 jest.mock("../../../src/servicesAndHelpers/user/userService");
 jest.mock("../../../src/utils/errors/errorFactory");
-jest.mock("../../../src/utils/apiResponseFormatters/authResponseFormatter");
+jest.mock("../../../src/utils/apiFormatters/authResponseFormatter");
 jest.mock("../../../src/servicesAndHelpers/auth/authService");
 jest.mock("../../../src/servicesAndHelpers/auth/tokenService");
 
@@ -181,18 +181,6 @@ describe("loginService.login", () => {
     
         expect(authService.tokenService.generateToken).not.toHaveBeenCalled();
         expect(authResponseFormatter.formatLoginResponse).not.toHaveBeenCalled();
-    });
-
-    it("email with different casing should be authenicated as email is not case sensitive", async () => {
-        const email = "teST@eXaMPle.cOm";
-        (userRepository.findUserByEmail as jest.Mock).mockResolvedValue(() => mockUserRecord);
-        (userService.authenticateUser as jest.Mock).mockResolvedValue(true);
-
-        await loginService.login({email, password: mockFields.password});
-
-        expect(userRepository.findUserByEmail).toHaveBeenCalledWith(mockFields.email.toLowerCase());
-        expect(email).not.toEqual(mockUserRecord.USER_EMAIL);
-        expect(email.toLowerCase()).toEqual(mockUserRecord.USER_EMAIL);
     });
 
     it("should handle errors when tokenService.generateToken throws an error", async () => {

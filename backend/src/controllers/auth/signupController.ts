@@ -4,6 +4,7 @@ import { AuthSignupResponseData, SignupFields } from '../../types/auth/authTypes
 
 import authService from '../../servicesAndHelpers/auth/authService';
 import { validateSignupRequestData } from '../../servicesAndHelpers/auth/authHelper';
+import { formatEmail } from '../../utils/apiFormatters/apiFieldFormatter';
 
 const signupController = {
     /**
@@ -45,7 +46,7 @@ const signupController = {
                 password: req.body.password,
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
-                email: req.body.email
+                email: formatEmail(req.body.email)
             }
             validateSignupRequestData(requestData);
 

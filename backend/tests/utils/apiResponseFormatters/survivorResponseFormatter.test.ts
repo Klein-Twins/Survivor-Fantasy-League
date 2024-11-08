@@ -1,4 +1,4 @@
-import getSurvivorResponseDataFormatter from '../../../src/utils/apiResponseFormatters/survivorResponseFormatter';
+import getSurvivorResponseDataFormatter from '../../../src/utils/apiFormatters/survivorResponseFormatter';
 import { SurvivorsWithDetailsBySeasonResponseData, SurvivorWithDetailsObject } from '../../../src/types/survivor/survivorTypes';
 
 describe('getSurvivorResponseDataFormatter', () => {

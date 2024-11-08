@@ -4,12 +4,12 @@ import authService from "../../../src/servicesAndHelpers/auth/authService";
 import signupService from "../../../src/servicesAndHelpers/auth/signupService";
 import userService from "../../../src/servicesAndHelpers/user/userService";
 import { SignupFields } from "../../../src/types/auth/authTypes"
-import authResponseFormatter from "../../../src/utils/apiResponseFormatters/authResponseFormatter";
+import authResponseFormatter from "../../../src/utils/apiFormatters/authResponseFormatter";
 
 jest.mock("../../../src/repositories/userRepository");
 jest.mock("../../../src/servicesAndHelpers/auth/authService");
 jest.mock("../../../src/servicesAndHelpers/user/userService");
-jest.mock("../../../src/utils/apiResponseFormatters/authResponseFormatter");
+jest.mock("../../../src/utils/apiFormatters/authResponseFormatter");
 
 describe("signupService tests", () => {
 

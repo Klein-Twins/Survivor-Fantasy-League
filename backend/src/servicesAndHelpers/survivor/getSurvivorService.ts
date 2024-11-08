@@ -1,6 +1,6 @@
 import survivorRepository from "../../repositories/survivorRepository";
 
-import getSurvivorResponseDataFormatter from "../../utils/apiResponseFormatters/survivorResponseFormatter";
+import getSurvivorResponseDataFormatter from "../../utils/apiFormatters/survivorResponseFormatter";
 import errorFactory from "../../utils/errors/errorFactory";
 import { transformSurvivorWithDetailsData } from "../../utils/transformers/survivorTransformers";
 

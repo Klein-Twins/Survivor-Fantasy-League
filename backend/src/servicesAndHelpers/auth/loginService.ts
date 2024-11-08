@@ -1,7 +1,7 @@
 import userRepository from "../../repositories/userRepository";
 import userService from "../user/userService";
 import errorFactory from "../../utils/errors/errorFactory";
-import authResponseFormatter from "../../utils/apiResponseFormatters/authResponseFormatter";
+import authResponseFormatter from "../../utils/apiFormatters/authResponseFormatter";
 import { LoginFields, AuthLoginResponseData } from "../../types/auth/authTypes";
 import authService from "./authService";
 
@@ -42,7 +42,7 @@ const loginService = {
         }
 
         // Step 2: Find User by Email
-        const userRecord = await userRepository.findUserByEmail(email.toLowerCase());
+        const userRecord = await userRepository.findUserByEmail(email);
         if (!userRecord) {
             throw errorFactory({
                 message: "No account tied to the provided email",

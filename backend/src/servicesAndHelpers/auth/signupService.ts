@@ -1,7 +1,7 @@
 import userRepository from "../../repositories/userRepository";
 import userService from "../user/userService";
 import errorFactory from "../../utils/errors/errorFactory";
-import authResponseFormatter from "../../utils/apiResponseFormatters/authResponseFormatter";
+import authResponseFormatter from "../../utils/apiFormatters/authResponseFormatter";
 import { SignupFields, AuthSignupResponseData } from "../../types/auth/authTypes";
 import authService from "./authService";
 
@@ -52,7 +52,7 @@ const signupService = {
      */
     signup: async (fields: SignupFields): Promise<AuthSignupResponseData> => {
         // Step 1: Check if the email is already tied to an existing account
-        if (await userRepository.findUserByEmail(fields.email.toLowerCase())) {
+        if (await userRepository.findUserByEmail(fields.email)) {
             throw errorFactory({
                 message: 'Email already tied to account',
                 statusCode: 400
