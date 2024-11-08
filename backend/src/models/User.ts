@@ -16,6 +16,7 @@ const UserModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       this.hasMany(models.Password, { foreignKey: 'USER_ID' });
+      this.belongsTo(models.Profile, { foreignKey: 'USER_PROFILE_ID' })
     }
   }
 
