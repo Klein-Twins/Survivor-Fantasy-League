@@ -1,4 +1,4 @@
-import authService from './tokenService';
+import authService from './authService';
 import errorFactory from "../../utils/errors/errorFactory";
 import { AuthLogoutResponseData } from '../../types/auth/authTypes';
 
@@ -24,12 +24,12 @@ const logoutService = {
      */
     logout: (token: string): AuthLogoutResponseData => {
         // Verify the token's validity
-        if (!authService.verifyToken(token)) {
+        if (!authService.tokenService.verifyToken(token)) {
             throw errorFactory({ message: "Session token invalid", statusCode: 401 });
         }
 
         // Blacklist the token to invalidate it
-        authService.blacklistToken(token);
+        authService.tokenService.blacklistToken(token);
 
         // Return the successful logout response
         return { message: 'Successfully logged out user', statusCode: 200 };

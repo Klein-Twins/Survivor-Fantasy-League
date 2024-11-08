@@ -42,6 +42,10 @@ describe("loginService.login", () => {
             message: "Email and password are required",
             statusCode: 400,
         });
+        expect(userRepository.findUserByEmail).not.toHaveBeenCalled();
+        expect(userService.authenticateUser).not.toHaveBeenCalled();
+        expect(authService.tokenService.generateToken).not.toHaveBeenCalled();
+        expect(authResponseFormatter.formatLoginResponse).not.toHaveBeenCalled();
     });
 
     it("should throw an error if no account is found for the provided email", async () => {
@@ -58,6 +62,9 @@ describe("loginService.login", () => {
             message: "No account tied to the provided email",
             statusCode: 404,
         });
+        expect(userService.authenticateUser).not.toHaveBeenCalled();
+        expect(authService.tokenService.generateToken).not.toHaveBeenCalled();
+        expect(authResponseFormatter.formatLoginResponse).not.toHaveBeenCalled();
     });
 
     /*
@@ -81,6 +88,9 @@ describe("loginService.login", () => {
             message: "Incorrect password. Please try again",
             statusCode: 401
         });
+
+        expect(authService.tokenService.generateToken).not.toHaveBeenCalled();
+        expect(authResponseFormatter.formatLoginResponse).not.toHaveBeenCalled();
     })
 
     /*
