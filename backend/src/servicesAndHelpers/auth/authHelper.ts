@@ -63,25 +63,85 @@ export const validateSignupRequestData = ({ email, username, password, firstName
  * const isValid = isValidName('John Doe');  // Returns true
  * const isValid = isValidName('John123');   // Returns false
  */
-function isValidName(name: string): boolean {
-    // Regex to check if the name only contains letters (both upper and lower case) and spaces
-    const regex = /^[A-Za-z\s]+$/;
+export function isValidName(name: string): boolean {
+    // Regex to check if the name contains only letters (both upper and lower case), accented characters, and spaces in the middle
+    const regex = /^(?!.*\s\s)[A-Za-zÀ-ÿ]+(?: [A-Za-zÀ-ÿ]+)*$/;
     return regex.test(name);
 }
 
 /**
- * Validates the format of an email address.
- * This function checks if the provided email matches a standard email format (e.g., 'user@example.com').
+ * Validates the given email address according to basic and extended email format rules.
+ * The function checks for proper email structure, character validity, and domain rules.
  * 
- * @param {string} email - The email string to validate.
+ * ### Email Rules Checked:
+ * - The email must have exactly one "@" symbol.
+ * - The local part (before "@") may contain letters, numbers, periods, underscores, and special characters like "%", "+", and "-".
+ * - The domain part (after "@") may contain letters, numbers, periods, and hyphens, but not underscores.
+ * - Domain parts cannot start or end with a hyphen.
+ * - Local part and domain cannot have consecutive dots.
+ * - Local part and domain cannot start or end with a dot.
+ * - The domain must have a valid structure, i.e., a valid top-level domain (TLD).
  * 
- * @returns {boolean} - `true` if the email is valid, otherwise `false`.
+ * @param email - The email address to validate.
+ * @returns `true` if the email is valid according to the rules, otherwise `false`.
  * 
  * @example
- * const isValid = validateEmail('test@example.com'); // Returns true
- * const isValid = validateEmail('invalid-email');    // Returns false
+ * validateEmail('test@example.com'); // true
+ * validateEmail('test@exam-ple.com'); // true
+ * validateEmail('test@exam..com'); // false (multiple dots)
+ * validateEmail('test@ex@ample.com'); // false (extra '@' symbol)
+ * validateEmail('test@ex_ample.com'); // false (underscore in domain)
+ * validateEmail('test@-example.com'); // false (domain starts with hyphen)
  */
 export const validateEmail = (email: string): boolean => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+    // Basic email format check
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Ensure the email passes the basic structure validation
+    if (!emailRegex.test(email)) return false;
+
+    // Split the email into local part and domain
+    const [localPart, domain] = email.split('@');
+
+    // Check for extra '@' symbol
+    if (email.split('@').length !== 2) {
+        return false; // Extra '@' detected
+    }
+
+    // Check if local part has invalid characters (like '#')
+    if (/[^a-zA-Z0-9._%+-]/.test(localPart)) {
+        return false;
+    }
+
+    // Ensure no dots before '@', multiple consecutive dots, or at the beginning or end
+    if (
+        localPart.startsWith('.') ||
+        domain.startsWith('.') ||
+        localPart.endsWith('.') ||
+        domain.endsWith('.') ||
+        localPart.includes('..') ||
+        domain.includes('..')
+    ) {
+        return false;
+    }
+
+    // Ensure no underscores in the domain part
+    if (/[^a-zA-Z0-9.-]/.test(domain)) {
+        return false; // Underscore or invalid characters found in domain
+    }
+
+    // Ensure the domain does not start or end with a hyphen
+    if (domain.startsWith('-') || domain.endsWith('-')) {
+        return false;
+    }
+
+    // Ensure no part of the domain has a hyphen at the start or end
+    const domainParts = domain.split('.');
+    for (let part of domainParts) {
+        if (part.startsWith('-') || part.endsWith('-')) {
+            return false;
+        }
+    }
+
+    return true;
 };
