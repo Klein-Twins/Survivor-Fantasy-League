@@ -1,6 +1,5 @@
 import express from 'express';
 import authController from '../../controllers/auth/authController.ts';
-import authenticateToken from '../../middleware/authenticateToken.ts';
 
 const router = express.Router();
 
@@ -22,6 +21,6 @@ const router = express.Router();
  *       500:
  *         description: Unexpected error
  */
-router.post('/logout', authenticateToken, authController.logoutController.logout);
+router.post('/logout', authController.logout);
 
 export default router;

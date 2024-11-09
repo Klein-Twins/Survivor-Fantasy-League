@@ -8,14 +8,14 @@ export interface ProfileAttributes {
 }
 
 const ProfileModel = (sequelize: Sequelize) => {
-  class Profile extends Model<Partial<ProfileAttributes>> implements ProfileAttributes {
+  class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
     public PROFILE_ID!: string;
     public FIRST_NAME?: string | null;
     public LAST_NAME?: string | null;
     public IMAGE_URL?: string | null;
 
     static associate(models: any) {
-      this.hasOne(models.User, { foreignKey: 'USER_PROFILE_ID' });
+      this.hasOne(models.User, { foreignKey: 'USER_PROFILE_ID', as: 'User' });
     }
   }
 

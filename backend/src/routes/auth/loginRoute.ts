@@ -1,5 +1,6 @@
 import express from 'express';
 import authController from '../../controllers/auth/authController';
+import tokenController from '../../controllers/auth/tokenController';
 const router = express.Router();
 
 /**
@@ -98,6 +99,6 @@ const router = express.Router();
  *                                  type: string
  *                                  example: Failed to login user
  */
-router.post('/login', authController.loginController.login);
+router.post('/login', authController.login, tokenController.generateToken);
 
 export default router;

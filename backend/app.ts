@@ -3,7 +3,7 @@ import cors from 'cors';
 import routes from './src/routes/index.ts';
 import { swaggerUi, swaggerSpec } from './src/config/swagger.ts';
 import path from 'path';
-import errorHandler from './src/middleware/errorHandler.ts';
+import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
 
 const corsOptions: cors.CorsOptions = {
     origin: '*', // Replace with frontend URL in production

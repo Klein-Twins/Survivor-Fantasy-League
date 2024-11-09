@@ -1,113 +1,168 @@
-import { models } from "../config/db";
+import { Transaction } from "sequelize";
+import { models, sequelize } from "../config/db";
 import { PasswordAttributes } from "../models/Password";
 import { UserAttributes } from "../models/User";
+import errorFactory from "../utils/errors/errorFactory";
+import logger from "../config/logger";
 
-/**
- * A repository for interacting with the `Password` model, which handles password data for users.
- * This repository includes methods to create, retrieve, and manage active and inactive passwords for users.
- * 
- * The `passwordRepository` provides the following functions:
- * - `createPassword`: Creates a new password for a user and stores it in the database.
- * - `getActivePassword`: Retrieves the most recent active password for a user, deactivating older passwords if necessary.
- * - `setInactivePassword`: Marks a password record as inactive.
- * - `getActivePasswordByUser`: Retrieves the active password for a given user.
- * 
- * @module passwordRepository
- */
 const passwordRepository = {
+
     /**
-     * Creates a new password record for the given user and stores it in the database.
-     * This function stores the user’s password along with a `PASSWORD_SEQ` and sets the password as active.
+     * Creates a new password record for a user and sets all previous passwords to inactive.
      * 
-     * @param {UserAttributes} user - The user for whom the password is being created.
-     * @param {string} hashedPassword - The hashed password to be stored.
+     * @param userId - The ID of the user to associate the new password with.
+     * @param hashedPassword - The hashed password to store in the database.
+     * @param transaction - The transaction used for atomic operations.
      * 
-     * @returns {Promise<PasswordAttributes | null>} - A promise that resolves to the created password record, or `null` if the creation fails.
-     * 
-     * @throws {Error} - If there is an issue creating the password record in the database.
-     * 
-     * @example
-     * const user = { USER_ID: 1, ... }; // user object
-     * const hashedPassword = "hashed_password_string";
-     * const newPassword = await passwordRepository.createPassword(user, hashedPassword);
+     * @returns A promise resolving to the newly created password record.
      */
-    createPassword: async (user : UserAttributes, hashedPassword: string) : Promise<PasswordAttributes | null> => {
-        return await models.Password.create({
-            USER_ID: user.USER_ID,
-            PASSWORD: hashedPassword,
-            ACTIVE: true,
-            PASSWORD_SEQ: 1,
-        })
+    createPasswordForUserId: async (
+        userId: UserAttributes['USER_ID'],
+        hashedPassword: string,
+        transaction?: Transaction
+    ): Promise<PasswordAttributes> => {
+        try {
+            const maxPasswordSeqResult = await models.Password.max('PASSWORD_SEQ', {
+                where: { USER_ID: userId },
+            });
+
+            const newPasswordSeq = (typeof maxPasswordSeqResult === 'number' ? maxPasswordSeqResult : 0) + 1;
+
+            await passwordRepository.setAllPasswordsForUserIdToInactive(userId, transaction);
+
+            const newPasswordRecord = await models.Password.create({
+                USER_ID: userId,
+                PASSWORD: hashedPassword,
+                ACTIVE: true,
+                PASSWORD_SEQ: newPasswordSeq,
+            }, { transaction });
+
+            if (!newPasswordRecord) {
+                throw errorFactory({
+                    statusCode: 500,
+                    message: `Failed to create password record for userId ${userId}`
+                });
+            }
+
+            return newPasswordRecord;
+        } catch (error) {
+            logger.error(`Failed in creating password for user with userId ${userId}: ${error}`);
+            throw (error);
+        }
+
     },
+
     /**
-     * Retrieves the most recent active password for the given user.
-     * If multiple active passwords are found, all but the most recent one are marked as inactive.
+     * Sets all active passwords for a user to inactive.
      * 
-     * @param {UserAttributes} user - The user whose active password is to be retrieved.
+     * @param userId - The ID of the user whose passwords should be deactivated.
+     * @param transaction - The transaction used for atomic operations.
      * 
-     * @returns {Promise<PasswordAttributes | null>} - A promise that resolves to the most recent active password for the user,
-     *          or `null` if no active password is found.
-     * 
-     * @throws {Error} - If there is an issue retrieving the password from the database.
-     * 
-     * @example
-     * const user = { USER_ID: 1, ... }; // user object
-     * const activePassword = await passwordRepository.getActivePassword(user);
+     * @returns A promise that resolves when all passwords are set to inactive.
      */
-    getActivePassword: async (user: UserAttributes) : Promise<PasswordAttributes | null> => {
+    setAllPasswordsForUserIdToInactive: async (
+        userId: UserAttributes["USER_ID"],
+        transaction?: Transaction
+    ): Promise<void> => {
+        try {
+            await models.Password.update(
+                { ACTIVE: false },
+                {
+                    where: {
+                        USER_ID: userId,
+                        ACTIVE: true,
+                    },
+                    transaction
+                }
+            );
+        } catch (error) {
+            logger.error(`Failed to set all passwords to inactive for user with userId ${userId}: ${error}`)
+            throw (error);
+        }
+    },
+
+    /**
+     * Marks a given password record as inactive.
+     * 
+     * @param passwordRecord - The password record to deactivate.
+     * @param transaction - Optional transaction for atomic operations.
+     * 
+     * @returns A promise that resolves when the password is deactivated.
+     */
+    setPasswordRecordToInactive: async (
+        passwordRecord: PasswordAttributes,
+        transaction?: Transaction
+    ): Promise<void> => {
+        try {
+            await models.Password.update(
+                { ACTIVE: false },
+                {
+                    where: {
+                        USER_ID: passwordRecord.USER_ID,
+                        PASSWORD_SEQ: passwordRecord.PASSWORD_SEQ,
+                    },
+                    transaction
+                }
+            );
+        } catch (error) {
+            logger.error(`Failed to set password seq ${passwordRecord.PASSWORD_SEQ} to inactive for user with user id ${passwordRecord.USER_ID}: ${error}`)
+            throw (error);
+        }
+    },
+
+    /**
+     * Retrieves the most recent active password for a user.
+     * If multiple active passwords are found, they are all marked as inactive except the most recent one.
+     * 
+     * @param userId - The ID of the user to retrieve the active password for.
+     * 
+     * @returns A promise that resolves to the most recent active password.
+     */
+    getActivePasswordForUserId: async (userId: UserAttributes["USER_ID"]): Promise<PasswordAttributes> => {
         const userPasswords = await models.Password.findAll({
-            where: { USER_ID : user.USER_ID, ACTIVE : true},
+            where: { USER_ID: userId, ACTIVE: true },
             order: [['createdAt', 'DESC']]
-        })
+        });
 
-        if(userPasswords.length == 0) return null;
+        if (userPasswords.length === 0) {
+            logger.error(`No active passwords for user id: ${userId}`);
+            throw errorFactory({ message: "Please reset your password", statusCode: 500 });
+        }
 
+        // Deactivate any extraneous active passwords
         if (userPasswords.length > 1) {
-            await Promise.all(userPasswords.slice(1).map(pw => passwordRepository.setInactivePassword(pw)));
+            const transaction: Transaction = await sequelize.transaction();
+            try {
+                // Deactivate all but the first one
+                await Promise.all(userPasswords.slice(1).map(pw => passwordRepository.setPasswordRecordToInactive(pw, transaction)));
+                await transaction.commit();
+            } catch (error) {
+                logger.error("Failed to update all extraneous active passwords to false.");
+                await transaction.rollback();
+                throw error;
+            }
         }
 
         return userPasswords[0];
     },
+
     /**
-     * Marks a given password record as inactive.
-     * This is typically used to deactivate an old password when a new password is created for a user.
+     * Marks a password record as inactive.
      * 
-     * @param {PasswordAttributes} passwordRecord - The password record to be marked as inactive.
+     * @param passwordRecord - The password record to deactivate.
+     * @param transaction - Optional transaction for atomic operations.
      * 
-     * @returns {Promise<void>} - A promise that resolves when the password record has been successfully updated to inactive.
-     * 
-     * @throws {Error} - If there is an issue updating the password record in the database.
-     * 
-     * @example
-     * const passwordRecord = { USER_ID: 1, PASSWORD_SEQ: 2, ACTIVE: true, ... };
-     * await passwordRepository.setInactivePassword(passwordRecord);
+     * @returns A promise that resolves when the password is deactivated.
      */
-    setInactivePassword: async (passwordRecord: PasswordAttributes) : Promise<void> => {
+    setInactivePassword: async (
+        passwordRecord: PasswordAttributes,
+        transaction?: Transaction
+    ): Promise<void> => {
         await models.Password.update(
             { ACTIVE: false },
-            { where: { USER_ID: passwordRecord.USER_ID, PASSWORD_SEQ: passwordRecord.PASSWORD_SEQ} }
+            { where: { USER_ID: passwordRecord.USER_ID, PASSWORD_SEQ: passwordRecord.PASSWORD_SEQ }, transaction }
         );
     },
-    /**
-     * Retrieves a single active password record for the given user.
-     * Unlike `getActivePassword`, which returns an array of passwords, this function only returns the first active password it finds.
-     * 
-     * @param {UserAttributes} user - The user whose active password is to be retrieved.
-     * 
-     * @returns {Promise<PasswordAttributes | null>} - A promise that resolves to the active password record for the user,
-     *          or `null` if no active password is found.
-     * 
-     * @throws {Error} - If there is an issue retrieving the password from the database.
-     * 
-     * @example
-     * const user = { USER_ID: 1, ... }; // user object
-     * const activePassword = await passwordRepository.getActivePasswordByUser(user);
-     */
-    getActivePasswordByUser: async (user: UserAttributes) : Promise<PasswordAttributes | null> => {
-        return await models.Password.findOne({
-            where: { USER_ID: user.USER_ID, ACTIVE: true }
-        });
-    }
 };
 
 export default passwordRepository;

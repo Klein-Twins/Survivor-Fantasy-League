@@ -3,7 +3,7 @@ import UserModel from './User';
 import PasswordModel from './Password';
 import SurvivorsModel from './Survivors';
 import SeasonsModel from './Seasons';
-import SeasonSurvivorCastMembersModel from './SeasonSurvivorCastMembers';
+import SurvivorDetailsOnSeasonModel from './SurvivorDetailsOnSeason';
 import ProfileModel from './Profile';
 
 const initModels = (sequelize: Sequelize) => {
@@ -11,15 +11,14 @@ const initModels = (sequelize: Sequelize) => {
   const Password = PasswordModel(sequelize);
   const Survivors = SurvivorsModel(sequelize);
   const Seasons = SeasonsModel(sequelize);
-  const SeasonSurvivorCastMembers = SeasonSurvivorCastMembersModel(sequelize);
+  const SurvivorDetailsOnSeason = SurvivorDetailsOnSeasonModel(sequelize);
   const Profile = ProfileModel(sequelize);
 
-  // Set up associations
   User.associate({ Password, Profile });
   Password.associate({ User });
-  Seasons.associate({ SeasonSurvivorCastMembers });
-  Survivors.associate({ SeasonSurvivorCastMembers });
-  SeasonSurvivorCastMembers.associate({ Survivors, Seasons });
+  Survivors.associate({ SurvivorDetailsOnSeason });
+  Seasons.associate({ SurvivorDetailsOnSeason });
+  SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
   Profile.associate({ User });
 
   return {
@@ -27,7 +26,7 @@ const initModels = (sequelize: Sequelize) => {
     Password,
     Survivors,
     Seasons,
-    SeasonSurvivorCastMembers,
+    SurvivorDetailsOnSeason,
     Profile
   };
 };
