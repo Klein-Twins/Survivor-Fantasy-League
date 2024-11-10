@@ -2,6 +2,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import errorFactory from "../../utils/errors/errorFactory";
 import { JWT_SECRET, JWT_EXPIRATION } from '../../config/config';
 import { UserAttributes } from '../../models/User';
+import { BLACKLISTED_TOKEN_ERROR } from '../../constants/auth/responseErrorConstants';
 
 /**
  * Interface to represent the payload of a user JWT.
@@ -39,12 +40,8 @@ const tokenService = {
      * @returns The decoded token payload if valid.
      * @throws A 401 error if the token is blacklisted or invalid.
      */
-    verifyTokenIsNotBlacklistedAndIsValid: (token: string): UserJwtPayload => {
-        if (blacklistedTokens.has(token)) {
-            throw errorFactory({ message: 'Token Blacklisted', statusCode: 401 });
-        }
-
-        return jwt.verify(token, JWT_SECRET as jwt.Secret) as UserJwtPayload;
+    isTokenBlacklisted: (token: string): boolean => {
+        return blacklistedTokens.has(token)
     },
 
     /**

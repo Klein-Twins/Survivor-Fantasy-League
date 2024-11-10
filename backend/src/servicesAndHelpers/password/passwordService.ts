@@ -6,6 +6,7 @@ import passwordRepository from '../../repositories/passwordRepository';
 import errorFactory from '../../utils/errors/errorFactory';
 import passwordHelper from './passwordHelper';
 import logger from '../../config/logger';
+import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD, WEAK_PASSWORD_ERROR } from '../../constants/auth/responseErrorConstants';
 
 /**
  * Service functions related to password management, including creating passwords, 
@@ -27,16 +28,14 @@ const passwordService = {
     ): Promise<PasswordAttributes> => {
         // Ensure password strength before proceeding
         if (!passwordHelper.isPasswordStrong(accountAndPassword.PASSWORD)) {
-            throw errorFactory({ message: 'Password is too weak', statusCode: 400 });
+            throw errorFactory(WEAK_PASSWORD_ERROR);
         }
 
         // Hash the password
         const hashedPassword = await passwordHelper.getHashedPassword(accountAndPassword.PASSWORD);
         if (!hashedPassword) {
-            throw errorFactory({
-                statusCode: 500,
-                message: `Failed to hash password: ${accountAndPassword.PASSWORD}`,
-            });
+            logger.error(`Failed to hash password: ${accountAndPassword.PASSWORD}`)
+            throw errorFactory(INTERNAL_SERVER_ERROR);
         }
 
         // Store the hashed password
@@ -64,7 +63,7 @@ const passwordService = {
 
         if (!activePassword) {
             logger.error(`No active password for user ${user.USER_ID} found...`);
-            throw errorFactory({ message: 'Please reset your password', statusCode: 500 });
+            throw errorFactory(PLEASE_RESET_PASSWORD);
         }
 
         // Compare the provided password with the stored password

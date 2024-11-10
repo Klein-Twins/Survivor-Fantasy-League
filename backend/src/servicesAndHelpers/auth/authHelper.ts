@@ -1,3 +1,5 @@
+import logger from "../../config/logger";
+
 /**
  * Validates a name string. The name should contain only letters (both uppercase and lowercase),
  * accented characters, and spaces in between words.

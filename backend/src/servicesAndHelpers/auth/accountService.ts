@@ -1,9 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import { SignupRequestFields } from '../../types/auth/authTypes';
+import { Account, SignupRequestFields } from '../../types/auth/authTypes';
 import accountRepository, { AccountAndPasswordAttributes, AccountAttributes } from '../../repositories/accountRepository';
 import userRepository from '../../repositories/userRepository';
 import errorFactory from '../../utils/errors/errorFactory';
 import { UserAttributes } from '../../models/User';
+import { EMAIL_UNAVAILABLE, USERNAME_UNAVAILABLE } from '../../constants/auth/responseErrorConstants';
+import logger from '../../config/logger';
 
 /**
  * Service for handling account creation, validation, and retrieval.
@@ -17,9 +19,9 @@ const accountService = {
      * @returns A promise that resolves to the created account details.
      * @throws A 400 error if the email or username is already tied to an account.
      */
-    createAccount: async (fields: SignupRequestFields): Promise<AccountAttributes> => {
-        // Check if the account with the given email and username is available
+    createAccount: async (fields: SignupRequestFields): Promise<Account> => {
         await accountService.checkAccountAvailable(fields.email, fields.username);
+        logger.debug("Email and Username are available");
 
         // Generate UUIDs for user profile and user ID
         const userProfileId = uuidv4();
@@ -29,7 +31,7 @@ const accountService = {
             USER_EMAIL: fields.email,
             USER_ID: userId,
             USER_NAME: fields.username,
-            USER_PROFILE: {
+            PROFILE: {
                 PROFILE_ID: userProfileId,
                 FIRST_NAME: fields.firstName,
                 LAST_NAME: fields.lastName,
@@ -37,8 +39,7 @@ const accountService = {
             },
             PASSWORD: fields.password,
         };
-
-        // Create the account record
+        
         return await accountRepository.createAccount(accountAndPassword);
     },
 
@@ -53,18 +54,14 @@ const accountService = {
     checkAccountAvailable: async (email: UserAttributes["USER_EMAIL"], username: UserAttributes["USER_NAME"]): Promise<void> => {
         // Check if the email is available
         if (!(await userRepository.isEmailAvailable(email))) {
-            throw errorFactory({
-                message: 'Email already tied to account',
-                statusCode: 400,
-            });
+            logger.debug(`${email} is unavailable`)
+            throw errorFactory(EMAIL_UNAVAILABLE);
         }
 
         // Check if the username is available
         if (!(await userRepository.isUsernameAvailable(username))) {
-            throw errorFactory({
-                message: 'Username already tied to account',
-                statusCode: 400,
-            });
+            logger.debug(`${username} is unavailable`)
+            throw errorFactory(USERNAME_UNAVAILABLE);
         }
     },
 

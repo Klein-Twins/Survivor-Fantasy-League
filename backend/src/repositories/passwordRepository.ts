@@ -4,6 +4,7 @@ import { PasswordAttributes } from "../models/Password";
 import { UserAttributes } from "../models/User";
 import errorFactory from "../utils/errors/errorFactory";
 import logger from "../config/logger";
+import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD } from "../constants/auth/responseErrorConstants";
 
 const passwordRepository = {
 
@@ -38,10 +39,7 @@ const passwordRepository = {
             }, { transaction });
 
             if (!newPasswordRecord) {
-                throw errorFactory({
-                    statusCode: 500,
-                    message: `Failed to create password record for userId ${userId}`
-                });
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
 
             return newPasswordRecord;
@@ -126,7 +124,7 @@ const passwordRepository = {
 
         if (userPasswords.length === 0) {
             logger.error(`No active passwords for user id: ${userId}`);
-            throw errorFactory({ message: "Please reset your password", statusCode: 500 });
+            throw errorFactory(PLEASE_RESET_PASSWORD);
         }
 
         // Deactivate any extraneous active passwords

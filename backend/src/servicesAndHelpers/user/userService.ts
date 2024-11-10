@@ -6,6 +6,8 @@ import passwordService from '../password/passwordService';
 import { UserAttributes } from "../../models/User";
 import { AccountAndPasswordAttributes } from '../../repositories/accountRepository';
 import { Transaction } from 'sequelize';
+import { PLEASE_RESET_PASSWORD } from '../../constants/auth/responseErrorConstants';
+import logger from '../../config/logger';
 
 const userService = {
 
@@ -14,7 +16,7 @@ const userService = {
       USER_EMAIL: accountAndPassword.USER_EMAIL,
       USER_ID: accountAndPassword.USER_ID,
       USER_NAME: accountAndPassword.USER_NAME,
-      USER_PROFILE_ID: accountAndPassword.USER_PROFILE.PROFILE_ID
+      USER_PROFILE_ID: accountAndPassword.PROFILE.PROFILE_ID
     };
     return userRepository.createUserRecord(userRecordCreationInput, transaction)
   },
@@ -31,10 +33,8 @@ const userService = {
     const activePasswordRecord = await passwordRepository.getActivePasswordForUserId(userRecord.USER_ID);
   
     if (!activePasswordRecord) {
-      throw errorFactory({
-        message: 'Please reset your password',
-        statusCode: 401
-      });
+      logger.error(`No active password found for user id: ${userRecord.USER_ID}`);
+      throw errorFactory(PLEASE_RESET_PASSWORD);
     }
   
     // Check the provided password against the stored password

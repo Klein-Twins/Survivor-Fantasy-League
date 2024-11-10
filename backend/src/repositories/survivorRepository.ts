@@ -3,6 +3,8 @@ import { SurvivorDetailsOnSeasonAttributes } from "../models/SurvivorDetailsOnSe
 import errorFactory from "../utils/errors/errorFactory";
 import logger from "../config/logger";
 import { SurvivorsAttributes } from "../models/Survivors";
+import { NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
+import { SurvivorWithDetails } from "../types/survivor/survivorTypes";
 
 export interface SurvivorWithDetailsAttributes extends SurvivorDetailsOnSeasonAttributes {
     SURVIVOR : SurvivorsAttributes
@@ -19,7 +21,7 @@ const survivorRepository = {
      */
     getSurvivorsWithDetailsInSeason: async (
         seasonId: number
-    ): Promise<SurvivorWithDetailsAttributes[]> => {
+    ): Promise<SurvivorWithDetails[]> => {
         try {
             const results = await models.SurvivorDetailsOnSeason.findAll({
                 where: { SEASON_ID: seasonId },
@@ -27,30 +29,25 @@ const survivorRepository = {
                     {
                         model: models.Survivors,
                         required: true,
+                        as: 'Survivor',
                         attributes: {
                             exclude: ['SURVIVOR_ID'],
                         },
                     },
                 ],
-            });
+            }) as unknown as SurvivorWithDetails[]
 
             if (results.length === 0) {
                 throw errorFactory({
                     message: `No survivors found for season ${seasonId}`,
-                    statusCode: 404,
+                    statusCode: NOT_FOUND_ERROR.statusCode,
                 });
             }
-
-            const formattedResults = results.map(result => ({
-                ...result,
-                //@ts-ignore
-                SURVIVOR: result.Survivor
-            })) as SurvivorWithDetailsAttributes[];
-
-            return formattedResults;
+            
+            return results;
         } catch (error) {
-            logger.error(`Error retrieving survivors for season ${seasonId}: ${error}`);
-            throw error;  // Propagate the error after logging
+            logger.error(`Error retrieving survivors from DB for season ${seasonId}: ${error}`);
+            throw error;
         }
     },
 };

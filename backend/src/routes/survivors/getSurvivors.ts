@@ -4,7 +4,7 @@ import survivorController from '../../controllers/survivor/survivorController.ts
 const router = express.Router();
 /**
  * @swagger
- * /api/survivor/survivorsBySeason:
+ * /api/survivor/survivorsWithDetailsBySeason:
  *  get:
  *      summary: Get survivors by season
  *      description: Gets the list of survivors by season
@@ -90,6 +90,6 @@ const router = express.Router();
  *                                  type: string
  *                                  example: Internal Server Error - Failed to login user
  */
-router.get('/survivorsBySeason', survivorController.getSurvivorController.getSurvivorsBySeason);
+router.get('/survivorsWithDetailsBySeason', survivorController.getSurvivorWithDetailsForSeason);
 
 export default router;

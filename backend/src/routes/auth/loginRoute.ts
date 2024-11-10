@@ -1,6 +1,6 @@
 import express from 'express';
 import authController from '../../controllers/auth/authController';
-import tokenController from '../../controllers/auth/tokenController';
+import tokenMiddleware from '../../middleware/tokenMiddleware';
 const router = express.Router();
 
 /**
@@ -99,6 +99,6 @@ const router = express.Router();
  *                                  type: string
  *                                  example: Failed to login user
  */
-router.post('/login', authController.login, tokenController.generateToken);
+router.post('/login', authController.login, tokenMiddleware.generateToken);
 
 export default router;

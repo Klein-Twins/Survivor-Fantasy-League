@@ -19,12 +19,12 @@ const profileService = {
         accountAndPassword: AccountAndPasswordAttributes,
         transaction: Transaction
     ): Promise<ProfileAttributes> => {
-        // Prepare the profile record to be created
+        
         const profileRecordCreationInput: ProfileAttributes = {
-            PROFILE_ID: accountAndPassword.USER_PROFILE.PROFILE_ID,
-            IMAGE_URL: accountAndPassword.USER_PROFILE.IMAGE_URL,
-            FIRST_NAME: accountAndPassword.USER_PROFILE.FIRST_NAME,
-            LAST_NAME: accountAndPassword.USER_PROFILE.LAST_NAME,
+            PROFILE_ID: accountAndPassword.PROFILE.PROFILE_ID,
+            IMAGE_URL: accountAndPassword.PROFILE.IMAGE_URL,
+            FIRST_NAME: accountAndPassword.PROFILE.FIRST_NAME,
+            LAST_NAME: accountAndPassword.PROFILE.LAST_NAME,
         };
 
         // Create the profile record in the database

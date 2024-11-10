@@ -3,6 +3,7 @@ import { models } from "../config/db";
 import logger from "../config/logger";
 import { UserAttributes } from '../models/User';
 import errorFactory from "../utils/errors/errorFactory";
+import { EMAIL_NOT_FOUND, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
 
 const userRepository = {
 
@@ -48,7 +49,7 @@ const userRepository = {
         try {
             const userRecord = await models.User.findOne({ where: { USER_NAME: username } });
             if (!userRecord) {
-                throw errorFactory({ statusCode: 404, message: `User with username: ${username} does not exist in the database.` });
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
             logger.debug(`User found by username: ${username}`);
             return userRecord;
@@ -68,7 +69,8 @@ const userRepository = {
         try {
             const userRecord = await models.User.findOne({ where: { USER_EMAIL: email } });
             if (!userRecord) {
-                throw errorFactory({ statusCode: 404, message: `User with email: ${email} does not exist in the database.` });
+                logger.error(`User with email: ${email} does not exist in the database.`)
+                throw errorFactory(EMAIL_NOT_FOUND);
             }
             logger.debug(`User found by email: ${email}`);
             return userRecord;
@@ -89,9 +91,8 @@ const userRepository = {
         try {
             const userRecord = await models.User.create(input, { transaction });
             if (!userRecord) {
-                throw errorFactory({ statusCode: 500, message: `Failed to create user record for (username, userId): (${input.USER_NAME}, ${input.USER_ID})` });
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
-            logger.debug(`User created: ${input.USER_NAME}, ${input.USER_ID}`);
             return userRecord;
         } catch (error) {
             logger.error(`Failed to create user record for (username, userId): (${input.USER_NAME}, ${input.USER_ID}): ${error}`);

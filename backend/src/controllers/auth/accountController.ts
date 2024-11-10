@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from "express";
-import { SignupRequestFields } from "../../types/auth/authTypes";
+import { Account, SignupRequestFields } from "../../types/auth/authTypes";
 import errorFactory from "../../utils/errors/errorFactory";
 import { isValidEmail, isValidName, isValidUsername } from "../../servicesAndHelpers/auth/authHelper";
 import passwordHelper from "../../servicesAndHelpers/password/passwordHelper";
 import { AccountAttributes } from "../../repositories/accountRepository";
 import accountService from "../../servicesAndHelpers/auth/accountService";
+import { CREATE_ACCOUNT_FAILED_ERROR, INVALID_EMAIL_ERROR, INVALID_FIRST_NAME_ERROR, INVALID_LAST_NAME_ERROR, INVALID_USERNAME_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR, MISSING_USERNAME_ERROR, WEAK_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
+import logger from "../../config/logger";
 
 /**
  * Controller for managing account-related actions, including creating accounts.
@@ -20,6 +22,8 @@ const accountController = {
      */
     createAccount: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
+
+            logger.debug("Signup Request received.");
             const signupRequestData: SignupRequestFields = {
                 username: req.body.username,
                 password: req.body.password,
@@ -28,20 +32,26 @@ const accountController = {
                 email: req.body.email,
             };
 
-            validateCreateAccountRequest(signupRequestData);
-            const formattedSignupRequestData = formatCreateAccountRequest(signupRequestData);
+            logger.debug(signupRequestData);
 
-            const accountData: AccountAttributes = await accountService.createAccount(formattedSignupRequestData);
+            validateCreateAccountRequest(signupRequestData);
+            logger.debug("Successfully validated signup request data");
+
+            const formattedSignupRequestData = formatCreateAccountRequest(signupRequestData);
+            logger.debug("Formatted signup request data", formattedSignupRequestData);
+
+            const accountData: Account = await accountService.createAccount(formattedSignupRequestData);
             if (!accountData) {
-                throw errorFactory({
-                    message: "Failed to create account",
-                    statusCode: 500,
-                });
+                logger.error("No Account data received - should have thrown an error before getting to this point.");
+                throw errorFactory(CREATE_ACCOUNT_FAILED_ERROR);
             }
 
+            logger.debug("Account Data");
+            logger.debug(accountData);
             res.locals.account = accountData;
             next();
         } catch (error) {
+            logger.error(`Caught error in account contoller ${error}`);
             next(error);
         }
     },
@@ -55,28 +65,36 @@ const accountController = {
  */
 const validateCreateAccountRequest = (requestSignupData: SignupRequestFields): void => {
     if (!requestSignupData.email || requestSignupData.email.length === 0) {
-        throw errorFactory({ message: 'Missing email', statusCode: 400 });
+        logger.debug(`Missing email from request`);
+        throw errorFactory(MISSING_EMAIL_ERROR);
     }
     if (!requestSignupData.password || requestSignupData.password.length === 0) {
-        throw errorFactory({ message: 'Missing password', statusCode: 400 });
+        logger.debug(`Missing password from request`);
+        throw errorFactory(MISSING_PASSWORD_ERROR);
     }
     if (!requestSignupData.username || requestSignupData.username.length === 0) {
-        throw errorFactory({ message: 'Missing username', statusCode: 400 });
+        logger.debug(`Missing username from request`);
+        throw errorFactory(MISSING_USERNAME_ERROR);
     }
     if (requestSignupData.firstName && !isValidName(requestSignupData.firstName)) {
-        throw errorFactory({ message: 'Invalid first name: only letters and spaces allowed', statusCode: 400 });
+        logger.debug(`First name from request is not valid`);
+        throw errorFactory(INVALID_FIRST_NAME_ERROR);
     }
     if (requestSignupData.lastName && !isValidName(requestSignupData.lastName)) {
-        throw errorFactory({ message: 'Invalid last name: only letters and spaces allowed', statusCode: 400 });
+        logger.debug(`Last name from request is not valid`);
+        throw errorFactory(INVALID_LAST_NAME_ERROR);
     }
     if (!isValidEmail(requestSignupData.email)) {
-        throw errorFactory({ message: 'Invalid email', statusCode: 400 });
+        logger.debug(`Email from request is not valid`);
+        throw errorFactory(INVALID_EMAIL_ERROR);
     }
     if (!isValidUsername(requestSignupData.username)) {
-        throw errorFactory({ message: 'Invalid username: only letters and numbers allowed', statusCode: 400 });
+        logger.debug(`Username from request is not valid`);
+        throw errorFactory(INVALID_USERNAME_ERROR);
     }
     if (!passwordHelper.isPasswordStrong(requestSignupData.password)) {
-        throw errorFactory({ message: 'Password is too weak', statusCode: 400 });
+        logger.debug(`Password from request is weak`);
+        throw errorFactory(WEAK_PASSWORD_ERROR);
     }
 };
 
@@ -86,9 +104,13 @@ const validateCreateAccountRequest = (requestSignupData: SignupRequestFields): v
  * @param requestSignupData - The signup data from the request body
  * @returns A new object with the email in lowercase and other fields unchanged
  */
-const formatCreateAccountRequest = (requestSignupData: SignupRequestFields): SignupRequestFields => ({
+const formatCreateAccountRequest = (requestSignupData: SignupRequestFields): SignupRequestFields => {
+    const formattedSignupRequestData = {
     ...requestSignupData,
     email: requestSignupData.email.toLowerCase(),
-});
+    }
+    logger.debug("formatted signup request data:", JSON.stringify(formattedSignupRequestData));
+    return formattedSignupRequestData;
+};
 
 export default accountController;

@@ -4,6 +4,10 @@ import { isValidEmail } from "../../servicesAndHelpers/auth/authHelper";
 import errorFactory from "../../utils/errors/errorFactory";
 import authService from "../../servicesAndHelpers/auth/authService";
 import { AccountAttributes } from "../../repositories/accountRepository";
+import { INTERNAL_SERVER_ERROR, INVALID_EMAIL_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
+import { AuthenticatedRequest } from "../../middleware/tokenMiddleware";
+import logger from "../../config/logger";
+import tokenService from "../../servicesAndHelpers/auth/tokenService";
 
 /**
  * Controller for handling authentication actions.
@@ -43,10 +47,19 @@ const authController = {
      * @param res - Express Response object
      * @param next - Express NextFunction to pass control to the next middleware or error handler
      */
-    logout: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    logout: async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
         try {
-            // Placeholder for future logout logic if needed
-            res.status(200).json({ message: "Logout successful" });
+
+            //To do, pass in the account/ userid to invalidate all active tokens if the token passed to this fails to authenticate.
+
+            logger.debug(req.decodedToken);
+            if(!req.decodedToken) {
+                throw(errorFactory({statusCode: INTERNAL_SERVER_ERROR.statusCode, message: 'Failed to get decoded token values'}));
+            }
+            //We know this token exists as no error was thrown in the tokenMiddleware.authenticateToken
+            tokenService.blacklistToken(req.headers['authorization']?.split(' ')[1] as string);
+
+            res.status(200).json({message: "Logout successful"});
         } catch (error) {
             next(error);
         }
@@ -62,13 +75,13 @@ const authController = {
  */
 const validateLoginRequest = (loginRequestData: LoginRequestFields): void => {
     if (!loginRequestData.email || loginRequestData.email.length === 0) {
-        throw errorFactory({ message: 'Missing email', statusCode: 400 });
+        throw errorFactory(MISSING_EMAIL_ERROR);
     }
     if (!isValidEmail(loginRequestData.email)) {
-        throw errorFactory({ message: 'Invalid Email', statusCode: 400 });
+        throw errorFactory(INVALID_EMAIL_ERROR);
     }
     if (!loginRequestData.password || loginRequestData.password.length === 0) {
-        throw errorFactory({ message: 'Missing password', statusCode: 400 });
+        throw errorFactory(MISSING_PASSWORD_ERROR);
     }
 };
 

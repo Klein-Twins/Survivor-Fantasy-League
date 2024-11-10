@@ -4,6 +4,7 @@ import logger from "../config/logger";
 import { ProfileAttributes } from "../models/Profile";
 import { UserAttributes } from "../models/User";
 import errorFactory from "../utils/errors/errorFactory";
+import { INTERNAL_SERVER_ERROR } from "../constants/auth/responseErrorConstants";
 
 const profileRepository = {
 
@@ -20,16 +21,12 @@ const profileRepository = {
         transaction?: Transaction
     ): Promise<ProfileAttributes> => {
         try {
-            const profileRecord = await models.Profile.create(input, { transaction });
+            const profileRecord = (await models.Profile.create(input, { transaction })).get({plain: true}) as ProfileAttributes;
 
             if (!profileRecord) {
-                throw errorFactory({
-                    statusCode: 500,
-                    message: `Failed to create profile record with Profile ID: ${input.PROFILE_ID}`,
-                });
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
-
-            logger.debug('Profile record created:', profileRecord);
+            
             return profileRecord;
         } catch (error) {
             logger.error(`Failed to createProfile record for profile id ${input.PROFILE_ID}: ${error}`);
@@ -53,13 +50,10 @@ const profileRepository = {
             });
 
             if (!profileRecord) {
-                throw errorFactory({
-                    statusCode: 404,
-                    message: `Profile with Profile ID: ${profileId} does not exist in the database.`,
-                });
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
 
-            logger.debug('Profile record found by Profile ID:', profileRecord);
+            logger.debug('Profile record found by Profile ID:', profileRecord.toJSON());
             return profileRecord;
         } catch (error) {
             logger.error(`Failed to get profile record by profile id ${profileId}: ${error}`);
@@ -88,10 +82,7 @@ const profileRepository = {
             });
 
             if (!profileRecord) {
-                throw errorFactory({
-                    statusCode: 404,
-                    message: `Profile with User ID: ${userId} does not exist in the database.`,
-                });
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
 
             logger.debug('Profile record found by User ID:', profileRecord);

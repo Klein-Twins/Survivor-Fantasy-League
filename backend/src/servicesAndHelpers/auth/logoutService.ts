@@ -1,4 +1,4 @@
-import { AuthLogoutResponseData } from '../../types/auth/authTypes';
+import { INVALID_TOKEN_ERROR } from '../../constants/auth/responseErrorConstants';
 import errorFactory from "../../utils/errors/errorFactory";
 import tokenService from './tokenService';
 
@@ -16,10 +16,10 @@ const logoutService = {
    * @returns A response data object with a success message and status code.
    * @throws A 401 error if the token is invalid or has been blacklisted.
    */
-  logout: (token: string): AuthLogoutResponseData => {
+  logout: (token: string) => {
     // Verify if the token is valid and not blacklisted
     if (!tokenService.verifyTokenIsNotBlacklistedAndIsValid(token)) {
-      throw errorFactory({ message: "Session token invalid", statusCode: 401 });
+      throw errorFactory(INVALID_TOKEN_ERROR);
     }
 
     // Blacklist the token to prevent further use

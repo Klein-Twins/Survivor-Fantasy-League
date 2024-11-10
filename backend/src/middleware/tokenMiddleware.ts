@@ -4,9 +4,12 @@ import { JWT_SECRET } from '../config/config';
 import { AccountAttributes } from '../repositories/accountRepository';
 import tokenService from '../servicesAndHelpers/auth/tokenService';
 import errorFactory from '../utils/errors/errorFactory';
+import { BLACKLISTED_TOKEN_ERROR, INTERNAL_SERVER_ERROR, INVALID_TOKEN_ERROR } from '../constants/auth/responseErrorConstants';
+import logger from '../config/logger';
+import { Account } from '../types/auth/authTypes';
 
-interface AuthenticatedRequest extends Request {
-    user?: string | jwt.JwtPayload; // The user payload can be a string or a decoded JWT object
+export interface AuthenticatedRequest extends Request {
+    decodedToken?: string | jwt.JwtPayload; // The user payload can be a string or a decoded JWT object
 }
 
 const tokenMiddleware = {
@@ -27,17 +30,23 @@ const tokenMiddleware = {
             return next(errorFactory({ message: 'Access token required', statusCode: 401 }));
         }
 
+        if(tokenService.isTokenBlacklisted(token)) {
+            logger.debug("Token was already blacklisted. Not authenticated...");
+            return next(errorFactory(BLACKLISTED_TOKEN_ERROR));
+        }
+
         jwt.verify(token, JWT_SECRET, (err, decoded) => {
             if (err) {
-                return next(errorFactory({ message: 'Invalid or expired token', statusCode: 403 }));
+                return next(errorFactory(INVALID_TOKEN_ERROR));
             }
-            req.user = decoded;
+            req.decodedToken = decoded;
+            logger.debug(decoded);
             next();
         });
     },
 
     /**
-     * Middleware to generate a JWT token for an authenticated user.
+     * Middleware AFTER controller to generate a JWT token for an authenticated user.
      * It retrieves the user data from `res.locals.user`, generates a token, and adds it to the response.
      *
      * @param req - The Express request object.
@@ -46,10 +55,12 @@ const tokenMiddleware = {
      */
     generateToken: (req: Request, res: Response, next: NextFunction): void => {
         try {
-            const account = res.locals.user as AccountAttributes;
+            const account = res.locals.account;
+            logger.debug(account);
 
             if (!account) {
-                throw errorFactory({ statusCode: 500, message: "User data missing for token generation" });
+                logger.error("Account data missing for token generation");
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
 
             // Generate a JWT token using the user's account ID

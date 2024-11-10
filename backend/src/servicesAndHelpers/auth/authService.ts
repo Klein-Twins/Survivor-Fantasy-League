@@ -5,6 +5,8 @@ import { LoginRequestFields } from '../../types/auth/authTypes';
 import errorFactory from '../../utils/errors/errorFactory';
 import accountService from './accountService';
 import passwordService from '../password/passwordService';
+import { INCORRECT_PASSWORD } from '../../constants/auth/responseErrorConstants';
+import logger from '../../config/logger';
 
 const authService = {
   
@@ -21,15 +23,14 @@ const authService = {
 
     // Retrieve user record based on email
     const userRecord: UserAttributes = await userRepository.findUserRecordByEmail(email);
-    
+    logger.debug(`Found user record for ${email}`);
+
     // Check if the provided password matches the stored user password
     const isAuthenticated: boolean = await passwordService.checkPasswordAgainstUserPassword(userRecord, password);
+    logger.debug(`User is authenticated`);
     
     if (!isAuthenticated) {
-      throw errorFactory({
-        message: "Incorrect password. Please try again.",
-        statusCode: 401,
-      });
+      throw errorFactory(INCORRECT_PASSWORD);
     }
 
     // Fetch and return account details
