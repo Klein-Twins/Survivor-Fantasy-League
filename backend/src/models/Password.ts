@@ -23,8 +23,7 @@ const PasswordModel = (sequelize: Sequelize) => {
     {
       passwordSeq: {
         type: DataTypes.INTEGER,
-        primaryKey: true,
-        autoIncrement: true,
+        primaryKey: false,
         field: 'PASSWORD_SEQ',
       },
       userId: {
@@ -48,6 +47,12 @@ const PasswordModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'USR_PASSWORDS',
       timestamps: true,
+      indexes: [
+        {
+          unique: true,
+          fields: ['USER_ID', 'PASSWORD_SEQ']
+        }
+      ]
     }
   );
 

@@ -26,10 +26,13 @@ const passwordRepository = {
             const maxPasswordSeqResult = await models.Password.max('passwordSeq', {
                 where: { userId },
             });
-
+            logger.debug(`maxPasswordSequResult=${maxPasswordSeqResult}`);
+            
             const newPasswordSeq = (typeof maxPasswordSeqResult === 'number' ? maxPasswordSeqResult : 0) + 1;
+            logger.debug(`newPasswordSeq = ${newPasswordSeq}`);
 
             await passwordRepository.setAllPasswordsForUserIdToInactive(userId, transaction);
+            logger.debug(`Set all active passwords for user ${userId} to active=false`);
 
             const newPasswordRecord = await models.Password.create({
                 userId,
@@ -37,6 +40,7 @@ const passwordRepository = {
                 active: true,
                 passwordSeq: newPasswordSeq,
             }, { transaction });
+            logger.debug(`Created new password record in database.`);
 
             if (!newPasswordRecord) {
                 throw errorFactory(INTERNAL_SERVER_ERROR);
