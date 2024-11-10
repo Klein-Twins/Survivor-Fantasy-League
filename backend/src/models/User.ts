@@ -1,4 +1,4 @@
-import { DataTypes, Model, Sequelize, Optional } from 'sequelize';
+import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface UserAttributes {
   USER_ID: string;
@@ -15,7 +15,8 @@ const UserModel = (sequelize: Sequelize) => {
     public USER_EMAIL!: string;
 
     static associate(models: any) {
-      this.hasMany(models.Password, { foreignKey: 'USER_ID' });
+      this.hasMany(models.Password, { foreignKey: 'USER_ID', as: 'Password' });
+      this.belongsTo(models.Profile, { foreignKey: 'USER_PROFILE_ID', as: 'Profile' })
     }
   }
 

@@ -30,7 +30,6 @@ const SurvivorCastPage : React.FC = () => {
             setError(null);
             try {
                 const response = await axios.get('http://localhost:3000/api/survivors?seasonId=47');
-                console.log(response);
                 setSurvivors(response.data.survivors);
             } catch (error) {
                 setError("Failed to fetch survivors");

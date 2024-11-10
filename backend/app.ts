@@ -1,9 +1,13 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import cors from 'cors';
 import routes from './src/routes/index.ts';
 import { swaggerUi, swaggerSpec } from './src/config/swagger.ts';
 import path from 'path';
-import errorHandler from './src/middleware/errorHandler.ts';
+import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
+import requestLogger from './src/middleware/requestLoggerMiddleware.ts';
+import morgan from 'morgan';
+import logger from './src/config/logger.ts';
+import { Response, Request, NextFunction } from 'express';
 
 const corsOptions: cors.CorsOptions = {
     origin: '*', // Replace with frontend URL in production
@@ -15,6 +19,10 @@ const app = express();
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(requestLogger);
+
+
+
 
 // Load routes
 app.use('/api', routes);  // Mount all routes under '/api'
