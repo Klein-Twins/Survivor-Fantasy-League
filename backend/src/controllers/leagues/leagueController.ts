@@ -6,41 +6,42 @@ import leagueService from "../../servicesAndHelpers/leagues/leagueService";
 import { LeagueAttributes } from '../../models/Leagues';
 import errorHandler from '../../middleware/errorHandlerMiddleware';
 import seasonService from '../../servicesAndHelpers/season/seasonService';
+import logger from '../../config/logger';
+import errorFactory from '../../utils/errors/errorFactory';
+import { INVALID_NAME, INVALID_SEASON_ID, SEASON_NOT_FOUND } from '../../constants/auth/responseErrorConstants';
 
 const leagueController = {
     createLeague: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const { seasonId, name } = req.body;
-        console.log(req.body);
-    
-        const parsedSeasonId = seasonId ? parseInt(seasonId as string, 10) : undefined;
-    
-        if (!parsedSeasonId || !name) {
-            const error:  CustomError = {
-                statusCode: 400, 
-                message: "Request is missing one of the required fields: seasonId, name",
-                name: 'Missing Required Fields'
+        try {
+            const { seasonId, name } = req.body;
+            const parsedSeasonId = seasonId ? parseInt(seasonId as string, 10) : undefined;
+            
+            validateCreateLeagueRequest(seasonId, name);
+            const doesSeasonExist: boolean = await seasonService.doesSeasonExist(parsedSeasonId!)
+            if (!doesSeasonExist) {
+                throw errorFactory(SEASON_NOT_FOUND);
             }
-            errorHandler(error, req, res, next);
-            return;
-        }
-
-        const doesSeasonExist: boolean = await seasonService.doesSeasonExist(parsedSeasonId)
-        if (!doesSeasonExist) {
-            const error: NotFoundError = new NotFoundError(`Season with seasonId ${parsedSeasonId} does not exist.`);
-            errorHandler(error, req, res, next);
-            return;
-        }
     
-        try {            
             let league : LeagueAttributes = await leagueService.createLeague(seasonId, name);
             league = await leagueService.getLeagueByLeagueId(league.leagueId)
             const responseBody : CreateLeagueResponse = leagueResponseBuilder.buildCreateLeagueResponse(league);
-
             res.status(201).json(responseBody);
+
         } catch (error) {
-            errorHandler(error, req, res, next)        
+            logger.debug("Caught error in leagueController.createLeague()")
+            next(error)
         }
+
     }
 };
+
+const validateCreateLeagueRequest = (seasonId: number, name: string) : void => {
+    if (!seasonId) {
+        throw errorFactory(INVALID_SEASON_ID)
+    }
+    if (!name) {
+        throw errorFactory(INVALID_NAME)
+    }
+}
 
 export default leagueController;

@@ -2,7 +2,7 @@ import { APIResponseData } from "../api/apiResponseTypes";
 import { LeagueWithDetails } from "./leagueTypes";
 
 export interface CreateLeagueResponse extends APIResponseData {
-    LEAGUE: LeagueWithDetails;
+    league: LeagueWithDetails;
 }
 
 export interface CreateLeagueRequest {
