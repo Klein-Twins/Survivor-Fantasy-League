@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import { Sequelize } from 'sequelize';
 import initModels from '../models/InitModels';
 import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME, NODE_ENV } from './config';
@@ -26,7 +25,7 @@ const dbConfig: Record<Environment, DbConfig> = {
   test: {
     username: DB_USERNAME,
     password: DB_PASSWORD,
-    database: `${DB_HOST}_tests`,
+    database: `${DB_NAME}_tests`,
     host: DB_HOST,
     port: DB_PORT,
     dialect: 'postgres',
@@ -34,7 +33,7 @@ const dbConfig: Record<Environment, DbConfig> = {
   production: {
     username: DB_USERNAME,
     password: DB_PASSWORD,
-    database: `${DB_HOST}_production`,
+    database: `${DB_NAME}_production`,
     host: DB_HOST,
     port: DB_PORT,
     dialect: 'postgres',
@@ -55,7 +54,8 @@ const sequelize = new Sequelize(currentConfig.database!, currentConfig.username!
 const testConnection = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
-    console.log(`Connection to the database ${currentConfig.database} has been established successfully.`);
+    if(NODE_ENV !== 'test')
+      console.log(`Connection to the database ${currentConfig.database} has been established successfully.`);
   } catch (error) {
     console.error("Unable to connect to the database:", error);
   }

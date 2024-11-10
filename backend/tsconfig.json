@@ -1,5 +1,5 @@
 {
-  "include": ["src/**/*.ts", "tests/**/*", "src/utils/apiResponseFormatters"],
+  "include": ["src/**/*.ts", "tests/**/*", "src/utils/apiFormatters"],
   "exclude": [
     "node_modules",                      // Exclude node_modules
   ],

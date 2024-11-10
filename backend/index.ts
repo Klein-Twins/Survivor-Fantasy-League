@@ -1,4 +1,3 @@
-// src/index.ts
 import app from './app.ts';
 import { APP_PORT, NODE_ENV } from './src/config/config.ts';
 import { sequelize } from './src/config/db.ts'; // Import the initialized models
@@ -24,7 +23,7 @@ const startServer = async (): Promise<void> => {
   }
 };
 
-// Start the server
+// Only start the server if we are not in the test environment
 if(NODE_ENV !== 'test') {
   startServer();
 }

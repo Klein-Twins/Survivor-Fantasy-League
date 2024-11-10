@@ -13,4 +13,4 @@ export interface APIResponseData {
  * A more specific error response structure extending the base API response.
  * This can be used for all error responses.
  */
-export interface APIResponseError extends APIResponseData {}
+export interface APIResponseError extends Partial<APIResponseData> {}
