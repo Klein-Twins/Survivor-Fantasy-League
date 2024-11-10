@@ -1,9 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { LoginRequestFields } from "../../types/auth/authTypes";
+import { Account, LoginRequestFields } from "../../types/auth/authTypes";
 import { isValidEmail } from "../../servicesAndHelpers/auth/authHelper";
 import errorFactory from "../../utils/errors/errorFactory";
 import authService from "../../servicesAndHelpers/auth/authService";
-import { AccountAttributes } from "../../repositories/accountRepository";
 import { INTERNAL_SERVER_ERROR, INVALID_EMAIL_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
 import { AuthenticatedRequest } from "../../middleware/tokenMiddleware";
 import logger from "../../config/logger";
@@ -31,7 +30,7 @@ const authController = {
             validateLoginRequest(loginRequestData);
             const formattedLoginRequestData = formatLoginRequest(loginRequestData);
 
-            const account: AccountAttributes = await authService.login(formattedLoginRequestData);
+            const account: Account = await authService.login(formattedLoginRequestData);
             res.locals.account = account;
 
             next();

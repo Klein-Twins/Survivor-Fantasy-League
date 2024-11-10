@@ -1,6 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Account, SignupRequestFields } from '../../types/auth/authTypes';
-import accountRepository, { AccountAndPasswordAttributes, AccountAttributes } from '../../repositories/accountRepository';
+import { Account, AccountAndPassword, SignupRequestFields, UserIncludeProfile } from '../../types/auth/authTypes';
+import accountRepository from '../../repositories/accountRepository';
 import userRepository from '../../repositories/userRepository';
 import errorFactory from '../../utils/errors/errorFactory';
 import { UserAttributes } from '../../models/User';
@@ -27,16 +27,14 @@ const accountService = {
         const userProfileId = uuidv4();
         const userId = uuidv4();
 
-        const accountAndPassword: AccountAndPasswordAttributes = {
-            USER_EMAIL: fields.email,
-            USER_ID: userId,
-            USER_NAME: fields.username,
-            PROFILE: {
-                PROFILE_ID: userProfileId,
-                FIRST_NAME: fields.firstName,
-                LAST_NAME: fields.lastName,
-                IMAGE_URL: 'TODO', // Placeholder for image URL
-            },
+        const accountAndPassword: AccountAndPassword = {
+            email: fields.email,
+            userId: userId,
+            userName: fields.username,
+            profileId: userProfileId,
+            firstName: fields.firstName,
+            lastName: fields.lastName,
+            imageUrl: 'TBD',
             PASSWORD: fields.password,
         };
         
@@ -51,7 +49,7 @@ const accountService = {
      * @param username - The username to check.
      * @throws A 400 error if the email or username is already tied to an account.
      */
-    checkAccountAvailable: async (email: UserAttributes["USER_EMAIL"], username: UserAttributes["USER_NAME"]): Promise<void> => {
+    checkAccountAvailable: async (email: UserAttributes["email"], username: UserAttributes["userName"]): Promise<void> => {
         // Check if the email is available
         if (!(await userRepository.isEmailAvailable(email))) {
             logger.debug(`${email} is unavailable`)
@@ -71,8 +69,20 @@ const accountService = {
      * @param email - The email of the account to retrieve.
      * @returns A promise that resolves to the account details.
      */
-    getAccountByEmail: async (email: UserAttributes["USER_EMAIL"]): Promise<AccountAttributes> => {
-        return await accountRepository.getAccountByEmail(email);
+    getAccountByEmail: async (email: UserAttributes["email"]): Promise<Account> => {
+        const account: UserIncludeProfile = await accountRepository.getAccountByEmail(email);
+
+        const formattedAccount : Account = {
+            userId: account.userId,
+            userName: account.userName,
+            profileId: account.profileId,
+            email: account.email,
+            firstName: account.profile.firstName,
+            lastName: account.profile.lastName,
+            imageUrl: account.profile.imageUrl
+        }
+
+        return formattedAccount;
     },
 };
 

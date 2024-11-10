@@ -18,13 +18,13 @@ const passwordRepository = {
      * @returns A promise resolving to the newly created password record.
      */
     createPasswordForUserId: async (
-        userId: UserAttributes['USER_ID'],
+        userId: UserAttributes['userId'],
         hashedPassword: string,
         transaction?: Transaction
     ): Promise<PasswordAttributes> => {
         try {
-            const maxPasswordSeqResult = await models.Password.max('PASSWORD_SEQ', {
-                where: { USER_ID: userId },
+            const maxPasswordSeqResult = await models.Password.max('passwordSeq', {
+                where: { userId },
             });
 
             const newPasswordSeq = (typeof maxPasswordSeqResult === 'number' ? maxPasswordSeqResult : 0) + 1;
@@ -32,10 +32,10 @@ const passwordRepository = {
             await passwordRepository.setAllPasswordsForUserIdToInactive(userId, transaction);
 
             const newPasswordRecord = await models.Password.create({
-                USER_ID: userId,
-                PASSWORD: hashedPassword,
-                ACTIVE: true,
-                PASSWORD_SEQ: newPasswordSeq,
+                userId,
+                password: hashedPassword,
+                active: true,
+                passwordSeq: newPasswordSeq,
             }, { transaction });
 
             if (!newPasswordRecord) {
@@ -59,16 +59,16 @@ const passwordRepository = {
      * @returns A promise that resolves when all passwords are set to inactive.
      */
     setAllPasswordsForUserIdToInactive: async (
-        userId: UserAttributes["USER_ID"],
+        userId: UserAttributes["userId"],
         transaction?: Transaction
     ): Promise<void> => {
         try {
             await models.Password.update(
-                { ACTIVE: false },
+                { active: false },
                 {
                     where: {
-                        USER_ID: userId,
-                        ACTIVE: true,
+                        userId: userId,
+                        active: true,
                     },
                     transaction
                 }
@@ -93,17 +93,17 @@ const passwordRepository = {
     ): Promise<void> => {
         try {
             await models.Password.update(
-                { ACTIVE: false },
+                { active: false },
                 {
                     where: {
-                        USER_ID: passwordRecord.USER_ID,
-                        PASSWORD_SEQ: passwordRecord.PASSWORD_SEQ,
+                        userId: passwordRecord.userId,
+                        passwordSeq: passwordRecord.passwordSeq,
                     },
                     transaction
                 }
             );
         } catch (error) {
-            logger.error(`Failed to set password seq ${passwordRecord.PASSWORD_SEQ} to inactive for user with user id ${passwordRecord.USER_ID}: ${error}`)
+            logger.error(`Failed to set password seq ${passwordRecord.passwordSeq} to inactive for user with user id ${passwordRecord.userId}: ${error}`)
             throw (error);
         }
     },
@@ -116,9 +116,9 @@ const passwordRepository = {
      * 
      * @returns A promise that resolves to the most recent active password.
      */
-    getActivePasswordForUserId: async (userId: UserAttributes["USER_ID"]): Promise<PasswordAttributes> => {
+    getActivePasswordForUserId: async (userId: UserAttributes["userId"]): Promise<PasswordAttributes> => {
         const userPasswords = await models.Password.findAll({
-            where: { USER_ID: userId, ACTIVE: true },
+            where: { userId, active: true },
             order: [['createdAt', 'DESC']]
         });
 
@@ -157,8 +157,8 @@ const passwordRepository = {
         transaction?: Transaction
     ): Promise<void> => {
         await models.Password.update(
-            { ACTIVE: false },
-            { where: { USER_ID: passwordRecord.USER_ID, PASSWORD_SEQ: passwordRecord.PASSWORD_SEQ }, transaction }
+            { active: false },
+            { where: { userId: passwordRecord.userId, passwordSeq: passwordRecord.passwordSeq }, transaction }
         );
     },
 };
