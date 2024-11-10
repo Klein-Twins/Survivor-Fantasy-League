@@ -27,6 +27,10 @@ app.use(requestLogger);
 // Load routes
 app.use('/api', routes);  // Mount all routes under '/api'
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+app.get('/swagger.json', (req, res) => {
+  res.setHeader('Content-Type', 'application/json');
+  res.send(swaggerSpec); // Send the Swagger JSON specification
+});
 app.use('/images/survivors', express.static(path.join(__dirname, 'src/assets/images/survivors')));
 
 app.use(errorHandler);

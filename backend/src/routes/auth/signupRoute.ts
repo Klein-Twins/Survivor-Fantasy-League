@@ -9,6 +9,7 @@ const router = express.Router();
  * /api/auth/signup:
  *  post:
  *      summary: Register a new user
+ *      operationId: signupUser
  *      description: Creates a new User account with a provided email, username, and password.
  *      tags:
  *          - Authentication

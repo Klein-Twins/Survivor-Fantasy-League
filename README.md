@@ -1,3 +1,10 @@
+## Generating API Client Library
+### Pre-requisites
+1. This application uses a script that pulls the _swagger-codegen-cli-v3_ image from [Docker](https://www.docker.com/products/docker-desktop/)
+```
+npm run generate-client
+```
+
 ## Installing Dependencies
 Before running the application, you must install all the necessary dependencies.  You can do so by entering the following command:
 ```
