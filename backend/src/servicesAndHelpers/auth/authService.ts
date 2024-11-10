@@ -1,6 +1,7 @@
 import { UserAttributes } from '../../models/User';
+import { AccountAttributes } from '../../repositories/accountRepository';
 import userRepository from '../../repositories/userRepository';
-import { Account, LoginRequestFields } from '../../types/auth/authTypes';
+import { LoginRequestFields } from '../../types/auth/authTypes';
 import errorFactory from '../../utils/errors/errorFactory';
 import accountService from './accountService';
 import passwordService from '../password/passwordService';
@@ -17,7 +18,7 @@ const authService = {
    * @returns A promise that resolves to the account details if authentication is successful.
    * @throws A 401 error if the password is incorrect.
    */
-  login: async (loginRequestData: LoginRequestFields): Promise<Account> => {
+  login: async (loginRequestData: LoginRequestFields): Promise<AccountAttributes> => {
     const { email, password } = loginRequestData;
 
     // Retrieve user record based on email

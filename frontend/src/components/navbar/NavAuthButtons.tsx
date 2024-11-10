@@ -4,7 +4,6 @@ import { openModal } from "../../store/slices/modalSlice";
 import { RootState } from "../../store/store";
 
 import styles from './NavAuthButtons.module.css';
-import ProfileButton from './ProfileButton';
 
 interface NavAuthButtonsProps {
     onClick : () => void
@@ -30,7 +29,6 @@ const NavAuthButtons: React.FC<NavAuthButtonsProps> = ({onClick}) => {
         onClick();
     }
 
-
     return (
         <>
             {!isAuthenticated ? (
@@ -43,7 +41,9 @@ const NavAuthButtons: React.FC<NavAuthButtonsProps> = ({onClick}) => {
                     </button>
                 </div>
             ) : (
-                <ProfileButton onLogoutClick={handleLogOutClick} />
+                <button onClick={handleLogOutClick} className={styles.logoutButton}>
+                    Log Out
+                </button>
             )}
         </>
     );

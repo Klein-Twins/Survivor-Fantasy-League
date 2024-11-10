@@ -1,8 +1,14 @@
 import { models } from "../config/db";
+import { SurvivorDetailsOnSeasonAttributes } from "../models/SurvivorDetailsOnSeason";
 import errorFactory from "../utils/errors/errorFactory";
 import logger from "../config/logger";
+import { SurvivorsAttributes } from "../models/Survivors";
 import { NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
-import { SurvivorDetailsOnSeasonIncludeSurvivors } from "../types/survivor/survivorTypes";
+import { SurvivorWithDetails } from "../types/survivor/survivorTypes";
+
+export interface SurvivorWithDetailsAttributes extends SurvivorDetailsOnSeasonAttributes {
+    SURVIVOR : SurvivorsAttributes
+}
 
 const survivorRepository = {
 
@@ -15,21 +21,21 @@ const survivorRepository = {
      */
     getSurvivorsWithDetailsInSeason: async (
         seasonId: number
-    ): Promise<SurvivorDetailsOnSeasonIncludeSurvivors[]> => {
+    ): Promise<SurvivorWithDetails[]> => {
         try {
             const results = await models.SurvivorDetailsOnSeason.findAll({
-                where: { seasonId },
+                where: { SEASON_ID: seasonId },
                 include: [
                     {
                         model: models.Survivors,
                         required: true,
                         as: 'Survivor',
                         attributes: {
-                            exclude: ['survivorId'],
+                            exclude: ['SURVIVOR_ID'],
                         },
                     },
                 ],
-            }) as unknown as SurvivorDetailsOnSeasonIncludeSurvivors[]
+            }) as unknown as SurvivorWithDetails[]
 
             if (results.length === 0) {
                 throw errorFactory({
@@ -37,8 +43,8 @@ const survivorRepository = {
                     statusCode: NOT_FOUND_ERROR.statusCode,
                 });
             }
-            return results;
             
+            return results;
         } catch (error) {
             logger.error(`Error retrieving survivors from DB for season ${seasonId}: ${error}`);
             throw error;

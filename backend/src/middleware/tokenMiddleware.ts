@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { JWT_SECRET } from '../config/config';
+import { AccountAttributes } from '../repositories/accountRepository';
 import tokenService from '../servicesAndHelpers/auth/tokenService';
 import errorFactory from '../utils/errors/errorFactory';
 import { BLACKLISTED_TOKEN_ERROR, INTERNAL_SERVER_ERROR, INVALID_TOKEN_ERROR } from '../constants/auth/responseErrorConstants';
@@ -54,7 +55,7 @@ const tokenMiddleware = {
      */
     generateToken: (req: Request, res: Response, next: NextFunction): void => {
         try {
-            const account : Account = res.locals.account;
+            const account = res.locals.account;
             logger.debug(account);
 
             if (!account) {
@@ -63,10 +64,7 @@ const tokenMiddleware = {
             }
 
             // Generate a JWT token using the user's account ID
-            const token = tokenService.generateToken({
-                profileId: account.profileId,
-                userName: account.userName
-            });
+            const token = tokenService.generateToken({ userId: account.USER_ID });
 
             // Set the Authorization header with the generated token
             res.set("Authorization", `Bearer ${token}`)

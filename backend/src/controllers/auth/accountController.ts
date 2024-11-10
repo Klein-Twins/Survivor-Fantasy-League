@@ -3,6 +3,7 @@ import { Account, SignupRequestFields } from "../../types/auth/authTypes";
 import errorFactory from "../../utils/errors/errorFactory";
 import { isValidEmail, isValidName, isValidUsername } from "../../servicesAndHelpers/auth/authHelper";
 import passwordHelper from "../../servicesAndHelpers/password/passwordHelper";
+import { AccountAttributes } from "../../repositories/accountRepository";
 import accountService from "../../servicesAndHelpers/auth/accountService";
 import { CREATE_ACCOUNT_FAILED_ERROR, INVALID_EMAIL_ERROR, INVALID_FIRST_NAME_ERROR, INVALID_LAST_NAME_ERROR, INVALID_USERNAME_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR, MISSING_USERNAME_ERROR, WEAK_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
 import logger from "../../config/logger";

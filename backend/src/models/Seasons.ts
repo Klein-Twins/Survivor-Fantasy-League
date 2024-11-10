@@ -1,44 +1,44 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface SeasonsAttributes {
-  seasonId: number;          // Primary key of type INTEGER
-  theme?: string | null;      // Theme of the season (optional)
-  location?: string | null;   // Location where the season takes place (optional)
-  name?: string | null;       // Name of the season (optional)
+  SEASON_ID: number;          // Primary key of type INTEGER
+  THEME?: string | null;      // Theme of the season (optional)
+  LOCATION?: string | null;   // Location where the season takes place (optional)
+  NAME?: string | null;       // Name of the season (optional)
 }
 
 const SeasonsModel = (sequelize: Sequelize) => {
   class Seasons extends Model<SeasonsAttributes> implements SeasonsAttributes {
-    public seasonId!: number;
-    public theme?: string | null;
-    public location?: string | null;
-    public name?: string | null;
+    public SEASON_ID!: number;
+    public THEME?: string | null;
+    public LOCATION?: string | null;
+    public NAME?: string | null;
 
     static associate(models: any) {
       this.hasMany(models.Leagues, {foreignKey: 'SEASON_ID'})
-      this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'seasonId', as: 'SurvivorDetailsOnSeason' });
+      this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'SEASON_ID', as: 'SurvivorDetailsOnSeason' });
     }
   }
 
   Seasons.init(
     {
-      seasonId: {
+      SEASON_ID: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
         field: 'SEASON_ID',
       },
-      theme: {
+      THEME: {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'THEME',
       },
-      location: {
+      LOCATION: {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'LOCATION',
       },
-      name: {
+      NAME: {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'NAME',

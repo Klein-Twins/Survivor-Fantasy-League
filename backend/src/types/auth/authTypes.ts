@@ -25,11 +25,7 @@ export interface SignupRequestFields {
 /**
  * Defines the Account type which is sent back for login and signup responses
  */
-export type Account = UserAttributes & Omit<ProfileAttributes, "profileId">
+export type Account = Omit<UserAttributes, "USER_PROFILE_ID"> & ProfileAttributes
 export type AccountAndPassword = Account & {
     PASSWORD: string
-}
-
-export interface UserIncludeProfile extends UserAttributes {
-    profile: Omit<ProfileAttributes, "profileId">;
 }

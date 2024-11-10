@@ -29,7 +29,7 @@ const profileRepository = {
             
             return profileRecord;
         } catch (error) {
-            logger.error(`Failed to createProfile record for profile id ${input.profileId}: ${error}`);
+            logger.error(`Failed to createProfile record for profile id ${input.PROFILE_ID}: ${error}`);
             throw error;
         }
     },
@@ -42,11 +42,11 @@ const profileRepository = {
      * @returns A promise that resolves to the profile record.
      */
     getProfileRecordByProfileId: async (
-        profileId: ProfileAttributes["profileId"]
+        profileId: ProfileAttributes["PROFILE_ID"]
     ): Promise<ProfileAttributes> => {
         try {
             const profileRecord = await models.Profile.findOne({
-                where: { profileId },
+                where: { PROFILE_ID: profileId },
             });
 
             if (!profileRecord) {
@@ -69,7 +69,7 @@ const profileRepository = {
      * @returns A promise that resolves to the profile record.
      */
     getProfileRecordByUserId: async (
-        userId: UserAttributes["userId"]
+        userId: UserAttributes["USER_ID"]
     ): Promise<ProfileAttributes> => {
 
         try {

@@ -1,18 +1,18 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface PasswordAttributes {
-  passwordSeq: number; // Primary key that auto-increments
-  userId: string;      // Composite primary key
-  password: string;     // The hashed password
-  active: boolean;      // The active password
+  PASSWORD_SEQ: number; // Primary key that auto-increments
+  USER_ID: string;      // Composite primary key
+  PASSWORD: string;     // The hashed password
+  ACTIVE: boolean;      // The active password
 }
 
 const PasswordModel = (sequelize: Sequelize) => {
   class Password extends Model<PasswordAttributes> implements PasswordAttributes {
-    public passwordSeq!: number;
-    public userId!: string;
-    public password!: string;
-    public active!: boolean;
+    public PASSWORD_SEQ!: number;
+    public USER_ID!: string;
+    public PASSWORD!: string;
+    public ACTIVE!: boolean;
 
     static associate(models: any) {
       this.belongsTo(models.User, { foreignKey: 'USER_ID', as: 'User' });
@@ -21,23 +21,24 @@ const PasswordModel = (sequelize: Sequelize) => {
 
   Password.init(
     {
-      passwordSeq: {
+      PASSWORD_SEQ: {
         type: DataTypes.INTEGER,
-        primaryKey: false,
+        primaryKey: true,
+        autoIncrement: true,
         field: 'PASSWORD_SEQ',
       },
-      userId: {
+      USER_ID: {
         type: DataTypes.UUID,
         allowNull: false,
         primaryKey: true,
         field: 'USER_ID',
       },
-      password: {
+      PASSWORD: {
         type: DataTypes.STRING(255),
         allowNull: false,
         field: 'PASSWORD',
       },
-      active: {
+      ACTIVE: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         field: 'ACTIVE'
@@ -47,12 +48,6 @@ const PasswordModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'USR_PASSWORDS',
       timestamps: true,
-      indexes: [
-        {
-          unique: true,
-          fields: ['USER_ID', 'PASSWORD_SEQ']
-        }
-      ]
     }
   );
 

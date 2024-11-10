@@ -1,12 +1,12 @@
 import { Transaction } from 'sequelize';
 import { PasswordAttributes } from '../../models/Password';
 import { UserAttributes } from '../../models/User';
+import { AccountAndPasswordAttributes } from '../../repositories/accountRepository';
 import passwordRepository from '../../repositories/passwordRepository';
 import errorFactory from '../../utils/errors/errorFactory';
 import passwordHelper from './passwordHelper';
 import logger from '../../config/logger';
 import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD, WEAK_PASSWORD_ERROR } from '../../constants/auth/responseErrorConstants';
-import { AccountAndPassword } from '../../types/auth/authTypes';
 
 /**
  * Service functions related to password management, including creating passwords, 
@@ -23,7 +23,7 @@ const passwordService = {
      * @throws A 400 error if the password is weak, or a 500 error if hashing fails.
      */
     createPasswordForAccount: async (
-        accountAndPassword: AccountAndPassword,
+        accountAndPassword: AccountAndPasswordAttributes,
         transaction: Transaction
     ): Promise<PasswordAttributes> => {
         // Ensure password strength before proceeding
@@ -40,7 +40,7 @@ const passwordService = {
 
         // Store the hashed password
         return await passwordRepository.createPasswordForUserId(
-            accountAndPassword.userId,
+            accountAndPassword.USER_ID,
             hashedPassword,
             transaction
         );
@@ -59,15 +59,15 @@ const passwordService = {
         password: string
     ): Promise<boolean> => {
         // Retrieve the active password for the user
-        const activePassword = await passwordRepository.getActivePasswordForUserId(user.userId);
+        const activePassword = await passwordRepository.getActivePasswordForUserId(user.USER_ID);
 
         if (!activePassword) {
-            logger.error(`No active password for user ${user.userId} found...`);
+            logger.error(`No active password for user ${user.USER_ID} found...`);
             throw errorFactory(PLEASE_RESET_PASSWORD);
         }
 
         // Compare the provided password with the stored password
-        return await passwordHelper.doPasswordsMatch(password, activePassword.password);
+        return await passwordHelper.doPasswordsMatch(password, activePassword.PASSWORD);
     }
 };
 

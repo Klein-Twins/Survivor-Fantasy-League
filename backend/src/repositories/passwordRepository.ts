@@ -18,29 +18,25 @@ const passwordRepository = {
      * @returns A promise resolving to the newly created password record.
      */
     createPasswordForUserId: async (
-        userId: UserAttributes['userId'],
+        userId: UserAttributes['USER_ID'],
         hashedPassword: string,
         transaction?: Transaction
     ): Promise<PasswordAttributes> => {
         try {
-            const maxPasswordSeqResult = await models.Password.max('passwordSeq', {
-                where: { userId },
+            const maxPasswordSeqResult = await models.Password.max('PASSWORD_SEQ', {
+                where: { USER_ID: userId },
             });
-            logger.debug(`maxPasswordSequResult=${maxPasswordSeqResult}`);
-            
+
             const newPasswordSeq = (typeof maxPasswordSeqResult === 'number' ? maxPasswordSeqResult : 0) + 1;
-            logger.debug(`newPasswordSeq = ${newPasswordSeq}`);
 
             await passwordRepository.setAllPasswordsForUserIdToInactive(userId, transaction);
-            logger.debug(`Set all active passwords for user ${userId} to active=false`);
 
             const newPasswordRecord = await models.Password.create({
-                userId,
-                password: hashedPassword,
-                active: true,
-                passwordSeq: newPasswordSeq,
+                USER_ID: userId,
+                PASSWORD: hashedPassword,
+                ACTIVE: true,
+                PASSWORD_SEQ: newPasswordSeq,
             }, { transaction });
-            logger.debug(`Created new password record in database.`);
 
             if (!newPasswordRecord) {
                 throw errorFactory(INTERNAL_SERVER_ERROR);
@@ -63,16 +59,16 @@ const passwordRepository = {
      * @returns A promise that resolves when all passwords are set to inactive.
      */
     setAllPasswordsForUserIdToInactive: async (
-        userId: UserAttributes["userId"],
+        userId: UserAttributes["USER_ID"],
         transaction?: Transaction
     ): Promise<void> => {
         try {
             await models.Password.update(
-                { active: false },
+                { ACTIVE: false },
                 {
                     where: {
-                        userId: userId,
-                        active: true,
+                        USER_ID: userId,
+                        ACTIVE: true,
                     },
                     transaction
                 }
@@ -97,17 +93,17 @@ const passwordRepository = {
     ): Promise<void> => {
         try {
             await models.Password.update(
-                { active: false },
+                { ACTIVE: false },
                 {
                     where: {
-                        userId: passwordRecord.userId,
-                        passwordSeq: passwordRecord.passwordSeq,
+                        USER_ID: passwordRecord.USER_ID,
+                        PASSWORD_SEQ: passwordRecord.PASSWORD_SEQ,
                     },
                     transaction
                 }
             );
         } catch (error) {
-            logger.error(`Failed to set password seq ${passwordRecord.passwordSeq} to inactive for user with user id ${passwordRecord.userId}: ${error}`)
+            logger.error(`Failed to set password seq ${passwordRecord.PASSWORD_SEQ} to inactive for user with user id ${passwordRecord.USER_ID}: ${error}`)
             throw (error);
         }
     },
@@ -120,9 +116,9 @@ const passwordRepository = {
      * 
      * @returns A promise that resolves to the most recent active password.
      */
-    getActivePasswordForUserId: async (userId: UserAttributes["userId"]): Promise<PasswordAttributes> => {
+    getActivePasswordForUserId: async (userId: UserAttributes["USER_ID"]): Promise<PasswordAttributes> => {
         const userPasswords = await models.Password.findAll({
-            where: { userId, active: true },
+            where: { USER_ID: userId, ACTIVE: true },
             order: [['createdAt', 'DESC']]
         });
 
@@ -161,8 +157,8 @@ const passwordRepository = {
         transaction?: Transaction
     ): Promise<void> => {
         await models.Password.update(
-            { active: false },
-            { where: { userId: passwordRecord.userId, passwordSeq: passwordRecord.passwordSeq }, transaction }
+            { ACTIVE: false },
+            { where: { USER_ID: passwordRecord.USER_ID, PASSWORD_SEQ: passwordRecord.PASSWORD_SEQ }, transaction }
         );
     },
 };

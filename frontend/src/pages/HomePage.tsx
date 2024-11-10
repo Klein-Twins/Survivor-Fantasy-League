@@ -4,11 +4,11 @@ import { RootState } from "../store/store";
 
 const HomePage: React.FC = () => {
 
-    const account = useSelector((state: RootState) => state.auth.account);
+    const user = useSelector((state: RootState) => state.auth.user);
     
     return (
         <>
-        <h1>{account ? `Hello ${account.userName}` : "Please login or create an account"}</h1>   
+        <h1>{user ? `Hello ${user.username}` : "Please login or create an account"}</h1>   
         </>
 
     )
