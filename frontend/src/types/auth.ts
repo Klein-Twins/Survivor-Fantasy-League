@@ -4,7 +4,7 @@ export interface User {
 }
 
 export interface AuthState {
-    user: User | null;
+    account: Account | null;
     isAuthenticated: boolean;
     loading: boolean;
     error: ResponseError | null
@@ -13,4 +13,14 @@ export interface AuthState {
 export interface ResponseError {
     message: string;
     statusCode: number;
+}
+
+export type Account = {
+    userId: string;
+    userName: string;
+    email: string;
+    profileId: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    imageUrl?: string | null
 }

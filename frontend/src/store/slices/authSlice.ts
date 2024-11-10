@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import { AuthState, User, ResponseError } from "../../types/auth.ts";
+import { AuthState, User, ResponseError, Account } from "../../types/auth.ts";
 import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
 import { loginUserService, logoutUserService, signupUserService } from "../../services/auth/authService.ts";
 
@@ -12,23 +12,23 @@ enum AuthActionTypes {
 }
 
 const storedToken = sessionStorage.getItem('token');
-const storedUser = sessionStorage.getItem('user');
+const storedAccount = sessionStorage.getItem('account');
 
 const initialState: AuthState = {
-    user: storedUser ? JSON.parse(storedUser) : null,
+    account: storedAccount ? JSON.parse(storedAccount) : null,
     isAuthenticated: !!storedToken,
     loading: false,
     error: null
 }
 
 const sessionManager = {
-    set: (token: string, user: User) => {
+    set: (token: string, account: Account) => {
         sessionStorage.setItem('token', token);
-        sessionStorage.setItem('user', JSON.stringify(user));
+        sessionStorage.setItem('account', JSON.stringify(account));
     },
     clear: () => {
         sessionStorage.removeItem('token');
-        sessionStorage.removeItem('user');
+        sessionStorage.removeItem('account');
     }
 }
 
@@ -37,29 +37,29 @@ const handleError = (error: any) : ResponseError => ({
     statusCode: error.response?.status || 500
 });
 
-interface UserActionPayload {
-    user: User;
+interface AccountActionPayload {
+    account: Account;
     token: string;
 }
-export const signupUser = createAsyncThunk<UserActionPayload, SignUpFormData, { rejectValue: ResponseError }>(
+export const signupUser = createAsyncThunk<AccountActionPayload, SignUpFormData, { rejectValue: ResponseError }>(
     AuthActionTypes.Signup,
     async (userData, { rejectWithValue }) => {
         try {
-            const { token, user } = await signupUserService(userData);
-            sessionManager.set(token, user);
-            return { user, token };
+            const { token, account } = await signupUserService(userData);
+            sessionManager.set(token, account);
+            return { account, token };
         } catch (error: any) {
             return rejectWithValue(handleError(error));
         }
     }
 );
-export const loginUser = createAsyncThunk<UserActionPayload, LogInFormData, { rejectValue: ResponseError }>(
+export const loginUser = createAsyncThunk<AccountActionPayload, LogInFormData, { rejectValue: ResponseError }>(
     AuthActionTypes.Login, 
     async (userData, { rejectWithValue }) => {
         try {
-            const { token, user } = await loginUserService(userData);
-            sessionManager.set(token, user);
-            return { user, token };
+            const { token, account } = await loginUserService(userData);
+            sessionManager.set(token, account);
+            return { account, token };
         } catch (error: any) {
             return rejectWithValue(handleError(error));
         }
@@ -80,9 +80,9 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: ResponseEr
     }
 )
 
-const setUserState = (state: AuthState, action: { payload?: UserActionPayload }) => {
+const setUserState = (state: AuthState, action: { payload?: AccountActionPayload }) => {
     state.loading = false;
-    state.user = action.payload?.user || null;
+    state.account = action.payload?.account || null;
     state.isAuthenticated = !!action.payload;
     state.error = action.payload ? null : {
         message: 'Unexpected error - no payload on action...',
@@ -107,7 +107,7 @@ const authSlice = createSlice({
     initialState,
     reducers: {
         logout: (state) => {
-            state.user = null;
+            state.account = null;
             state.isAuthenticated = false;
             state.error = null;
             sessionManager.clear();
@@ -127,7 +127,7 @@ const authSlice = createSlice({
             .addCase(logoutUser.pending, setLoadingState)
             .addCase(logoutUser.fulfilled, (state) => {
                 state.loading = false;
-                state.user = null;
+                state.account = null;
                 state.isAuthenticated = false;
                 state.error = null;
             })
