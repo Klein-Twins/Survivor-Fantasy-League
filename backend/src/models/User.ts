@@ -16,7 +16,7 @@ const UserModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       this.hasMany(models.Password, { foreignKey: 'userId', as: 'Password' });
-      this.belongsTo(models.Profile, { foreignKey: 'profileId', as: 'Profile' })
+      this.belongsTo(models.Profile, { foreignKey: 'profileId', as: 'profile' })
     }
   }
 

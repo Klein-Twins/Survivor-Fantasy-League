@@ -65,7 +65,7 @@ const accountRepository = {
             const userAndProfileRecord = await models.User.findOne({
                 include: {
                     model: models.Profile,
-                    as: 'Profile',
+                    as: 'profile',
                     required: true,
                 },
                 where: {
@@ -76,6 +76,8 @@ const accountRepository = {
             if (!userAndProfileRecord) {
                 throw errorFactory(ACCOUNT_NOT_FOUND);
             }
+
+            logger.debug(userAndProfileRecord);
 
             return userAndProfileRecord;
         } catch(error) {
