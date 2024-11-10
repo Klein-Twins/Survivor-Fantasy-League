@@ -1,45 +1,45 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface UserAttributes {
-  USER_ID: string;
-  USER_NAME: string;
-  USER_PROFILE_ID: string;
-  USER_EMAIL: string;
+  userId: string;
+  userName: string;
+  profileId: string;
+  email: string;
 }
 
 const UserModel = (sequelize: Sequelize) => {
   class User extends Model<UserAttributes> implements UserAttributes {
-    public USER_ID!: string;
-    public USER_NAME!: string;
-    public USER_PROFILE_ID!: string;
-    public USER_EMAIL!: string;
+    public userId!: string;
+    public userName!: string;
+    public profileId!: string;
+    public email!: string;
 
     static associate(models: any) {
-      this.hasMany(models.Password, { foreignKey: 'USER_ID', as: 'Password' });
-      this.belongsTo(models.Profile, { foreignKey: 'USER_PROFILE_ID', as: 'Profile' })
+      this.hasMany(models.Password, { foreignKey: 'userId', as: 'Password' });
+      this.belongsTo(models.Profile, { foreignKey: 'profileId', as: 'Profile' })
     }
   }
 
   User.init(
     {
-      USER_ID: {
+      userId: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
         field: 'USER_ID',
       },
-      USER_NAME: {
+      userName: {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'USER_NAME',
       },
-      USER_PROFILE_ID: {
+      profileId: {
         type: DataTypes.UUID,
         allowNull: false,
         defaultValue: DataTypes.UUIDV4,
         field: 'USER_PROFILE_ID',
       },
-      USER_EMAIL: {
+      email: {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'USER_EMAIL',

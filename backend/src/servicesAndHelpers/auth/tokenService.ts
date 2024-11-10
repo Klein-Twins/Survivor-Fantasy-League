@@ -3,13 +3,15 @@ import errorFactory from "../../utils/errors/errorFactory";
 import { JWT_SECRET, JWT_EXPIRATION } from '../../config/config';
 import { UserAttributes } from '../../models/User';
 import { BLACKLISTED_TOKEN_ERROR } from '../../constants/auth/responseErrorConstants';
+import { ProfileAttributes } from '../../models/Profile';
 
 /**
  * Interface to represent the payload of a user JWT.
  * Extends the standard JwtPayload with custom user properties.
  */
 export interface UserJwtPayload extends JwtPayload {
-    userId: UserAttributes["USER_ID"];
+    profileId: ProfileAttributes["profileId"];
+    userName: UserAttributes["userName"];
 }
 
 /**

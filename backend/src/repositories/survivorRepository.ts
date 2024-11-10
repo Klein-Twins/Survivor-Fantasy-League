@@ -1,14 +1,8 @@
 import { models } from "../config/db";
-import { SurvivorDetailsOnSeasonAttributes } from "../models/SurvivorDetailsOnSeason";
 import errorFactory from "../utils/errors/errorFactory";
 import logger from "../config/logger";
-import { SurvivorsAttributes } from "../models/Survivors";
 import { NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
-import { SurvivorWithDetails } from "../types/survivor/survivorTypes";
-
-export interface SurvivorWithDetailsAttributes extends SurvivorDetailsOnSeasonAttributes {
-    SURVIVOR : SurvivorsAttributes
-}
+import { SurvivorDetailsOnSeasonIncludeSurvivors } from "../types/survivor/survivorTypes";
 
 const survivorRepository = {
 
@@ -21,21 +15,21 @@ const survivorRepository = {
      */
     getSurvivorsWithDetailsInSeason: async (
         seasonId: number
-    ): Promise<SurvivorWithDetails[]> => {
+    ): Promise<SurvivorDetailsOnSeasonIncludeSurvivors[]> => {
         try {
             const results = await models.SurvivorDetailsOnSeason.findAll({
-                where: { SEASON_ID: seasonId },
+                where: { seasonId },
                 include: [
                     {
                         model: models.Survivors,
                         required: true,
                         as: 'Survivor',
                         attributes: {
-                            exclude: ['SURVIVOR_ID'],
+                            exclude: ['survivorId'],
                         },
                     },
                 ],
-            }) as unknown as SurvivorWithDetails[]
+            }) as unknown as SurvivorDetailsOnSeasonIncludeSurvivors[]
 
             if (results.length === 0) {
                 throw errorFactory({
@@ -43,8 +37,8 @@ const survivorRepository = {
                     statusCode: NOT_FOUND_ERROR.statusCode,
                 });
             }
-            
             return results;
+            
         } catch (error) {
             logger.error(`Error retrieving survivors from DB for season ${seasonId}: ${error}`);
             throw error;
