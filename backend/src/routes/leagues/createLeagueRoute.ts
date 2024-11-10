@@ -35,28 +35,48 @@ const router = express.Router();
  *             schema:
  *               type: object
  *               properties:
- *                 LEAGUE_ID:
+ *                 leagueId:
  *                   type: integer
  *                   description: The unique identifier of the newly created league
  *                   example: 123
- *                 SEASON_ID:
+ *                 seasonId:
  *                   type: integer
  *                   description: The ID of the season associated with the league
  *                   example: 47
- *                 NAME:
+ *                 name:
  *                   type: string
  *                   description: The name of the league
  *                   example: "Corner By The Bookshelf"
- *                 CREATED_AT:
+ *                 createdAt:
  *                   type: string
  *                   format: date-time
  *                   description: The timestamp when the league was created
  *                   example: "2024-11-09T14:55:30.000Z"
- *                 UPDATED_AT:
+ *                 updatedAt:
  *                   type: string
  *                   format: date-time
  *                   description: The timestamp when the league was last updated
  *                   example: "2024-11-09T14:55:30.000Z"
+ *                 season:
+ *                   type: object
+ *                   description: The season information associated with the league
+ *                   properties:
+ *                     seasonId:
+ *                       type: integer
+ *                       description: The unique identifier of the season
+ *                       example: 47
+ *                     theme:
+ *                       type: string
+ *                       description: The theme of the season
+ *                       example: "The New Era 2.0"
+ *                     location:
+ *                       type: string
+ *                       description: The location of the season
+ *                       example: "Fiji, Oceania"
+ *                     name:
+ *                       type: string
+ *                       description: The name of the season (optional)
+ *                       example: null
  *       '400':
  *         description: Bad request, missing required fields (name, seasonId)
  *         content:

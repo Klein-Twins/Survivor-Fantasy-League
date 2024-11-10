@@ -14,11 +14,11 @@ const seasonRepository = {
      * @returns A promise that resolves to the profile record.
      */
     getSeasonBySeasonId: async (
-        seasonId: SeasonsAttributes["SEASON_ID"]
+        seasonId: SeasonsAttributes["seasonId"]
     ): Promise<SeasonsAttributes | null> => {
         try {
             const season = await models.Seasons.findOne({
-                where: { SEASON_ID: seasonId },
+                where: { seasonId: seasonId },
             });
             if (season) {
                 logger.debug('Season record found by Season ID:', season.toJSON());

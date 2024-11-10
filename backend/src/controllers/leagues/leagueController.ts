@@ -33,7 +33,7 @@ const leagueController = {
     
         try {            
             let league : LeagueAttributes = await leagueService.createLeague(seasonId, name);
-            league = await leagueService.getLeagueByLeagueId(league.LEAGUE_ID)
+            league = await leagueService.getLeagueByLeagueId(league.leagueId)
             const responseBody : CreateLeagueResponse = leagueResponseBuilder.buildCreateLeagueResponse(league);
 
             res.status(201).json(responseBody);
