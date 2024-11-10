@@ -4,92 +4,99 @@ import leagueController from '../../controllers/leagues/leagueController.ts';
 const router = express.Router();
 /**
  * @swagger
- * /api/survivors:
- *  get:
- *      summary: Get survivors by season
- *      description: Gets the list of survivors by season
- *      tags:
- *          - Survivors
- *      parameters:
- *          -   in: query
- *              name: seasonId
- *              schema:
- *                  type: integer
- *              required: true
- *              description: The ID of the season to retrieve survivors from
- *      responses:
- *          200:
- *              description: A list of survivors
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: array
- *                          items:
- *                              type: object
- *                              properties:
- *                                  survivorId:
- *                                      type: integer
- *                                      description: The survivor ID
- *                                  firstName:
- *                                      type: string
- *                                      description: The survivor's first name
- *                                  lastName:
- *                                      type: string
- *                                      description: The survivor's last name
- *                                  nickName:
- *                                      type: string
- *                                      description: The survivor's nick name
- *                                  fromCity:
- *                                      type: string
- *                                      description: The city the survivor is from
- *                                  fromState:
- *                                      type: string
- *                                      description: The state the survivor is from
- *                                  fromCountry:
- *                                      type: string
- *                                      description: The country the survivor is from
- *                                  age:
- *                                      type: integer
- *                                      description: The survivor's age at the time of the survivor season
- *                                  description:
- *                                      type: string
- *                                      description: The survivor's description
- *                                  job:
- *                                      type: string
- *                                      description: The survivor's job/occupation.
- *          404:
- *              description: Not Found - No survivors for provided season ID
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              message:
- *                                  type: string
- *                                  example: Not Found - No survivors for provided season id.
- *          400:
- *              description: Bad Request - Missing season ID | Invalid season ID
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              message:
- *                                  type: string
- *                                  enum:
- *                                      - Bad Request - Missing season ID
- *                                      - Bad Request - Invalid season ID
- *          500:
- *              description: Internal Server Error - Failed to fetch survivors by season
- *              content:
- *                  application/json:
- *                      schema:
- *                          type: object
- *                          properties:
- *                              message:
- *                                  type: string
- *                                  example: Internal Server Error - Failed to login user
+ * /api/league/:
+ *   post:
+ *     summary: Create a new League
+ *     description: Creates a new league for a given season.
+ *     operationId: createLeague
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 description: The name of the league
+ *                 example: "Corner By The Bookshelf"
+ *               seasonId:
+ *                 type: integer
+ *                 description: The ID of the season the league belongs to
+ *                 example: 47
+ *             required:
+ *               - name
+ *               - seasonId
+ *     responses:
+ *       '201':
+ *         description: League created successfully
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 LEAGUE_ID:
+ *                   type: integer
+ *                   description: The unique identifier of the newly created league
+ *                   example: 123
+ *                 SEASON_ID:
+ *                   type: integer
+ *                   description: The ID of the season associated with the league
+ *                   example: 47
+ *                 NAME:
+ *                   type: string
+ *                   description: The name of the league
+ *                   example: "Corner By The Bookshelf"
+ *                 CREATED_AT:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The timestamp when the league was created
+ *                   example: "2024-11-09T14:55:30.000Z"
+ *                 UPDATED_AT:
+ *                   type: string
+ *                   format: date-time
+ *                   description: The timestamp when the league was last updated
+ *                   example: "2024-11-09T14:55:30.000Z"
+ *       '400':
+ *         description: Bad request, missing required fields (name, seasonId)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 400
+ *                 message:
+ *                   type: string
+ *                   example: "Request is missing one of the required fields: seasonId, name"
+ *       '404':
+ *         description: Season not found
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 404
+ *                 message:
+ *                   type: string
+ *                   example: "Season with seasonId 47 does not exist."
+ *       '500':
+ *         description: Internal server error
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 statusCode:
+ *                   type: integer
+ *                   example: 500
+ *                 message:
+ *                   type: string
+ *                   example: "An unexpected error occurred"
  */
-router.post('/league', leagueController.createLeagueController.createLeague);
+router.post('/', leagueController.createLeague);
 
 export default router;

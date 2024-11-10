@@ -4,6 +4,6 @@ import createLeagueRoute from './createLeagueRoute';
 
 const router = express.Router();
 
-router.use('/', [createLeagueRoute])
+router.use('/league', [createLeagueRoute])
 
 export default router;

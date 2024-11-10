@@ -4,6 +4,7 @@ export interface LeagueAttributes {
     LEAGUE_ID: number;
     SEASON_ID: number;
     NAME: string;
+    CREATED_AT: Date
 }
 
 interface LeagueOptionalAttributes {
@@ -15,9 +16,10 @@ const LeaguesModel = (sequelize: Sequelize) => {
         public LEAGUE_ID!: number;
         public SEASON_ID!: number;
         public NAME!: string;
+        public CREATED_AT!: Date;
 
         static associate(models: any) {
-            this.belongsTo(models.Seasons, { foreignKey: 'SEASON_ID' });
+            this.belongsTo(models.Seasons, { foreignKey: 'SEASON_ID', as: "SEASON"});
         }
     }
 
@@ -38,12 +40,20 @@ const LeaguesModel = (sequelize: Sequelize) => {
                 type: DataTypes.STRING(100),
                 allowNull: true,
                 field: 'NAME'
+            },
+            CREATED_AT: {
+                type: DataTypes.DATE,
+                field: 'CREATED_AT',  // Custom createdAt column name
+                allowNull: false,
+                defaultValue: DataTypes.NOW,  // Automatically set the current timestamp when created
             }
         },
         {
             sequelize,
             tableName: 'LGE_LEAGUES',
             timestamps: true,
+            createdAt: 'CREATED_AT',
+            updatedAt: false
         }
     );
 

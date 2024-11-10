@@ -1,6 +1,3 @@
-export interface SeasonWithDetailsObject {
-    seasonId: number;
-    seasonNumber: number;
-    seasonStart: string;
-    seasonEnd: string;
-}
+import { SeasonsAttributes } from "../../models/Seasons";
+
+export type SeasonWithDetails = SeasonsAttributes;

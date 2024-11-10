@@ -1,7 +1,3 @@
-import { SeasonWithDetailsObject } from "../season/seasonTypes";
+import { LeagueAttributes } from "../../models/Leagues";
 
-export interface LeagueWithDetailsObject {
-    leagueId: number;
-    name: string;
-    season: SeasonWithDetailsObject
-}
+export type LeagueWithDetails = Omit<LeagueAttributes, "SEASON_ID">;

@@ -1,12 +1,11 @@
-import { LeagueAttributes } from "../../models/Leagues";
 import { APIResponseData } from "../api/apiResponseTypes";
-import { LeagueWithDetailsObject } from "./leagueTypes";
+import { LeagueWithDetails } from "./leagueTypes";
 
 export interface CreateLeagueResponse extends APIResponseData {
-    league: LeagueWithDetailsObject;
+    LEAGUE: LeagueWithDetails;
 }
 
-export  interface CreateLeagueRequest {
+export interface CreateLeagueRequest {
     name: string;
     seasonId: number;
 }
