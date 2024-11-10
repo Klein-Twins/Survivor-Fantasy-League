@@ -1,43 +1,43 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface ProfileAttributes {
-  PROFILE_ID: string;
-  FIRST_NAME?: string | null;
-  LAST_NAME?: string | null;
-  IMAGE_URL?: string | null;
+  profileId: string;
+  firstName?: string | null;
+  lastName?: string | null;
+  imageUrl?: string | null;
 }
 
 const ProfileModel = (sequelize: Sequelize) => {
   class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
-    public PROFILE_ID!: string;
-    public FIRST_NAME?: string | null;
-    public LAST_NAME?: string | null;
-    public IMAGE_URL?: string | null;
+    public profileId!: string;
+    public firstName?: string | null;
+    public lastName?: string | null;
+    public imageUrl?: string | null;
 
     static associate(models: any) {
-      this.hasOne(models.User, { foreignKey: 'USER_PROFILE_ID', as: 'User' });
+      this.hasOne(models.User, { foreignKey: 'profileId', as: 'User' });
     }
   }
 
   Profile.init(
     {
-      PROFILE_ID: {
+      profileId: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
         field: 'PROFILE_ID',
       },
-      FIRST_NAME: {
+      firstName: {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'FIRST_NAME',
       },
-      LAST_NAME: {
+      lastName: {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'LAST_NAME',
       },
-      IMAGE_URL: {
+      imageUrl: {
         type: DataTypes.STRING(200),
         allowNull: true,
         field: 'IMAGE_URL',

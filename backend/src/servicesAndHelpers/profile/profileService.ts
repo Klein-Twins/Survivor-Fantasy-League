@@ -1,7 +1,7 @@
 import { Transaction } from 'sequelize';
 import { ProfileAttributes } from '../../models/Profile';
-import { AccountAndPasswordAttributes } from '../../repositories/accountRepository';
 import profileRepository from '../../repositories/profileRepository';
+import { AccountAndPassword } from '../../types/auth/authTypes';
 
 /**
  * Service functions related to profile management, including creating profiles for accounts.
@@ -16,15 +16,15 @@ const profileService = {
      * @returns A promise that resolves to the created profile record.
      */
     createProfileForAccount: async (
-        accountAndPassword: AccountAndPasswordAttributes,
+        accountAndPassword: AccountAndPassword,
         transaction: Transaction
     ): Promise<ProfileAttributes> => {
         
         const profileRecordCreationInput: ProfileAttributes = {
-            PROFILE_ID: accountAndPassword.PROFILE.PROFILE_ID,
-            IMAGE_URL: accountAndPassword.PROFILE.IMAGE_URL,
-            FIRST_NAME: accountAndPassword.PROFILE.FIRST_NAME,
-            LAST_NAME: accountAndPassword.PROFILE.LAST_NAME,
+            profileId: accountAndPassword.profileId,
+            imageUrl: accountAndPassword.imageUrl,
+            firstName: accountAndPassword.firstName,
+            lastName: accountAndPassword.lastName,
         };
 
         // Create the profile record in the database
