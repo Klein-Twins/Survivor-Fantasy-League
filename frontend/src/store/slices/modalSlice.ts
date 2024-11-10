@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type ModalType = 'login' | 'signup' | 'logout' | 'notify' | null;
+type ModalType = 'login' | 'signup' | 'logout' | 'notify' | 'createLeague' | null;
 
 interface ModalState {
     isOpen: boolean;

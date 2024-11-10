@@ -6,6 +6,7 @@ import SignupForm from "../auth/forms/SignupForm.tsx";
 import LoginForm from "../auth/forms/LoginForm.tsx"
 import Form from "./forms/Form.tsx";
 import LogoutConfirmation from "../auth/LogoutConfirmation.tsx";
+import CreateLeagueForm from "../dashboard/league/forms/CreateLeagueForm.tsx";
 
 interface ModalProps {
     isOpen: boolean;
@@ -32,6 +33,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
             {modalType === 'signup' && <Form title={"Sign Up"}><SignupForm /></Form>}
             {modalType === 'login' && <Form title={"Log In"}><LoginForm /></Form>}
             {modalType === 'logout' && <LogoutConfirmation />}
+            {modalType === 'createLeague' && <CreateLeagueForm />}
             </div>
         </div>
     );
