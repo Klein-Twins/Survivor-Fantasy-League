@@ -11,7 +11,7 @@ const SurvivorCastPage : React.FC = () => {
     const [survivors, setSurvivors] = useState<SurvivorDetails[]>([]);
     const [loading, setLoading]=  useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
-    const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[availableSeasons.length-1]);
+    const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[0]);
 
     useEffect(() => {
         const getSurvivors = async () => {

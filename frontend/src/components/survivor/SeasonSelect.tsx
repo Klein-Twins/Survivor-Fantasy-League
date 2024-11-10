@@ -7,7 +7,7 @@ interface SeasonSelectProps {
 
 const SeasonSelect: React.FC<SeasonSelectProps> = ({ seasons, onSeasonChange }) => {
     const [isOpen, setIsOpen] = useState(false);
-    const [selectedSeason, setSelectedSeason] = useState<number>(seasons[seasons.length-1]);
+    const [selectedSeason, setSelectedSeason] = useState<number>(seasons[0]);
   
     const handleSelectSeason = (season: number) => {
       setSelectedSeason(season);
