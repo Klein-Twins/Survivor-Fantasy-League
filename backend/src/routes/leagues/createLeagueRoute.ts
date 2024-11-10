@@ -1,6 +1,5 @@
 import express from 'express';
-import survivorController from '../../controllers/survivorController.ts';
-import leagueController from '../../controllers/leagueController.ts';
+import leagueController from '../../controllers/leagues/leagueController.ts';
 
 const router = express.Router();
 /**
@@ -91,6 +90,6 @@ const router = express.Router();
  *                                  type: string
  *                                  example: Internal Server Error - Failed to login user
  */
-router.post('/league', leagueController.createLeagueController);
+router.post('/league', leagueController.createLeagueController.createLeague);
 
 export default router;

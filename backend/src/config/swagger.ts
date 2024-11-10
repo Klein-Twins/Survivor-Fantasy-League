@@ -51,7 +51,11 @@ const options: {
     apis: string[];
 } = {
     swaggerDefinition,
-    apis: ['./src/routes/auth/*.ts', './src/routes/survivors/*.ts'],
+    apis: [
+        './src/routes/auth/*.ts', 
+        './src/routes/survivors/*.ts',
+        './src/routes/leagues/*.ts'
+    ],
 };
 
 // Initialize swagger-jsdoc

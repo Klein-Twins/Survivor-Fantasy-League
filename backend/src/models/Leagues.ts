@@ -1,29 +1,26 @@
 import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
 
-// Define all attributes for the League model
 export interface LeagueAttributes {
-    LEAGUE_ID: number; // Primary key that auto-increments
+    LEAGUE_ID: number;
     SEASON_ID: number;
     NAME: string;
 }
 
-// Define optional attributes for League creation (LEAGUE_ID is optional)
-export interface LeagueOptionalAttributes extends Optional<LeagueAttributes, 'LEAGUE_ID'> {}
-
-// Define the League model class
-export class League extends Model<LeagueAttributes, LeagueOptionalAttributes> 
-    implements LeagueAttributes {
-    public LEAGUE_ID!: number;
-    public SEASON_ID!: number;
-    public NAME!: string;
-
-    static associate(models: any) {
-        this.belongsTo(models.Seasons, { foreignKey: 'SEASON_ID' });
-    }
+interface LeagueOptionalAttributes {
+    
 }
 
-// Initialize the model
-const LeagueModel = (sequelize: Sequelize) => {
+const LeaguesModel = (sequelize: Sequelize) => {
+    class League extends Model<LeagueAttributes, LeagueOptionalAttributes> implements LeagueAttributes {
+        public LEAGUE_ID!: number;
+        public SEASON_ID!: number;
+        public NAME!: string;
+
+        static associate(models: any) {
+            this.belongsTo(models.Seasons, { foreignKey: 'SEASON_ID' });
+        }
+    }
+
     League.init(
         {
             LEAGUE_ID: {
@@ -53,4 +50,4 @@ const LeagueModel = (sequelize: Sequelize) => {
     return League;
 };
 
-export default LeagueModel;
+export default LeaguesModel;

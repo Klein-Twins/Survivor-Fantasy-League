@@ -1,4 +1,4 @@
-import { createLeagueController } from "./leagues/createLeague";
+import createLeagueController from "./createLeagueController";
 
 const leagueController = {
     createLeagueController,

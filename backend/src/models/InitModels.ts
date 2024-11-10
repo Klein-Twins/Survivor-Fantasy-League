@@ -4,7 +4,7 @@ import PasswordModel from './Password';
 import SurvivorsModel from './Survivors';
 import SeasonsModel from './Seasons';
 import SeasonSurvivorCastMembersModel from './SeasonSurvivorCastMembers';
-import LeagueModel from './Leagues';
+import LeaguesModel from './Leagues';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -12,15 +12,15 @@ const initModels = (sequelize: Sequelize) => {
   const Survivors = SurvivorsModel(sequelize);
   const Seasons = SeasonsModel(sequelize);
   const SeasonSurvivorCastMembers = SeasonSurvivorCastMembersModel(sequelize);
-  const League = LeagueModel(sequelize);
+  const Leagues = LeaguesModel(sequelize);
 
   // Set up associations
   User.associate({ Password });
   Password.associate({ User });
-  Seasons.associate({ SeasonSurvivorCastMembers, League });
+  Seasons.associate({ SeasonSurvivorCastMembers, Leagues });
   Survivors.associate({ SeasonSurvivorCastMembers });
   SeasonSurvivorCastMembers.associate({ Survivors, Seasons });
-  League.associate({Survivors, Seasons})
+  Leagues.associate({Seasons})
 
   return {
     User,
@@ -28,7 +28,7 @@ const initModels = (sequelize: Sequelize) => {
     Survivors,
     Seasons,
     SeasonSurvivorCastMembers,
-    League
+    Leagues
   };
 };
 
