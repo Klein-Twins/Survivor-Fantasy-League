@@ -25,6 +25,7 @@ export interface SignupRequestFields {
 /**
  * Defines the Account type which is sent back for login and signup responses
  */
+export type AccountForResponses = Omit<Account, "userId">;
 export type Account = UserAttributes & Omit<ProfileAttributes, "profileId">
 export type AccountAndPassword = Account & {
     PASSWORD: string

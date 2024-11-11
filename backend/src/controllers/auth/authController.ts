@@ -1,16 +1,13 @@
 import { Request, Response, NextFunction } from "express";
 import httpStatusCodes from 'http-status-codes';
-import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
 
-import { Account, LoginRequestFields } from "../../types/auth/authTypes";
+import { Account, AccountForResponses, LoginRequestFields } from "../../types/auth/authTypes";
 import { isValidEmail } from "../../servicesAndHelpers/auth/authHelper";
 import errorFactory from "../../utils/errors/errorFactory";
 import authService from "../../servicesAndHelpers/auth/authService";
 import logger from "../../config/logger";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
-import { INVALID_EMAIL_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
-import { JWT_REFRESH_SECRET } from "../../config/config";
-import { ForbiddenError } from "../../utils/errors/errors";
+import { INVALID_EMAIL_ERROR, LOGIN_FAILED_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
 
 /**
  * Controller for handling authentication actions.
@@ -19,30 +16,38 @@ const authController = {
 
     login: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
+            logger.debug("Login Request received.")
+
+            //Extract login data
             const loginRequestData: LoginRequestFields = {
                 email: req.body.email,
                 password: req.body.password,
             };
 
+            //Validate and format request data
             validateLoginRequest(loginRequestData);
-            logger.debug("Login Request fields validated")
             const formattedLoginRequestData = formatLoginRequest(loginRequestData);
 
+            //Get account
             const account: Account = await authService.login(formattedLoginRequestData);
-            res.locals.account = account;
+            if(!account) {
+                throw errorFactory(LOGIN_FAILED_ERROR);
+            }
 
+            res.locals.account = account;
             next();
         } catch (error) {
+            logger.error(`Error in authController.login: ${error}`)
             next(error);
         }
     },
 
     logout: async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try {
-            const refreshTokenHeader = req.headers['X-Refresh-Token'] as string;
-            const refreshToken = refreshTokenHeader && refreshTokenHeader.split(' ')[1];
+            const accessToken = req.cookies.accessToken;
+            const refreshToken = req.cookies.refreshToken;
 
-            //is refresh token in db
+
             const foundRefreshToken = tokenService.findTokenRecordByRefreshToken(refreshToken);
 
             if(!foundRefreshToken) {
@@ -58,53 +63,37 @@ const authController = {
 
     refreshTokens: async (req : Request, res: Response, next: NextFunction): Promise<any> => {
         try {
-            const refreshTokenHeader = req.headers['x-refresh-token'] as string;
-            const refreshToken = refreshTokenHeader && refreshTokenHeader.split(' ')[1];
-    
-            if(!refreshToken) {
-                res.status(httpStatusCodes.UNAUTHORIZED);
-            }
-    
-            const foundTokenRecord = await tokenService.findTokenRecordByRefreshToken(refreshToken);
-            if(!foundTokenRecord) {
-                logger.warn('Refresh token on request was not found in database');
-                try {
-                    const payload = await tokenService.verifyJwtTokenAsynchronously(refreshToken, JWT_REFRESH_SECRET);
-                    if(payload && payload.userId) {
-                        logger.warn(`Attempted refresh token reuse`);
-                        await tokenService.deleteTokenRecordsByUserId(payload.userId);
-                    }
-                    return res.status(httpStatusCodes.FORBIDDEN).send('Token Reuse Detected')
-                } catch (error) {
-                    if(error instanceof TokenExpiredError || error instanceof JsonWebTokenError || error instanceof ForbiddenError) {
-                        return res.sendStatus(httpStatusCodes.FORBIDDEN);
-                    }
-                    return next(error);
-                }
-            }
+            logger.debug('In authController.refreshTokens');
+
+            const refreshToken = req.cookies.refreshToken;
+            logger.debug(`Refresh Token: ${refreshToken}`);
             
-            await tokenService.deleteTokenRecordsByRefreshToken(refreshToken);
-            try {
-                const payload = await tokenService.verifyJwtTokenAsynchronously(refreshToken, JWT_REFRESH_SECRET);
-                if(payload && payload.userId) {
-                    const accessToken = tokenService.createAccessToken(payload);
-                    const newRefreshToken = tokenService.createRefreshToken(payload);
-                    await tokenService.createTokenRecordWithAccessAndRefreshTokens(accessToken, newRefreshToken, payload.userId);
-    
-                    return res
-                        .set('X-Access-Token', `Bearer ${accessToken}`)
-                        .set('X-Refresh-Token', `Bearer ${newRefreshToken}`)
-                        .status(httpStatusCodes.ACCEPTED)
-                        .send("Tokens refreshed successfully");
-                } else {
-                    logger.error('Decoded payload missing userId')
-                    return res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR);
+            if(!refreshToken) {
+                return res.sendStatus(httpStatusCodes.UNAUTHORIZED)
+            }
+
+            //const foundTokenRecord = await tokenService.findTokenRecordByRefreshToken(refreshToken);
+ 
+
+            const decodedRefreshToken = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
+            if(decodedRefreshToken) {
+                /*
+                if(!foundTokenRecord) {
+                    logger.warn(`Valid Refresh token is not in the database. Reuse or tampering detected.`);
+                    return res.sendStatus(httpStatusCodes.FORBIDDEN);
                 }
-            } catch (err) {
-                return res.status(httpStatusCodes.FORBIDDEN).send('Invalid or expired refresh token');
+                logger.debug(`Refresh token is found in database`);
+                */
+                const newAccessToken = tokenService.createAccessToken(decodedRefreshToken);
+                const newRefreshToken = tokenService.createRefreshToken(decodedRefreshToken);
+                tokenService.attachTokensToResponse({accessToken: newAccessToken, refreshToken: newRefreshToken}, res);
+                return res.status(httpStatusCodes.ACCEPTED).send({message: 'Session extended'})
+            } else {
+                return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
             }
         } catch(error) {
-            next(error);
+            logger.error(`Unexpected error for refreshtToken endpoint ${error}`)
+            next(error)
         }
     }
 };

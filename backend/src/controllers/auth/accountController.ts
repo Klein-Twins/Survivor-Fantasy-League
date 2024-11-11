@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { Account, SignupRequestFields } from "../../types/auth/authTypes";
+import { Account, AccountForResponses, SignupRequestFields } from "../../types/auth/authTypes";
 import errorFactory from "../../utils/errors/errorFactory";
 import { isValidEmail, isValidName, isValidUsername } from "../../servicesAndHelpers/auth/authHelper";
 import passwordHelper from "../../servicesAndHelpers/password/passwordHelper";
@@ -29,15 +29,15 @@ const accountController = {
             const formattedSignupRequestData = formatSignupData(signupRequestData);
 
             //Create account
-            const accountData: Account = await accountService.createAccount(formattedSignupRequestData);
-            if (!accountData) {
+            const account: Account = await accountService.createAccount(formattedSignupRequestData);
+            if (!account) {
                 throw errorFactory(CREATE_ACCOUNT_FAILED_ERROR);
             }
 
-            res.locals.account = accountData;
+            res.locals.account = account;
             next();
         } catch (error) {
-            logger.error(`Error in account contoller: ${error}`);
+            logger.error(`Error in accountController.signup: ${error}`);
             next(error);
         }
     },

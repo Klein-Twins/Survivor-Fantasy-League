@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Account, AccountAndPassword, SignupRequestFields, UserIncludeProfile } from '../../types/auth/authTypes';
+import { Account, AccountAndPassword, AccountForResponses, SignupRequestFields, UserIncludeProfile } from '../../types/auth/authTypes';
 import accountRepository from '../../repositories/accountRepository';
 import userRepository from '../../repositories/userRepository';
 import errorFactory from '../../utils/errors/errorFactory';
@@ -39,6 +39,11 @@ const accountService = {
         };
         
         return await accountRepository.createAccount(accountAndPassword);
+    },
+
+    getAccountForResponse: (account : Account): AccountForResponses => {
+        const { userId, ...accountForResponse} = account;
+        return accountForResponse;
     },
 
     /**

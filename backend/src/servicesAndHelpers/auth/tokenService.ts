@@ -1,43 +1,17 @@
-import jwt, { JsonWebTokenError, JwtPayload, TokenExpiredError } from 'jsonwebtoken';
+import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { JWT_EXPIRATION, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRATION } from '../../config/config';
-import { UserAttributes } from '../../models/User';
 import tokenRepository from '../../repositories/tokenRepository';
 import { TokenAttributes } from '../../models/Tokens';
 import logger from '../../config/logger';
-import { ForbiddenError, InternalServerError } from '../../utils/errors/errors';
+import { ForbiddenError } from '../../utils/errors/errors';
+import { Response } from 'express';
+import { TokenType, UserJwtPayload } from '../../types/auth/tokenTypes';
+import { ProfileAttributes } from '../../models/Profile';
+import { UserAttributes } from '../../models/User';
 
-/**
- * Interface to represent the payload of a user JWT.
- * Extends the standard JwtPayload with custom user properties.
- */
-export interface UserJwtPayload extends JwtPayload {
-    userId: UserAttributes['userId'];
-}
 
-export type TokenType = 'access' | 'refresh';
-
-/**
- * A set to store blacklisted tokens.
- * Blacklisted tokens cannot be used for further authentication.
- */
 export const blacklistedTokens = new Set<string>();
 
-const verifyJwtToken = (token: string, secret: string): Promise<UserJwtPayload> => {
-    return new Promise((resolve, reject) => {
-        jwt.verify(token, secret, (err, decoded) => {
-            if(err) {
-                if(err instanceof TokenExpiredError) {
-                    return reject(err as TokenExpiredError);
-                } else if (err instanceof JsonWebTokenError) {
-                    return reject(err as JsonWebTokenError);
-                } else {
-                    return reject(new InternalServerError('Unexpected error verifying jwt token'))
-                }
-            }
-            resolve(decoded as UserJwtPayload);
-        })
-    });
-}
 
 const getTokenSecret = (tokenType : TokenType) => {
     if(tokenType == 'access') {
@@ -79,6 +53,10 @@ const tokenService = {
         }
     },
 
+    updateAccessTokenInTokenTableWithNewAccessToken : async (userId: string, accessToken : string) => {
+        await tokenRepository.updateAccessTokenInTokenTableWithNewAccessToken(userId, accessToken)
+    },
+
     deleteTokenRecordsByUserId: async (userId: string) : Promise<number> => {
         return await tokenRepository.deleteTokenRecordsByUserId(userId);
     },
@@ -105,18 +83,64 @@ const tokenService = {
         })
     },
 
-    updateAccessTokenInTokenTableWithNewAccessToken : async (userId: string, accessToken : string) => {
-        await tokenRepository.updateAccessTokenInTokenTableWithNewAccessToken(userId, accessToken)
-    },
-
     validateTokenAndPromiseDecode: async (token: string, tokenType: TokenType): Promise<UserJwtPayload | null> => {
         try {
             const decoded = await jwt.verify(token, getTokenSecret(tokenType)) as UserJwtPayload;
+            logger.debug(`${tokenType} token is valid`);
             return decoded;
         } catch (err) {
+            logger.debug(`${tokenType} token is invalid: ${err}`);
             return null;
         }
+    },
+
+    refreshAccessTokenIfNeeded : async (refreshToken: string): Promise<{ accessToken: string, refreshToken: string } | null> => {
+        const refreshTokenDecoded = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
+        
+        if (!refreshTokenDecoded) {
+            logger.debug('Refresh token is invalid');
+            return null;
+        }
+        const newAccessToken = tokenService.createAccessToken({ userId: refreshTokenDecoded.userId, profileId: refreshTokenDecoded.profileId });
+        await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(refreshTokenDecoded.userId, newAccessToken);
+    
+        return { accessToken: newAccessToken, refreshToken };
+    },
+
+    createAndAttachTokens: async (userId: UserAttributes['userId'], profileId: ProfileAttributes['profileId'], res: Response) => {
+        const accessToken = tokenService.createAccessToken({ userId, profileId });
+        const refreshToken = tokenService.createRefreshToken({ userId, profileId });
+    
+        await tokenService.deleteTokenRecordsByUserId(userId);
+        await tokenService.createTokenRecordWithAccessAndRefreshTokens(accessToken, refreshToken, userId);
+    
+        tokenService.attachTokensToResponse({accessToken, refreshToken}, res);
+    },
+
+    attachTokensToResponse: (tokens: {accessToken? : string, refreshToken? : string}, res: Response) => {
+        if (tokens.accessToken) {
+            logger.debug(`Setting access token as a cookie`);
+            logger.debug(tokens.accessToken);
+            res.cookie('accessToken', tokens.accessToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict'
+            });
+        }
+        if (tokens.refreshToken) {
+            logger.debug(`Setting refresh token as a cookie`);
+            logger.debug(tokens.refreshToken);
+            res.cookie('refreshToken', tokens.refreshToken, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'strict'
+            });
+        }
+
+        //For response debugger...
+
     }
+
 };
 
 export default tokenService;

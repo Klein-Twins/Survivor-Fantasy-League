@@ -13,6 +13,8 @@ export const WEAK_PASSWORD_ERROR = { message: 'Password is too weak', statusCode
 export const CREATE_ACCOUNT_FAILED_ERROR = { message: "Failed to create account", statusCode: 500 };
 
 
+//Login Account
+export const LOGIN_FAILED_ERROR = {message: "Failed to log into account", statusCode: 500};
 
 //Tokens
 export const INVALID_OR_EXPIRED_TOKEN_ERROR = { message: 'Invalid or expired token', statusCode: 403 };
