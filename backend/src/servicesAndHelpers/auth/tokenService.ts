@@ -1,9 +1,6 @@
 import jwt, { JsonWebTokenError, JwtPayload, TokenExpiredError } from 'jsonwebtoken';
-import errorFactory from "../../utils/errors/errorFactory";
 import { JWT_EXPIRATION, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRATION } from '../../config/config';
 import { UserAttributes } from '../../models/User';
-import { BLACKLISTED_TOKEN_ERROR } from '../../constants/auth/responseErrorConstants';
-import { ProfileAttributes } from '../../models/Profile';
 import tokenRepository from '../../repositories/tokenRepository';
 import { TokenAttributes } from '../../models/Tokens';
 import logger from '../../config/logger';

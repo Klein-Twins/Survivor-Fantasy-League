@@ -11,76 +11,49 @@ import { JWT_ACCESS_SECRET, JWT_REFRESH_SECRET } from '../config/config';
 
 const tokenMiddleware = {
     authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<any> => {
-        const accessTokenHeader = req.headers['x-access-token'] as string;
-        const accessToken = accessTokenHeader && accessTokenHeader.split(' ')[1];
-        const refreshTokenHeader = req.headers['x-refresh-token'] as string;
-        const refreshToken = refreshTokenHeader && refreshTokenHeader.split(' ')[1];
+        const accessToken = req.headers['x-access-token']?.split(' ')[1];
+        const refreshToken = req.headers['x-refresh-token']?.split(' ')[1];
 
-        logger.debug(`In authenticate token...`);
-
+        // Helper to handle unauthorized response with logging
+        const handleUnauthorized = (res : Response, message: string) => {
+            logger.debug(message);
+            return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
+        };
+    
         try {
-            //Access token is missing and refresh token is missing
             if (!accessToken && !refreshToken) {
-                logger.debug(`No access token or refresh token attached to request`);
+                logger.debug('No access token or refresh token attached to request');
                 return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
             }
-            else if (accessToken) {
-                logger.debug(`Access token is in request.`)
-                //TODO validate tokens against DB
-                //const foundTokenRecord = await tokenService.findTokenRecordByAccessToken(accessToken);
+    
+            if (accessToken) {
+                logger.debug('Access token is in request.');
                 const accessTokenDecoded = await tokenService.validateTokenAndPromiseDecode(accessToken, 'access');
+                
                 if (!accessTokenDecoded) {
-                    logger.debug(`Access token is invalid`);
+                    logger.debug('Access token is invalid');
+                    
                     if (refreshToken) {
-                        logger.debug(`Refresh token is in request.`)
-                        const refreshTokenDecoded = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
-                        //Access token is invalid and refresh token is invalid
-                        if (!refreshTokenDecoded) {
-                            logger.debug(`Refresh token is invalid`);
-                            return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
+                        const refreshHandled = await handleRefreshToken(refreshToken, res, next);
+                        if (refreshHandled === null) {
+                            return handleUnauthorized(res, 'Refresh token is invalid');
                         }
-                        //Access token is invalid and refresh token is valid
-                        else {
-                            logger.debug(`Refresh token is valid - creating new access token`);
-                            const newAccessToken = tokenService.createAccessToken({userId: refreshTokenDecoded.userId});
-                            await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(refreshTokenDecoded.userId, accessToken);
-                            res.set('X-Access-Token', `Bearer ${newAccessToken}`)
-                               .set('X-Refresh-Token', `Bearer ${refreshToken}`)
-                            return next();
-                        }
+                    } else {
+                        return handleUnauthorized(res, 'Refresh token is missing');
                     }
-                    //Access token is invalid and refresh token is missing
-                    else {
-                        logger.debug(`Refresh token is not in request`);
-                        return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-                    }
-                }
-                //Access token is valid
-                else {
-                    logger.debug(`Access token is valid`);
+                } else {
+                    logger.debug('Access token is valid');
                     return next();
                 }
             } else if (refreshToken) {
-                logger.debug(`Refresh token is in request and access token is not in request`);
-                const decodedRefreshToken = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
-                //Refresh token is invalid
-                if (!decodedRefreshToken) {
-                    logger.debug(`Refresh token is invalid and access token is not in request`);
-                    return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-                }
-                //Refresh token is valid
-                else {
-                    logger.debug(`Refresh token is valid and access token is not in the request`);
-                    logger.debug(`Access token is invalid and refresh token is valid`);
-                    const newAccessToken = tokenService.createAccessToken({userId : decodedRefreshToken.userId});
-                    await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(decodedRefreshToken.userId, accessToken);
-                    res.set('X-Access-Token', `Bearer ${newAccessToken}`)
-                       .set('X-Refresh-Token', `Bearer ${refreshToken}`)
-                    return next();
+                logger.debug('Only refresh token is present');
+                const refreshHandled = await handleRefreshToken(refreshToken, res, next);
+                if (refreshHandled === null) {
+                    return handleUnauthorized(res, 'Refresh token is invalid');
                 }
             }
         } catch (error) {
-            logger.error(`Caught error in authenticate token...`);
+            logger.error('Caught error in authenticate token...');
             next(error);
         }
     },
@@ -113,6 +86,26 @@ const tokenMiddleware = {
             next(error);
         }
     }
+};
+
+//Helper function to handle refresh token logic.
+const handleRefreshToken = async (refreshToken: string, res: Response, next: NextFunction): Promise<null | void> => {
+    const refreshTokenDecoded = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
+    
+    if (!refreshTokenDecoded) {
+        logger.debug('Refresh token is invalid');
+        return null; // Explicitly return null if refresh token validation fails
+    }
+
+    logger.debug('Refresh token is valid - creating new access token');
+    const newAccessToken = tokenService.createAccessToken({ userId: refreshTokenDecoded.userId });
+    
+    await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(refreshTokenDecoded.userId, newAccessToken);
+
+    res.set('X-Access-Token', `Bearer ${newAccessToken}`)
+       .set('X-Refresh-Token', `Bearer ${refreshToken}`);
+    
+    return next();
 };
 
 export default tokenMiddleware;
