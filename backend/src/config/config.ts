@@ -8,7 +8,7 @@ const requiredEnvVars = [
     'DB_HOST',
     'DB_PORT',
     'DB_NAME',
-    'JWT_SECRET',
+    'JWT_ACCESS_SECRET',
     'APP_HOST',
     'APP_PORT',
     'APP_PROTOCOL',
@@ -34,5 +34,7 @@ export const APP_HOST = process.env.APP_HOST!;
 export const APP_PORT = process.env.APP_PORT || 3000;
 export const APP_PROTOCOL = process.env.APP_PROTOCOL || 'http';
 
-export const JWT_SECRET = process.env.JWT_SECRET!;
-export const JWT_EXPIRATION = process.env.JWT_EXPIRATION || "1h";
+export const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
+export const JWT_EXPIRATION = process.env.JWT_ACCESS_EXPIRATION || "1h";
+export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
+export const JWT_REFRESH_EXPIRATION = process.env.JWT_REFRESH_EXPIRATION || "1h";

@@ -11,7 +11,7 @@ import { Response, Request, NextFunction } from 'express';
 
 const corsOptions: cors.CorsOptions = {
     origin: '*', // Replace with frontend URL in production
-    exposedHeaders: ['Authorization'],
+    exposedHeaders: ['X-Refresh-Token', 'X-Access-Token'],
 };
 
 const app = express();

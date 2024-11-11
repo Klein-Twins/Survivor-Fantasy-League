@@ -100,6 +100,6 @@ const router = express.Router();
  *                                  type: string
  *                                  example: Failed to login user
  */
-router.post('/login', authController.login, tokenMiddleware.generateToken);
+router.post('/login', authController.login, tokenMiddleware.generateTokensAfterSignupOrLogin);
 
 export default router;

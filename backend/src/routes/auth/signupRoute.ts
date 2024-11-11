@@ -93,6 +93,6 @@ const router = express.Router();
  *                                  example: Could not create user
  *          
  */
-router.post('/signup', accountController.createAccount, tokenMiddleware.generateToken);
+router.post('/signup', accountController.createAccount, tokenMiddleware.generateTokensAfterSignupOrLogin);
 
 export default router;

@@ -14,7 +14,8 @@ const requestLogger = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const essentialHeadersList = [
-        'Authorization',
+        'x-access-token',
+        'x-refresh-token',
         'Content-Type',
         'User-Agent',
         'Accept',
@@ -50,8 +51,10 @@ const requestLogger = (req: Request, res: Response, next: NextFunction) => {
         Response Time: ${responseTime}ms
 ------------------------------------------------------------------------------------------
         Response Headers  : {
-            Content-Type: ${res.getHeader('Content-Type') || 'Not Provided'},
-            Authorization: ${res.getHeader('Authorization') || 'Not Provided'}
+            Content-Type: ${res.getHeader('content-type') || 'Not Provided'},
+            Authorization: ${res.getHeader('authorization') || 'Not Provided'},
+            X-Access-Token: ${res.getHeader('x-access-token') || 'Not Provided'},
+            X-Refresh-Token: ${res.getHeader('x-refresh-token') || 'Not Provided'},
         }
         ${responseBody ? `
         Response Body     :${JSON.stringify(responseBody, null, 2)

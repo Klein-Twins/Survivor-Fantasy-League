@@ -1,25 +1,22 @@
 import { Request, Response, NextFunction } from "express";
+import httpStatusCodes from 'http-status-codes';
+import { JsonWebTokenError, TokenExpiredError } from "jsonwebtoken";
+
 import { Account, LoginRequestFields } from "../../types/auth/authTypes";
 import { isValidEmail } from "../../servicesAndHelpers/auth/authHelper";
 import errorFactory from "../../utils/errors/errorFactory";
 import authService from "../../servicesAndHelpers/auth/authService";
-import { INTERNAL_SERVER_ERROR, INVALID_EMAIL_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
-import { AuthenticatedRequest } from "../../middleware/tokenMiddleware";
 import logger from "../../config/logger";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
+import { INVALID_EMAIL_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
+import { JWT_REFRESH_SECRET } from "../../config/config";
+import { ForbiddenError } from "../../utils/errors/errors";
 
 /**
  * Controller for handling authentication actions.
  */
 const authController = {
-    /**
-     * Handles user login requests by validating input, formatting the data, and invoking the authService login function.
-     * If successful, attaches the account information to `res.locals` and calls the next middleware.
-     * 
-     * @param req - Express Request object containing email and password in the body
-     * @param res - Express Response object to attach the account to `res.locals`
-     * @param next - Express NextFunction to pass control to the next middleware or error handler
-     */
+
     login: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const loginRequestData: LoginRequestFields = {
@@ -40,30 +37,76 @@ const authController = {
         }
     },
 
-    /**
-     * Handles user logout requests.
-     *
-     * @param req - Express Request object
-     * @param res - Express Response object
-     * @param next - Express NextFunction to pass control to the next middleware or error handler
-     */
-    logout: async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    logout: async (req: Request, res: Response, next: NextFunction): Promise<any> => {
         try {
+            const refreshTokenHeader = req.headers['X-Refresh-Token'] as string;
+            const refreshToken = refreshTokenHeader && refreshTokenHeader.split(' ')[1];
 
-            //To do, pass in the account/ userid to invalidate all active tokens if the token passed to this fails to authenticate.
+            //is refresh token in db
+            const foundRefreshToken = tokenService.findTokenRecordByRefreshToken(refreshToken);
 
-            logger.debug(req.decodedToken);
-            if(!req.decodedToken) {
-                throw(errorFactory({statusCode: INTERNAL_SERVER_ERROR.statusCode, message: 'Failed to get decoded token values'}));
+            if(!foundRefreshToken) {
+                return res.sendStatus(httpStatusCodes.NO_CONTENT);
             }
-            //We know this token exists as no error was thrown in the tokenMiddleware.authenticateToken
-            tokenService.blacklistToken(req.headers['authorization']?.split(' ')[1] as string);
-
-            res.status(200).json({message: "Logout successful"});
-        } catch (error) {
+            await tokenService.deleteTokenRecordsByRefreshToken(refreshToken);
+            return res.sendStatus(httpStatusCodes.NO_CONTENT)
+        }
+        catch (error) {
             next(error);
         }
     },
+
+    refreshTokens: async (req : Request, res: Response, next: NextFunction): Promise<any> => {
+        try {
+            const refreshTokenHeader = req.headers['x-refresh-token'] as string;
+            const refreshToken = refreshTokenHeader && refreshTokenHeader.split(' ')[1];
+    
+            if(!refreshToken) {
+                res.status(httpStatusCodes.UNAUTHORIZED);
+            }
+    
+            const foundTokenRecord = await tokenService.findTokenRecordByRefreshToken(refreshToken);
+            if(!foundTokenRecord) {
+                logger.warn('Refresh token on request was not found in database');
+                try {
+                    const payload = await tokenService.verifyJwtTokenAsynchronously(refreshToken, JWT_REFRESH_SECRET);
+                    if(payload && payload.userId) {
+                        logger.warn(`Attempted refresh token reuse`);
+                        await tokenService.deleteTokenRecordsByUserId(payload.userId);
+                    }
+                    return res.status(httpStatusCodes.FORBIDDEN).send('Token Reuse Detected')
+                } catch (error) {
+                    if(error instanceof TokenExpiredError || error instanceof JsonWebTokenError || error instanceof ForbiddenError) {
+                        return res.sendStatus(httpStatusCodes.FORBIDDEN);
+                    }
+                    return next(error);
+                }
+            }
+            
+            await tokenService.deleteTokenRecordsByRefreshToken(refreshToken);
+            try {
+                const payload = await tokenService.verifyJwtTokenAsynchronously(refreshToken, JWT_REFRESH_SECRET);
+                if(payload && payload.userId) {
+                    const accessToken = tokenService.createAccessToken(payload);
+                    const newRefreshToken = tokenService.createRefreshToken(payload);
+                    await tokenService.createTokenRecordWithAccessAndRefreshTokens(accessToken, newRefreshToken, payload.userId);
+    
+                    return res
+                        .set('X-Access-Token', `Bearer ${accessToken}`)
+                        .set('X-Refresh-Token', `Bearer ${newRefreshToken}`)
+                        .status(httpStatusCodes.ACCEPTED)
+                        .send("Tokens refreshed successfully");
+                } else {
+                    logger.error('Decoded payload missing userId')
+                    return res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR);
+                }
+            } catch (err) {
+                return res.status(httpStatusCodes.FORBIDDEN).send('Invalid or expired refresh token');
+            }
+        } catch(error) {
+            next(error);
+        }
+    }
 };
 
 /**
