@@ -28,8 +28,12 @@ export const EMAIL_UNAVAILABLE = { message: 'Email already tied to account', sta
 
 export const INCORRECT_PASSWORD = { message: "Incorrect password. Please try again.", statusCode: 401 };
 
+//Season
+export const SEASON_NOT_FOUND = { message: "Season was not found", statusCode: 404}
 
-
+//Create League
+export const INVALID_SEASON_ID = { message: "Please provide a valid seasonId.", statusCode: 400};
+export const INVALID_NAME = { message: "Please provide a valid name.", statusCode: 400};
 
 export const INTERNAL_SERVER_ERROR = {message: 'An internal server error occurred', statusCode: 500};
 export const NOT_FOUND_ERROR = {message: 'The requested resource was not found', statusCode: 404};

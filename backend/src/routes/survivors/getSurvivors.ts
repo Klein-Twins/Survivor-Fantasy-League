@@ -7,6 +7,7 @@ const router = express.Router();
  * /api/survivor/survivorsWithDetailsBySeason:
  *  get:
  *      summary: Get survivors by season
+ *      operationId: getSurvivorsBySeasonId
  *      description: Gets the list of survivors by season
  *      tags:
  *          - Survivors

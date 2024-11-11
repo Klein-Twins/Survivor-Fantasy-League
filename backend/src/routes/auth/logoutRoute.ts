@@ -9,6 +9,7 @@ const router = express.Router();
  * /api/auth/logout:
  *   post:
  *     summary: Log out a user
+ *     operationId: logoutUser
  *     tags: 
  *       - Authentication
  *     description: Logs out the user by invalidating the JWT token.

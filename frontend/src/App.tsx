@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import HomePage from './pages/HomePage.tsx';
 import RootLayout from './pages/RootLayout.tsx';
 import SurvivorCastPage from './pages/SurvivorCastPage.tsx';
+import DashboardPage from './pages/DashboardPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -10,7 +11,8 @@ const router = createBrowserRouter([
     //errorElement: <ErrorPage />,
     children: [
       { path: "/", element: <HomePage /> },
-      { path: "/survivor-cast", element: <SurvivorCastPage />}
+      { path: "/survivor-cast", element: <SurvivorCastPage />},
+      { path: "/dashboard", element: <DashboardPage />}
     ],
   },
 ]);

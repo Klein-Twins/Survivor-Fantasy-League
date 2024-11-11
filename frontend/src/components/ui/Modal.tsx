@@ -6,6 +6,7 @@ import SignupForm from "../auth/forms/SignupForm.tsx";
 import LoginForm from "../auth/forms/LoginForm.tsx"
 import Form from "./forms/Form.tsx";
 import LogoutConfirmation from "../auth/LogoutConfirmation.tsx";
+import CreateLeagueForm from "../dashboard/league/forms/CreateLeagueForm.tsx";
 import SurvivorDetailCard, { SurvivorDetailCardProps } from "../survivor/SurvivorDetailCard.tsx";
 import { SurvivorDetails } from "../../types/survivorTypes.ts";
 
@@ -36,6 +37,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
             {modalType === 'login' && <Form title={"Log In"}><LoginForm /></Form>}
             {modalType === 'survivorDetail' && <SurvivorDetailCard survivor={modalProps.survivor}/>}
             {modalType === 'logout' && <LogoutConfirmation />}
+            {modalType === 'createLeague' && <CreateLeagueForm />}
             </div>
         </div>
     );

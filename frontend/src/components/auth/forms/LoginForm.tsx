@@ -9,6 +9,7 @@ import { loginUser } from "../../../store/slices/authSlice.ts";
 import { closeModal } from "../../../store/slices/modalSlice.ts";
 import { LogInFormData, validateLogin } from "../../../utils/auth/formValidation.ts";
 import SubmitButton from "../../ui/forms/SubmitButton.tsx";
+import { ResponseError } from "../../../types/auth.ts";
 
 
 const LoginForm: React.FC = () => {
