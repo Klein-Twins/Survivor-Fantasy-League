@@ -72,6 +72,8 @@ const accountService = {
     getAccountByEmail: async (email: UserAttributes["email"]): Promise<Account> => {
         const account: UserIncludeProfile = await accountRepository.getAccountByEmail(email);
 
+        logger.debug("for account from db");
+
         const formattedAccount : Account = {
             userId: account.userId,
             userName: account.userName,
@@ -81,6 +83,9 @@ const accountService = {
             lastName: account.profile.lastName,
             imageUrl: account.profile.imageUrl
         }
+        
+        logger.debug("Formatted account");
+        logger.debug(formattedAccount);
 
         return formattedAccount;
     },

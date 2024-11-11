@@ -28,6 +28,7 @@ const authController = {
             };
 
             validateLoginRequest(loginRequestData);
+            logger.debug("Login Request fields validated")
             const formattedLoginRequestData = formatLoginRequest(loginRequestData);
 
             const account: Account = await authService.login(formattedLoginRequestData);

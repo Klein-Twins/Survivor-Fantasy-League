@@ -17,6 +17,9 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
 
   // Determine if stack trace should be included in the response
   const showStack = NODE_ENV !== 'production' && err.statusCode === 500;
+  if (showStack) {
+    logger.error(err.stack);
+  } 
 
   res.status(err.statusCode || INTERNAL_SERVER_ERROR.statusCode).json({
     message: err.message || INTERNAL_SERVER_ERROR.message,

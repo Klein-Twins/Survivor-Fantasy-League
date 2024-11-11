@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SurvivorDetails } from "../../types/survivorTypes";
 
-type ModalType = 'login' | 'signup' | 'logout' | 'notify' | 'createLeague' | null;
+type ModalType = 'login' | 'signup' | 'logout' | 'notify' | 'createLeague' | 'survivorDetail'  | null;
 
 interface ModalState {
     isOpen: boolean;
@@ -10,7 +11,7 @@ interface ModalState {
 
 const initialState: ModalState = { 
     isOpen: false,
-    modalType: null,
+    modalType: null
 }
 
 const modalSlice = createSlice({
