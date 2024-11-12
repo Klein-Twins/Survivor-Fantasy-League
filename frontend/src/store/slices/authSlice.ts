@@ -1,33 +1,30 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { AuthState, User, ResponseError, Account } from "../../types/auth.ts";
 import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
-import { loginUserService, logoutUserService, signupUserService } from "../../services/auth/authService.ts";
+import { checkAuthService, loginUserService, logoutUserService, signupUserService } from "../../services/auth/authService.ts";
 
 import { closeModal } from "./modalSlice.ts";
 
 enum AuthActionTypes {
     Signup = 'auth/signupUser',
     Login = 'auth/loginUser',
-    Logout = 'auth/logoutUser'
+    Logout = 'auth/logoutUser',
+    CheckAuth = 'auth/checkAuthentication'
 }
-
-const storedToken = sessionStorage.getItem('token');
 const storedAccount = sessionStorage.getItem('account');
 
 const initialState: AuthState = {
     account: storedAccount ? JSON.parse(storedAccount) : null,
-    isAuthenticated: !!storedToken,
+    isAuthenticated: false,
     loading: false,
     error: null
 }
 
 const sessionManager = {
-    set: (token: string, account: Account) => {
-        sessionStorage.setItem('token', token);
+    set: (account: Account) => {
         sessionStorage.setItem('account', JSON.stringify(account));
     },
     clear: () => {
-        sessionStorage.removeItem('token');
         sessionStorage.removeItem('account');
     }
 }
@@ -39,15 +36,14 @@ const handleError = (error: any) : ResponseError => ({
 
 interface AccountActionPayload {
     account: Account;
-    token: string;
 }
 export const signupUser = createAsyncThunk<AccountActionPayload, SignUpFormData, { rejectValue: ResponseError }>(
     AuthActionTypes.Signup,
     async (userData, { rejectWithValue }) => {
         try {
-            const { token, account } = await signupUserService(userData);
-            sessionManager.set(token, account);
-            return { account, token };
+            const { account } = await signupUserService(userData);
+            sessionManager.set(account);
+            return { account };
         } catch (error: any) {
             return rejectWithValue(handleError(error));
         }
@@ -57,9 +53,9 @@ export const loginUser = createAsyncThunk<AccountActionPayload, LogInFormData, {
     AuthActionTypes.Login, 
     async (userData, { rejectWithValue }) => {
         try {
-            const { token, account } = await loginUserService(userData);
-            sessionManager.set(token, account);
-            return { account, token };
+            const { account } = await loginUserService(userData);
+            sessionManager.set(account);
+            return { account };
         } catch (error: any) {
             return rejectWithValue(handleError(error));
         }
@@ -68,13 +64,21 @@ export const loginUser = createAsyncThunk<AccountActionPayload, LogInFormData, {
 export const logoutUser = createAsyncThunk<void, void, { rejectValue: ResponseError }>(
     AuthActionTypes.Logout,
     async(_, { rejectWithValue}) => {
-        const token = sessionStorage.getItem('token');
+        sessionManager.clear();
         try {
-            if(token) {
-                await logoutUserService(token);
-            }
-            sessionManager.clear();
+            return await logoutUserService();
         } catch (error : any) {
+            return rejectWithValue(handleError(error));
+        }
+    }
+)
+
+export const checkAuthentication = createAsyncThunk<boolean, void, { rejectValue: ResponseError }>(
+    AuthActionTypes.CheckAuth,
+    async (_, { rejectWithValue }) => {
+        try {
+            return await checkAuthService();
+        } catch(error: any) {
             return rejectWithValue(handleError(error));
         }
     }
@@ -134,6 +138,20 @@ const authSlice = createSlice({
             .addCase(logoutUser.rejected, (state, action) => setRejectedState(state, action, 'Logout'))
             .addCase(closeModal, (state) => {
                 state.error = null;
+            })
+            .addCase(checkAuthentication.pending, (state) => {
+                state.loading = true;
+                state.error = null;
+            })
+            .addCase(checkAuthentication.fulfilled, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = action.payload;
+            })
+            .addCase(checkAuthentication.rejected, (state, action) => {
+                state.loading = false;
+                state.isAuthenticated = false;
+                state.account = null;
+                state.error = action.payload || { message: 'Authentication check failed', statusCode: 500 };
             });
     },
 });

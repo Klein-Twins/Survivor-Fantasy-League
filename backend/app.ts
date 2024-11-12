@@ -8,8 +8,8 @@ import requestLogger from './src/middleware/requestLoggerMiddleware.ts';
 import cookieParser from 'cookie-parser';
 
 const corsOptions: cors.CorsOptions = {
-    origin: '*', // Replace with frontend URL in production
-    exposedHeaders: ['X-Refresh-Token', 'X-Access-Token'],
+    origin: 'http://localhost:5173', // Replace with frontend URL in production
+    credentials: true
 };
 
 const app = express();

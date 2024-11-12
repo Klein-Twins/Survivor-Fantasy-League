@@ -23,6 +23,6 @@ const router = express.Router();
  *       500:
  *         description: Unexpected error
  */
-router.post('/logout', tokenMiddleware.authenticateToken, authController.logout);
+router.post('/logout', authController.logout);
 
 export default router;

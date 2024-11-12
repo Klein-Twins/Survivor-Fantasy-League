@@ -5,7 +5,7 @@ import tokenService from '../servicesAndHelpers/auth/tokenService';
 import errorFactory from '../utils/errors/errorFactory';
 import { INTERNAL_SERVER_ERROR } from '../constants/auth/responseErrorConstants';
 import logger from '../config/logger';
-import { Account, AccountForResponses } from '../types/auth/authTypes';
+import { Account } from '../types/auth/authTypes';
 import accountService from '../servicesAndHelpers/auth/accountService';
 
 const tokenMiddleware = {

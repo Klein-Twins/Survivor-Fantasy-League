@@ -8,6 +8,10 @@ import authService from "../../servicesAndHelpers/auth/authService";
 import logger from "../../config/logger";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
 import { INVALID_EMAIL_ERROR, LOGIN_FAILED_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
+import { UserJwtPayload } from "../../types/auth/tokenTypes";
+import jwt from 'jsonwebtoken';
+import { JWT_REFRESH_SECRET } from "../../config/config";
+
 
 /**
  * Controller for handling authentication actions.
@@ -47,17 +51,20 @@ const authController = {
             const accessToken = req.cookies.accessToken;
             const refreshToken = req.cookies.refreshToken;
 
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
 
             const foundRefreshToken = tokenService.findTokenRecordByRefreshToken(refreshToken);
 
             if(!foundRefreshToken) {
-                return res.sendStatus(httpStatusCodes.NO_CONTENT);
+                return res.sendStatus(httpStatusCodes.OK);
             }
             await tokenService.deleteTokenRecordsByRefreshToken(refreshToken);
-            return res.sendStatus(httpStatusCodes.NO_CONTENT)
+            return res.sendStatus(httpStatusCodes.OK)
         }
         catch (error) {
-            next(error);
+            logger.error(`Error in logout: ${error}`);
+            return res.sendStatus(httpStatusCodes.OK)
         }
     },
 
@@ -92,8 +99,52 @@ const authController = {
                 return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
             }
         } catch(error) {
-            logger.error(`Unexpected error for refreshtToken endpoint ${error}`)
+            logger.error(`Unexpected error for refresh token endpoint ${error}`)
             next(error)
+        }
+    },
+
+    getRefreshTokenExpiresIn: (req: Request, res: Response, next: NextFunction) : any => {
+
+        logger.debug('In authController.getRefreshTokenExpiresIn');
+
+        const refreshToken = req.cookies.refreshToken;
+
+        if(!refreshToken) {
+            logger.error('No refresh token cookie attached to request')
+            return res.status(httpStatusCodes.UNAUTHORIZED).json({ message: 'Refresh token not found'});
+        }
+
+        try {
+            const decoded = jwt.decode(refreshToken) as UserJwtPayload;
+            logger.debug(decoded);
+            if(! decoded || !decoded.exp) {
+                logger.debug('Refresh Token is invalid');
+                return res.status(httpStatusCodes.BAD_REQUEST).json({message: 'Invalid refresh token'});
+            }
+            //Return the remaining time before expiration (in seconds);
+            const remainingTime = decoded.exp - Math.floor(Date.now() / 1000);
+            logger.debug(`Refresh token cookie is valid for ${remainingTime} seconds`);
+            
+            res.status(httpStatusCodes.OK).json({remainingTime})
+            
+        } catch (error) {
+            logger.error(`Error decoding refresh token: ${error}`);
+            return res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({message: 'Failed to decode refresh token'});
+        }
+    },
+
+    checkAuth: (req: Request, res: Response, next: NextFunction): any => {
+        logger.debug('In checkAuth');
+        const refreshToken = req.cookies.refreshToken;
+        if(!refreshToken) {
+            return res.json({isAuthenticated: false});
+        }
+        try {
+            jwt.verify(refreshToken, JWT_REFRESH_SECRET);
+            return res.json({ isAuthenticated: true});
+        } catch (error) {
+            return res.json({isAuthenticated: false});
         }
     }
 };

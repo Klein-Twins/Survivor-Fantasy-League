@@ -1,5 +1,5 @@
 import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-import { JWT_EXPIRATION, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRATION } from '../../config/config';
+import { JWT_EXPIRATION, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRATION, NODE_ENV } from '../../config/config';
 import tokenRepository from '../../repositories/tokenRepository';
 import { TokenAttributes } from '../../models/Tokens';
 import logger from '../../config/logger';
@@ -123,7 +123,7 @@ const tokenService = {
             logger.debug(tokens.accessToken);
             res.cookie('accessToken', tokens.accessToken, {
                 httpOnly: true,
-                secure: true,
+                secure: NODE_ENV === 'production',
                 sameSite: 'strict'
             });
         }
@@ -132,7 +132,7 @@ const tokenService = {
             logger.debug(tokens.refreshToken);
             res.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
-                secure: true,
+                secure: NODE_ENV === 'production',
                 sameSite: 'strict'
             });
         }
