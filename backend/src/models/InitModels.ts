@@ -6,6 +6,7 @@ import SeasonsModel from './Seasons';
 import LeaguesModel from './Leagues';
 import SurvivorDetailsOnSeasonModel from './SurvivorDetailsOnSeason';
 import ProfileModel from './Profile';
+import TokensModel from './Tokens';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -15,13 +16,16 @@ const initModels = (sequelize: Sequelize) => {
   const Leagues = LeaguesModel(sequelize);
   const SurvivorDetailsOnSeason = SurvivorDetailsOnSeasonModel(sequelize);
   const Profile = ProfileModel(sequelize);
-  User.associate({ Password, Profile });
+  const Tokens = TokensModel(sequelize);
+
+  User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
   Leagues.associate({Seasons})
   Survivors.associate({ SurvivorDetailsOnSeason });
   Seasons.associate({ SurvivorDetailsOnSeason, Leagues });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
   Profile.associate({ User });
+  Tokens.associate({ User });
 
   return {
     User,
@@ -30,7 +34,8 @@ const initModels = (sequelize: Sequelize) => {
     Seasons,
     Leagues,
     SurvivorDetailsOnSeason,
-    Profile
+    Profile,
+    Tokens
   };
 };
 

@@ -1,99 +1,71 @@
 import { Request, Response, NextFunction } from "express";
+import httpStatusCodes from 'http-status-codes';
+
 import { Account, LoginRequestFields } from "../../types/auth/authTypes";
-import { isValidEmail } from "../../servicesAndHelpers/auth/authHelper";
-import errorFactory from "../../utils/errors/errorFactory";
 import authService from "../../servicesAndHelpers/auth/authService";
-import { INTERNAL_SERVER_ERROR, INVALID_EMAIL_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
-import { AuthenticatedRequest } from "../../middleware/tokenMiddleware";
 import logger from "../../config/logger";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
+import { formatLoginRequest, validateLoginRequest } from "../../utils/auth/authUtils";
 
 /**
  * Controller for handling authentication actions.
  */
 const authController = {
-    /**
-     * Handles user login requests by validating input, formatting the data, and invoking the authService login function.
-     * If successful, attaches the account information to `res.locals` and calls the next middleware.
-     * 
-     * @param req - Express Request object containing email and password in the body
-     * @param res - Express Response object to attach the account to `res.locals`
-     * @param next - Express NextFunction to pass control to the next middleware or error handler
-     */
+
     login: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const loginRequestData: LoginRequestFields = {
-                email: req.body.email,
-                password: req.body.password,
-            };
+            logger.debug("Login Request received.");
 
-            validateLoginRequest(loginRequestData);
-            logger.debug("Login Request fields validated")
-            const formattedLoginRequestData = formatLoginRequest(loginRequestData);
+            // Destructure login data
+            const { email, password }: LoginRequestFields = req.body;
 
-            const account: Account = await authService.login(formattedLoginRequestData);
+            // Validate and format request data
+            validateLoginRequest({ email, password });
+            const formattedLoginRequestData = formatLoginRequest({ email, password });
+
+            // Get account
+            const account: Account | null = await authService.login(formattedLoginRequestData);
+            if (!account) {
+                res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR);
+            }
+
             res.locals.account = account;
-
             next();
         } catch (error) {
+            logger.error(`Error in authController.login: ${error}`);
             next(error);
         }
     },
 
-    /**
-     * Handles user logout requests.
-     *
-     * @param req - Express Request object
-     * @param res - Express Response object
-     * @param next - Express NextFunction to pass control to the next middleware or error handler
-     */
-    logout: async (req: AuthenticatedRequest, res: Response, next: NextFunction): Promise<void> => {
+    logout: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
+            const accessToken : string | undefined = req.cookies.accessToken;
+            const refreshToken : string | undefined = req.cookies.refreshToken;
 
-            //To do, pass in the account/ userid to invalidate all active tokens if the token passed to this fails to authenticate.
+            // Clear cookies
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
 
-            logger.debug(req.decodedToken);
-            if(!req.decodedToken) {
-                throw(errorFactory({statusCode: INTERNAL_SERVER_ERROR.statusCode, message: 'Failed to get decoded token values'}));
+            // If no refresh token is present, end the response
+            if (!refreshToken) {
+                res.sendStatus(httpStatusCodes.OK);
+                return;
             }
-            //We know this token exists as no error was thrown in the tokenMiddleware.authenticateToken
-            tokenService.blacklistToken(req.headers['authorization']?.split(' ')[1] as string);
 
-            res.status(200).json({message: "Logout successful"});
+            const foundRefreshToken = await tokenService.findTokenRecordByRefreshToken(refreshToken);
+
+            if (!foundRefreshToken) {
+                res.sendStatus(httpStatusCodes.OK);
+                logger.warn('Refresh token was not found in database.')
+                return
+            }
+
+            await tokenService.deleteTokenRecordsByRefreshToken(refreshToken);
+            res.sendStatus(httpStatusCodes.OK);
         } catch (error) {
-            next(error);
+            logger.error(`Error in logout: ${error}`);
+            res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR);
         }
-    },
-};
-
-/**
- * Validates login request data, checking for a valid email and non-empty password.
- * Throws an error if validation fails.
- * 
- * @param loginRequestData - Object containing the email and password from the login request
- * @throws Will throw an error if email is invalid or if email/password are missing
- */
-const validateLoginRequest = (loginRequestData: LoginRequestFields): void => {
-    if (!loginRequestData.email || loginRequestData.email.length === 0) {
-        throw errorFactory(MISSING_EMAIL_ERROR);
-    }
-    if (!isValidEmail(loginRequestData.email)) {
-        throw errorFactory(INVALID_EMAIL_ERROR);
-    }
-    if (!loginRequestData.password || loginRequestData.password.length === 0) {
-        throw errorFactory(MISSING_PASSWORD_ERROR);
     }
 };
-
-/**
- * Formats the login request data by converting the email to lowercase.
- * 
- * @param loginRequestData - Object containing the email and password from the login request
- * @returns A new object with the email in lowercase and the original password
- */
-const formatLoginRequest = (loginRequestData: LoginRequestFields): LoginRequestFields => ({
-    ...loginRequestData,
-    email: loginRequestData.email.toLowerCase(),
-});
-
 export default authController;

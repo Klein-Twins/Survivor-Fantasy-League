@@ -22,8 +22,10 @@ export interface SignupRequestFields {
     lastName?: string;
 }
 
+export type AccountForResponses = Omit<Account, "userId">;
+
 /**
- * Defines the Account type which is sent back for login and signup responses
+ * Account for backend. DO NOT SEND THIS BACK IN THE RESPONSES AS WE WILL KEEP USERID HIDDEN FROM FRONT END
  */
 export type Account = UserAttributes & Omit<ProfileAttributes, "profileId">
 export type AccountAndPassword = Account & {
