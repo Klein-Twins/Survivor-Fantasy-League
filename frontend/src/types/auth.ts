@@ -16,7 +16,6 @@ export interface ResponseError {
 }
 
 export type Account = {
-    userId: string;
     userName: string;
     email: string;
     profileId: string;

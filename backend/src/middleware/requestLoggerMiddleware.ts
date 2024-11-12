@@ -1,5 +1,5 @@
 import logger from "../config/logger";
-import { Request, Response, NextFunction } from "express";
+import { Request, Response, NextFunction, CookieOptions } from "express";
 
 // Format the log with nice newlines and indentation for readability
 const requestLogger = (req: Request, res: Response, next: NextFunction) => {
@@ -14,7 +14,8 @@ const requestLogger = (req: Request, res: Response, next: NextFunction) => {
     }
 
     const essentialHeadersList = [
-        'Authorization',
+        'x-access-token',
+        'x-refresh-token',
         'Content-Type',
         'User-Agent',
         'Accept',
@@ -33,7 +34,9 @@ const requestLogger = (req: Request, res: Response, next: NextFunction) => {
         Request Method   : ${req.method}
         Request URL      : ${req.originalUrl}
         Request Headers  : {${essentialHeadersList.map((header) => `\n          ${header}: ${req.headers[header]}`)}
-        }${req.body ? `
+        }
+        Request Cookies : {${req.cookies.accessToken}}
+        ${req.body ? `
         Request Body     :${JSON.stringify(req.body, null, 2)
                 .replace(/^\{/, '  {')  // Add 2 spaces before the opening brace
                 .replace(/\}$/, '        }')  // Add 8 spaces before the closing brace
@@ -50,8 +53,8 @@ const requestLogger = (req: Request, res: Response, next: NextFunction) => {
         Response Time: ${responseTime}ms
 ------------------------------------------------------------------------------------------
         Response Headers  : {
-            Content-Type: ${res.getHeader('Content-Type') || 'Not Provided'},
-            Authorization: ${res.getHeader('Authorization') || 'Not Provided'}
+            Content-Type: ${res.getHeader('content-type') || 'Not Provided'},
+            Authorization: ${res.getHeader('authorization') || 'Not Provided'},
         }
         ${responseBody ? `
         Response Body     :${JSON.stringify(responseBody, null, 2)

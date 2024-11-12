@@ -5,13 +5,11 @@ import { swaggerUi, swaggerSpec } from './src/config/swagger.ts';
 import path from 'path';
 import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
 import requestLogger from './src/middleware/requestLoggerMiddleware.ts';
-import morgan from 'morgan';
-import logger from './src/config/logger.ts';
-import { Response, Request, NextFunction } from 'express';
+import cookieParser from 'cookie-parser';
 
 const corsOptions: cors.CorsOptions = {
-    origin: '*', // Replace with frontend URL in production
-    exposedHeaders: ['Authorization'],
+    origin: 'http://localhost:5173', // Replace with frontend URL in production
+    credentials: true
 };
 
 const app = express();
@@ -19,6 +17,7 @@ const app = express();
 // Middleware
 app.use(cors(corsOptions));
 app.use(express.json());
+app.use(cookieParser())
 app.use(requestLogger);
 
 

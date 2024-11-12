@@ -1,6 +1,6 @@
 import express from 'express';
 import accountController from '../../controllers/auth/accountController';
-import tokenMiddleware from '../../middleware/tokenMiddleware';
+import tokenController from '../../controllers/auth/tokenController';
 
 const router = express.Router();
 
@@ -42,7 +42,15 @@ const router = express.Router();
  *      responses:
  *          201:
  *              description: User created successfully
- *              content:
+ *              headers:
+ *                  Set-Cookie:
+ *                      description: Session cookies containing access and refresh tokens
+ *                      schema:
+ *                          type: array
+ *                          items:
+ *                              type: string
+ *                              example: accessToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...; HttpOnly; Secure; SameSite=Strict
+ *          content:
  *                  application/json:
  *                      schema:
  *                          type: object
@@ -50,9 +58,6 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  example: User created successfully
- *                              token:
- *                                  type: string
- *                                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7InVzZXJuYW1lIjoiU3Vydml...
  *                              user:
  *                                  type: object
  *                                  properties:
@@ -91,8 +96,7 @@ const router = express.Router();
  *                              message:
  *                                  type: string
  *                                  example: Could not create user
- *          
  */
-router.post('/signup', accountController.createAccount, tokenMiddleware.generateToken);
+router.post('/signup', accountController.createAccount, tokenController.generateTokensAfterSignupOrLogin);
 
 export default router;

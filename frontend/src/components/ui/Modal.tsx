@@ -7,20 +7,19 @@ import LoginForm from "../auth/forms/LoginForm.tsx"
 import Form from "./forms/Form.tsx";
 import LogoutConfirmation from "../auth/LogoutConfirmation.tsx";
 import CreateLeagueForm from "../dashboard/league/forms/CreateLeagueForm.tsx";
-import SurvivorDetailCard, { SurvivorDetailCardProps } from "../survivor/SurvivorDetailCard.tsx";
-import { SurvivorDetails } from "../../types/survivorTypes.ts";
+import SurvivorDetailCard from "../survivor/SurvivorDetailCard.tsx";
+import Notification from "./Notifcation.tsx";
 
 interface ModalProps {
     isOpen: boolean;
     children?: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
+const Modal: React.FC<ModalProps> = ({ children }) => {
     const dispatch = useDispatch();
     const modalType = useSelector((state: RootState) => state.modal.modalType);
     const modalProps = useSelector((state: RootState) => state.modal.modalProps);
 
-    if(!isOpen) return null;
 
     const handleClose = () => {
         dispatch(closeModal());
@@ -36,6 +35,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
             {modalType === 'signup' && <Form title={"Sign Up"}><SignupForm /></Form>}
             {modalType === 'login' && <Form title={"Log In"}><LoginForm /></Form>}
             {modalType === 'survivorDetail' && <SurvivorDetailCard survivor={modalProps.survivor}/>}
+            {modalType === 'notify' && <Notification title={modalProps.title} description={modalProps.description}/>}
             {modalType === 'logout' && <LogoutConfirmation />}
             {modalType === 'createLeague' && <CreateLeagueForm />}
             </div>

@@ -1,84 +1,79 @@
-import jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
-import { JWT_SECRET } from '../config/config';
+import httpStatusCodes from 'http-status-codes';
 import tokenService from '../servicesAndHelpers/auth/tokenService';
-import errorFactory from '../utils/errors/errorFactory';
-import { BLACKLISTED_TOKEN_ERROR, INTERNAL_SERVER_ERROR, INVALID_TOKEN_ERROR } from '../constants/auth/responseErrorConstants';
 import logger from '../config/logger';
-import { Account } from '../types/auth/authTypes';
-
-export interface AuthenticatedRequest extends Request {
-    decodedToken?: string | jwt.JwtPayload; // The user payload can be a string or a decoded JWT object
-}
 
 const tokenMiddleware = {
-    /**
-     * Middleware to authenticate a JWT token from the 'Authorization' header.
-     * If the token is valid, it adds the decoded user data to the request object.
-     * If the token is missing or invalid, it responds with an error.
-     *
-     * @param req - The Express request object, extended to include a user property.
-     * @param res - The Express response object.
-     * @param next - The next middleware function in the stack.
-     */
-    authenticateToken: (req: AuthenticatedRequest, res: Response, next: NextFunction): void => {
-        const authHeader = req.headers['authorization'];
-        const token = authHeader && authHeader.split(' ')[1];
+    authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        logger.debug('In tokenMiddleware.authenticateToken');
+        
+        const { accessToken, refreshToken } = req.cookies;
 
-        if (!token) {
-            return next(errorFactory({ message: 'Access token required', statusCode: 401 }));
+        // If no tokens are present, return Unauthorized status
+        if (!accessToken && !refreshToken) {
+            logger.debug('No access or refresh token found in cookies');
+            res.sendStatus(httpStatusCodes.UNAUTHORIZED);
+            return;
         }
 
-        if(tokenService.isTokenBlacklisted(token)) {
-            logger.debug("Token was already blacklisted. Not authenticated...");
-            return next(errorFactory(BLACKLISTED_TOKEN_ERROR));
-        }
-
-        jwt.verify(token, JWT_SECRET, (err, decoded) => {
-            if (err) {
-                return next(errorFactory(INVALID_TOKEN_ERROR));
-            }
-            req.decodedToken = decoded;
-            logger.debug(decoded);
-            next();
-        });
-    },
-
-    /**
-     * Middleware AFTER controller to generate a JWT token for an authenticated user.
-     * It retrieves the user data from `res.locals.user`, generates a token, and adds it to the response.
-     *
-     * @param req - The Express request object.
-     * @param res - The Express response object, where the token will be set.
-     * @param next - The next middleware function in the stack.
-     */
-    generateToken: (req: Request, res: Response, next: NextFunction): void => {
         try {
-            const account : Account = res.locals.account;
-            logger.debug(account);
+            // If access token is provided, validate it
+            if (accessToken) {
+                const accessTokenDecoded = await tokenService.validateTokenAndPromiseDecode(accessToken, 'access');
+                
+                // If access token is invalid, try to refresh the access token using refresh token
+                if (!accessTokenDecoded && refreshToken) {
+                    return await handleRefreshToken(refreshToken, res, next);
+                }
 
-            if (!account) {
-                logger.error("Account data missing for token generation");
-                throw errorFactory(INTERNAL_SERVER_ERROR);
+                // If access token is valid, proceed to next middleware
+                if (accessTokenDecoded) {
+                    return next();
+                }
             }
 
-            // Generate a JWT token using the user's account ID
-            const token = tokenService.generateToken({
-                profileId: account.profileId,
-                userName: account.userName
-            });
-
-            // Set the Authorization header with the generated token
-            res.set("Authorization", `Bearer ${token}`)
-                .status(200)
-                .json({
-                    message: "Authentication successful",
-                    account, // Return the account information in the response
-                });
+            // If only refresh token is provided, attempt to refresh the access token
+            if (refreshToken) {
+                return await handleRefreshToken(refreshToken, res, next);
+            }
         } catch (error) {
-            next(error); // Pass the error to the error-handling middleware
+            logger.error('Error in authenticateToken middleware:', error);
+            return next(error);
         }
     }
 };
+
+const handleRefreshToken = async (refreshToken: string, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const tokens = await refreshAccessTokenIfRefreshTokenIsValid(refreshToken);
+        
+        // If no new tokens could be obtained, return Unauthorized status
+        if (!tokens) {
+            res.sendStatus(httpStatusCodes.UNAUTHORIZED);
+            return
+        }
+
+        // Attach new access token to response and proceed to the next middleware
+        tokenService.attachTokensToResponse({ accessToken: tokens.accessToken }, res);
+        return next();
+    } catch (error) {
+        logger.error('Error while handling refresh token:', error);
+        return next(error);
+    }
+}
+
+
+const refreshAccessTokenIfRefreshTokenIsValid = async (refreshToken: string): Promise<{ accessToken: string } | null> => {
+    const refreshTokenDecoded = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
+    
+    if (!refreshTokenDecoded) {
+        logger.debug('Refresh token is invalid');
+        return null;
+    }
+    const newAccessToken = tokenService.createToken({ userId: refreshTokenDecoded.userId, profileId: refreshTokenDecoded.profileId }, 'access');
+    await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(refreshTokenDecoded.userId, newAccessToken);
+
+    return { accessToken: newAccessToken };
+}
 
 export default tokenMiddleware;
