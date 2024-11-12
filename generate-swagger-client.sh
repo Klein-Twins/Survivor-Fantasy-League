@@ -14,5 +14,5 @@ docker run --rm \
   -v $(pwd):/local \
   swaggerapi/swagger-codegen-cli-v3 generate \
   -i http://host.docker.internal:3000/swagger.json \
-  -l typescript-fetch \
+  -l typescript-axios \
   -o /local/frontend/generated-api

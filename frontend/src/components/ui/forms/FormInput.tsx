@@ -9,6 +9,7 @@ interface FormInputProps {
     onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
     error?: string;
     required?: boolean;
+    className?: string
 }
 
 const FormInput: React.FC<FormInputProps> = ({

@@ -1,4 +1,4 @@
-import { CreateLeagueRequest, CreateLeagueResponse, League } from "../../../generated-api";
+import { CreateLeagueRequest, CreateLeagueResponse } from "../../../generated-api";
 import api from "../apiContainer"
 
 
@@ -8,12 +8,8 @@ const leagueService = {
             name: name,
             seasonId: seasonId
         }
-        try {
-            return await api.league.createLeague(apiRequest);
-        } catch (error) {
-            console.log("Failed to create league: " + error)
-            throw new Error("League Creation Failed.")
-        }
+            return (await api.league.createLeague(apiRequest)).data;
+
     }
 } 
 
