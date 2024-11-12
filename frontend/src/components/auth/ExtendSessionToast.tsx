@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useTokenExpiration } from '../../hooks/auth/useRefreshTokenExpiration';
-import { extendSessionService } from '../../services/auth/authService';
 
 interface ToastProps {
 }
