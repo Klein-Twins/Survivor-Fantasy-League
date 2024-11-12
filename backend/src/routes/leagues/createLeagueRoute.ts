@@ -138,6 +138,6 @@ const router = express.Router();
  *           description: Additional details about the error (optional)
  *           example: "The 'seasonId' field is required and cannot be null."
  */
-router.post('/', tokenMiddleware.authenticateToken, leagueController.createLeague);
+router.post('/', leagueController.createLeague);
 
 export default router;
