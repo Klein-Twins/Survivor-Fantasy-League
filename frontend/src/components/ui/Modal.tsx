@@ -15,12 +15,11 @@ interface ModalProps {
     children?: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, children }) => {
+const Modal: React.FC<ModalProps> = ({ children }) => {
     const dispatch = useDispatch();
     const modalType = useSelector((state: RootState) => state.modal.modalType);
     const modalProps = useSelector((state: RootState) => state.modal.modalProps);
 
-    if(!isOpen) return null;
 
     const handleClose = () => {
         dispatch(closeModal());

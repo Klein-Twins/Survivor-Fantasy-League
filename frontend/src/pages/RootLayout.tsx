@@ -24,7 +24,7 @@ const RootLayout : React.FC = () => {
             <main>
                 <Outlet />
             </main>
-            <Modal isOpen ={isOpen} />
+            {isOpen && <Modal isOpen ={isOpen} />}
             {isAuthenticated && <ExtendSessionToast />}
         </>
     );
