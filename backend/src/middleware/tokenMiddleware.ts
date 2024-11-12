@@ -1,74 +1,79 @@
 import { Request, Response, NextFunction } from 'express';
 import httpStatusCodes from 'http-status-codes';
-
 import tokenService from '../servicesAndHelpers/auth/tokenService';
-import errorFactory from '../utils/errors/errorFactory';
-import { INTERNAL_SERVER_ERROR } from '../constants/auth/responseErrorConstants';
 import logger from '../config/logger';
-import { Account } from '../types/auth/authTypes';
-import accountService from '../servicesAndHelpers/auth/accountService';
 
 const tokenMiddleware = {
-    authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+    authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        logger.debug('In tokenMiddleware.authenticateToken');
+        
+        const { accessToken, refreshToken } = req.cookies;
 
-        logger.debug('In tokenMiddleware.authenticateToken')
+        // If no tokens are present, return Unauthorized status
+        if (!accessToken && !refreshToken) {
+            logger.debug('No access or refresh token found in cookies');
+            res.sendStatus(httpStatusCodes.UNAUTHORIZED);
+            return;
+        }
 
-        const accessToken = req.cookies.accessToken;
-        const refreshToken = req.cookies.refreshToken;
-    
         try {
-            if (!accessToken && !refreshToken) {
-                logger.debug('No access token cookie or refresh token cookie attached to request');
-                return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-            }
-
+            // If access token is provided, validate it
             if (accessToken) {
                 const accessTokenDecoded = await tokenService.validateTokenAndPromiseDecode(accessToken, 'access');
                 
-                if (!accessTokenDecoded) {
-                    if (refreshToken) {
-                        const tokens = await tokenService.refreshAccessTokenIfNeeded(refreshToken);
-                        if (!tokens) {
-                            return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-                        }
-                        tokenService.attachTokensToResponse({accessToken: tokens.accessToken}, res)
-                        return next();
-                    }
-                    return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
+                // If access token is invalid, try to refresh the access token using refresh token
+                if (!accessTokenDecoded && refreshToken) {
+                    return await handleRefreshToken(refreshToken, res, next);
                 }
-                return next();
+
+                // If access token is valid, proceed to next middleware
+                if (accessTokenDecoded) {
+                    return next();
+                }
             }
 
+            // If only refresh token is provided, attempt to refresh the access token
             if (refreshToken) {
-                const tokens = await tokenService.refreshAccessTokenIfNeeded(refreshToken);
-                if (!tokens) {
-                    return res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-                }
-                tokenService.attachTokensToResponse({accessToken: tokens.accessToken}, res)
-                return next();
+                return await handleRefreshToken(refreshToken, res, next);
             }
         } catch (error) {
-            logger.error('Caught error in authenticate token...');
-            next(error);
-        }
-    },
-
-    generateTokensAfterSignupOrLogin: async (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const account: Account = res.locals.account;
-
-            if (!account) {
-                logger.error("Account data missing for token generation");
-                throw errorFactory(INTERNAL_SERVER_ERROR);
-            }
-
-            await tokenService.createAndAttachTokens(account.userId, account.profileId, res);
-
-            res.status(httpStatusCodes.ACCEPTED).json({ account: accountService.getAccountForResponse(account) });
-        } catch (error) {
-            next(error);
+            logger.error('Error in authenticateToken middleware:', error);
+            return next(error);
         }
     }
 };
+
+const handleRefreshToken = async (refreshToken: string, res: Response, next: NextFunction): Promise<void> => {
+    try {
+        const tokens = await refreshAccessTokenIfRefreshTokenIsValid(refreshToken);
+        
+        // If no new tokens could be obtained, return Unauthorized status
+        if (!tokens) {
+            res.sendStatus(httpStatusCodes.UNAUTHORIZED);
+            return
+        }
+
+        // Attach new access token to response and proceed to the next middleware
+        tokenService.attachTokensToResponse({ accessToken: tokens.accessToken }, res);
+        return next();
+    } catch (error) {
+        logger.error('Error while handling refresh token:', error);
+        return next(error);
+    }
+}
+
+
+const refreshAccessTokenIfRefreshTokenIsValid = async (refreshToken: string): Promise<{ accessToken: string } | null> => {
+    const refreshTokenDecoded = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
+    
+    if (!refreshTokenDecoded) {
+        logger.debug('Refresh token is invalid');
+        return null;
+    }
+    const newAccessToken = tokenService.createToken({ userId: refreshTokenDecoded.userId, profileId: refreshTokenDecoded.profileId }, 'access');
+    await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(refreshTokenDecoded.userId, newAccessToken);
+
+    return { accessToken: newAccessToken };
+}
 
 export default tokenMiddleware;

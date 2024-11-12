@@ -1,6 +1,5 @@
 import express from 'express';
 import authController from '../../controllers/auth/authController.ts';
-import tokenMiddleware from '../../middleware/tokenMiddleware.ts';
 
 const router = express.Router();
 

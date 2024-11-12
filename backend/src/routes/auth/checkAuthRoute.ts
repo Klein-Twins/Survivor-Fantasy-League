@@ -1,7 +1,7 @@
 import express from 'express';
-import authController from '../../controllers/auth/authController';
+import tokenController from '../../controllers/auth/tokenController';
 const router = express.Router();
 
-router.get('/check-auth', authController.checkAuth);
+router.get('/check-auth', tokenController.checkIsAuthenticated);
 
 export default router;

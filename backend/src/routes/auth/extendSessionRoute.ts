@@ -1,22 +1,16 @@
 import express from 'express';
-import tokenMiddleware from '../../middleware/tokenMiddleware';
+import tokenController from '../../controllers/auth/tokenController';
 const router = express.Router();
 /**
  * @swagger
- * /api/auth/dummyAuthRoute:
+ * /api/auth/extendSession:
  *   post:
- *     summary: Runs the authenticate middleware for testing purposes
+ *     summary: Creates a new refresh token to extend the session
  *     operationId: dummyAuthenticateUser
  *     tags: 
  *       - Authentication
  *     description: Logs out the user by invalidating the JWT token.
  *     parameters:
- *       - in: cookie
- *         name: accessToken
- *         required: false
- *         schema:
- *           type: string
- *         description: Access token for authorization stored in a session cookie
  *       - in: cookie
  *         name: refreshToken
  *         required: false
@@ -28,7 +22,9 @@ const router = express.Router();
  *         description: Unauthorized
  *       403:
  *         description: Forbidden
+ *       200:
+ *         description: Session Extended
  */
-router.post('/dummyAuthRoute', tokenMiddleware.authenticateToken);
+router.post('/extendSession', tokenController.extendSessionByRefreshingAccessAndRefreshTokens);
 
 export default router;

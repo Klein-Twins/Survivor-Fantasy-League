@@ -1,6 +1,6 @@
 import express from 'express';
 import accountController from '../../controllers/auth/accountController';
-import tokenMiddleware from '../../middleware/tokenMiddleware';
+import tokenController from '../../controllers/auth/tokenController';
 
 const router = express.Router();
 
@@ -97,6 +97,6 @@ const router = express.Router();
  *                                  type: string
  *                                  example: Could not create user
  */
-router.post('/signup', accountController.createAccount, tokenMiddleware.generateTokensAfterSignupOrLogin);
+router.post('/signup', accountController.createAccount, tokenController.generateTokensAfterSignupOrLogin);
 
 export default router;

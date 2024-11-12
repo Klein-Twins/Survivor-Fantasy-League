@@ -1,5 +1,6 @@
 import express from 'express';
 import authController from '../../controllers/auth/authController';
+import tokenController from '../../controllers/auth/tokenController';
 const router = express.Router();
 /**
  * @swagger
@@ -49,6 +50,6 @@ const router = express.Router();
  *                              type: string
  *                              example: Failed to decode refresh token
  */
-router.get('/refresh-token-expires-in', authController.getRefreshTokenExpiresIn);
+router.get('/refresh-token-expires-in', tokenController.getRefreshTokenExpiresIn);
 
 export default router;

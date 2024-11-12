@@ -1,9 +1,8 @@
-import jwt, { JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
-import { JWT_EXPIRATION, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRATION, NODE_ENV } from '../../config/config';
+import jwt from 'jsonwebtoken';
+import { JWT_ACCESS_EXPIRATION, JWT_ACCESS_SECRET, JWT_REFRESH_SECRET, JWT_REFRESH_EXPIRATION, NODE_ENV } from '../../config/config';
 import tokenRepository from '../../repositories/tokenRepository';
 import { TokenAttributes } from '../../models/Tokens';
 import logger from '../../config/logger';
-import { ForbiddenError } from '../../utils/errors/errors';
 import { Response } from 'express';
 import { TokenType, UserJwtPayload } from '../../types/auth/tokenTypes';
 import { ProfileAttributes } from '../../models/Profile';
@@ -21,20 +20,21 @@ const getTokenSecret = (tokenType : TokenType) => {
     }
 }
 
+const getTokenExpiresIn = (tokenType: TokenType) => {
+    if(tokenType == 'access') { 
+        return JWT_ACCESS_EXPIRATION;
+    } else {
+        return JWT_REFRESH_EXPIRATION;
+    }
+}
+
 /**
  * Service responsible for generating, verifying, and blacklisting JWT tokens.
  */
 const tokenService = {
-    createAccessToken: (payload: UserJwtPayload) : string => {
-        logger.debug(JWT_EXPIRATION);
-        logger.debug(payload);
-        return jwt.sign({userId : payload.userId}, JWT_ACCESS_SECRET, {expiresIn: '30s'});
-    },
 
-    createRefreshToken: (payload: UserJwtPayload) : string => {
-        logger.debug(JWT_REFRESH_EXPIRATION);
-        logger.debug(payload);
-        return jwt.sign({userId : payload.userId}, JWT_REFRESH_SECRET, {expiresIn: JWT_REFRESH_EXPIRATION});
+    createToken: (payload: UserJwtPayload, tokenType: TokenType): string => {
+        return jwt.sign({userId : payload.userId}, getTokenSecret(tokenType), {expiresIn: getTokenExpiresIn(tokenType)});
     },
 
     findTokenRecordByRefreshToken: async (refreshToken: string) : Promise<TokenAttributes | null> => {
@@ -65,24 +65,6 @@ const tokenService = {
         return await tokenRepository.deleteTokenRecordsByRefreshToken(refreshToken)
     },
 
-    verifyJwtTokenAsynchronously: async (token: string, secret: string) : Promise<UserJwtPayload> => {
-        return new Promise((resolve, reject) => {
-            jwt.verify(token, secret, (err, decoded) => {
-                if(err) {
-                    if(err instanceof TokenExpiredError) {
-                        logger.debug(`Token is expired`)
-                        return reject(err as TokenExpiredError);
-                    } else if(err instanceof JsonWebTokenError) {
-                        logger.debug(`Invalid token`);
-                        return reject(err as JsonWebTokenError);
-                    }
-                    return reject(new ForbiddenError("Forbidden"));
-                }
-                resolve(decoded as UserJwtPayload);
-            })
-        })
-    },
-
     validateTokenAndPromiseDecode: async (token: string, tokenType: TokenType): Promise<UserJwtPayload | null> => {
         try {
             const decoded = await jwt.verify(token, getTokenSecret(tokenType)) as UserJwtPayload;
@@ -94,22 +76,9 @@ const tokenService = {
         }
     },
 
-    refreshAccessTokenIfNeeded : async (refreshToken: string): Promise<{ accessToken: string, refreshToken: string } | null> => {
-        const refreshTokenDecoded = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
-        
-        if (!refreshTokenDecoded) {
-            logger.debug('Refresh token is invalid');
-            return null;
-        }
-        const newAccessToken = tokenService.createAccessToken({ userId: refreshTokenDecoded.userId, profileId: refreshTokenDecoded.profileId });
-        await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(refreshTokenDecoded.userId, newAccessToken);
-    
-        return { accessToken: newAccessToken, refreshToken };
-    },
-
-    createAndAttachTokens: async (userId: UserAttributes['userId'], profileId: ProfileAttributes['profileId'], res: Response) => {
-        const accessToken = tokenService.createAccessToken({ userId, profileId });
-        const refreshToken = tokenService.createRefreshToken({ userId, profileId });
+    createAndAttachTokensToResponse: async (userId: UserAttributes['userId'], profileId: ProfileAttributes['profileId'], res: Response) => {
+        const accessToken = tokenService.createToken({ userId, profileId }, 'access');
+        const refreshToken = tokenService.createToken({ userId, profileId }, 'refresh');
     
         await tokenService.deleteTokenRecordsByUserId(userId);
         await tokenService.createTokenRecordWithAccessAndRefreshTokens(accessToken, refreshToken, userId);
@@ -119,8 +88,7 @@ const tokenService = {
 
     attachTokensToResponse: (tokens: {accessToken? : string, refreshToken? : string}, res: Response) => {
         if (tokens.accessToken) {
-            logger.debug(`Setting access token as a cookie`);
-            logger.debug(tokens.accessToken);
+            logger.debug(`Setting access token as a cookie\n${tokens.accessToken}`);
             res.cookie('accessToken', tokens.accessToken, {
                 httpOnly: true,
                 secure: NODE_ENV === 'production',
@@ -128,17 +96,13 @@ const tokenService = {
             });
         }
         if (tokens.refreshToken) {
-            logger.debug(`Setting refresh token as a cookie`);
-            logger.debug(tokens.refreshToken);
+            logger.debug(`Setting refresh token as a cookie\n${tokens.refreshToken}`);
             res.cookie('refreshToken', tokens.refreshToken, {
                 httpOnly: true,
                 secure: NODE_ENV === 'production',
                 sameSite: 'strict'
             });
         }
-
-        //For response debugger...
-
     }
 
 };

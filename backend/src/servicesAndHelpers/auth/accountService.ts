@@ -38,7 +38,19 @@ const accountService = {
             PASSWORD: fields.password,
         };
         
-        return await accountRepository.createAccount(accountAndPassword);
+        const {profileRecord, userRecord} = await accountRepository.createAccount(accountAndPassword);
+
+        const account : Account = {
+            profileId: profileRecord.profileId,
+            userId: userRecord.userId,
+            email: userRecord.email,
+            userName: userRecord.userName,
+            firstName: profileRecord.firstName,
+            lastName: profileRecord.lastName,
+            imageUrl: profileRecord.imageUrl,
+        }
+
+        return account;
     },
 
     getAccountForResponse: (account : Account): AccountForResponses => {
@@ -77,8 +89,6 @@ const accountService = {
     getAccountByEmail: async (email: UserAttributes["email"]): Promise<Account> => {
         const account: UserIncludeProfile = await accountRepository.getAccountByEmail(email);
 
-        logger.debug("for account from db");
-
         const formattedAccount : Account = {
             userId: account.userId,
             userName: account.userName,
@@ -89,7 +99,6 @@ const accountService = {
             imageUrl: account.profile.imageUrl
         }
         
-        logger.debug("Formatted account");
         logger.debug(formattedAccount);
 
         return formattedAccount;
