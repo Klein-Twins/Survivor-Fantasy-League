@@ -12,7 +12,7 @@ const leagueService = {
         const league: LeagueAttributes = await leagueRepository.createLeague(seasonId, leagueName as string);
         return league;
     },
-    getLeagueByLeagueId: async(leagueId: number): Promise<LeagueAttributes> => {
+    getLeagueByLeagueId: async(leagueId: string): Promise<LeagueAttributes> => {
         const league: LeagueAttributes | null = await leagueRepository.findLeagueByLeagueId(leagueId);
         if (!league) {
             throw errorFactory({statusCode: 404, message: `Unable to find league with league id: ${leagueId}`});

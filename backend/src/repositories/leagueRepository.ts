@@ -8,7 +8,7 @@ const leagueRepository = {
             name: name
         })
     },
-    findLeagueByLeagueId: async (leagueId: number) : Promise<LeagueAttributes | null> => {
+    findLeagueByLeagueId: async (leagueId: string) : Promise<LeagueAttributes | null> => {
         return await models.Leagues.findByPk(leagueId, {
             include: [{
                 model: models.Seasons,
