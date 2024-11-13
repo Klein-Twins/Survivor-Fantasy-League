@@ -14,7 +14,7 @@ const leagueService = {
       name: name,
       seasonId: Number(seasonId),
     };
-    return await api.league.createLeague(apiRequest);
+    return await api.league.createLeague(apiRequest, {withCredentials: true});
   },
 };
 
