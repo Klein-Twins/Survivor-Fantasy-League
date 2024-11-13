@@ -15,7 +15,7 @@ const SeasonsModel = (sequelize: Sequelize) => {
     public name?: string | null;
 
     static associate(models: any) {
-      this.hasMany(models.Leagues, {foreignKey: 'seasonId'})
+      this.hasMany(models.League, {foreignKey: 'seasonId'})
       this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'seasonId', as: 'SurvivorDetailsOnSeason' });
     }
   }

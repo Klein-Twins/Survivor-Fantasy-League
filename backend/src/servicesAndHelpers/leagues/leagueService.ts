@@ -1,6 +1,6 @@
 import { models } from "../../config/db";
 import { NOT_FOUND_ERROR } from "../../constants/auth/responseErrorConstants";
-import { LeagueAttributes } from "../../models/Leagues";
+import { LeagueAttributes } from "../../models/League";
 import leagueRepository from "../../repositories/leagueRepository";
 import { CreateLeagueResponse } from "../../types/league/leagueDto";
 import errorFactory from "../../utils/errors/errorFactory";

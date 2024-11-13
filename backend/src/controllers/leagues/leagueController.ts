@@ -3,7 +3,7 @@ import CustomError, { NotFoundError } from "../../utils/errors/errors";
 import { CreateLeagueResponse } from '../../types/league/leagueDto';
 import leagueResponseBuilder from "../../servicesAndHelpers/leagues/leagueResponseBuilder";
 import leagueService from "../../servicesAndHelpers/leagues/leagueService";
-import { LeagueAttributes } from '../../models/Leagues';
+import { LeagueAttributes } from '../../models/League';
 import errorHandler from '../../middleware/errorHandlerMiddleware';
 import seasonService from '../../servicesAndHelpers/season/seasonService';
 import logger from '../../config/logger';

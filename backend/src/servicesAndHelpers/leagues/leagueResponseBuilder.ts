@@ -1,4 +1,4 @@
-import { LeagueAttributes } from "../../models/Leagues";
+import { LeagueAttributes } from "../../models/League";
 import { CreateLeagueResponse } from "../../types/league/leagueDto";
 
 const leagueResponseBuilder = {

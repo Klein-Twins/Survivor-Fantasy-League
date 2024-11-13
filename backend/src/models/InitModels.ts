@@ -3,7 +3,7 @@ import UserModel from './User';
 import PasswordModel from './Password';
 import SurvivorsModel from './Survivors';
 import SeasonsModel from './Seasons';
-import LeaguesModel from './Leagues';
+import LeagueModel from './League';
 import SurvivorDetailsOnSeasonModel from './SurvivorDetailsOnSeason';
 import ProfileModel from './Profile';
 import TokensModel from './Tokens';
@@ -13,16 +13,16 @@ const initModels = (sequelize: Sequelize) => {
   const Password = PasswordModel(sequelize);
   const Survivors = SurvivorsModel(sequelize);
   const Seasons = SeasonsModel(sequelize);
-  const Leagues = LeaguesModel(sequelize);
+  const League = LeagueModel(sequelize);
   const SurvivorDetailsOnSeason = SurvivorDetailsOnSeasonModel(sequelize);
   const Profile = ProfileModel(sequelize);
   const Tokens = TokensModel(sequelize);
 
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
-  Leagues.associate({Seasons})
+  League.associate({Seasons})
   Survivors.associate({ SurvivorDetailsOnSeason });
-  Seasons.associate({ SurvivorDetailsOnSeason, Leagues });
+  Seasons.associate({ SurvivorDetailsOnSeason, League });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
   Profile.associate({ User });
   Tokens.associate({ User });
@@ -32,7 +32,7 @@ const initModels = (sequelize: Sequelize) => {
     Password,
     Survivors,
     Seasons,
-    Leagues,
+    League,
     SurvivorDetailsOnSeason,
     Profile,
     Tokens

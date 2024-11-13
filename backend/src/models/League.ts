@@ -11,7 +11,7 @@ interface LeagueOptionalAttributes {
     
 }
 
-const LeaguesModel = (sequelize: Sequelize) => {
+const LeagueModel = (sequelize: Sequelize) => {
     class League extends Model<LeagueAttributes, LeagueOptionalAttributes> implements LeagueAttributes {
         public leagueId!: string;
         public seasonId!: number;
@@ -44,7 +44,7 @@ const LeaguesModel = (sequelize: Sequelize) => {
         },
         {
             sequelize,
-            tableName: 'LGE_LEAGUES',
+            tableName: 'LGE_LEAGUE',
             timestamps: true,
         }
     );
@@ -52,4 +52,4 @@ const LeaguesModel = (sequelize: Sequelize) => {
     return League;
 };
 
-export default LeaguesModel;
+export default LeagueModel;
