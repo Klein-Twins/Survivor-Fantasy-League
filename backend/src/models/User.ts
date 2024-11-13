@@ -50,6 +50,8 @@ const UserModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'USR_USERS',
       timestamps: true,
+      createdAt: "CREATED_AT",
+      updatedAt: "UPDATED_AT"
     }
   );
 

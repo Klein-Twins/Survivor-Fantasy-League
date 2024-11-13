@@ -20,9 +20,6 @@ app.use(express.json());
 app.use(cookieParser())
 app.use(requestLogger);
 
-
-
-
 // Load routes
 app.use('/api', routes);  // Mount all routes under '/api'
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
