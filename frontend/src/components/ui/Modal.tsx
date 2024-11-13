@@ -6,7 +6,6 @@ import SignupForm from "../auth/forms/SignupForm.tsx";
 import LoginForm from "../auth/forms/LoginForm.tsx"
 import Form from "./forms/Form.tsx";
 import LogoutConfirmation from "../auth/LogoutConfirmation.tsx";
-import CreateLeagueForm from "../dashboard/league/forms/CreateLeagueForm.tsx";
 import SurvivorDetailCard from "../survivor/SurvivorDetailCard.tsx";
 import Notification from "./Notifcation.tsx";
 
@@ -37,7 +36,6 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
             {modalType === 'survivorDetail' && <SurvivorDetailCard survivor={modalProps.survivor}/>}
             {modalType === 'notify' && <Notification title={modalProps.title} description={modalProps.description}/>}
             {modalType === 'logout' && <LogoutConfirmation />}
-            {modalType === 'createLeague' && <CreateLeagueForm />}
             </div>
         </div>
     );
