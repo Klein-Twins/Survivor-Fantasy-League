@@ -7,6 +7,10 @@
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "dependencies": {
-    "concurrently": "^9.1.0"
+    "concurrently": "^9.1.0",
+    "yamljs": "^0.3.0"
+  },
+  "devDependencies": {
+    "@types/yamljs": "^0.2.34"
   }
 }

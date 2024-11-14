@@ -1,9 +1,10 @@
 import express from 'express';
 
-import createLeagueRoute from './createLeagueRoute';
+import tokenMiddleware from '../../middleware/tokenMiddleware';
+import leagueController from '../../controllers/leagues/leagueController';
 
 const router = express.Router();
 
-router.use('/league', [createLeagueRoute])
+router.post('/', tokenMiddleware.authenticateToken, leagueController.createLeague);
 
 export default router;

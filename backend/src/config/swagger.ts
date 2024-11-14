@@ -1,6 +1,11 @@
 import swaggerJsDoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
 import { APP_HOST, APP_PORT, APP_PROTOCOL } from './config';
+import YAML from 'yamljs';
+import path from 'path';
+
+const swaggerDocument = YAML.load(path.join(__dirname, '../../docs/api-doc.yaml'));
+
 
 // Define the swagger definition with proper TypeScript types
 const swaggerDefinition: {
@@ -50,11 +55,8 @@ const options: {
     swaggerDefinition: typeof swaggerDefinition;
     apis: string[];
 } = {
-    swaggerDefinition,
+    swaggerDefinition: swaggerDocument,
     apis: [
-        './src/routes/auth/*.ts', 
-        './src/routes/survivors/*.ts',
-        './src/routes/leagues/*.ts'
     ],
 };
 
