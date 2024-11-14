@@ -47,6 +47,8 @@ const PasswordModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'USR_PASSWORDS',
       timestamps: true,
+      createdAt: "CREATED_AT",
+      updatedAt: "UPDATED_AT",
       indexes: [
         {
           unique: true,

@@ -47,6 +47,8 @@ const ProfileModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'PRF_PROFILE',
       timestamps: true,
+      createdAt: "CREATED_AT",
+      updatedAt: "UPDATED_AT"
     }
   );
 

@@ -123,7 +123,7 @@ const passwordRepository = {
     getActivePasswordForUserId: async (userId: UserAttributes["userId"]): Promise<PasswordAttributes> => {
         const userPasswords = await models.Password.findAll({
             where: { userId, active: true },
-            order: [['createdAt', 'DESC']]
+            order: [['CREATED_AT', 'DESC']]
         });
 
         if (userPasswords.length === 0) {
