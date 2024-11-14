@@ -1,6 +1,6 @@
 import { models } from "../../config/db";
 import { NOT_FOUND_ERROR } from "../../constants/auth/responseErrorConstants";
-import { LeagueAttributes } from "../../models/Leagues";
+import { LeagueAttributes } from "../../models/League";
 import leagueRepository from "../../repositories/leagueRepository";
 import { CreateLeagueResponse } from "../../types/league/leagueDto";
 import errorFactory from "../../utils/errors/errorFactory";
@@ -12,7 +12,7 @@ const leagueService = {
         const league: LeagueAttributes = await leagueRepository.createLeague(seasonId, leagueName as string);
         return league;
     },
-    getLeagueByLeagueId: async(leagueId: number): Promise<LeagueAttributes> => {
+    getLeagueByLeagueId: async(leagueId: string): Promise<LeagueAttributes> => {
         const league: LeagueAttributes | null = await leagueRepository.findLeagueByLeagueId(leagueId);
         if (!league) {
             throw errorFactory({statusCode: 404, message: `Unable to find league with league id: ${leagueId}`});
