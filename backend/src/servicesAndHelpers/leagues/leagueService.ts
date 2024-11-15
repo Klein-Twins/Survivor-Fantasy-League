@@ -1,6 +1,6 @@
 import { sequelize } from "../../config/db";
 import { LeagueAttributes } from "../../models/League";
-import { LeagueProfileAttributes } from "../../models/LeagueProfile";
+import { InviteStatusEnum, LeagueProfileAttributes } from "../../models/LeagueProfile";
 import leagueRepository from "../../repositories/leagueRepository";
 import errorFactory from "../../utils/errors/errorFactory";
 
@@ -15,7 +15,7 @@ const leagueService = {
       const league: LeagueAttributes = await leagueRepository.createLeague(seasonId, leagueName, {transaction});
 
       const leagueProfile: LeagueProfileAttributes =
-        await leagueRepository.createLeagueProfile(profileId, league.leagueId, "LEAGUE_OWNER", {transaction}
+        await leagueRepository.createLeagueProfile(profileId, league.leagueId, "LEAGUE_OWNER", InviteStatusEnum.Accepted, {transaction}
         );
 
       if (!leagueProfile) {

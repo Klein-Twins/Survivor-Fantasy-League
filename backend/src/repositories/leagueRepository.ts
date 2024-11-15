@@ -1,7 +1,7 @@
 import { CreateOptions } from "sequelize";
 import { models } from "../config/db";
 import { LeagueAttributes } from "../models/League";
-import { LeagueProfileAttributes } from "../models/LeagueProfile";
+import { InviteStatusEnum, LeagueProfileAttributes } from "../models/LeagueProfile";
 
 const leagueRepository = {
     createLeague: async (seasonId: number, name: string, options: CreateOptions) : Promise<LeagueAttributes> => {
@@ -18,11 +18,12 @@ const leagueRepository = {
             }]
         })
     },
-    createLeagueProfile: async (profileId: string, leagueId: string, role: string, options: CreateOptions) : Promise<LeagueProfileAttributes> => {
+    createLeagueProfile: async (profileId: string, leagueId: string, role: string, inviteStatus: InviteStatusEnum, options: CreateOptions) : Promise<LeagueProfileAttributes> => {
         return await models.LeagueProfile.create({
             leagueId: leagueId,
             profileId: profileId,
-            role: role
+            role: role,
+            inviteStatus: inviteStatus
         }, options)
     },
     findLeagueProfileByProfileId: async (profileId: string) : Promise<LeagueProfileAttributes[]> => {

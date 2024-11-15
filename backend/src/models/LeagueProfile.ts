@@ -1,9 +1,15 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
 
+export enum InviteStatusEnum {
+  Pending = "pending",
+  Accepted = "accepted",
+}
+
 export interface LeagueProfileAttributes {
   profileId: string;
   leagueId: string;
   role: string;
+  inviteStatus: InviteStatusEnum;
 }
 
 const LeagueProfileModel = (sequelize: Sequelize) => {
@@ -14,6 +20,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     public leagueId!: string;
     public profileId!: string;
     public role!: string;
+    public inviteStatus!: InviteStatusEnum;
 
     static associate(models: any) {
       this.belongsTo(models.League, {foreignKey: 'leagueId', as: 'league'});
@@ -40,6 +47,11 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: "ROLE"
       },
+      inviteStatus: {
+        type: DataTypes.ENUM(...Object.values(InviteStatusEnum)),
+        allowNull: false,
+        field: "INVITE_STATUS"
+      }
     },
     {
       sequelize,
