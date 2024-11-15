@@ -437,6 +437,109 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiError"
 
+  /api/profile/get-profiles-by-search:
+    get:
+      summary: Retrieve profiles by search criteria
+      description: This endpoint allows you to search for profiles based on username, first name, and league ID, with pagination options.
+      tags:
+        - Profile
+      parameters:
+        - name: username
+          in: query
+          required: false
+          description: The username of the profile.
+          schema:
+            type: string
+        - name: firstName
+          in: query
+          required: false
+          description: The first name of the profile.
+          schema:
+            type: string
+        - name: leagueId
+          in: query
+          required: false
+          description: The ID of the league the profile is associated with.
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: The page number for pagination.
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: The number of profiles to return per page.
+          schema:
+            type: integer
+            example: 10
+      responses:
+        "200":
+          description: A list of profiles matching the search criteria.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        profileId:
+                          type: string
+                          description: The unique ID of the profile.
+                        username:
+                          type: string
+                          description: The username of the profile.
+                        firstName:
+                          type: string
+                          description: The first name of the profile.
+                        lastName:
+                          type: string
+                          description: The last name of the profile.
+                        leagueId:
+                          type: string
+                          description: The ID of the league the profile is part of.
+                        role:
+                          type: string
+                          description: The role of the profile in the league.
+                        inviteStatus:
+                          type: string
+                          description: The invitation status of the profile in the league.
+                          enum: [pending, accepted]
+                  pagination:
+                    type: object
+                    properties:
+                      currentPage:
+                        type: integer
+                        description: The current page of the result set.
+                        example: 1
+                      totalPages:
+                        type: integer
+                        description: The total number of pages available.
+                        example: 10
+                      totalResults:
+                        type: integer
+                        description: The total number of profiles that match the search criteria.
+                        example: 100
+        "400":
+          description: Bad request, invalid parameters.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
+        "500":
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiError"
+
 #REFERENCE DEFINITIONS
 components:
   schemas:
