@@ -1,12 +1,13 @@
-import { Sequelize } from 'sequelize';
-import UserModel from './User';
-import PasswordModel from './Password';
-import SurvivorsModel from './Survivors';
-import SeasonsModel from './Seasons';
-import LeagueModel from './League';
-import SurvivorDetailsOnSeasonModel from './SurvivorDetailsOnSeason';
-import ProfileModel from './Profile';
-import TokensModel from './Tokens';
+import { Sequelize } from "sequelize";
+import UserModel from "./User";
+import PasswordModel from "./Password";
+import SurvivorsModel from "./Survivors";
+import SeasonsModel from "./Seasons";
+import LeagueModel from "./League";
+import SurvivorDetailsOnSeasonModel from "./SurvivorDetailsOnSeason";
+import ProfileModel from "./Profile";
+import TokensModel from "./Tokens";
+import LeagueProfileModel from "./LeagueProfile";
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -17,6 +18,7 @@ const initModels = (sequelize: Sequelize) => {
   const SurvivorDetailsOnSeason = SurvivorDetailsOnSeasonModel(sequelize);
   const Profile = ProfileModel(sequelize);
   const Tokens = TokensModel(sequelize);
+  const LeagueProfile = LeagueProfileModel(sequelize);
 
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
@@ -27,6 +29,18 @@ const initModels = (sequelize: Sequelize) => {
   Profile.associate({ User });
   Tokens.associate({ User });
 
+  Profile.belongsToMany(League, {
+    foreignKey: "profileId",
+    through: LeagueProfile,
+    as: "profile",
+  });
+
+  League.belongsToMany(Profile, {
+    foreignKey: "leagueId",
+    through: LeagueProfile,
+    as: "leagues",
+  });
+
   return {
     User,
     Password,
@@ -35,7 +49,8 @@ const initModels = (sequelize: Sequelize) => {
     League,
     SurvivorDetailsOnSeason,
     Profile,
-    Tokens
+    Tokens,
+    LeagueProfile,
   };
 };
 

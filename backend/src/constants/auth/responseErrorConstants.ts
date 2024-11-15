@@ -36,6 +36,7 @@ export const SEASON_NOT_FOUND = { message: "Season was not found", statusCode: 4
 //Create League
 export const INVALID_SEASON_ID = { message: "Please provide a valid seasonId.", statusCode: 400};
 export const INVALID_NAME = { message: "Please provide a valid name.", statusCode: 400};
+export const INVALID_PROFILE_ID = { message: "Please provide a valid profileId", statusCode: 400}
 
 export const INTERNAL_SERVER_ERROR = {message: 'An internal server error occurred', statusCode: 500};
 export const NOT_FOUND_ERROR = {message: 'The requested resource was not found', statusCode: 404};

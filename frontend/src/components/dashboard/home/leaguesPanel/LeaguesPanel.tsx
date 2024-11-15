@@ -1,17 +1,36 @@
+import { AxiosResponse } from "axios";
 import React, { useEffect, useState } from "react";
-import { League } from "../../../../../generated-api";
+import { useSelector } from "react-redux";
+import { GetLeaguesForProfileResponse, League } from "../../../../../generated-api";
 import AddCircleIcon from "../../../../assets/add_circle.svg";
+import leagueService from "../../../../services/league/leagueService";
+import { RootState } from "../../../../store/store";
 import CreateLeagueForm from "./forms/CreateLeagueForm";
 import LeagueList from "./LeagueList";
 
 const LeaguesPanel: React.FC = () => {
   const [leagues, setLeagues] = useState<League[]>([]);
   const [isCreateLeagueFormVisible, setIsCreateLeagueFormVisible] = useState(false);
+  const account = useSelector((state: RootState) => state.auth.account);
 
-  // Fetch leagues when the component mounts
   useEffect(() => {
-    // TODO: Fetch leagues for the user's profile
-  }, []); // Empty dependency array ensures it runs only once after mount
+    const fetchLeagues = async () => {
+      try {
+        const profileId: string = account!.profileId;
+
+        const getLeaguesForProfileResponse: AxiosResponse<GetLeaguesForProfileResponse> = await leagueService.getLeaguesForProfile(profileId);
+        if (getLeaguesForProfileResponse.status === 200) {
+          setLeagues(getLeaguesForProfileResponse.data.leagues!);
+        } else {
+          console.error("Unable to get leagues for profile");
+        }
+      } catch (error) {
+        console.error("Error fetching leagues:", error);
+      }
+    };
+
+    fetchLeagues();
+  }, []); 
 
   const handleCreateLeagueClick = (): void => {
     setIsCreateLeagueFormVisible(true);

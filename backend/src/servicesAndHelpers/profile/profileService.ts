@@ -2,6 +2,7 @@ import { Transaction } from 'sequelize';
 import { ProfileAttributes } from '../../models/Profile';
 import profileRepository from '../../repositories/profileRepository';
 import { AccountAndPassword } from '../../types/auth/authTypes';
+import { LeagueProfileAttributes } from '../../models/LeagueProfile';
 
 /**
  * Service functions related to profile management, including creating profiles for accounts.
