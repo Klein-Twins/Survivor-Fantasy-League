@@ -31,39 +31,39 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SignupUserRequest'
+              $ref: "#/components/schemas/SignupUserRequest"
       responses:
-        '201':
+        "201":
           description: User created and authenticated successfully
           headers:
             Set-Cookie:
               description: Cookies for authentication
               required: true
               schema:
-                $ref: '#/components/schemas/AuthCookies'
+                $ref: "#/components/schemas/AuthCookies"
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignupUserSuccessResponse'
-        '400':
+                $ref: "#/components/schemas/SignupUserSuccessResponse"
+        "400":
           description: Bad Request - Missing email | Missing password | Missing username | Invalid first name | Invalid last name | Invalid email | Password is too weak
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignupUserBadRequestErrorResponse'
-        '409':
+                $ref: "#/components/schemas/ApiError"
+        "409":
           description: Conflict - Email already tied to account | Username already tied to account
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignupUserConflictErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericInternalServerErrorResponse'
-  
+                $ref: "#/components/schemas/ApiError"
+
   /api/auth/login:
     post:
       operationId: loginUser
@@ -77,33 +77,33 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/LoginUserRequest'  # Corrected reference here
+              $ref: "#/components/schemas/LoginUserRequest" # Corrected reference here
       responses:
-        '200':
+        "200":
           description: User Logged in and authenticated successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginUserSuccessResponse'
+                $ref: "#/components/schemas/LoginUserSuccessResponse"
           headers:
             Set-Cookie:
               description: Cookies for authentication
               required: true
               schema:
-                $ref: '#/components/schemas/AuthCookies'  # Corrected reference here
-        '401':
+                $ref: "#/components/schemas/AuthCookies" # Corrected reference here
+        "401":
           description: Unauthorized
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LoginUserUnauthorizedErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericInternalServerErrorResponse'
-                
+                $ref: "#/components/schemas/ApiError"
+
   /api/auth/logout:
     post:
       operationId: logoutUser
@@ -138,36 +138,36 @@ paths:
             example: "unique-profile-id"
 
       responses:
-        '200':
+        "200":
           description: User successfully logged out
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LogoutSuccessResponse'
-        '400':
+                $ref: "#/components/schemas/LogoutSuccessResponse"
+        "400":
           description: Bad Request - Missing or invalid cookies, or tokens already invalidated
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LogoutBadRequestErrorResponse'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized - Cookies are missing or tokens are invalid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/LogoutUnauthorizedErrorResponse'
-        '403':
+                $ref: "#/components/schemas/ApiError"
+        "403":
           description: Forbidded - Cookies have been tampered with (like someone elses cookies)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericForbiddenErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Server Error - Unexpected issue during logout
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericInternalServerErrorResponse'
+                $ref: "#/components/schemas/ApiError"
 
   /api/auth/refresh-token-expires-in:
     get:
@@ -192,37 +192,37 @@ paths:
             description: The profile ID associated with the user session
             example: "unique-profile-id"
       responses:
-        '200':
+        "200":
           description: Returns the remaining time in seconds the refresh token is valid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetRefreshTokenExpiresInSuccessResponse'
-        '400':
+                $ref: "#/components/schemas/GetRefreshTokenExpiresInSuccessResponse"
+        "400":
           description: Bad Request - Refresh cookie is missing from request
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetRefreshTokenExpiresInBadRequestErrorResponse'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized - Refresh cookie is invalid
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetRefreshTokenExpiresInUnauthorizedErrorResponse'
-        '403':
+                $ref: "#/components/schemas/ApiError"
+        "403":
           description: Forbidden - Refresh cookie is revoked or has been tampered with and does not belong to profile
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericForbiddenErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Internal Server Error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericInternalServerErrorResponse'
-                
+                $ref: "#/components/schemas/ApiError"
+
   /api/auth/check-auth:
     get:
       summary: Purpose is to check to see if the token is valid for auth slice on redux (such as a page reload)
@@ -245,7 +245,7 @@ paths:
             description: The profile ID associated with the user session
             example: "unique-profile-id"
       responses:
-        '200':
+        "200":
           description: ok
           content:
             application/json:
@@ -257,7 +257,7 @@ paths:
                   isAuthenticated:
                     type: boolean
                     example: false
-        
+
   /api/auth/extend-session:
     post:
       operationId: extendSession
@@ -282,43 +282,43 @@ paths:
             description: The profile ID associated with the user session
             example: "unique-profile-id"
       responses:
-        '200':
+        "200":
           description: User Session Extended Successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExtendSessionSuccessResponse'
+                $ref: "#/components/schemas/ExtendSessionSuccessResponse"
           headers:
             Set-Cookie:
               description: Cookies for authentication
               required: true
               schema:
-                $ref: '#/components/schemas/AuthCookies'  # Corrected reference here
-        '400':
+                $ref: "#/components/schemas/AuthCookies" # Corrected reference here
+        "400":
           description: Bad Request - Missing refresh token cookie
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExtendSessionBadRequestErrorResponse'
-        '401':
+                $ref: "#/components/schemas/ApiError"
+        "401":
           description: Unauthorized - Refresh token is invalid/expired
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ExtendSessionUnauthorizedErrorResponse'
-        '403':
+                $ref: "#/components/schemas/ApiError"
+        "403":
           description: Forbidden - Refresh token has been tampered with or does not belong to profileId of the session
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericForbiddenErrorResponse'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Internal Server Error - Unexpected issue during extend session
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericInternalServerErrorResponse'
-                
+                $ref: "#/components/schemas/ApiError"
+
   /api/league/:
     post:
       summary: Create a new League
@@ -331,32 +331,32 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/CreateLeagueRequest'
+              $ref: "#/components/schemas/CreateLeagueRequest"
       responses:
-        '201':
+        "201":
           description: League created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CreateLeagueResponse'
-        '400':
+                $ref: "#/components/schemas/CreateLeagueResponse"
+        "400":
           description: Bad request, missing required fields (name, seasonId)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Season not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
+                $ref: "#/components/schemas/ApiError"
   /api/league/profile/{profileId}:
     get:
       summary: Get leagues for a profile
@@ -372,30 +372,30 @@ paths:
             type: string
             description: "The profile ID for the league"
       responses:
-        '201':
+        "201":
           description: League created successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GetLeaguesForProfileResponse'
-        '400':
+                $ref: "#/components/schemas/GetLeaguesForProfileResponse"
+        "400":
           description: Bad request, missing required fields (profileId)
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '404':
+                $ref: "#/components/schemas/ApiError"
+        "404":
           description: Profile not found
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'
-        '500':
+                $ref: "#/components/schemas/ApiError"
+        "500":
           description: Internal server error
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApiError'                
+                $ref: "#/components/schemas/ApiError"
   /api/survivor/getSurvivorsWithDetailsBySeason/:
     get:
       summary: Get survivors by season
@@ -417,514 +417,356 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getSurvivorsWithDetailsBySeasonIdSuccessResponse'
+                $ref: "#/components/schemas/getSurvivorsWithDetailsBySeasonIdSuccessResponse"
         404:
           description: Not Found - No survivors for provided season ID
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getSurvivorsWithDetailsBySeasonIdNotFoundErrorResponse'
+                $ref: "#/components/schemas/ApiError"
         400:
           description: Bad Request - Missing season ID | Invalid season ID
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/getSurvivorsWithDetailsBySeasonIdBadRequestErrorResponse'
+                $ref: "#/components/schemas/ApiError"
         500:
           description: Internal Server Error - Failed to fetch survivors by season
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/GenericInternalServerErrorResponse'
- 
-#REFERENCE DEFINITIONS                  
+                $ref: "#/components/schemas/ApiError"
+
+#REFERENCE DEFINITIONS
 components:
-    schemas:
+  schemas:
+    #AUTH
+    #AUTH COOKIES
+    AuthCookies:
+      type: string
+      description: |
+        Cookies to be included in response for authentication.
+        `accessToken` and `refreshToken` are both set in the response
+        as HttpOnly, Secure cookies.
+      example: |
+        accessToken=your-access-token-here; HttpOnly; Secure; SameSite=Strict
+        refreshToken=your-refresh-token-here; HttpOnly; Secure; SameSite=Strict
 
-#AUTH  
-  #AUTH COOKIES
-      AuthCookies:
-        type: string
-        description: |
-          Cookies to be included in response for authentication.
-          `accessToken` and `refreshToken` are both set in the response
-          as HttpOnly, Secure cookies.
-        example: |
-          accessToken=your-access-token-here; HttpOnly; Secure; SameSite=Strict
-          refreshToken=your-refresh-token-here; HttpOnly; Secure; SameSite=Strict
-    
-  #LOGOUT
-      #Success Response
-      LogoutSuccessResponse:
-        type: object
-        required:
-          - message
-        properties:
-          message:
-            type: string
-            enum:
-              - "User logged out successfully. All session data has been cleared."
-            example: "User logged out successfully. All session data has been cleared."
-  
-      #Error Responses for Logout
-      LogoutBadRequestErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            description: Description of the error during logout
-            enum:
-              - "Missing authentication cookies. Please log in."
-            example: "Missing authentication cookies. Please log in."
-      
-      LogoutUnauthorizedErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            description: Description of the error during logout
-            enum:
-              - "Invalid or expired tokens. Please log in again."
-              - "User session already invalidated. Please log in."
-            example: "Invalid or expired tokens. Please log in again."
+    #LOGOUT
+    #Success Response
+    LogoutSuccessResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          enum:
+            - "User logged out successfully. All session data has been cleared."
+          example: "User logged out successfully. All session data has been cleared."
 
-  #LOGIN
-      #Request
-      LoginUserRequest:
-        type: object
-        required:
-          - email
-          - password
-        properties:
-          email:
-            type: string
-            example: user@example.com
-          password:
-            type: string
-            example: StrongPassword123!
+    #LOGIN
+    #Request
+    LoginUserRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: StrongPassword123!
 
-      #Success Response
-      LoginUserSuccessResponse:
+    #Success Response
+    LoginUserSuccessResponse:
+      type: object
+      required:
+        - account
+      properties:
+        message:
+          type: string
+          enum:
+            - "User logged in successfully"
+          example: User logged in successfully
+        account:
+          $ref: "#/components/schemas/Account"
+
+    #SIGNUP
+    #Request
+    SignupUserRequest:
+      type: object
+      required:
+        - email
+        - password
+        - username
+      properties:
+        email:
+          type: string
+          example: user@example.com
+        password:
+          type: string
+          example: StrongPassword123!
+        username:
+          type: string
+          example: SurvivorFan69
+        firstName:
+          type: string
+          example: Jeff
+        lastName:
+          type: string
+          example: Probst
+
+    #Success Response
+    SignupUserSuccessResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          enum:
+            - "User signed up successfully"
+          example: User signed up successfully
+        account:
+          $ref: "#/components/schemas/Account"
+
+    #GETREFRESHTOKENEXPIRESIN
+    GetRefreshTokenExpiresInSuccessResponse:
+      type: object
+      required:
+        - secondsRefreshTokenIsValidFor
+      properties:
+        secondsRefreshTokenIsValidFor:
+          type: integer
+          example: 360
+
+    #EXTENDSESSION
+    ExtendSessionSuccessResponse:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          enum:
+            - "User session extended successfully."
+          example: User session extended successfully.
+
+    #OBJECT DEFINITIONS
+
+    Account:
+      type: object
+      required:
+        - userName
+        - profileId
+        - email
+        - imageUrl
+      properties:
+        userName:
+          type: string
+          example: SurvivorFan69
+        profileId:
+          type: string
+          example: Unique-Profile-Id-String
+        email:
+          type: string
+          example: user@example.com
+        imageUrl:
+          type: string
+          example: assets/images/profileImages/genericProfileImage.jpg
+        firstName:
+          type: string
+          example: Jeff
+        lastName:
+          type: string
+          example: Probst
+
+    #SURVIVOR
+
+    getSurvivorsWithDetailsBySeasonIdSuccessResponse:
+      type: object
+      required:
+        - message
+        - survivorsWithDetails
+      properties:
+        message:
+          type: string
+          enum:
+            - "Survivors with details sucessfully retrieved"
+          example: Survivors with details sucessfully retrieved
+        survivorsWithDetails:
+          $ref: "#/components/schemas/SurvivorsWithDetails"
+
+    SurvivorsWithDetails:
+      type: array
+      items:
         type: object
         required:
-          - account
+          - survivorId
+          - firstName
+          - lastName
+          - nickName
+          - fromState
+          - fromCountry
+          - description
+          - age
+          - job
         properties:
-          message:
-            type: string
-            enum:
-              - "User logged in successfully"
-            example: User logged in successfully
-          account:
-            $ref: '#/components/schemas/Account'
-      
-      #Unauthorized Error Response
-      LoginUserUnauthorizedErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            enum:
-              - "Invalid email or password. Please try again."
-            example: Invalid email or password. Please try again.
-            
-  #SIGNUP
-      #Request
-      SignupUserRequest:
-        type: object
-        required:
-          - email
-          - password
-          - username
-        properties:
-          email:
-            type: string
-            example: user@example.com
-          password:
-            type: string
-            example: StrongPassword123!
-          username:
-            type: string
-            example: SurvivorFan69
+          seasonId:
+            type: integer
+            description: The season tied with this survivors details
+            example: 47
+          survivorId:
+            type: integer
+            description: The survivor
+            example: unique-survivor-identifier
           firstName:
             type: string
-            example: Jeff
+            description: The survivor's first name
+            example: Andy
           lastName:
             type: string
-            example: Probst
-      
-      #Success Response
-      SignupUserSuccessResponse:
-        type: object
-        required:
-          - message
-        properties:
-          message:
+            description: The survivor's last name
+            example: Rueda
+          nickName:
             type: string
-            enum:
-              - "User signed up successfully"
-            example: User signed up successfully
-          account:
-            $ref: '#/components/schemas/Account'
-            
-      SignupUserBadRequestErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
+            description: The survivor's nick name
+            example:
+          fromCity:
             type: string
-            enum:
-              - "Missing email."
-              - "Missing password."
-              - "Missing username."
-              - "Invalid first name."
-              - "Invalid last name."
-              - "Invalid email."
-              - "Password is too weak."
-            example: Invalid email.
-            
-      SignupUserConflictErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
+            description: The city the survivor is from
+            example: Brooklyn
+          fromState:
             type: string
-            enum: 
-              - "Email unavailable."
-              - "UserName unavailable."
-            example: Email unavailable.
-            
-  #GETREFRESHTOKENEXPIRESIN
-      GetRefreshTokenExpiresInSuccessResponse:
-        type: object
-        required:
-          - secondsRefreshTokenIsValidFor
-        properties:
-          secondsRefreshTokenIsValidFor:
+            description: The state the survivor is from
+            example: New York
+          fromCountry:
+            type: string
+            description: The country the survivor is from
+            example: US
+          age:
             type: integer
-            example: 360
-            
-      GetRefreshTokenExpiresInBadRequestErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
+            description: The survivor's age at the time of the survivor season
+            example: 31
+          description:
             type: string
-            enum:
-              - "Missing refresh token."
-            example: Missing refresh token.
-            
-      GetRefreshTokenExpiresInUnauthorizedErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
+            description: The survivor's description
+            example: Nobody likes this guy
+          job:
             type: string
-            enum:
-              - "Invalid/expired refresh token."
-            example: Invalid/expired refresh token.
+            description: The survivor's job/occupation.
+            example: AI Research Assistant
+    #LEAGUE
+    CreateLeagueRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the league
+          example: "Corner By The Bookshelf"
+        seasonId:
+          type: integer
+          description: The ID of the season the league belongs to
+          example: 47
+        profileId:
+          type: string
+          description: The profileId of the user creating the league
+          example: "49e27bd8-dc24-4159-9630-e989025bf8fd"
+      required:
+        - name
+        - seasonId
+        - profileId
+    CreateLeagueResponse:
+      type: object
+      properties:
+        league:
+          $ref: "#/components/schemas/League"
+        statusCode:
+          type: integer
+          description: The HTTP status code indicating the result of the operation
+          example: 201
+        message:
+          type: string
+          description: A message describing the outcome of the operation
+          example: "League successfully created."
 
-  #EXTENDSESSION
-      ExtendSessionSuccessResponse:
-        type: object
-        required:
-          - message
-        properties:
-          message:
-            type: string
-            enum: 
-              - "User session extended successfully."
-            example: User session extended successfully.
-      
-      ExtendSessionBadRequestErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            enum:
-              - "Missing refresh token"
-            example: Missing refresh token
-      
-      ExtendSessionUnauthorizedErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            enum:
-              - "Token is invalid/expired"
-            example: Token is invalid/expired
-      
-  #GENERIC
-      GenericInternalServerErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            enum:
-              - "Internal server error. Please try again later."
-            example: Internal server error. Please try again later.
-      
-      GenericForbiddenErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            enum:
-              - "Forbidden."
-            example: Forbidden
-      
-  #OBJECT DEFINITIONS
+    League:
+      type: object
+      required:
+        - leagueId
+        - seasonId
+        - name
+        - season
+      properties:
+        leagueId:
+          type: integer
+          description: The unique identifier of the newly created league
+          example: 1
+        seasonId:
+          type: integer
+          description: The ID of the season associated with the league
+          example: 47
+        name:
+          type: string
+          description: The name of the league
+          example: "Corner By The Bookshelf"
+        createdAt:
+          type: string
+          format: date-time
+          description: The timestamp when the league was created
+          example: "2024-11-10T16:35:09.034Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: The timestamp when the league was last updated
+          example: "2024-11-10T16:35:09.034Z"
+        season:
+          $ref: "#/components/schemas/Season"
 
-      Account:
-        type: object
-        required:
-          - userName
-          - profileId
-          - email
-          - imageUrl
-        properties:
-          userName:
-            type: string
-            example: SurvivorFan69
-          profileId:
-            type: string
-            example: Unique-Profile-Id-String
-          email:
-            type: string
-            example: user@example.com
-          imageUrl:
-            type: string
-            example: assets/images/profileImages/genericProfileImage.jpg
-          firstName:
-            type: string
-            example: Jeff
-          lastName:
-            type: string
-            example: Probst
-            
-#SURVIVOR
-      
-      getSurvivorsWithDetailsBySeasonIdSuccessResponse:
-        type: object
-        required:
-          - message
-          - survivorsWithDetails
-        properties:
-          message:
-            type: string
-            enum:
-              - "Survivors with details sucessfully retrieved"
-            example: Survivors with details sucessfully retrieved
-          survivorsWithDetails:
-            $ref: '#/components/schemas/SurvivorsWithDetails'
-      
-      getSurvivorsWithDetailsBySeasonIdNotFoundErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            enum:
-              - "No survivors found"
-            example: No survivors found      
-      
-      getSurvivorsWithDetailsBySeasonIdBadRequestErrorResponse:
-        type: object
-        required:
-          - error
-        properties:
-          error:
-            type: string
-            enum:
-              - "Missing season ID"
-              - "Invalid season ID"
-            example: Missing season ID
-    
-      SurvivorsWithDetails:
-        type: array
-        items:
-          type: object
-          required:
-            - survivorId
-            - firstName
-            - lastName
-            - nickName
-            - fromState
-            - fromCountry
-            - description
-            - age
-            - job
-          properties:
-            seasonId:
-              type: integer
-              description: The season tied with this survivors details
-              example: 47
-            survivorId:
-              type: integer
-              description: The survivor 
-              example: unique-survivor-identifier
-            firstName:
-              type: string
-              description: The survivor's first name
-              example: Andy
-            lastName:
-              type: string
-              description: The survivor's last name
-              example: Rueda
-            nickName:
-              type: string
-              description: The survivor's nick name
-              example:
-            fromCity:
-              type: string
-              description: The city the survivor is from
-              example: Brooklyn
-            fromState:
-              type: string
-              description: The state the survivor is from
-              example: New York
-            fromCountry:
-              type: string
-              description: The country the survivor is from
-              example: US
-            age:
-              type: integer
-              description: The survivor's age at the time of the survivor season
-              example: 31
-            description:
-              type: string
-              description: The survivor's description
-              example: Nobody likes this guy
-            job:
-              type: string
-              description: The survivor's job/occupation.
-              example: AI Research Assistant            
-#LEAGUE
-      CreateLeagueRequest:
-        type: object
-        properties:
-          name:
-            type: string
-            description: The name of the league
-            example: "Corner By The Bookshelf"
-          seasonId:
-            type: integer
-            description: The ID of the season the league belongs to
-            example: 47
-          profileId:
-            type: string
-            description: The profileId of the user creating the league
-            example: "49e27bd8-dc24-4159-9630-e989025bf8fd"
-        required:
-          - name
-          - seasonId
-          - profileId
-      CreateLeagueResponse:
-        type: object
-        properties:
-          league:
-            $ref: '#/components/schemas/League'
-          statusCode:
-            type: integer
-            description: The HTTP status code indicating the result of the operation
-            example: 201
-          message:
-            type: string
-            description: A message describing the outcome of the operation
-            example: "League successfully created."
-    
-      League:
-        type: object
-        required:
-          - leagueId
-          - seasonId
-          - name
-          - season
-        properties:
-          leagueId:
-            type: integer
-            description: The unique identifier of the newly created league
-            example: 1
-          seasonId:
-            type: integer
-            description: The ID of the season associated with the league
-            example: 47
-          name:
-            type: string
-            description: The name of the league
-            example: "Corner By The Bookshelf"
-          createdAt:
-            type: string
-            format: date-time
-            description: The timestamp when the league was created
-            example: "2024-11-10T16:35:09.034Z"
-          updatedAt:
-            type: string
-            format: date-time
-            description: The timestamp when the league was last updated
-            example: "2024-11-10T16:35:09.034Z"
-          season:
-             $ref: '#/components/schemas/Season'
-    
-      Season:
-        type: object
-        properties:
-          seasonId:
-            type: integer
-            description: The unique identifier of the season
-            example: 47
-          theme:
-            type: string
-            description: The theme of the season
-            example: "The New Era 2.0"
-          location:
-            type: string
-            description: The location of the season
-            example: "Fiji, Oceania"
-          name:
-            type: string
-            description: The name of the season (optional)
-            example: null
-      GetLeaguesForProfileResponse:
-        type: object
-        required:
-          - leagues
-        properties:
-          statusCode:
-            type: integer
-            description: The HTTP status code indicating the result of the error
-            example: 400
-          message:
-            type: string
-            description: A message describing the error
-            example: "Invalid input, missing required fields."
-          leagues:
-            type: array
-            items:
-              $ref: "#/components/schemas/League"
-              
-      ApiError:
-        type: object
-        properties:
-          error:
-            type: string
-            description: A message describing the error
-            example: "Invalid input, missing required fields."
+    Season:
+      type: object
+      properties:
+        seasonId:
+          type: integer
+          description: The unique identifier of the season
+          example: 47
+        theme:
+          type: string
+          description: The theme of the season
+          example: "The New Era 2.0"
+        location:
+          type: string
+          description: The location of the season
+          example: "Fiji, Oceania"
+        name:
+          type: string
+          description: The name of the season (optional)
+          example: null
+    GetLeaguesForProfileResponse:
+      type: object
+      required:
+        - leagues
+      properties:
+        statusCode:
+          type: integer
+          description: The HTTP status code indicating the result of the error
+          example: 400
+        message:
+          type: string
+          description: A message describing the error
+          example: "Invalid input, missing required fields."
+        leagues:
+          type: array
+          items:
+            $ref: "#/components/schemas/League"
+
+    ApiError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: A message describing the error
+          example: "Invalid input, missing required fields."

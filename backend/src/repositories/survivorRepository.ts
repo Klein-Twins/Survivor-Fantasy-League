@@ -33,12 +33,12 @@ const survivorRepository = {
 
             if (results.length === 0) {
                 throw errorFactory({
-                    message: `No survivors found for season ${seasonId}`,
+                    error: `No survivors found for season ${seasonId}`,
                     statusCode: NOT_FOUND_ERROR.statusCode,
                 });
             }
             return results;
-            
+
         } catch (error) {
             logger.error(`Error retrieving survivors from DB for season ${seasonId}: ${error}`);
             throw error;

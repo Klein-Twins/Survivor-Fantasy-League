@@ -6,6 +6,7 @@ import authService from "../../servicesAndHelpers/auth/authService";
 import logger from "../../config/logger";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
 import { formatLoginRequest, validateLoginRequest } from "../../utils/auth/authUtils";
+import errorFactory from "../../utils/errors/errorFactory";
 
 /**
  * Controller for handling authentication actions.
@@ -26,7 +27,7 @@ const authController = {
             // Get account
             const account: Account | null = await authService.login(formattedLoginRequestData);
             if (!account) {
-                res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR);
+                throw errorFactory({ statusCode: 500 })
             }
 
             res.locals.account = account;
@@ -39,8 +40,8 @@ const authController = {
 
     logout: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const accessToken : string | undefined = req.cookies.accessToken;
-            const refreshToken : string | undefined = req.cookies.refreshToken;
+            const accessToken: string | undefined = req.cookies.accessToken;
+            const refreshToken: string | undefined = req.cookies.refreshToken;
 
             // Clear cookies
             res.clearCookie('accessToken');

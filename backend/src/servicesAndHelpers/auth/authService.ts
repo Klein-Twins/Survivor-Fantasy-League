@@ -4,11 +4,11 @@ import { Account, LoginRequestFields } from '../../types/auth/authTypes';
 import errorFactory from '../../utils/errors/errorFactory';
 import accountService from './accountService';
 import passwordService from '../password/passwordService';
-import { INCORRECT_PASSWORD } from '../../constants/auth/responseErrorConstants';
+import { INCORRECT_PASSWORD_ERROR } from '../../constants/auth/responseErrorConstants';
 import logger from '../../config/logger';
 
 const authService = {
-  
+
   /**
    * Handles user login by validating the provided email and password.
    * If the credentials are correct, it returns the account details.
@@ -27,9 +27,9 @@ const authService = {
     // Check if the provided password matches the stored user password
     const isAuthenticated: boolean = await passwordService.checkPasswordAgainstUserPassword(userRecord, password);
     logger.debug(`User is authenticated`);
-    
+
     if (!isAuthenticated) {
-      throw errorFactory(INCORRECT_PASSWORD);
+      throw errorFactory(INCORRECT_PASSWORD_ERROR);
     }
 
     // Fetch and return account details

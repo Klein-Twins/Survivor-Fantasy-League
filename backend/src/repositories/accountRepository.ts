@@ -1,6 +1,6 @@
 import { models, sequelize } from "../config/db";
 import logger from "../config/logger";
-import { ACCOUNT_NOT_FOUND } from "../constants/auth/responseErrorConstants";
+import { ACCOUNT_NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
 import { PasswordAttributes } from "../models/Password";
 import { ProfileAttributes } from "../models/Profile";
 import { UserAttributes } from "../models/User";
@@ -15,18 +15,18 @@ import errorFactory from "../utils/errors/errorFactory";
  * and retrieving accounts by email.
  */
 const accountRepository = {
-    createAccount: async (inputAccountData : AccountAndPassword): Promise<{profileRecord: ProfileAttributes, userRecord: UserAttributes, passwordRecord: PasswordAttributes}> => {
+    createAccount: async (inputAccountData: AccountAndPassword): Promise<{ profileRecord: ProfileAttributes, userRecord: UserAttributes, passwordRecord: PasswordAttributes }> => {
         const transaction = await sequelize.transaction();
         logger.debug("Transaction Created.");
         try {
-            const profileRecord : ProfileAttributes = await profileService.createProfileForAccount(inputAccountData, transaction)
-            const userRecord : UserAttributes = await userService.createUserForAccount(inputAccountData, transaction);
-            const passwordRecord : PasswordAttributes = await passwordService.createPasswordForAccount(inputAccountData, transaction)
+            const profileRecord: ProfileAttributes = await profileService.createProfileForAccount(inputAccountData, transaction)
+            const userRecord: UserAttributes = await userService.createUserForAccount(inputAccountData, transaction);
+            const passwordRecord: PasswordAttributes = await passwordService.createPasswordForAccount(inputAccountData, transaction)
 
             await transaction.commit();
             logger.debug("Transaction committed. Account created in DB");
 
-            return {profileRecord, passwordRecord, userRecord};
+            return { profileRecord, passwordRecord, userRecord };
         } catch (error) {
             await transaction.rollback();
             logger.error(`Transaction rolledback. Error creating and persisting account into DB: ${error}`)
@@ -46,13 +46,13 @@ const accountRepository = {
                     email
                 }
             }) as unknown as UserIncludeProfile;
-    
+
             if (!userAndProfileRecord) {
-                throw errorFactory(ACCOUNT_NOT_FOUND);
+                throw errorFactory(ACCOUNT_NOT_FOUND_ERROR);
             }
-            
+
             return userAndProfileRecord;
-        } catch(error) {
+        } catch (error) {
             logger.error(`Error getting account for email ${email}: ${error}`);
             throw error;
         }

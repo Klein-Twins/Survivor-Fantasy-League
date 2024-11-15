@@ -10,6 +10,7 @@ import logger from "../../config/logger";
 
 import accountService from "../../servicesAndHelpers/auth/accountService";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
+import errorFactory from "../../utils/errors/errorFactory";
 
 const tokenController = {
     extendSessionByRefreshingAccessAndRefreshTokens: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -87,13 +88,12 @@ const tokenController = {
             const account: Account | undefined = res.locals.account;
             if (!account) {
                 logger.error("Missing account data for token generation");
-                res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR);
-                return;
+                throw errorFactory({ statusCode: 500 })
             }
 
             await tokenService.createAndAttachTokensToResponse(account.userId, account.profileId, res);
             const accountResponse = accountService.getAccountForResponse(account);
-            res.status(httpStatusCodes.ACCEPTED).json({ account: accountResponse });
+            res.status(httpStatusCodes.ACCEPTED).json({ message: "User signed up successfully", account: accountResponse });
         } catch (error) {
             next(error);
         }

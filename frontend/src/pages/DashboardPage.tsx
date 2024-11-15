@@ -1,5 +1,5 @@
 import React from "react";
-import LeaguesPanel from "../components/dashboard/home/leaguesPanel/LeaguesPanel";
+import LeaguesPanel from "../components/dashboard/leaguesPanel/LeaguesPanel";
 import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
 

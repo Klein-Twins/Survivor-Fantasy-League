@@ -8,7 +8,7 @@ import errorHandler from '../../middleware/errorHandlerMiddleware';
 import seasonService from '../../servicesAndHelpers/season/seasonService';
 import logger from '../../config/logger';
 import errorFactory from '../../utils/errors/errorFactory';
-import { INVALID_NAME, INVALID_PROFILE_ID, INVALID_SEASON_ID, SEASON_NOT_FOUND } from '../../constants/auth/responseErrorConstants';
+import { INVALID_NAME_ERROR, INVALID_PROFILE_ID_ERROR, INVALID_SEASON_ID_ERROR, SEASON_NOT_FOUND_ERROR } from '../../constants/auth/responseErrorConstants';
 import leagueRepository from '../../repositories/leagueRepository';
 
 const leagueController = {
@@ -16,16 +16,16 @@ const leagueController = {
         try {
             const { seasonId, name, profileId } = req.body;
             const parsedSeasonId = seasonId ? parseInt(seasonId as string, 10) : undefined;
-            
+
             validateCreateLeagueRequest(seasonId, name, profileId);
             const doesSeasonExist: boolean = await seasonService.doesSeasonExist(parsedSeasonId!)
             if (!doesSeasonExist) {
-                throw errorFactory(SEASON_NOT_FOUND);
+                throw errorFactory(SEASON_NOT_FOUND_ERROR);
             }
-    
-            let league : LeagueAttributes = await leagueService.createLeague(seasonId, name, profileId);
+
+            let league: LeagueAttributes = await leagueService.createLeague(seasonId, name, profileId);
             league = await leagueService.getLeagueByLeagueId(league.leagueId)
-            const responseBody : CreateLeagueResponse = leagueResponseBuilder.buildCreateLeagueResponse(league);
+            const responseBody: CreateLeagueResponse = leagueResponseBuilder.buildCreateLeagueResponse(league);
             res.status(201).json(responseBody);
 
         } catch (error) {
@@ -48,21 +48,21 @@ const leagueController = {
     }
 };
 
-const validateCreateLeagueRequest = (seasonId: number, name: string, profileId: string) : void => {
+const validateCreateLeagueRequest = (seasonId: number, name: string, profileId: string): void => {
     if (!seasonId) {
-        throw errorFactory(INVALID_SEASON_ID)
+        throw errorFactory(INVALID_SEASON_ID_ERROR)
     }
     if (!name) {
-        throw errorFactory(INVALID_NAME)
+        throw errorFactory(INVALID_NAME_ERROR)
     }
     if (!profileId) {
-        throw errorFactory(INVALID_PROFILE_ID)
+        throw errorFactory(INVALID_PROFILE_ID_ERROR)
     }
 }
 
-const validateGetLeaguesForProfileRequest = (profileId: string) : void => {
+const validateGetLeaguesForProfileRequest = (profileId: string): void => {
     if (!profileId) {
-        throw errorFactory(INVALID_PROFILE_ID)
+        throw errorFactory(INVALID_PROFILE_ID_ERROR)
     }
 }
 

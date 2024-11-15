@@ -1,23 +1,23 @@
 import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../../store/store";
+import { RootState } from "../../../../store/store";
 
-import { League, CreateLeagueResponse } from "../../../../../../generated-api";
-import leagueService from "../../../../../services/league/leagueService";
+import { League, CreateLeagueResponse } from "../../../../../generated-api";
+import leagueService from "../../../../services/league/leagueService";
 
-import usePostApi from "../../../../../hooks/usePostApi";
-import useForm from "../../../../../hooks/useForm";
+import usePostApi from "../../../../hooks/usePostApi";
+import useForm from "../../../../hooks/useForm";
 
 import {
   CreateLeagueFormData,
   validateCreateLeague,
-} from "../../../../../utils/league/formValidation";
+} from "../../../../utils/league/formValidation";
 
-import FormInput from "../../../../ui/forms/FormInput";
-import Select from "../../../../ui/forms/Select";
-import Form from "../../../../ui/forms/Form";
+import FormInput from "../../../ui/forms/FormInput";
+import Select from "../../../ui/forms/Select";
+import Form from "../../../ui/forms/Form";
 
-import CloseIcon from "../../../../../assets/close.svg";
+import CloseIcon from "../../../../assets/close.svg";
 
 interface CreateLeagueFormProps {
   setShowCreateLeagueForm: React.Dispatch<React.SetStateAction<boolean>>;

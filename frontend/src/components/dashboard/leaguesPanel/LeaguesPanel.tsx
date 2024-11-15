@@ -1,11 +1,11 @@
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
 import AddCircleIcon from "../../../../assets/add_circle.svg";
-import leagueService from "../../../../services/league/leagueService";
-import { RootState } from "../../../../store/store";
+import leagueService from "../../../services/league/leagueService";
+import { RootState } from "../../../store/store";
 import LeagueList from "./LeagueList";
-import useGetApi from "../../../../hooks/useGetApi";
-import { GetLeaguesForProfileResponse } from "../../../../../generated-api";
+import useGetApi from "../../../hooks/useGetApi";
+import { GetLeaguesForProfileResponse } from "../../../../generated-api";
 import NoLeagues from "./NoLeagues";
 import CreateLeagueForm from "./forms/CreateNewLeagueForm";
 

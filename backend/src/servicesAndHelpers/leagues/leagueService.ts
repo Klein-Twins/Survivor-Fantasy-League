@@ -12,16 +12,16 @@ const leagueService = {
   ): Promise<LeagueAttributes> => {
     const transaction = await sequelize.transaction();
     try {
-      const league: LeagueAttributes = await leagueRepository.createLeague(seasonId, leagueName, {transaction});
+      const league: LeagueAttributes = await leagueRepository.createLeague(seasonId, leagueName, { transaction });
 
       const leagueProfile: LeagueProfileAttributes =
-        await leagueRepository.createLeagueProfile(profileId, league.leagueId, "LEAGUE_OWNER", InviteStatusEnum.Accepted, {transaction}
+        await leagueRepository.createLeagueProfile(profileId, league.leagueId, "LEAGUE_OWNER", InviteStatusEnum.Accepted, { transaction }
         );
 
       if (!leagueProfile) {
         throw errorFactory({
           statusCode: 400,
-          message: "Unable to create LeagueProfile association",
+          error: "Unable to create LeagueProfile association",
         });
       }
 
@@ -39,7 +39,7 @@ const leagueService = {
     if (!league) {
       throw errorFactory({
         statusCode: 404,
-        message: `Unable to find league with league id: ${leagueId}`,
+        error: `Unable to find league with league id: ${leagueId}`,
       });
     }
     return league;

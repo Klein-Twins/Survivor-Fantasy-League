@@ -3,7 +3,7 @@ import { models } from "../config/db";
 import logger from "../config/logger";
 import { UserAttributes } from '../models/User';
 import errorFactory from "../utils/errors/errorFactory";
-import { EMAIL_NOT_FOUND, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
+import { EMAIL_NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
 
 const userRepository = {
 
@@ -70,7 +70,7 @@ const userRepository = {
             const userRecord = await models.User.findOne({ where: { email } });
             if (!userRecord) {
                 logger.error(`User with email: ${email} does not exist in the database.`)
-                throw errorFactory(EMAIL_NOT_FOUND);
+                throw errorFactory(EMAIL_NOT_FOUND_ERROR);
             }
             logger.debug(`User found by email: ${email}`);
             return userRecord;

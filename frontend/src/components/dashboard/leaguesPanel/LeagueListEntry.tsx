@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { League } from '../../../../../generated-api';
+import { League } from '../../../../generated-api';
 import hamburgerImg from '../../../../assets/hamburger.svg';
 interface LeagueListEntryProps {
   league: League;
