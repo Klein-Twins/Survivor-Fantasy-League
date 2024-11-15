@@ -5,12 +5,12 @@ import { useLocation } from "react-router-dom";
 const LeagueDetailView: React.FC = () => {
   const location = useLocation();
 
-  const leagueID = location.state as { leagueId: LeagueModel };
+  const { leagueId } = location.state
 
   //Handle if he user enters the URL manually.
-  if (!leagueID) return <h1>You cannot navigate here this way</h1>
+  if (!leagueId) return <h1>You cannot navigate here this way</h1>
 
-  return <h1>{leagueID.leagueId.leagueId}</h1>;
+  return <h1>{leagueId}</h1>;
 }
 
 export default LeagueDetailView;
