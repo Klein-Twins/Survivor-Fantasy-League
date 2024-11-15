@@ -57,8 +57,9 @@ const LeaguesPanel: React.FC = () => {
         </>
       )}
 
-      {leagues.length === 0 && !showCreateLeagueForm && <NoLeagues onClickAddForm={setShowCreateLeagueForm} />}
+      {leagues.length === 0 && !showCreateLeagueForm && !isLoading && <NoLeagues onClickAddForm={setShowCreateLeagueForm} />}
       {leagues.length !== 0 && <LeagueList leagues={leagues} />}
+      {isLoading && <h2 className="text-center mt-2 text-xl">Loading Leagues...</h2>}
     </div>
   );
 };

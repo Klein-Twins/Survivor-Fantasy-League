@@ -1,13 +1,10 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
-import League from '.';
+import { League } from '../../../../../generated-api';
 
 interface LeagueListEntryProps {
-  league: any;
+  league: League;
 }
-
-
-
 
 const LeagueListEntry: React.FC<LeagueListEntryProps> = ({ league }) => {
 
