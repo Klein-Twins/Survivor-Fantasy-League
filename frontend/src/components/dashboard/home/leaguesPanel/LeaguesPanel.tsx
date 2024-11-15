@@ -10,6 +10,8 @@ import NoLeagues from "./NoLeagues";
 import CreateLeagueForm from "./forms/CreateNewLeagueForm";
 
 
+
+
 const LeaguesPanel: React.FC = () => {
 
   const [showCreateLeagueForm, setShowCreateLeagueForm] = useState(false);
@@ -31,7 +33,7 @@ const LeaguesPanel: React.FC = () => {
   return (
     <div className="flex flex-col mx-auto bg-white p-8 rounded-lg shadow-lg w-auto">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl">Your Leagues</h2>
+        <h2 className="text-xl">{isLoading && leagues.length == 0 ? "Loading Your Leagues" : "Your Leagues"}</h2>
         <div
           className="cursor-pointer p-2 transition duration-300 -translate-y-2 transform hover:scale-105 hover:bg-blue-200 active:bg-blue-400 rounded-full"
           aria-label="Create League"
@@ -59,7 +61,6 @@ const LeaguesPanel: React.FC = () => {
 
       {leagues.length === 0 && !showCreateLeagueForm && !isLoading && <NoLeagues onClickAddForm={setShowCreateLeagueForm} />}
       {leagues.length !== 0 && <LeagueList leagues={leagues} />}
-      {isLoading && <h2 className="text-center mt-2 text-xl">Loading Leagues...</h2>}
     </div>
   );
 };
