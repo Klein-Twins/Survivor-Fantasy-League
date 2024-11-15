@@ -22,24 +22,13 @@ const initModels = (sequelize: Sequelize) => {
 
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
-  League.associate({Seasons})
+  League.associate({Seasons, LeagueProfile})
   Survivors.associate({ SurvivorDetailsOnSeason });
   Seasons.associate({ SurvivorDetailsOnSeason, League });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
-  Profile.associate({ User });
+  Profile.associate({ User, LeagueProfile });
   Tokens.associate({ User });
-
-  Profile.belongsToMany(League, {
-    foreignKey: "profileId",
-    through: LeagueProfile,
-    as: "profile",
-  });
-
-  League.belongsToMany(Profile, {
-    foreignKey: "leagueId",
-    through: LeagueProfile,
-    as: "leagues",
-  });
+  LeagueProfile.associate({ League, Profile });
 
   return {
     User,

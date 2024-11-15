@@ -20,6 +20,7 @@ const LeagueModel = (sequelize: Sequelize) => {
 
         static associate(models: any) {
             this.belongsTo(models.Seasons, { foreignKey: 'seasonId', as: "season"});
+            this.hasMany(models.LeagueProfile, {foreignKey: 'leagueId', as: "leagueProfiles"});
         }
     }
 

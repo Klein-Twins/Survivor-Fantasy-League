@@ -14,7 +14,14 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     public leagueId!: string;
     public profileId!: string;
     public role!: string;
+
+    static associate(models: any) {
+      this.belongsTo(models.League, {foreignKey: 'leagueId', as: 'league'});
+      this.belongsTo(models.Profile, {foreignKey: 'profileId', as: 'profile'});
+    }
   }
+
+  
 
   LeagueProfile.init(
     {
