@@ -31,8 +31,8 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
                 ✕
             </button>
             
-            {modalType === 'signup' && <Form title={"Sign Up"}><SignupForm /></Form>}
-            {modalType === 'login' && <Form title={"Log In"}><LoginForm /></Form>}
+            {modalType === 'signup' && <SignupForm />}
+            {modalType === 'login' && <LoginForm />}
             {modalType === 'survivorDetail' && <SurvivorDetailCard survivor={modalProps.survivor}/>}
             {modalType === 'notify' && <Notification title={modalProps.title} description={modalProps.description}/>}
             {modalType === 'logout' && <LogoutConfirmation />}

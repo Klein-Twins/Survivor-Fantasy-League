@@ -853,6 +853,11 @@ components:
     
       League:
         type: object
+        required:
+          - leagueId
+          - seasonId
+          - name
+          - season
         properties:
           leagueId:
             type: integer
@@ -900,6 +905,8 @@ components:
             example: null
       GetLeaguesForProfileResponse:
         type: object
+        required:
+          - leagues
         properties:
           statusCode:
             type: integer
@@ -917,15 +924,7 @@ components:
       ApiError:
         type: object
         properties:
-          statusCode:
-            type: integer
-            description: The HTTP status code indicating the result of the error
-            example: 400
-          message:
+          error:
             type: string
             description: A message describing the error
             example: "Invalid input, missing required fields."
-          errorDetails:
-            type: string
-            description: Additional details about the error (optional)
-            example: "The 'seasonId' field is required and cannot be null."

@@ -13,10 +13,10 @@ interface FormInputProps {
 }
 
 const FormInput: React.FC<FormInputProps> = ({
-    label, name, type, value, onChange, onBlur, error, required = false,
+    label, name, type, value, onChange, onBlur, error, required = false, className = ''
 }) => {
         return (
-        <div className="mb-4">
+        <div className={`${className}`}>
             <label htmlFor={name} className='block text-gray-700 mb-1'>{required ? label + '*' : label}</label>
             <input
                 type={type}
@@ -25,7 +25,7 @@ const FormInput: React.FC<FormInputProps> = ({
                 value={value}
                 onChange={onChange}
                 onBlur = {onBlur}
-                className={`w-full p-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded`}
+                className={`w-full p-2 border ${error ? 'border-red-500' : 'border-gray-300'} rounded h-10`}
                 required={required}
             />
             {error && <p className='text-red-500 text-sm mt-1'>{error}</p>}

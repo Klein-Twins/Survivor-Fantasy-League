@@ -22,7 +22,7 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
   } 
 
   res.status(err.statusCode || INTERNAL_SERVER_ERROR.statusCode).json({
-    message: err.message || INTERNAL_SERVER_ERROR.message,
+    error: err.message || INTERNAL_SERVER_ERROR.message,
     stack: showStack ? err.stack : undefined,
   });
 };

@@ -9,19 +9,30 @@ import api from "../apiContainer";
 const leagueService = {
   createLeague: async (
     name: string,
-    seasonId: string,
+    seasonId: number,
     profileId: string
-  ): Promise<AxiosResponse<CreateLeagueResponse>> => {
+  ): Promise<CreateLeagueResponse> => {
     const apiRequest: CreateLeagueRequest = {
-      name: name,
+      name,
       seasonId: Number(seasonId),
-      profileId: profileId
+      profileId,
     };
-    return await api.league.createLeague(apiRequest, {withCredentials: true});
+
+    const response: AxiosResponse<CreateLeagueResponse> = await api.league.createLeague(
+      apiRequest,
+      { withCredentials: true }
+    );
+
+    return response.data;
   },
-  getLeaguesForProfile: async (profileId: string): Promise<AxiosResponse<GetLeaguesForProfileResponse>> => {
-    return await api.league.getLeaguesForProfile(profileId, {withCredentials: true})
-  }
+
+  getLeaguesForProfile: async (
+    profileId: string
+  ): Promise<AxiosResponse<GetLeaguesForProfileResponse>> => {
+    return await api.league.getLeaguesForProfile(profileId, {
+      withCredentials: true,
+    });
+  },
 };
 
 export default leagueService;

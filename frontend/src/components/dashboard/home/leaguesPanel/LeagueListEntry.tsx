@@ -9,12 +9,12 @@ interface LeagueListEntryProps {
 
 
 
-const LeagueListEntry: React.FC<LeagueListEntryProps> = ({league}) => {
+const LeagueListEntry: React.FC<LeagueListEntryProps> = ({ league }) => {
 
   const navigate = useNavigate();
 
-  const onClickLeagueEntry = (leagueId: number) : void => {
-    navigate(`./league/${leagueId}`);
+  const onClickLeagueEntry = (leagueId: number): void => {
+    navigate(`./league`, { state: leagueId });
   }
 
   return (
@@ -25,7 +25,7 @@ const LeagueListEntry: React.FC<LeagueListEntryProps> = ({league}) => {
         <p className="text-sm text-gray-600">Location: Fiji, Oceania</p>
       </div>
       <div className="self-center">
-        <button 
+        <button
           onClick={() => onClickLeagueEntry(league.leagueId)}
           className="bg-blue-500 text-white text-sm py-2 px-4 rounded hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-400">
           View League

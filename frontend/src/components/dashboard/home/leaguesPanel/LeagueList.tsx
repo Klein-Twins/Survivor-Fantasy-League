@@ -3,7 +3,7 @@ import LeagueListEntry from "./LeagueListEntry";
 import { League } from "../../../../../generated-api/index";
 
 interface LeagueListProps {
-  leagues: any[]; // Replace with League[] type
+  leagues: League[]; // Replace with League[] type
 }
 
 const LeagueList: React.FC<LeagueListProps> = ({ leagues }) => {

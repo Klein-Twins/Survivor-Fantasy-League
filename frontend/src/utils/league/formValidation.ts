@@ -1,6 +1,6 @@
 export interface CreateLeagueFormData {
     name: string;
-    seasonId: string;
+    seasonId: number;
 }
 
 export const validateCreateLeague = (values: CreateLeagueFormData) => {
@@ -8,7 +8,7 @@ export const validateCreateLeague = (values: CreateLeagueFormData) => {
     if (!values.seasonId) {
         errors.seasonId = "Please enter a valid season";
     }
-    if (!values.name) {
+    if (!values.name || values.name.length === 0) {
         errors.name = "Please enter a valid name"
     }
 

@@ -46,7 +46,7 @@ export const checkAuthService = async () : Promise<boolean> => {
 
 export const extendSessionService = async () => {
     try {
-        await axios.post(`${API_URL}/extendSession`, {}, { withCredentials: true });
+        await axios.post(`${API_URL}/extend-session`, {}, { withCredentials: true });
         return true;
     } catch (error) {
         console.error("Failed to extend session:", error);
