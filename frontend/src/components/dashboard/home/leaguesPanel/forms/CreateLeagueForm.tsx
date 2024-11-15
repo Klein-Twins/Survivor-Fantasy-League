@@ -1,9 +1,11 @@
 import axios, { AxiosResponse } from "axios";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { CreateLeagueResponse, League } from "../../../../../../generated-api";
 import CloseIcon from "../../../../../assets/close.svg";
 import useForm from "../../../../../hooks/useForm";
 import leagueService from "../../../../../services/league/leagueService";
+import { RootState } from "../../../../../store/store";
 import {
   CreateLeagueFormData,
   validateCreateLeague,
@@ -23,11 +25,13 @@ const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({
   leagues,
 }) => {
   const [responseError, setResponseError] = useState("");
+  const account = useSelector((state: RootState) => state.auth.account);
+
 
   const onSubmit = async (values: CreateLeagueFormData): Promise<void> => {
     try {
       const createLeagueResponse: AxiosResponse<CreateLeagueResponse> =
-        await leagueService.createLeague(values.name, values.seasonId);
+        await leagueService.createLeague(values.name, values.seasonId, account!.profileId);
       if (
         createLeagueResponse.status === 201 &&
         createLeagueResponse.data?.league

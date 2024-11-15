@@ -9,11 +9,13 @@ import api from "../apiContainer";
 const leagueService = {
   createLeague: async (
     name: string,
-    seasonId: string
+    seasonId: string,
+    profileId: string
   ): Promise<AxiosResponse<CreateLeagueResponse>> => {
     const apiRequest: CreateLeagueRequest = {
       name: name,
       seasonId: Number(seasonId),
+      profileId: profileId
     };
     return await api.league.createLeague(apiRequest, {withCredentials: true});
   },
