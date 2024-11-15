@@ -15,20 +15,50 @@ export interface LeagueProfileAttributes {
 const LeagueProfileModel = (sequelize: Sequelize) => {
   class LeagueProfile
     extends Model<LeagueProfileAttributes>
-    implements LeagueProfileAttributes
-  {
+    implements LeagueProfileAttributes {
     public leagueId!: string;
     public profileId!: string;
     public role!: string;
     public inviteStatus!: InviteStatusEnum;
 
     static associate(models: any) {
-      this.belongsTo(models.League, {foreignKey: 'leagueId', as: 'league'});
-      this.belongsTo(models.Profile, {foreignKey: 'profileId', as: 'profile'});
+      this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
+      this.belongsTo(models.Profile, { foreignKey: 'profileId', as: 'profile' });
     }
   }
 
-  
+  // beforeCreate Hook: Enforce single Owner per league
+  LeagueProfile.addHook("beforeCreate", async (leagueProfile: LeagueProfile, options) => {
+    if (leagueProfile.role === "Owner") {
+      const existingOwner = await LeagueProfile.findOne({
+        where: {
+          leagueId: leagueProfile.leagueId,
+          role: "Owner",
+        },
+      });
+
+      if (existingOwner) {
+        throw new Error("A league can only have one Owner.");
+      }
+    }
+  });
+
+  // beforeUpdate Hook: Prevent updates to the Owner role
+  LeagueProfile.addHook("beforeUpdate", async (leagueProfile: LeagueProfile, options) => {
+    if (leagueProfile.changed("role") && leagueProfile.role === "Owner") {
+      // Prevent the change if the role is being updated to Owner, and there's already an owner in the league
+      const existingOwner = await LeagueProfile.findOne({
+        where: {
+          leagueId: leagueProfile.leagueId,
+          role: "Owner",
+        },
+      });
+
+      if (existingOwner && existingOwner.profileId !== leagueProfile.profileId) {
+        throw new Error("A league can only have one Owner, and this profile is not allowed to change to Owner.");
+      }
+    }
+  });
 
   LeagueProfile.init(
     {
