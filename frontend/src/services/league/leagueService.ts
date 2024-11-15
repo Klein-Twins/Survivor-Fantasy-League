@@ -2,6 +2,7 @@ import { AxiosResponse } from "axios";
 import {
   CreateLeagueRequest,
   CreateLeagueResponse,
+  GetLeaguesForProfileResponse,
 } from "../../../generated-api";
 import api from "../apiContainer";
 
@@ -16,6 +17,9 @@ const leagueService = {
     };
     return await api.league.createLeague(apiRequest, {withCredentials: true});
   },
+  getLeaguesForProfile: async (profileId: string): Promise<AxiosResponse<GetLeaguesForProfileResponse>> => {
+    return await api.league.getLeaguesForProfile(profileId, {withCredentials: true})
+  }
 };
 
 export default leagueService;

@@ -8,4 +8,9 @@ export interface CreateLeagueResponse extends APIResponseData {
 export interface CreateLeagueRequest {
     name: string;
     seasonId: number;
+    profileId: string;
+}
+
+export interface GetLeaguesForProfileResponse extends APIResponseData {
+    leagues: LeagueWithDetails[];
 }

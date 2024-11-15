@@ -357,7 +357,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
-                
+  /api/league/profile/{profileId}:
+    get:
+      summary: Get leagues for a profile
+      description: Gets leagues for a profile
+      tags:
+        - League
+      operationId: getLeaguesForProfile
+      parameters:
+        - name: "profileId"
+          in: "path"
+          required: true
+          schema:
+            type: string
+            description: "The profile ID for the league"
+      responses:
+        '201':
+          description: League created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetLeaguesForProfileResponse'
+        '400':
+          description: Bad request, missing required fields (profileId)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Profile not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'                
   /api/survivor/getSurvivorsWithDetailsBySeason/:
     get:
       summary: Get survivors by season
@@ -791,9 +829,14 @@ components:
             type: integer
             description: The ID of the season the league belongs to
             example: 47
+          profileId:
+            type: string
+            description: The profileId of the user creating the league
+            example: "49e27bd8-dc24-4159-9630-e989025bf8fd"
         required:
           - name
           - seasonId
+          - profileId
       CreateLeagueResponse:
         type: object
         properties:
@@ -855,7 +898,22 @@ components:
             type: string
             description: The name of the season (optional)
             example: null
-           
+      GetLeaguesForProfileResponse:
+        type: object
+        properties:
+          statusCode:
+            type: integer
+            description: The HTTP status code indicating the result of the error
+            example: 400
+          message:
+            type: string
+            description: A message describing the error
+            example: "Invalid input, missing required fields."
+          leagues:
+            type: array
+            items:
+              $ref: "#/components/schemas/League"
+              
       ApiError:
         type: object
         properties:
