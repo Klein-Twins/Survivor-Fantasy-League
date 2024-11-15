@@ -27,53 +27,6 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     }
   }
 
-  // beforeCreate Hook: Enforce single Owner per league
-  LeagueProfile.addHook("beforeCreate", async (leagueProfile: LeagueProfile, options) => {
-    if (leagueProfile.role === "Owner") {
-      const existingOwner = await LeagueProfile.findOne({
-        where: {
-          leagueId: leagueProfile.leagueId,
-          role: "Owner",
-        },
-      });
-
-      if (existingOwner) {
-        throw new Error("A league can only have one Owner.");
-      }
-    }
-  });
-
-  // beforeUpdate Hook: Prevent updates to the Owner role
-  LeagueProfile.addHook("beforeUpdate", async (leagueProfile: LeagueProfile, options) => {
-    // Fetch the original LeagueProfile record from the database
-    const originalLeagueProfile = await LeagueProfile.findOne({
-      where: { leagueId: leagueProfile.leagueId, profileId: leagueProfile.profileId }
-    });
-
-    if (!originalLeagueProfile) {
-      throw new Error("League profile not found.");
-    }
-
-    // Check if the role is changing and whether the current role is 'Owner'
-    if (leagueProfile.changed("role") && originalLeagueProfile.role === "Owner") {
-      throw new Error("An Owner role cannot be changed.");
-    }
-
-    // Check if the role is being set to 'Owner', and there's already an Owner
-    if (leagueProfile.role === "Owner") {
-      const existingOwner = await LeagueProfile.findOne({
-        where: {
-          leagueId: leagueProfile.leagueId,
-          role: "Owner",
-        },
-      });
-
-      if (existingOwner && existingOwner.profileId !== leagueProfile.profileId) {
-        throw new Error("A league can only have one Owner.");
-      }
-    }
-  });
-
   LeagueProfile.init(
     {
       profileId: {
@@ -103,6 +56,51 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
       timestamps: true,
       createdAt: "CREATED_AT",
       updatedAt: "UPDATED_AT",
+      hooks: {
+        // beforeCreate Hook: Enforce single Owner per league
+        beforeCreate: async (leagueProfile: LeagueProfile, options) => {
+          if (leagueProfile.role === "Owner") {
+            const existingOwner = await LeagueProfile.findOne({
+              where: {
+                leagueId: leagueProfile.leagueId,
+                role: "Owner",
+              },
+            });
+
+            if (existingOwner) {
+              throw new Error("A league can only have one Owner.");
+            }
+          }
+        },
+
+        // beforeUpdate Hook: Prevent updates to the Owner role
+        beforeUpdate: async (leagueProfile: LeagueProfile, options) => {
+          const originalLeagueProfile = await LeagueProfile.findOne({
+            where: { leagueId: leagueProfile.leagueId, profileId: leagueProfile.profileId }
+          });
+
+          if (!originalLeagueProfile) {
+            throw new Error("League profile not found.");
+          }
+
+          if (leagueProfile.changed("role") && originalLeagueProfile.role === "Owner") {
+            throw new Error("An Owner role cannot be changed.");
+          }
+
+          if (leagueProfile.role === "Owner") {
+            const existingOwner = await LeagueProfile.findOne({
+              where: {
+                leagueId: leagueProfile.leagueId,
+                role: "Owner",
+              },
+            });
+
+            if (existingOwner && existingOwner.profileId !== leagueProfile.profileId) {
+              throw new Error("A league can only have one Owner.");
+            }
+          }
+        }
+      }
     }
   );
 
