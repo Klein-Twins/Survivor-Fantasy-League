@@ -7,6 +7,7 @@
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "concurrently": "^9.1.0",
     "yamljs": "^0.3.0"
   },
