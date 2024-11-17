@@ -1,6 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { useSelector } from "react-redux";
-import AddCircleIcon from "../../../../assets/add_circle.svg";
+import AddCircleIcon from "../../../assets/add_circle.svg";
 import leagueService from "../../../services/league/leagueService";
 import { RootState } from "../../../store/store";
 import LeagueList from "./LeagueList";
