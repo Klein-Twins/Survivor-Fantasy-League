@@ -505,48 +505,62 @@ paths:
               schema:
                 type: object
                 properties:
-                  data:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        profileId:
-                          type: string
-                          description: The unique ID of the profile.
-                        username:
-                          type: string
-                          description: The username of the profile.
-                        firstName:
-                          type: string
-                          description: The first name of the profile.
-                        lastName:
-                          type: string
-                          description: The last name of the profile.
-                        leagueId:
-                          type: string
-                          description: The ID of the league the profile is part of.
-                        role:
-                          type: string
-                          description: The role of the profile in the league.
-                        inviteStatus:
-                          type: string
-                          description: The invitation status of the profile in the league.
-                          enum: [pending, accepted]
-                  pagination:
+                  results:
                     type: object
                     properties:
-                      currentPage:
-                        type: integer
-                        description: The current page of the result set.
-                        example: 1
-                      totalPages:
-                        type: integer
-                        description: The total number of pages available.
-                        example: 10
-                      totalResults:
-                        type: integer
-                        description: The total number of profiles that match the search criteria.
-                        example: 100
+                      searchResults:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            profileId:
+                              type: string
+                              description: The unique ID of the profile.
+                              example: e23223e4-6d61-4875-9750-b842b82e4933
+                            userName:
+                              type: string
+                              description: The username of the profile.
+                              example: blackpanther
+                            firstName:
+                              type: string
+                              description: The first name of the profile.
+                              example: TChalla
+                            lastName:
+                              type: string
+                              description: The last name of the profile.
+                              example: Wakanda
+                            imageUrl:
+                              type: string
+                              description: The URL of the profile image.
+                              example: "/assets/images/profileImages/blackpanther.jpeg"
+                            inviteStatus:
+                              type: string
+                              description: The invitation status of the profile in the league.
+                              enum: [pending, accepted]
+                              example: null
+                      pagination:
+                        type: object
+                        properties:
+                          currentPage:
+                            type: integer
+                            description: The current page of the result set.
+                            example: 1
+                          totalPages:
+                            type: integer
+                            description: The total number of pages available.
+                            example: 1
+                          totalCount:
+                            type: integer
+                            description: The total number of profiles that match the search criteria.
+                            example: 8
+                  message:
+                    type: string
+                    description: A message indicating the result of the search.
+                    example: "Found matching profiles"
+                  foundResults:
+                    type: boolean
+                    description: Indicates whether matching profiles were found.
+                    example: true
         "400":
           description: Bad request, invalid parameters.
           content:
