@@ -456,6 +456,12 @@ paths:
           description: The first name of the profile.
           schema:
             type: string
+        - name: lastName
+          in: query
+          required: false
+          description: The last name of the profile.
+          schema:
+            type: string
         - name: leagueId
           in: query
           required: false
@@ -476,6 +482,21 @@ paths:
           schema:
             type: integer
             example: 10
+        - name: sortBy
+          in: query
+          required: false
+          description: The field to sort the profiles by. Options are "firstName", "lastName", and "userName". Defaults to "firstName" if not provided.
+          schema:
+            type: string
+            enum: [firstName, lastName, userName]
+            example: firstName
+        - name: isAsc
+          in: query
+          required: false
+          description: A boolean indicating whether to sort in ascending (true) or descending (false) order. Defaults to true (ascending).
+          schema:
+            type: boolean
+            example: true
       responses:
         "200":
           description: A list of profiles matching the search criteria.
