@@ -14,6 +14,10 @@ export type ProfileSearchParams = {
     isAsc: string;
 }
 
+export interface ProfileSearchResultWithTotalCount extends ProfileSearchResult {
+    totalCount: number;
+}
+
 export interface ProfileSearchResult {
     profileId: ProfileAttributes["profileId"],
     lastName?: ProfileAttributes["lastName"],
@@ -25,6 +29,10 @@ export interface ProfileSearchResult {
 
 export interface ProfileSearchResultsWithPagination {
     searchResults: ProfileSearchResult[],
+    pagination: Pagination
+}
+
+export interface Pagination {
     totalPages: number,
     totalCount: number,
     currentPage: number,

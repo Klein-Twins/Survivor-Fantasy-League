@@ -39,8 +39,8 @@ const profileController = {
             const profileSearchResultsWithPagination: ProfileSearchResultsWithPagination =
                 await profileService.searchForProfilesToInviteToLeague(searchParams);
 
-            const message: string = profileSearchResultsWithPagination.totalCount === 0 ? 'No matching profiles found' : 'Found matching profiles';
-            const foundResults: boolean = profileSearchResultsWithPagination.totalCount > 0
+            const message: string = profileSearchResultsWithPagination.pagination.totalCount === 0 ? 'No matching profiles found' : 'Found matching profiles';
+            const foundResults: boolean = profileSearchResultsWithPagination.pagination.totalCount > 0
             res.status(200).json({ results: foundResults ? profileSearchResultsWithPagination : undefined, message, foundResults });
 
         } catch (error) {

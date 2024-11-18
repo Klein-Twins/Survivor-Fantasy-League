@@ -1,4 +1,4 @@
-import { Model, Op, Sequelize, Transaction } from "sequelize";
+import { Model, Op, QueryTypes, Sequelize, Transaction } from "sequelize";
 import { Order } from "sequelize";
 import { models, sequelize } from "../config/db";
 import logger from "../config/logger";
@@ -6,7 +6,7 @@ import { ProfileAttributes } from "../models/Profile";
 import { UserAttributes } from "../models/User";
 import errorFactory from "../utils/errors/errorFactory";
 import { INTERNAL_SERVER_ERROR } from "../constants/auth/responseErrorConstants";
-import { ProfileSearchParams, ProfileSearchResult, ProfileSearchSortBy } from "../types/profile/profileTypes";
+import { ProfileSearchParams, ProfileSearchResult, ProfileSearchResultWithTotalCount, ProfileSearchSortBy } from "../types/profile/profileTypes";
 
 import { col } from 'sequelize';
 
@@ -160,7 +160,8 @@ const profileRepository = {
                 "Profile"."IMAGE_URL" AS "imageUrl",
                 "Profile"."UPDATED_AT" AS "updatedAt",
                 "User"."USER_NAME" AS "userName",
-                "leagueProfiles"."INVITE_STATUS" AS "inviteStatus"
+                "leagueProfiles"."INVITE_STATUS" AS "inviteStatus",
+                CAST(COUNT(*) OVER () AS INTEGER) AS "totalCount"
             FROM "PRF_PROFILE" AS "Profile"
             INNER JOIN "USR_USERS" AS "User"
                 ON "Profile"."PROFILE_ID" = "User"."USER_PROFILE_ID"
@@ -169,21 +170,34 @@ const profileRepository = {
                 AND "leagueProfiles"."LEAGUE_ID" = :leagueId
             WHERE
                 ${whereClause}
-            ${orderClause}   
+            ${orderClause}
             LIMIT :limit OFFSET :offset;
         `;
 
-        const [results] = await sequelize.query(sql, {
+        const results = await sequelize.query<ProfileSearchResultWithTotalCount>(sql, {
             replacements,
             raw: true,
             logging: ((sql) => {
                 logger.debug(sql);
-            })
-        })
+            }),
+            type: QueryTypes.SELECT
+        });
+
+        // If results are not empty, get totalCount from the first result
+        const totalCount = results.length > 0 ? results[0].totalCount : 0;
+
+        logger.error(results);
 
         return {
-            foundProfiles: results as ProfileSearchResult[],
-            totalCount: results.length,
+            foundProfiles: results.map(result => ({
+                profileId: result.profileId,
+                firstName: result.firstName,
+                lastName: result.lastName,
+                imageUrl: result.imageUrl,
+                userName: result.userName,
+                inviteStatus: result.inviteStatus,
+            })) as ProfileSearchResult[],
+            totalCount: results.length > 0 ? results[0].totalCount : 0,
         };
     },
 };

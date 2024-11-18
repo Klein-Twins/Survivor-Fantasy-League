@@ -45,9 +45,11 @@ const profileService = {
 
         return {
             searchResults: profileSearchResults.foundProfiles,
-            totalPages,
-            totalCount: profileSearchResults.totalCount,
-            currentPage: params.page,
+            pagination: {
+                totalPages,
+                totalCount: profileSearchResults.totalCount,
+                currentPage: params.page,
+            }
         }
 
     }
