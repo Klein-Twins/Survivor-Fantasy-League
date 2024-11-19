@@ -51,7 +51,7 @@ const LeagueListEntry: React.FC<LeagueListEntryProps> = ({ league }) => {
           <img className="w-6 mx-auto" src={hamburgerImg} alt="options" />
         </div>
         {isDropdownOpen && (
-          <ul className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-10"
+          <ul className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20"
             onMouseLeave={handleMouseLeave}>
             <li>
               <button

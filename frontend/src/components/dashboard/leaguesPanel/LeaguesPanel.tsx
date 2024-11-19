@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AddCircleIcon from "../../../assets/add_circle.svg";
 import leagueService from "../../../services/league/leagueService";
@@ -16,16 +16,20 @@ const LeaguesPanel: React.FC = () => {
 
   const [showCreateLeagueForm, setShowCreateLeagueForm] = useState(false);
   const account = useSelector((state: RootState) => state.auth.account);
+  const profileId = account?.profileId || "";
 
-  const profileId = account?.profileId || '';
-
-  const fetchLeaguesForProfile = useCallback(
-    () => leagueService.getLeaguesForProfile(profileId),
-    [profileId, showCreateLeagueForm]
+  const { data, isLoading, error, fetchData } = useGetApi(() =>
+    leagueService.getLeaguesForProfile(profileId)
   );
 
-  const { data, isLoading, error } = useGetApi<GetLeaguesForProfileResponse>(fetchLeaguesForProfile);
   const leagues = data?.leagues || [];
+
+
+  useEffect(() => {
+    if (profileId && !showCreateLeagueForm) {
+      fetchData(); // Fetch leagues when profileId is set
+    }
+  }, [profileId, showCreateLeagueForm]);
 
   if (error) return <p>Error: {error}</p>;
 
