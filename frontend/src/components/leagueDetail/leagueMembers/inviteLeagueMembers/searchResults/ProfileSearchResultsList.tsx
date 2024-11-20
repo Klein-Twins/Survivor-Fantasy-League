@@ -1,18 +1,26 @@
 import React, { useState } from "react";
-import { GetProfilesBySearchResponse, ProfileSearchResults } from "../../../../services/profile/profileService";
+import { GetProfilesBySearchResponse, ProfileSearchResults } from "../../../../../services/profile/profileService";
 import { Button } from "@headlessui/react";
 
 interface ProfileSearchResultsProps {
-    profiles: ProfileSearchResults
+    profiles?: ProfileSearchResults
 }
 
 const ProfileSearchResultsList: React.FC<ProfileSearchResultsProps> = ({ profiles }) => {
+
+    if (!profiles) {
+        return (
+            <div className="flex w-full h-14 bg-red-200 rounded-lg items-center justify-center">
+                <h2 className="font-semibold text-lg my-auto text-red-500">Error Rendering profiles in ProfileSearchResultsList</h2>
+            </div>
+        );
+    }
 
     return (
         <>
             {profiles.length != 0 ?
                 (
-                    <div className="max-w-4xl mx-auto px-4 py-6">
+                    <div className="w-full mx-auto px-4 py-6">
                         <div className="space-y-4">
                             {profiles.map((profile) => (
                                 <div key={profile.profileId} className="flex items-center justify-between bg-white p-4 rounded-lg shadow-md hover:shadow-lg transition-shadow">

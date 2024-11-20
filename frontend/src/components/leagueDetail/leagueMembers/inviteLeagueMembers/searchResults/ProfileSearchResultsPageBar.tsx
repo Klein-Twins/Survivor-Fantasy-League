@@ -1,12 +1,13 @@
 import React from "react";
-import { Pagination } from "../../../../services/profile/profileService";
+import { Pagination } from "../../../../../services/profile/profileService";
 
-interface PageBarProps {
+
+interface ProfileSearchResultsPageBarProps {
     pagination: Pagination;
     onPageChange: (page: number) => void;
 }
 
-const PageBar: React.FC<PageBarProps> = ({ pagination, onPageChange }) => {
+const ProfileSearchResultsPageBar: React.FC<ProfileSearchResultsPageBarProps> = ({ pagination, onPageChange }) => {
     const { currentPage, totalPages } = pagination;
 
     // Handler for previous and next buttons
@@ -61,4 +62,4 @@ const PageBar: React.FC<PageBarProps> = ({ pagination, onPageChange }) => {
     );
 }
 
-export default PageBar;
+export default ProfileSearchResultsPageBar;

@@ -1,7 +1,21 @@
-const FormField: React.FC<{ name: string; label: string; value: string | undefined; onChange: (value: string) => void }> = ({ name, label, value, onChange }) => {
+import React from "react";
+
+interface FormFieldProps {
+    name: string;
+    label: string;
+    value: string | undefined;
+    onChange: (value: string) => void;
+}
+
+const FormField: React.FC<FormFieldProps> = ({ name, label, value, onChange }) => {
     return (
         <div className="flex flex-col space-y-1 w-full">
-            <label htmlFor={name} className="block text-left pl-2 text-md font-semibold text-gray-700">{label}</label>
+            <label
+                htmlFor={name}
+                className="block text-left pl-2 text-md font-semibold text-gray-700"
+            >
+                {label}
+            </label>
             <input
                 id={name}
                 name={name}
