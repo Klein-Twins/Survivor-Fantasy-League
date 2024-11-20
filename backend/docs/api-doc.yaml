@@ -444,7 +444,7 @@ paths:
       tags:
         - Profile
       parameters:
-        - name: username
+        - name: userName
           in: query
           required: false
           description: The username of the profile.

@@ -4,6 +4,7 @@ import profileRepository from '../../repositories/profileRepository';
 import { AccountAndPassword } from '../../types/auth/authTypes';
 import { ProfileSearchParams, ProfileSearchResultsWithPagination } from '../../types/profile/profileTypes';
 import errorFactory from '../../utils/errors/errorFactory';
+import logger from '../../config/logger';
 
 /**
  * Service functions related to profile management, including creating profiles for accounts.

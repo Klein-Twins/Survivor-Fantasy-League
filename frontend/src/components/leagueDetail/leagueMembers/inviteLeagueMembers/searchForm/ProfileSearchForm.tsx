@@ -26,6 +26,7 @@ const ProfileSearchForm: React.FC<ProfileSearchFormProps> = ({ onSearchSubmit })
         const searchParams: ProfileSearchFormValues = {
             firstName,
             lastName,
+            userName,
             sortBy,
             isAsc: isAscending,
             numProfilesPerPage,

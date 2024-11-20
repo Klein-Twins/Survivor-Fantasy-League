@@ -7,7 +7,7 @@ import { ProfileSearchParams, ProfileSearchResultsWithPagination, ProfileSearchS
 const profileController = {
     getProfilesBySearch: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         logger.debug("In profileController.getProfilesBySearch");
-        const userName = req.query.username as string | undefined;
+        const userName = req.query.userName as string | undefined;
         const firstName = req.query.firstName as string | undefined;
         const lastName = req.query.lastName as string | undefined;
         const leagueId = req.query.leagueId as string | undefined;
