@@ -4,6 +4,6 @@ import profileController from '../../controllers/profile/profileController.ts';
 
 const router = express.Router();
 
-router.get('/get-profiles-by-search', tokenMiddleware.authenticateToken, profileController.getProfilesBySearch);
+router.get('/get-profiles-by-search', profileController.getProfilesBySearch);
 
 export default router;

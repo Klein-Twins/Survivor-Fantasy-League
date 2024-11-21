@@ -9,6 +9,7 @@ import ProfileModel from "./Profile";
 import TokensModel from "./Tokens";
 import LeagueProfileModel from "./LeagueProfile";
 import NotificationModel from "./Notification";
+import { sequelize } from '../config/db';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -24,7 +25,7 @@ const initModels = (sequelize: Sequelize) => {
 
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
-  League.associate({ Seasons, LeagueProfile });
+  League.associate({ Seasons, LeagueProfile })
   Survivors.associate({ SurvivorDetailsOnSeason });
   Seasons.associate({ SurvivorDetailsOnSeason, League });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
@@ -34,6 +35,7 @@ const initModels = (sequelize: Sequelize) => {
   Notification.associate({ Profile });
 
   return {
+    sequelize,
     User,
     Password,
     Survivors,

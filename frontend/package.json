@@ -12,6 +12,7 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.3.0",
     "axios": "^1.7.7",
     "frontend": "file:",
