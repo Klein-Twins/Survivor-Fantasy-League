@@ -17,6 +17,7 @@ const ProfileModel = (sequelize: Sequelize) => {
     static associate(models: any) {
       this.hasOne(models.User, { foreignKey: 'profileId', as: 'User' });
       this.hasMany(models.LeagueProfile, {foreignKey: 'profileId', as: 'leagueProfiles'});
+      this.hasMany(models.Notification, {foreignKey: 'profileId', as: "profile"})
     }
   }
 

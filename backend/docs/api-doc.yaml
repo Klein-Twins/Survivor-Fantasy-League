@@ -540,6 +540,32 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiError"
 
+  # NOTIFICATIONS
+  /api/notification/{notificationId}:
+    put:
+      summary: Mark a notification as read
+      description: This endpoint marks a notification as read by updating the `acknowledged` field to `true`.
+      operationId: markNotificationAsRead
+      tags:
+        - Notifications
+      parameters:
+        - name: notificationId
+          in: path
+          required: true
+          description: The ID of the notification to be marked as read.
+          schema:
+            type: string
+            example: "a3f83bdd-9f9e-4a05-9b97-5c8d844b73bc"
+      responses:
+        '204':
+          description: Successfully marked the notification as read. No content is returned.
+        '400':
+          description: Bad request. The notification ID was invalid or malformed.
+        '404':
+          description: Notification not found with the given ID.
+        '500':
+          description: Internal server error. Something went wrong on the server.
+
 #REFERENCE DEFINITIONS
 components:
   schemas:

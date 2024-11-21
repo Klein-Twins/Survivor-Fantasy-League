@@ -40,3 +40,4 @@ export const INVALID_PROFILE_ID_ERROR = { error: "Please provide a valid profile
 
 export const INTERNAL_SERVER_ERROR = { error: 'An internal server error occurred', statusCode: 500 };
 export const NOT_FOUND_ERROR = { error: 'The requested resource was not found', statusCode: 404 };
+export const BAD_REQUEST_ERROR = { error: 'Invalid request.', statusCode: 400 }
