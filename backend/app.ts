@@ -1,15 +1,12 @@
-import express from 'express';
-import cors from 'cors';
-import routes from './src/routes/index.ts';
-import { swaggerUi, swaggerSpec } from './src/config/swagger.ts';
-import path from 'path';
-import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
-import requestLogger from './src/middleware/requestLoggerMiddleware.ts';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import express from 'express';
 import http from 'http';
-import { setupSocket } from './socket.ts';
-import { Server, Socket } from 'socket.io';
-import logger from './src/config/logger.ts';
+import path from 'path';
+import { Server } from 'socket.io';
+import { swaggerSpec, swaggerUi } from './src/config/swagger.ts';
+import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
+import routes from './src/routes/index.ts';
 
 const corsOptions: cors.CorsOptions = {
     origin: 'http://localhost:5173', // Replace with frontend URL in production

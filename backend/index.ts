@@ -1,8 +1,8 @@
-import { APP_PORT, NODE_ENV } from './src/config/config.ts';
-import { sequelize } from './src/config/db.ts'; 
 import path from 'path';
-import { runSqlFilesInDirectory } from './src/servicesAndHelpers/sqlHelper.ts'
 import server from './app.ts';
+import { APP_PORT, NODE_ENV } from './src/config/config.ts';
+import { sequelize } from './src/config/db.ts';
+import { runSqlFilesInDirectory } from './src/servicesAndHelpers/sqlHelper.ts';
 const PORT: number = Number(APP_PORT) || 3000;
 
 // Sync the database and then start the server
