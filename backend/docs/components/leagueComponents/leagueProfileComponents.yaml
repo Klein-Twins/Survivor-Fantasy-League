@@ -1,0 +1,176 @@
+components:
+  schemas:
+    ProfileSearchForLeagueInviteResponseSuccess:
+      type: object
+      properties:
+        results:
+          type: object
+          properties:
+            searchResults:
+              $ref: "#/components/schemas/ProfileSearchResultsArray"
+            pagination:
+              $ref: "#/components/schemas/Pagination"
+        message:
+          type: string
+          description: A message indicating the result of the search.
+          example: "Found matching profiles"
+        foundResults:
+          type: boolean
+          description: Indicates whether matching profiles were found.
+          example: true
+
+    ProfileSearchResultsArray:
+      type: array
+      items:
+        type: object
+        properties:
+          profileId:
+            type: string
+            description: The unique ID of the profile.
+            example: e23223e4-6d61-4875-9750-b842b82e4933
+          userName:
+            type: string
+            description: The username of the profile.
+            example: blackpanther
+          firstName:
+            type: string
+            description: The first name of the profile.
+            example: TChalla
+          lastName:
+            type: string
+            description: The last name of the profile.
+            example: Wakanda
+          imageUrl:
+            type: string
+            description: The URL of the profile image.
+            example: "/assets/images/profileImages/blackpanther.jpeg"
+          inviteStatus:
+            type: string
+            description: The invitation status of the profile in the league.
+            enum: [pending, accepted]
+            example: null
+
+    Pagination:
+      type: object
+      required:
+        - currentPage
+        - totalPages
+        - totalCount
+      properties:
+        currentPage:
+          type: integer
+          description: The current page of the result set.
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of pages available.
+          example: 1
+        totalCount:
+          type: integer
+          description: The total number of profiles that match the search criteria.
+          example: 8
+
+    InviteMemberToLeagueRequest:
+      type: object
+      required:
+        - inviterProfileId
+        - inviteeProfileId
+        - leagueId
+      properties:
+        inviterProfileId:
+          type: string
+          description: The unique ID of the profile inviting the member.
+          example: "inviterProfileId"
+        inviteeProfileId:
+          type: string
+          description: The unique ID of the profile being invited to the league.
+          example: "inviteeProfileId"
+        leagueId:
+          type: string
+          description: The unique ID of the league where the invitation is being sent.
+          example: "leagueId"
+
+  parameters:
+    profileSearchForLeagueInviteParameters:
+      type: object
+      properties:
+        userName:
+          name: userName
+          in: query
+          required: false
+          description: The username of the profile.
+          schema:
+            type: string
+        firstName:
+          name: firstName
+          in: query
+          required: false
+          description: The first name of the profile.
+          schema:
+            type: string
+        lastName:
+          name: lastName
+          in: query
+          required: false
+          description: The last name of the profile.
+          schema:
+            type: string
+        leagueId:
+          name: leagueId
+          in: query
+          required: true
+          description: The ID of the league the profile is associated with.
+          schema:
+            type: string
+        page:
+          name: page
+          in: query
+          required: false
+          description: The page number for pagination.
+          schema:
+            type: integer
+            example: 1
+        limit:
+          name: limit
+          in: query
+          required: false
+          description: The number of profiles to return per page.
+          schema:
+            type: integer
+            example: 10
+        sortBy:
+          name: sortBy
+          in: query
+          required: false
+          description: The field to sort the profiles by. Options are "firstName", "lastName", and "userName". Defaults to "firstName" if not provided.
+          schema:
+            type: string
+            enum: [firstName, lastName, userName]
+            example: firstName
+        isAsc:
+          name: isAsc
+          in: query
+          required: false
+          description: A boolean indicating whether to sort in ascending (true) or descending (false) order. Defaults to true (ascending).
+          schema:
+            type: boolean
+            example: true
+
+  responses:
+    ProfileDoesNotBelongToLeague:
+      description: Profile does not belong to league the user is searching for
+      content:
+        application/json:
+          schema:
+            $ref: "../errorComponents.yaml#/components/schemas/UnauthorizedError"
+          examples:
+            ProfileDoesNotBelongToLeague:
+              summary: LeagueId (provided in request parameters) does not belong to the league
+
+  examples:
+    ProfileDoesNotBelongToLeague:
+      summary: ProfileId (provided in request parameters) does not belong to the league
+      value:
+        statusCode: 401
+        error: "Unauthorized"
+        message: "Profile does not belong to the league the user is searching for"

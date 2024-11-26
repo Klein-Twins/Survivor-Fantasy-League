@@ -1,0 +1,19 @@
+Season:
+  type: object
+  properties:
+    seasonId:
+      type: integer
+      description: The unique identifier of the season
+      example: 47
+    theme:
+      type: string
+      description: The theme of the season
+      example: "The New Era 2.0"
+    location:
+      type: string
+      description: The location of the season
+      example: "Fiji, Oceania"
+    name:
+      type: string
+      description: The name of the season (optional)
+      example: null

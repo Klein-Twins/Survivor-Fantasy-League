@@ -1,0 +1,96 @@
+ProfileLeagues:
+  get:
+    summary: Get leagues for a profile
+    description: Gets leagues for a profile
+    tags:
+      - Profile
+    operationId: getLeaguesForProfile
+    parameters:
+      - $ref: "../../components/securityComponents.yaml#/components/parameters/ProfileId"
+    responses:
+      "201":
+        $ref: "../../components/profileComponents/profileLeaguesComponents.yaml#/components/responses/GetProfileLeaguesSuccess"
+
+      "401":
+        description: Unauthorized Error
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/errorComponents.yaml#/components/schemas/UnauthorizedError"
+            examples:
+              UnauthorizedError:
+                $ref: "../../components/errorComponents.yaml#/components/examples/UnauthorizedError"
+
+      "500":
+        $ref: "../../components/errorComponents.yaml#/components/responses/InternalServerError"
+    security:
+      - accessTokenCookie: []
+      - refreshTokenCookie: []
+
+  post:
+    summary: Create a new League
+    description: Creates a new league for a given season.
+    tags:
+      - Profile
+    operationId: createLeague
+
+    parameters:
+      - $ref: "../../components/securityComponents.yaml#/components/parameters/ProfileId"
+      - name: userName
+        in: query
+        required: false
+        description: The username of the profile.
+        schema:
+          type: string
+
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/profileComponents/profileLeaguesComponents.yaml#/components/schemas/CreateLeagueRequest"
+    responses:
+      "201":
+        description: League created successfully
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/profileComponents/profileLeaguesComponents.yaml#/components/schemas/CreateLeagueResponse"
+      "400":
+        description: Bad request, missing required fields (name, seasonId)
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/errorComponents.yaml#/components/schemas/BadRequestError"
+            examples:
+              MissingName:
+                summary: Missing Name
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Missing name for league"
+              MissingSeason:
+                summary: Missing seasonId
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Missing seasonId for league"
+      "401":
+        $ref: "../../components/errorComponents.yaml#/components/responses/UnauthorizedError"
+      "404":
+        description: Season not found
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/errorComponents.yaml#/components/schemas/NotFoundError"
+            examples:
+              SeasonNotFound:
+                value:
+                  statusCode: 404
+                  error: "Not Found"
+                  message: "Season not found"
+      "500":
+        $ref: "../../components/errorComponents.yaml#/components/responses/InternalServerError"
+    security:
+      - refreshTokenCookie: []
+      - accessTokenCookie: []

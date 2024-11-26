@@ -1,0 +1,38 @@
+components:
+  schemas:
+    GetRefreshTokenExpiresInResponseSuccess:
+      type: object
+      required:
+        - secondsRefreshTokenIsValidFor
+      properties:
+        secondsRefreshTokenIsValidFor:
+          type: integer
+          description: Time in seconds until the refresh token expires.
+          example: 3600
+
+    ExtendSessionResponseSuccess:
+      type: object
+      required:
+        - message
+        - refreshTokenExpiresIn
+      properties:
+        message:
+          type: string
+          description: Success message for session extension.
+          enum:
+            - "User session extended successfully."
+          example: "User session extended successfully."
+        refreshTokenExpiresIn:
+          type: integer
+          description: Time in seconds until the new refresh token expires.
+          example: 3600
+
+    CheckAuthResponseSuccess:
+      type: object
+      required:
+        - isAuthenticated
+      properties:
+        isAuthenticated:
+          type: boolean
+          description: Indicates whether the user is authenticated.
+          example: true

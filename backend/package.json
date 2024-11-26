@@ -6,7 +6,8 @@
   "scripts": {
     "install-dependencies": "npm install",
     "test": "jest",
-    "dev": "ts-node index.ts"
+    "bundle-swagger": "npx swagger-cli bundle ./docs/api-doc.yaml -o ./docs/bundled-api-doc.yaml --dereference --type yaml",
+    "dev": "npm run bundle-swagger && ts-node index.ts"
   },
   "author": "",
   "license": "ISC",

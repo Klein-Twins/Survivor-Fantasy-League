@@ -1,0 +1,151 @@
+components:
+  schemas:
+    ApiError:
+      type: object
+      required:
+        - statusCode
+        - error
+        - message
+      properties:
+        statusCode:
+          type: integer
+          description: HTTP status code of the error
+          example: 400
+        error:
+          type: string
+          description: A short label or type of the error
+          example: "Bad Request"
+        message:
+          type: string
+          description: A detailed message explaining the error
+          example: "Invalid input, missing required fields."
+
+    BadRequestError:
+      allOf:
+        - $ref: "#/components/schemas/ApiError"
+        - type: object
+          properties:
+            statusCode:
+              enum:
+                - 400
+              example: 400
+            error:
+              enum:
+                - "Bad Request"
+              example: "Bad Request"
+            message:
+              example: "The request contains invalid or missing parameters."
+
+    NotFoundError:
+      allOf:
+        - $ref: "#/components/schemas/ApiError"
+        - type: object
+          properties:
+            statusCode:
+              enum:
+                - 404
+              example: 404
+            error:
+              enum:
+                - "Not Found"
+              example: "Not Found"
+            message:
+              example: "The requested resource was not found."
+
+    ConflictError:
+      allOf:
+        - $ref: "#/components/schemas/ApiError"
+        - type: object
+          properties:
+            statusCode:
+              enum:
+                - 409
+              example: 409
+            error:
+              enum:
+                - "Conflict"
+              example: "Conflict"
+            message:
+              example: "The resource already exists or conflicts with another resource."
+
+    UnauthorizedError:
+      allOf:
+        - $ref: "#/components/schemas/ApiError"
+        - type: object
+          properties:
+            statusCode:
+              enum:
+                - 401
+              example: 401
+            error:
+              enum:
+                - "Unauthorized"
+              example: "Unauthorized"
+            message:
+              example: "Authentication is required or failed."
+
+    ForbiddenError:
+      allOf:
+        - $ref: "#/components/schemas/ApiError"
+        - type: object
+          properties:
+            statusCode:
+              enum:
+                - 403
+              example: 403
+            error:
+              enum:
+                - "Forbidden"
+              example: "Forbidden"
+            message:
+              example: "You do not have permission to perform this action."
+
+    InternalServerError:
+      allOf:
+        - $ref: "#/components/schemas/ApiError"
+        - type: object
+          properties:
+            statusCode:
+              enum:
+                - 500
+              example: 500
+            error:
+              enum:
+                - "Internal Server Error"
+              example: "Internal Server Error"
+            message:
+              example: "An unexpected error occurred on the server."
+
+  responses:
+    InternalServerError:
+      description: Internal Server Error - Unexpected error.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InternalServerError"
+          examples:
+            ServerError:
+              $ref: "#/components/examples/ServerError"
+    UnauthorizedError:
+      description: Unauthorized Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnauthorizedError"
+          examples:
+            UnauthorizedError:
+              $ref: "#/components/examples/UnauthorizedError"
+
+  examples:
+    ServerError:
+      summary: "Internal Server Error"
+      value:
+        statusCode: 500
+        error: "Internal Server Error"
+        message: "An unexpected error occurred on the server. Please try again later."
+    UnauthorizedError:
+      summary: "Unauthorized Error"
+      value:
+        statusCode: 401
+        error: "Unauthorized"
+        message: "Authentication is required or failed."
