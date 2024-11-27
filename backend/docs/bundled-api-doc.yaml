@@ -181,6 +181,12 @@ paths:
                     statusCode: 400
                     error: Bad Request
                     message: Missing userName
+                missingPassword:
+                  summary: Missing password error
+                  value:
+                    statusCode: 400
+                    error: Bad Request
+                    message: Missing password
                 weakPassword:
                   summary: Weak password error
                   value:

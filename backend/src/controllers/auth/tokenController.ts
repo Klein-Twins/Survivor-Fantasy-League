@@ -93,7 +93,7 @@ const tokenController = {
 
             await tokenService.createAndAttachTokensToResponse(account.userId, account.profileId, res);
             const accountResponse = accountService.getAccountForResponse(account);
-            res.status(httpStatusCodes.ACCEPTED).json({ message: "User signed up successfully", account: accountResponse });
+            res.json({ message: "User signed up successfully", account: accountResponse });
         } catch (error) {
             next(error);
         }

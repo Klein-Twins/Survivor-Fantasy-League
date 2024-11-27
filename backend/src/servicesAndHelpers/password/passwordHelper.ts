@@ -38,7 +38,7 @@ const passwordHelper = {
         const hasSpaces = /\s/.test(password);
 
         return (
-            password.length >= minLength &&
+            password != undefined && password.length >= minLength &&
             hasLowercase &&
             hasUppercase &&
             hasSpecialChar &&

@@ -27,42 +27,42 @@ class CustomError extends Error {
 export class NotFoundError extends CustomError {
     constructor(error: any | null | undefined = undefined) {
         super(404, getErrorMessage("The requested resource was not found", error));
-        this.name = "NotFoundError";
+        this.name = "Not Found";
     }
 }
 
 export class ValidationError extends CustomError {
     constructor(error: any | null | undefined = undefined) {
         super(400, getErrorMessage("Bad Request", error));
-        this.name = "ValidationError";
+        this.name = "Bad Request";
     }
 }
 
 export class ConflictError extends CustomError {
     constructor(error: any | null | undefined = undefined) {
-        super(400, getErrorMessage("Conflict", error));
-        this.name = "ConflictError";
+        super(409, getErrorMessage("Conflict", error));
+        this.name = "Conflict";
     }
 }
 
 export class InternalServerError extends CustomError {
     constructor(error: any | null | undefined = undefined) {
         super(500, getErrorMessage("An internal server error occurred", error));
-        this.name = "InternalServerError"
+        this.name = "Internal Server sError"
     }
 }
 
 export class UnauthorizedError extends CustomError {
     constructor(error: any | null | undefined = undefined) {
         super(401, getErrorMessage("Unauthorized access", error));
-        this.name = "UnauthorizedError"
+        this.name = "Unauthorized"
     }
 }
 
 export class ForbiddenError extends CustomError {
     constructor(error: string | null | undefined = undefined) {
         super(403, getErrorMessage("Access forbidden", error));
-        this.name = "ForbiddenError"
+        this.name = "Forbidden"
     }
 }
 

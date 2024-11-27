@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { NODE_ENV } from '../config/config';
 import logger from '../config/logger';
 import { INTERNAL_SERVER_ERROR } from '../constants/auth/responseErrorConstants';
+import CustomError from '../utils/errors/errors';
 
 /**
  * Global error handling middleware for Express applications.
@@ -22,7 +23,9 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
   }
 
   res.status(err.statusCode || INTERNAL_SERVER_ERROR.statusCode).json({
-    error: err.message || INTERNAL_SERVER_ERROR.error,
+    statusCode: err.statusCode || INTERNAL_SERVER_ERROR.statusCode,
+    error: err.name || "Internal Server Error",
+    message: err.message || INTERNAL_SERVER_ERROR.error,
     stack: showStack ? err.stack : undefined,
   });
 };

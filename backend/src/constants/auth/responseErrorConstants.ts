@@ -5,10 +5,10 @@
 export const MISSING_EMAIL_ERROR = { error: 'Missing email', statusCode: 400 };
 export const MISSING_PASSWORD_ERROR = { error: 'Missing password', statusCode: 400 };
 export const MISSING_USERNAME_ERROR = { error: 'Missing username', statusCode: 400 };
-export const INVALID_FIRST_NAME_ERROR = { error: 'Invalid first name: only letters and spaces allowed', statusCode: 400 };
-export const INVALID_LAST_NAME_ERROR = { error: 'Invalid last name: only letters and spaces allowed', statusCode: 400 };
+export const INVALID_FIRST_NAME_ERROR = { error: 'Invalid first name: must be characters with spaces allowed', statusCode: 400 };
+export const INVALID_LAST_NAME_ERROR = { error: 'Invalid last name: must be characters with spaces allowed', statusCode: 400 };
 export const INVALID_EMAIL_ERROR = { error: 'Invalid email', statusCode: 400 };
-export const INVALID_USERNAME_ERROR = { error: 'Invalid username: only letters and numbers allowed', statusCode: 400 };
+export const INVALID_USERNAME_ERROR = { error: 'Invalid username: must be characters and numbers - no spaces', statusCode: 400 };
 export const WEAK_PASSWORD_ERROR = { error: 'Password is too weak', statusCode: 400 };
 export const CREATE_ACCOUNT_FAILED_ERROR = { error: "Failed to create account", statusCode: 500 };
 

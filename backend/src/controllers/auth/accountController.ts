@@ -25,12 +25,14 @@ const accountController = {
             const formattedSignupRequestData = formatSignupData(signupRequestData);
 
             //Create account
+            logger.debug("Attempting to create account");
             const account: Account = await accountService.createAccount(formattedSignupRequestData);
             if (!account) {
                 throw errorFactory({ statusCode: 500 })
             }
 
             res.locals.account = account;
+            res.status(201);
             next();
         } catch (error) {
             logger.error(`Error in creating account: ${error}`);
