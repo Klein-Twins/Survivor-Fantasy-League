@@ -1,39 +1,3 @@
-RefreshTokenExpiresIn:
-  get:
-    summary: Retrieve remaining validity of the refresh token
-    operationId: getRefreshTokenExpiresIn
-    description: |
-      This endpoint is used by the front-end to determine how much time (in seconds) 
-      remains before the refresh token expires. The refresh token must be passed 
-      in the request as a cookie, and the associated profile ID must be provided 
-      as a query parameter.
-    tags:
-      - Token
-    parameters:
-      - $ref: "../components/securityComponents.yaml#/components/parameters/ProfileId"
-    responses:
-      "200":
-        description: Refresh token validity retrieved successfully.
-        content:
-          application/json:
-            schema:
-              $ref: "../components/tokenComponents.yaml#/components/schemas/GetRefreshTokenExpiresInResponseSuccess"
-
-      "401":
-        description: Unauthorized Error
-        content:
-          application/json:
-            schema:
-              $ref: "../components/errorComponents.yaml#/components/schemas/UnauthorizedError"
-            examples:
-              UnauthorizedError:
-                $ref: "../components/errorComponents.yaml#/components/examples/UnauthorizedError"
-
-      "500":
-        $ref: "../components/errorComponents.yaml#/components/responses/InternalServerError"
-    security:
-      - refreshTokenCookie: []
-
 CheckAuth:
   get:
     summary: Validate refresh token authenticity

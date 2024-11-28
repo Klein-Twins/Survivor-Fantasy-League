@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from "express";
 import { validateQuery } from "../../utils/survivor/survivorUtils";
 
 const survivorController = {
-    getSurvivorWithDetailsForSeason : async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const seasonId : any = req.query.seasonId;
+    getSurvivors: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const seasonId: any = req.query.seasonId;
 
         try {
             validateQuery(seasonId);

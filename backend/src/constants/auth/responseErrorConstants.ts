@@ -15,6 +15,7 @@ export const CREATE_ACCOUNT_FAILED_ERROR = { error: "Failed to create account", 
 
 //Login Account
 export const LOGIN_FAILED_ERROR = { error: "Failed to log into account", statusCode: 500 };
+export const LOGIN_UNAUTHORIZED_ERROR = { error: "Invalid username/password", statusCode: 401 };
 
 //Tokens
 export const INVALID_OR_EXPIRED_TOKEN_ERROR = { error: 'Invalid or expired token', statusCode: 403 };
@@ -29,6 +30,7 @@ export const USERNAME_UNAVAILABLE_ERROR = { error: 'Username already tied to acc
 export const EMAIL_UNAVAILABLE_ERROR = { error: 'Email already tied to account', statusCode: 409 };
 
 export const INCORRECT_PASSWORD_ERROR = { error: "Incorrect password. Please try again.", statusCode: 401 };
+export const UNAUTHORIZED_ERROR = { error: "Authentication is required or failed.", statusCode: 401 };
 
 //Season
 export const SEASON_NOT_FOUND_ERROR = { error: "Season was not found", statusCode: 404 }
@@ -41,3 +43,5 @@ export const INVALID_PROFILE_ID_ERROR = { error: "Please provide a valid profile
 export const INTERNAL_SERVER_ERROR = { error: 'An internal server error occurred', statusCode: 500 };
 export const NOT_FOUND_ERROR = { error: 'The requested resource was not found', statusCode: 404 };
 export const BAD_REQUEST_ERROR = { error: 'Invalid request.', statusCode: 400 }
+
+export const LOGOUT_MESSAGE = "User logged out successfully. All session data has been cleared.";

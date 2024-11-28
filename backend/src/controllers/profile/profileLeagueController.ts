@@ -1,17 +1,14 @@
-import { NextFunction, Request, RequestHandler, Response } from 'express';
-import CustomError, { NotFoundError } from "../../utils/errors/errors";
-import { CreateLeagueResponse, GetLeaguesForProfileResponse } from '../../types/league/leagueDto';
+import { Request, Response, NextFunction } from "express";
+import logger from "../../config/logger";
+import errorFactory from "../../utils/errors/errorFactory";
+import { LeagueAttributes } from "../../models/League";
+import { CreateLeagueResponse, GetLeaguesForProfileResponse } from "../../types/league/leagueDto";
 import leagueResponseBuilder from "../../servicesAndHelpers/leagues/leagueResponseBuilder";
 import leagueService from "../../servicesAndHelpers/leagues/leagueService";
-import { LeagueAttributes } from '../../models/League';
-import errorHandler from '../../middleware/errorHandlerMiddleware';
-import seasonService from '../../servicesAndHelpers/season/seasonService';
-import logger from '../../config/logger';
-import errorFactory from '../../utils/errors/errorFactory';
-import { INVALID_NAME_ERROR, INVALID_PROFILE_ID_ERROR, INVALID_SEASON_ID_ERROR, SEASON_NOT_FOUND_ERROR } from '../../constants/auth/responseErrorConstants';
-import leagueRepository from '../../repositories/leagueRepository';
+import { INVALID_NAME_ERROR, INVALID_PROFILE_ID_ERROR, INVALID_SEASON_ID_ERROR, SEASON_NOT_FOUND_ERROR } from "../../constants/auth/responseErrorConstants";
+import seasonService from "../../servicesAndHelpers/season/seasonService";
 
-const leagueController = {
+const profileLeagueController = {
     createLeague: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
             const { seasonId, name, profileId } = req.body;
@@ -46,7 +43,13 @@ const leagueController = {
             next(error)
         }
     }
-};
+}
+
+const validateGetLeaguesForProfileRequest = (profileId: string): void => {
+    if (!profileId) {
+        throw errorFactory(INVALID_PROFILE_ID_ERROR)
+    }
+}
 
 const validateCreateLeagueRequest = (seasonId: number, name: string, profileId: string): void => {
     if (!seasonId) {
@@ -60,10 +63,4 @@ const validateCreateLeagueRequest = (seasonId: number, name: string, profileId: 
     }
 }
 
-const validateGetLeaguesForProfileRequest = (profileId: string): void => {
-    if (!profileId) {
-        throw errorFactory(INVALID_PROFILE_ID_ERROR)
-    }
-}
-
-export default leagueController;
+export default profileLeagueController;

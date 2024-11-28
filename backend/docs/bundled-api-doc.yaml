@@ -79,6 +79,7 @@ paths:
                 required:
                   - message
                   - account
+                  - numSecondsRefreshTokenExpiresIn
                 properties:
                   message:
                     type: string
@@ -120,6 +121,10 @@ paths:
                         type: string
                         description: Last name of the user
                         example: Probst
+                  numSecondsRefreshTokenExpiresIn:
+                    type: number
+                    description: Number of seconds the session is valid for
+                    example: 1800
               examples:
                 success:
                   summary: Successful response
@@ -132,6 +137,7 @@ paths:
                       imageUrl: assets/images/profileImages/default.jpg
                       firstName: Jeff
                       lastName: Probst
+                    numSecondsRefreshTokenExpiresIn: 1800
         '400':
           description: Invalid input data
           content:
@@ -353,6 +359,7 @@ paths:
                 required:
                   - message
                   - account
+                  - numSecondsRefreshTokenExpiresIn
                 properties:
                   message:
                     type: string
@@ -394,6 +401,10 @@ paths:
                         type: string
                         description: Last name of the user
                         example: Probst
+                  numSecondsRefreshTokenExpiresIn:
+                    type: number
+                    description: Number of seconds the session is valid for
+                    example: 1800
         '401':
           description: Unauthorized - Invalid email or password
           content:
@@ -608,127 +619,6 @@ paths:
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
-  /api/auth/refresh-token-expires-in:
-    get:
-      summary: Retrieve remaining validity of the refresh token
-      operationId: getRefreshTokenExpiresIn
-      description: |
-        This endpoint is used by the front-end to determine how much time (in seconds) 
-        remains before the refresh token expires. The refresh token must be passed 
-        in the request as a cookie, and the associated profile ID must be provided 
-        as a query parameter.
-      tags:
-        - Token
-      parameters:
-        - in: query
-          name: profileId
-          required: true
-          schema:
-            type: string
-          description: Unique identifier for the user session's profile.
-          example: unique-profile-id
-      responses:
-        '200':
-          description: Refresh token validity retrieved successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                required:
-                  - secondsRefreshTokenIsValidFor
-                properties:
-                  secondsRefreshTokenIsValidFor:
-                    type: integer
-                    description: Time in seconds until the refresh token expires.
-                    example: 3600
-        '401':
-          description: Unauthorized Error
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - type: object
-                    required:
-                      - statusCode
-                      - error
-                      - message
-                    properties:
-                      statusCode:
-                        type: integer
-                        description: HTTP status code of the error
-                        example: 400
-                      error:
-                        type: string
-                        description: A short label or type of the error
-                        example: Bad Request
-                      message:
-                        type: string
-                        description: A detailed message explaining the error
-                        example: 'Invalid input, missing required fields.'
-                  - type: object
-                    properties:
-                      statusCode:
-                        enum:
-                          - 401
-                        example: 401
-                      error:
-                        enum:
-                          - Unauthorized
-                        example: Unauthorized
-                      message:
-                        example: Authentication is required or failed.
-              examples:
-                UnauthorizedError:
-                  summary: Unauthorized Error
-                  value:
-                    statusCode: 401
-                    error: Unauthorized
-                    message: Authentication is required or failed.
-        '500':
-          description: Internal Server Error - Unexpected error.
-          content:
-            application/json:
-              schema:
-                allOf:
-                  - type: object
-                    required:
-                      - statusCode
-                      - error
-                      - message
-                    properties:
-                      statusCode:
-                        type: integer
-                        description: HTTP status code of the error
-                        example: 400
-                      error:
-                        type: string
-                        description: A short label or type of the error
-                        example: Bad Request
-                      message:
-                        type: string
-                        description: A detailed message explaining the error
-                        example: 'Invalid input, missing required fields.'
-                  - type: object
-                    properties:
-                      statusCode:
-                        enum:
-                          - 500
-                        example: 500
-                      error:
-                        enum:
-                          - Internal Server Error
-                        example: Internal Server Error
-                      message:
-                        example: An unexpected error occurred on the server.
-              examples:
-                ServerError:
-                  summary: Internal Server Error
-                  value:
-                    statusCode: 500
-                    error: Internal Server Error
-                    message: An unexpected error occurred on the server. Please try again later.
-      security:
-        - refreshTokenCookie: []
   /api/auth/check-auth:
     get:
       summary: Validate refresh token authenticity
@@ -756,11 +646,51 @@ paths:
                 type: object
                 required:
                   - isAuthenticated
+                  - numSecondsRefreshTokenExpiresIn
+                  - account
                 properties:
                   isAuthenticated:
                     type: boolean
                     description: Indicates whether the user is authenticated.
                     example: true
+                  numSecondsRefreshTokenExpiresIn:
+                    type: integer
+                    description: Time in seconds until the new refresh token expires.
+                    example: 3600
+                  account:
+                    type: object
+                    required:
+                      - userName
+                      - profileId
+                      - email
+                      - imageUrl
+                    properties:
+                      userName:
+                        type: string
+                        description: The username of the account holder
+                        example: SurvivorFan69
+                      profileId:
+                        type: string
+                        description: Unique identifier for the profile
+                        example: Unique-Profile-Id-String
+                      email:
+                        type: string
+                        format: email
+                        description: Email address associated with the account
+                        example: user@example.com
+                      imageUrl:
+                        type: string
+                        format: uri
+                        description: URL to the profile image
+                        example: assets/images/profileImages/genericProfileImage.jpg
+                      firstName:
+                        type: string
+                        description: First name of the user
+                        example: Jeff
+                      lastName:
+                        type: string
+                        description: Last name of the user
+                        example: Probst
         '401':
           description: Unauthorized Error
           content:
@@ -876,7 +806,7 @@ paths:
                 type: object
                 required:
                   - message
-                  - refreshTokenExpiresIn
+                  - numSecondsRefreshTokenExpiresIn
                 properties:
                   message:
                     type: string
@@ -884,7 +814,7 @@ paths:
                     enum:
                       - User session extended successfully.
                     example: User session extended successfully.
-                  refreshTokenExpiresIn:
+                  numSecondsRefreshTokenExpiresIn:
                     type: integer
                     description: Time in seconds until the new refresh token expires.
                     example: 3600
@@ -1694,7 +1624,7 @@ paths:
                     statusCode: 500
                     error: Internal Server Error
                     message: An unexpected error occurred on the server. Please try again later.
-  /api/league/profile-search:
+  /api/league/profile/search:
     get:
       summary: Retrieve profiles by search criteria
       description: 'This endpoint allows you to search for profiles based on username, first name, and league ID, with pagination options.'
@@ -2008,7 +1938,7 @@ paths:
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
-  /api/league/invite-profile:
+  /api/league/profile/invite:
     post:
       summary: Invite a profile to a league
       tags:

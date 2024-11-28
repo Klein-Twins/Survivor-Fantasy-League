@@ -1,79 +1,66 @@
 import { Request, Response, NextFunction } from 'express';
-import httpStatusCodes from 'http-status-codes';
-import tokenService from '../servicesAndHelpers/auth/tokenService';
 import logger from '../config/logger';
+import tokenService from '../servicesAndHelpers/auth/tokenService';
+import errorFactory from '../utils/errors/errorFactory';
+import { UNAUTHORIZED_ERROR } from '../constants/auth/responseErrorConstants';
+import { UserJwtPayload } from '../types/auth/tokenTypes';
+import authService from '../servicesAndHelpers/auth/authService';
 
 const tokenMiddleware = {
     authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         logger.debug('In tokenMiddleware.authenticateToken');
-        
-        const { accessToken, refreshToken } = req.cookies;
 
-        // If no tokens are present, return Unauthorized status
-        if (!accessToken && !refreshToken) {
-            logger.debug('No access or refresh token found in cookies');
-            res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-            return;
-        }
+        const accessToken: string = req.cookies.accessToken;
+        const refreshToken: string = req.cookies.refreshToken;
+        const profileId = req.query.profileId as string;
 
         try {
-            // If access token is provided, validate it
-            if (accessToken) {
-                const accessTokenDecoded = await tokenService.validateTokenAndPromiseDecode(accessToken, 'access');
-                
-                // If access token is invalid, try to refresh the access token using refresh token
-                if (!accessTokenDecoded && refreshToken) {
-                    return await handleRefreshToken(refreshToken, res, next);
-                }
 
-                // If access token is valid, proceed to next middleware
-                if (accessTokenDecoded) {
-                    return next();
-                }
-            }
+            await authService.authenticateTokens({ profileId, accessToken, refreshToken }, res)
+            logger.debug('Tokens are valid. Proceeding with the request.');
+            res.locals.isAuthenticated = true;
+            next();
 
-            // If only refresh token is provided, attempt to refresh the access token
-            if (refreshToken) {
-                return await handleRefreshToken(refreshToken, res, next);
-            }
         } catch (error) {
             logger.error('Error in authenticateToken middleware:', error);
+            res.locals.isAuthenticated = false;
             return next(error);
         }
     }
 };
 
-const handleRefreshToken = async (refreshToken: string, res: Response, next: NextFunction): Promise<void> => {
-    try {
-        const tokens = await refreshAccessTokenIfRefreshTokenIsValid(refreshToken);
-        
-        // If no new tokens could be obtained, return Unauthorized status
-        if (!tokens) {
-            res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-            return
-        }
+const validateProfileAndUserWithTokens = async (
+    profileId: string,
+    userId: string,
+    decodedAccessToken: UserJwtPayload,
+    decodedRefreshToken: UserJwtPayload
+): Promise<void> => {
 
-        // Attach new access token to response and proceed to the next middleware
-        tokenService.attachTokensToResponse({ accessToken: tokens.accessToken }, res);
-        return next();
-    } catch (error) {
-        logger.error('Error while handling refresh token:', error);
-        return next(error);
+    logger.debug(`${profileId} = ${decodedAccessToken.profileId} = ${decodedRefreshToken.profileId}`);
+    logger.debug(`${userId} = ${decodedAccessToken.userId} = ${decodedRefreshToken.userId}`);
+
+    if (
+        (decodedAccessToken && profileId !== decodedAccessToken.profileId) ||
+        (decodedRefreshToken && profileId !== decodedRefreshToken.profileId) ||
+        (decodedAccessToken && userId !== decodedAccessToken.userId) ||
+        (decodedRefreshToken && userId !== decodedRefreshToken.userId)
+    ) {
+        logger.error('Mismatch between profileId, userId and token payload');
+        throw errorFactory(UNAUTHORIZED_ERROR);
     }
-}
+};
 
-
-const refreshAccessTokenIfRefreshTokenIsValid = async (refreshToken: string): Promise<{ accessToken: string } | null> => {
-    const refreshTokenDecoded = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
-    
-    if (!refreshTokenDecoded) {
-        logger.debug('Refresh token is invalid');
-        return null;
+const validateTokensInDatabase = async (
+    userId: string,
+    accessToken: string,
+    refreshToken: string
+): Promise<void> => {
+    const areTokensValid = await tokenService.verifyTokensInDatabase(accessToken, refreshToken, userId);
+    if (!areTokensValid) {
+        logger.error('Tokens do not belong to user ID in database');
+        throw errorFactory(UNAUTHORIZED_ERROR);
     }
-    const newAccessToken = tokenService.createToken({ userId: refreshTokenDecoded.userId, profileId: refreshTokenDecoded.profileId }, 'access');
-    await tokenService.updateAccessTokenInTokenTableWithNewAccessToken(refreshTokenDecoded.userId, newAccessToken);
+};
 
-    return { accessToken: newAccessToken };
-}
 
 export default tokenMiddleware;

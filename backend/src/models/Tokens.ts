@@ -1,15 +1,15 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface TokenAttributes {
-  accessToken: string;
-  refreshToken: string;
+  accessToken?: string | null;
+  refreshToken?: string | null;
   userId: string;
 }
 
 const TokensModel = (sequelize: Sequelize) => {
   class Tokens extends Model<TokenAttributes> implements TokenAttributes {
-    public accessToken!: string;
-    public refreshToken!: string;
+    public accessToken?: string | null;
+    public refreshToken?: string | null;
     public userId!: string;
 
     static associate(models: any) {
@@ -20,12 +20,12 @@ const TokensModel = (sequelize: Sequelize) => {
   Tokens.init(
     {
       accessToken: {
-        type: DataTypes.STRING(200),
+        type: DataTypes.STRING(500),
         allowNull: true,
         field: 'ACCESS_TOKEN',
       },
       refreshToken: {
-        type: DataTypes.STRING(200),
+        type: DataTypes.STRING(500),
         allowNull: true,
         field: 'REFRESH_TOKEN',
       },

@@ -54,7 +54,7 @@ export class InternalServerError extends CustomError {
 
 export class UnauthorizedError extends CustomError {
     constructor(error: any | null | undefined = undefined) {
-        super(401, getErrorMessage("Unauthorized access", error));
+        super(401, getErrorMessage("Unauthorized", error));
         this.name = "Unauthorized"
     }
 }

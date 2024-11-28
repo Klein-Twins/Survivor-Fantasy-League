@@ -31,6 +31,7 @@ const accountController = {
                 throw errorFactory({ statusCode: 500 })
             }
 
+            res.locals.message = "User signed up successfully"
             res.locals.account = account;
             res.status(201);
             next();

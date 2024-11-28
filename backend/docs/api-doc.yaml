@@ -19,8 +19,6 @@ paths:
     $ref: "./paths/authPaths.yaml#/Login"
   /api/auth/logout:
     $ref: "./paths/authPaths.yaml#/Logout"
-  /api/auth/refresh-token-expires-in:
-    $ref: "./paths/tokenPaths.yaml#/RefreshTokenExpiresIn"
   /api/auth/check-auth:
     $ref: "./paths/tokenPaths.yaml#/CheckAuth"
   /api/auth/extend-session:
@@ -29,9 +27,9 @@ paths:
     $ref: "./paths/profilePaths/profileLeaguesPaths.yaml#/ProfileLeagues"
   /api/survivor:
     $ref: "./paths/survivorPaths.yaml#/Survivors"
-  /api/league/profile-search:
+  /api/league/profile/search:
     $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/ProfileSearchForLeagueInvite"
-  /api/league/invite-profile:
+  /api/league/profile/invite:
     $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/InviteProfileToLeague"
   # /api/notification/{notificationId}:
   #   $ref: "./paths/notificationPaths.yaml#/MarkNotificationAsRead"

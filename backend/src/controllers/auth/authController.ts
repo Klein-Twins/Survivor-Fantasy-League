@@ -7,6 +7,8 @@ import logger from "../../config/logger";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
 import { formatLoginRequest, validateLoginRequest } from "../../utils/auth/authUtils";
 import errorFactory from "../../utils/errors/errorFactory";
+import { UserJwtPayload } from "../../types/auth/tokenTypes";
+import { LOGOUT_MESSAGE } from "../../constants/auth/responseErrorConstants";
 
 /**
  * Controller for handling authentication actions.
@@ -30,7 +32,9 @@ const authController = {
                 throw errorFactory({ statusCode: 500 })
             }
 
+            res.locals.message = "User logged in successfully"
             res.locals.account = account;
+            res.status(200);
             next();
         } catch (error) {
             logger.error(`Error in authController.login: ${error}`);
@@ -38,34 +42,33 @@ const authController = {
         }
     },
 
-    logout: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    authenticatedLogout: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const accessToken: string | undefined = req.cookies.accessToken;
-            const refreshToken: string | undefined = req.cookies.refreshToken;
-
-            // Clear cookies
-            res.clearCookie('accessToken');
-            res.clearCookie('refreshToken');
-
-            // If no refresh token is present, end the response
-            if (!refreshToken) {
-                res.sendStatus(httpStatusCodes.OK);
-                return;
+            const numSessionsDeleted = await authService.logout(req, res, next, true);
+            if (numSessionsDeleted === 1) {
+                logger.debug(`Cleared ${numSessionsDeleted} session`)
+            } else {
+                logger.warn(`Cleared ${numSessionsDeleted} session(s).`);
             }
-
-            const foundRefreshToken = await tokenService.findTokenRecordByRefreshToken(refreshToken);
-
-            if (!foundRefreshToken) {
-                res.sendStatus(httpStatusCodes.OK);
-                logger.warn('Refresh token was not found in database.')
-                return
-            }
-
-            await tokenService.deleteTokenRecordsByRefreshToken(refreshToken);
-            res.sendStatus(httpStatusCodes.OK);
+            res.status(httpStatusCodes.OK).json({ message: LOGOUT_MESSAGE });
         } catch (error) {
-            logger.error(`Error in logout: ${error}`);
-            res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR);
+            logger.error("Caught error in authController.authenticatedLogout()")
+            next(error);
+        }
+    },
+
+    unauthenticatedlogout: async (err: any, req: Request, res: Response, next: NextFunction): Promise<void> => {
+        try {
+            const numSessionsDeleted = await authService.logout(req, res, next, false);
+            if (numSessionsDeleted === 1) {
+                logger.debug(`Cleared ${numSessionsDeleted} session`)
+            } else {
+                logger.warn(`Cleared ${numSessionsDeleted} session(s).`);
+            }
+            res.status(httpStatusCodes.OK).json({ message: LOGOUT_MESSAGE });
+        } catch (error) {
+            logger.error("Caught error in authController.unauthenticatedlogout()")
+            next(error);
         }
     }
 };

@@ -40,6 +40,11 @@ const userService = {
     // Check the provided password against the stored password
     return await passwordService.checkPasswordAgainstUserPassword(userRecord, password);
   },
+
+  getUserIdByProfileId: async (profileId: string): Promise<string | null> => {
+    return await userRepository.getUserIdByProfileId(profileId);
+  }
+
 };
 
 export default userService;

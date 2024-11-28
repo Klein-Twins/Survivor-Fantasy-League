@@ -34,21 +34,23 @@ const accountRepository = {
         }
     },
 
-    getAccountByEmail: async (email: UserAttributes["email"]): Promise<UserIncludeProfile> => {
+    getAccount: async ({ email, profileId }: { email?: UserAttributes["email"], profileId?: UserAttributes["profileId"] }): Promise<UserIncludeProfile | null> => {
         try {
+            const whereClause: Partial<{ email: string; profileId: string }> = {};
+            if (email !== undefined) whereClause.email = email;
+            if (profileId !== undefined) whereClause.profileId = profileId;
+
             const userAndProfileRecord = await models.User.findOne({
                 include: {
                     model: models.Profile,
                     as: 'profile',
                     required: true,
                 },
-                where: {
-                    email
-                }
+                where: whereClause,
             }) as unknown as UserIncludeProfile;
 
             if (!userAndProfileRecord) {
-                throw errorFactory(ACCOUNT_NOT_FOUND_ERROR);
+                return null;
             }
 
             return userAndProfileRecord;

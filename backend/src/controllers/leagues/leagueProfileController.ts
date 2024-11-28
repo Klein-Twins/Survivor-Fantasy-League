@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import logger from "../../config/logger";
 import errorFactory from "../../utils/errors/errorFactory";
+import { ProfileSearchParams, ProfileSearchResultsWithPagination } from "../../types/profile/profileTypes";
 import profileService from "../../servicesAndHelpers/profile/profileService";
-import { ProfileSearchParams, ProfileSearchResultsWithPagination, ProfileSearchSortBy, ProfileSearchSortDirection } from "../../types/profile/profileTypes";
 
-const profileController = {
+
+const leagueProfileController = {
     getProfilesBySearch: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         logger.debug("In profileController.getProfilesBySearch");
         const userName = req.query.userName as string | undefined;
@@ -46,7 +47,11 @@ const profileController = {
         } catch (error) {
             next(error);
         }
+    },
+
+    inviteProfileToLeague: (req: Request, res: Response, next: NextFunction) => {
+
     }
 }
 
-export default profileController;
+export default leagueProfileController;

@@ -86,8 +86,17 @@ const accountService = {
      * @param email - The email of the account to retrieve.
      * @returns A promise that resolves to the account details.
      */
-    getAccountByEmail: async (email: UserAttributes["email"]): Promise<Account> => {
-        const account: UserIncludeProfile = await accountRepository.getAccountByEmail(email);
+    getAccount: async (params: { email?: UserAttributes["email"], profileId?: UserAttributes["profileId"] }): Promise<Account | null> => {
+
+        if (!params.email && !params.profileId) {
+            logger.error("Called accountService.getAccount(params) without any defined params.");
+            return null;
+        }
+
+        const account: UserIncludeProfile | null = await accountRepository.getAccount(params);
+        if (account === null) {
+            return null;
+        }
 
         const formattedAccount: Account = {
             userId: account.userId,
@@ -98,8 +107,6 @@ const accountService = {
             lastName: account.profile.lastName,
             imageUrl: account.profile.imageUrl
         }
-
-        logger.debug(formattedAccount);
 
         return formattedAccount;
     },

@@ -122,6 +122,7 @@ Signup:
                     imageUrl: "assets/images/profileImages/default.jpg"
                     firstName: "Jeff"
                     lastName: "Probst"
+                  numSecondsRefreshTokenExpiresIn: 1800
       "400":
         description: Invalid input data
         content:

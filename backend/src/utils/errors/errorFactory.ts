@@ -28,7 +28,7 @@ const errorFactory = (error: APIResponseError): CustomError => {
         case 500:
             return new InternalServerError(getErrorMessage("An internal server error occurred", error.error));
         case 401:
-            return new UnauthorizedError(getErrorMessage("Unauthorized access", error.error));
+            return new UnauthorizedError(getErrorMessage("Unauthorized", error.error));
         case 403:
             return new ForbiddenError(getErrorMessage("Access forbidden", error.error));
         case 409:

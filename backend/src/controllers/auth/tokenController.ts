@@ -1,99 +1,85 @@
 import { Request, Response, NextFunction } from "express";
 import httpStatusCodes from 'http-status-codes';
-import jwt from 'jsonwebtoken';
 
-import { Account } from "../../types/auth/authTypes";
-import { UserJwtPayload } from "../../types/auth/tokenTypes";
-import { JWT_REFRESH_SECRET } from "../../config/config";
+import { Account, AccountForResponses } from "../../types/auth/authTypes";
 
 import logger from "../../config/logger";
 
 import accountService from "../../servicesAndHelpers/auth/accountService";
 import tokenService from "../../servicesAndHelpers/auth/tokenService";
 import errorFactory from "../../utils/errors/errorFactory";
+import { INTERNAL_SERVER_ERROR, UNAUTHORIZED_ERROR } from "../../constants/auth/responseErrorConstants";
+import userService from "../../servicesAndHelpers/user/userService";
+import authService from "../../servicesAndHelpers/auth/authService";
 
 const tokenController = {
-    extendSessionByRefreshingAccessAndRefreshTokens: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    extendSessionByRefreshingTokens: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         logger.debug('Attempting to refresh tokens');
 
-        const refreshToken = req.cookies.refreshToken;
-        if (!refreshToken) {
-            res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-            return;
-        }
-
         try {
-            const decodedRefreshToken = await tokenService.validateTokenAndPromiseDecode(refreshToken, 'refresh');
-            if (!decodedRefreshToken) {
-                res.sendStatus(httpStatusCodes.UNAUTHORIZED);
-                return;
+            const profileId = req.query.profileId as string;
+            const userId = await userService.getUserIdByProfileId(profileId);
+
+            if (!profileId || !userId) {
+                logger.error("Cannot extend session. Missing profileId from query Parameters or profileId is not tied to a userId");
+                throw errorFactory(UNAUTHORIZED_ERROR);
             }
 
-            const newAccessToken = tokenService.createToken(decodedRefreshToken, 'access');
-            const newRefreshToken = tokenService.createToken(decodedRefreshToken, 'refresh');
-            tokenService.attachTokensToResponse({ accessToken: newAccessToken, refreshToken: newRefreshToken }, res);
-            res.status(httpStatusCodes.ACCEPTED).json({ message: 'Session extended' });
+            const { refreshToken } = await tokenService.createAndAttachTokensToResponse(userId, profileId, res);
+            const numSecondsTokenIsValid = tokenService.numSecondsTokenIsValid(refreshToken);
+
+            res.status(httpStatusCodes.ACCEPTED).json({ message: 'User session extended successfully.', numSecondsRefreshTokenExpiresIn: numSecondsTokenIsValid });
         } catch (error) {
             logger.error(`Error refreshing tokens: ${error}`);
             next(error);
         }
     },
 
-    getRefreshTokenExpiresIn: (req: Request, res: Response): void => {
-        logger.debug('Checking refresh token expiration');
-
-        const refreshToken = req.cookies.refreshToken;
-        if (!refreshToken) {
-            logger.error('Refresh token missing in request');
-            res.status(httpStatusCodes.UNAUTHORIZED).json({ message: 'Refresh token not found' });
-            return;
-        }
+    checkIsAuthenticated: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        logger.debug("Checking if authenticated.");
+        const accessToken: string | undefined = req.cookies.accessToken;
+        const refreshToken: string | undefined = req.cookies.refreshToken;
+        const profileId = req.query.profileId as string;
 
         try {
-            const decoded = jwt.decode(refreshToken) as UserJwtPayload | null;
-            if (!decoded?.exp) {
-                logger.debug('Invalid refresh token');
-                res.status(httpStatusCodes.BAD_REQUEST).json({ message: 'Invalid refresh token' });
-                return;
+            await authService.authenticateTokens({ profileId, accessToken, refreshToken }, res)
+
+            const account: Account | null = await accountService.getAccount({ profileId });
+            if (!account) {
+                logger.error("Cannot retrieve account for authenticated session.");
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
 
-            const remainingTime = decoded.exp - Math.floor(Date.now() / 1000);
-            logger.debug(`Remaining refresh token time: ${remainingTime} seconds`);
-            res.status(httpStatusCodes.OK).json({ remainingTime });
+            const accountForResponse: AccountForResponses = accountService.getAccountForResponse(account);
+            const numSecondsTokenIsValid = tokenService.numSecondsTokenIsValid(refreshToken as string);
+
+            res.json({
+                isAuthenticated: true,
+                account: accountForResponse,
+                numSecondsRefreshTokenExpiresIn: numSecondsTokenIsValid
+            });
+
         } catch (error) {
-            logger.error(`Error decoding refresh token: ${error}`);
-            res.status(httpStatusCodes.INTERNAL_SERVER_ERROR).json({ message: 'Failed to decode refresh token' });
-        }
-    },
-
-    checkIsAuthenticated: (req: Request, res: Response): void => {
-        logger.debug('Checking authentication status of refresh token');
-
-        const refreshToken = req.cookies.refreshToken;
-        if (!refreshToken) {
-            res.json({ isAuthenticated: false });
-            return;
-        }
-
-        try {
-            jwt.verify(refreshToken, JWT_REFRESH_SECRET);
-            res.json({ isAuthenticated: true });
-        } catch {
             res.json({ isAuthenticated: false });
         }
     },
 
-    generateTokensAfterSignupOrLogin: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    createSession: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        logger.debug('Creating a new user session.');
         try {
             const account: Account | undefined = res.locals.account;
+            const message: string = res.locals.message || "Success";
             if (!account) {
                 logger.error("Missing account data for token generation");
-                throw errorFactory({ statusCode: 500 })
+                throw errorFactory(INTERNAL_SERVER_ERROR);
             }
 
-            await tokenService.createAndAttachTokensToResponse(account.userId, account.profileId, res);
+            const { refreshToken } = await tokenService.createAndAttachTokensToResponse(account.userId, account.profileId, res);
+
+            const numSecondsTokenIsValid = tokenService.numSecondsTokenIsValid(refreshToken);
             const accountResponse = accountService.getAccountForResponse(account);
-            res.json({ message: "User signed up successfully", account: accountResponse });
+
+            res.json({ message, account: accountResponse, numSecondsRefreshTokenExpiresIn: numSecondsTokenIsValid });
         } catch (error) {
             next(error);
         }
