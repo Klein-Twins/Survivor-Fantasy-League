@@ -3,7 +3,6 @@ import DashboardPage from './pages/DashboardPage.tsx';
 import HomePage from './pages/HomePage.tsx';
 import RootLayout from './pages/RootLayout.tsx';
 import SurvivorCastPage from './pages/SurvivorCastPage.tsx';
-import Home from './components/dashboard/home/Home.tsx';
 import LeagueDetailView from './pages/LeagueDetailView.tsx';
 
 const router = createBrowserRouter([

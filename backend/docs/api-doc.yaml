@@ -55,6 +55,11 @@ components:
     Account:
       $ref: "./components/authComponents.yaml#/components/schemas/Account"
 
+    UserSessionResponseSuccess:
+      $ref: "./components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
+    LogoutSuccessResponseSchema:
+      $ref: "./components/authComponents.yaml#/components/responses/LogoutUserResponseSuccess"
+
   securitySchemes:
     accessTokenCookie:
       type: apiKey

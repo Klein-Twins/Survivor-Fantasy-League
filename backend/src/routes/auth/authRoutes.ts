@@ -6,7 +6,7 @@ import tokenMiddleware from '../../middleware/tokenMiddleware';
 
 const router = express.Router();
 
-router.post('/login', authController.login,);
+router.post('/login', authController.login, tokenController.createSession);
 router.post('/signup', accountController.createAccount, tokenController.createSession);
 router.post('/logout', tokenMiddleware.authenticateToken, authController.unauthenticatedlogout, authController.authenticatedLogout);
 

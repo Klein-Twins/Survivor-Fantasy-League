@@ -24,7 +24,7 @@ Login:
         content:
           application/json:
             schema:
-              $ref: "../components/authComponents.yaml#/components/responses/LoginUserResponseSuccess"
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
       "401":
         description: "Unauthorized - Invalid email or password"
         content:
@@ -109,7 +109,7 @@ Signup:
         content:
           application/json:
             schema:
-              $ref: "../components/authComponents.yaml#/components/responses/SignupUserResponseSuccess"
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
             examples:
               success:
                 summary: Successful response
@@ -123,6 +123,7 @@ Signup:
                     firstName: "Jeff"
                     lastName: "Probst"
                   numSecondsRefreshTokenExpiresIn: 1800
+                  isAuthenticated: true
       "400":
         description: Invalid input data
         content:

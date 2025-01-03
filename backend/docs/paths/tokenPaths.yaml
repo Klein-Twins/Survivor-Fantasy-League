@@ -16,7 +16,7 @@ CheckAuth:
         content:
           application/json:
             schema:
-              $ref: "../components/tokenComponents.yaml#/components/schemas/CheckAuthResponseSuccess"
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
 
       "401":
         description: Unauthorized Error
@@ -51,7 +51,7 @@ ExtendSession:
         content:
           application/json:
             schema:
-              $ref: "../components/tokenComponents.yaml#/components/schemas/ExtendSessionResponseSuccess"
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
         headers:
           Set-Cookie:
             $ref: "../components/securityComponents.yaml#/components/headers/AuthCookies"

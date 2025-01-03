@@ -49,26 +49,6 @@ components:
           example: Probst
 
   responses:
-    LoginUserResponseSuccess:
-      type: object
-      required:
-        - message
-        - account
-        - numSecondsRefreshTokenExpiresIn
-      properties:
-        message:
-          type: string
-          description: Success message for login
-          enum:
-            - "User logged in successfully"
-          example: "User logged in successfully"
-        account:
-          $ref: "#/components/schemas/Account"
-        numSecondsRefreshTokenExpiresIn:
-          type: number
-          description: Number of seconds the session is valid for
-          example: 1800
-
     LogoutUserResponseSuccess:
       type: object
       required:
@@ -81,18 +61,17 @@ components:
             - "User logged out successfully. All session data has been cleared."
           example: "User logged out successfully. All session data has been cleared."
 
-    SignupUserResponseSuccess:
+    UserCreateSessionResponseSuccess:
       type: object
       required:
         - message
         - account
         - numSecondsRefreshTokenExpiresIn
+        - isAuthenticated
       properties:
         message:
           type: string
-          description: Success message for signup
-          enum:
-            - "User signed up successfully"
+          description: Success message for auth
           example: "User signed up successfully"
         account:
           $ref: "#/components/schemas/Account"
@@ -100,6 +79,9 @@ components:
           type: number
           description: Number of seconds the session is valid for
           example: 1800
+        isAuthenticated:
+          type: boolean
+          example: true
 
   schemas:
     Account:

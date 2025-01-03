@@ -56,10 +56,13 @@ const tokenController = {
             res.json({
                 isAuthenticated: true,
                 account: accountForResponse,
-                numSecondsRefreshTokenExpiresIn: numSecondsTokenIsValid
+                numSecondsRefreshTokenExpiresIn: numSecondsTokenIsValid,
+                message: 'User is authenticated'
             });
 
         } catch (error) {
+            res.clearCookie('accessToken');
+            res.clearCookie('refreshToken');
             res.json({ isAuthenticated: false });
         }
     },
@@ -79,7 +82,9 @@ const tokenController = {
             const numSecondsTokenIsValid = tokenService.numSecondsTokenIsValid(refreshToken);
             const accountResponse = accountService.getAccountForResponse(account);
 
-            res.json({ message, account: accountResponse, numSecondsRefreshTokenExpiresIn: numSecondsTokenIsValid });
+            logger.debug("Session created successfully, sending response");
+
+            res.json({ message, account: accountResponse, numSecondsRefreshTokenExpiresIn: numSecondsTokenIsValid, isAuthenticated: true });
         } catch (error) {
             next(error);
         }

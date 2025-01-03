@@ -8,7 +8,6 @@ import { loginUser } from "../../../store/slices/authSlice";
 import { closeModal } from "../../../store/slices/modalSlice";
 import { LogInFormData, validateLogin } from "../../../utils/auth/formValidation";
 import Form from "../../ui/forms/Form";
-import { ResponseError } from "../../../types/auth";
 
 const LoginForm: React.FC = () => {
   const responseError = useSelector((state: RootState) => state.auth.error)?.message;
@@ -40,10 +39,10 @@ const LoginForm: React.FC = () => {
   });
 
   return (
-    <Form 
-      title="Log In" 
-      onSubmit={handleSubmit} 
-      isSubmitDisabled={isSubmitDisabled} 
+    <Form
+      title="Log In"
+      onSubmit={handleSubmit}
+      isSubmitDisabled={isSubmitDisabled}
       submitError={responseError}
       isLoading={loading}
     >

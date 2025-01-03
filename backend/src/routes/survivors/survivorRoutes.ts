@@ -3,6 +3,6 @@ import survivorController from '../../controllers/survivor/survivorController.ts
 
 const router = express.Router();
 
-router.get('/survivor', survivorController.getSurvivors);
+router.get('/', survivorController.getSurvivors);
 
 export default router;
