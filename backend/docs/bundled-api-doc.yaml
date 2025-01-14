@@ -2561,6 +2561,67 @@ components:
           enum:
             - User logged out successfully. All session data has been cleared.
           example: User logged out successfully. All session data has been cleared.
+    ProfileLeaguesResponseSuccessSchema:
+      type: object
+      required:
+        - leagues
+        - message
+      properties:
+        message:
+          type: string
+          description: Leagues sucessfully retrived for profile
+          example: Leagues for profile successfully retrieved
+        leagues:
+          type: array
+          items:
+            type: object
+            required:
+              - leagueId
+              - seasonId
+              - name
+              - season
+            properties:
+              leagueId:
+                type: integer
+                description: The unique identifier of the newly created league
+                example: 1
+              seasonId:
+                type: integer
+                description: The ID of the season associated with the league
+                example: 47
+              name:
+                type: string
+                description: The name of the league
+                example: Corner By The Bookshelf
+              createdAt:
+                type: string
+                format: date-time
+                description: The timestamp when the league was created
+                example: '2024-11-10T16:35:09.034Z'
+              updatedAt:
+                type: string
+                format: date-time
+                description: The timestamp when the league was last updated
+                example: '2024-11-10T16:35:09.034Z'
+              season:
+                type: object
+                properties:
+                  seasonId:
+                    type: integer
+                    description: The unique identifier of the season
+                    example: 47
+                  theme:
+                    type: string
+                    description: The theme of the season
+                    example: The New Era 2.0
+                  location:
+                    type: string
+                    description: The location of the season
+                    example: 'Fiji, Oceania'
+                  name:
+                    type: string
+                    description: The name of the season (optional)
+                    example: null
   securitySchemes:
     accessTokenCookie:
       type: apiKey

@@ -1,7 +1,7 @@
 {
   "scripts": {
     "install-dependencies": "npm install && npm run install-dependencies --prefix backend && npm run install-dependencies --prefix frontend",
-    "generate-client": "./generate-swagger-client.sh",
+    "generate-client": "./generate-swagger-client.sh && node post-process-swagger-client.js",
     "backend": "npm run dev --prefix backend",
     "frontend": "npm start --prefix frontend",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""

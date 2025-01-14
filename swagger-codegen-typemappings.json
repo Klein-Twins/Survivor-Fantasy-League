@@ -1,0 +1,14 @@
+{
+  "InlineResponse2002": "ProfileSearchResultsResponse",
+  "InlineResponse2002Results": "ProfileSearchResults",
+  "InlineResponse2002ResultsSearchResults": "ProfileSearchResultsProfile",
+  "InlineResponse2002ResultsPagination": "ProfileSearchResultsPagination",
+
+  "InlineResponse200": "LogoutSuccessResponse",
+  "InlineResponse201": "UserSessionCreatedResponse",
+  "InlineResponse400": "GenericApiResponse",
+  "InlineResponse2001Survivors": "SurvivorItem",
+  "InlineResponse2003": "InviteMemberResponse",
+  "InlineResponse2011": "ProfileLeaguesResponse",
+  "InlineResponse2012": "LeagueResponse"
+}

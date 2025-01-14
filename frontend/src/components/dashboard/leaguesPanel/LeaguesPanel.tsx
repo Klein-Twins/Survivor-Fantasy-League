@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import AddCircleIcon from "../../../assets/add_circle.svg";
 import leagueService from "../../../services/league/leagueService";
 import { RootState } from "../../../store/store";
 import LeagueList from "./LeagueList";
 import useGetApi from "../../../hooks/useGetApi";
-import { GetLeaguesForProfileResponse } from "../../../../generated-api";
 import NoLeagues from "./NoLeagues";
 import CreateLeagueForm from "./forms/CreateNewLeagueForm";
 
@@ -18,11 +17,12 @@ const LeaguesPanel: React.FC = () => {
   const account = useSelector((state: RootState) => state.auth.account);
   const profileId = account?.profileId || "";
 
-  const { data, isLoading, error, fetchData } = useGetApi(() =>
+  const { responseData, isLoading, error, fetchData } = useGetApi(() =>
     leagueService.getLeaguesForProfile(profileId)
   );
 
-  const leagues = data?.leagues || [];
+  const leagues = responseData?.leagues || [];
+  console.log(leagues);
 
 
   useEffect(() => {

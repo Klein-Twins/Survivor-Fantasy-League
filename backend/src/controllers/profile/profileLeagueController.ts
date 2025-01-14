@@ -32,7 +32,10 @@ const profileLeagueController = {
     },
     getLeaguesForProfile: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         try {
-            const { profileId } = req.params;
+            logger.debug("In profileLeagueController.getLeaguesForProfile");
+            const profileId = req.query.profileId as string;
+
+
             validateGetLeaguesForProfileRequest(profileId);
 
             const leagues: LeagueAttributes[] = await leagueService.getLeaguesForProfile(profileId)
@@ -45,7 +48,7 @@ const profileLeagueController = {
     }
 }
 
-const validateGetLeaguesForProfileRequest = (profileId: string): void => {
+const validateGetLeaguesForProfileRequest = (profileId: string | undefined): void => {
     if (!profileId) {
         throw errorFactory(INVALID_PROFILE_ID_ERROR)
     }

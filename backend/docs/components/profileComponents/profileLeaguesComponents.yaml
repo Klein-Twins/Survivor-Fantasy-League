@@ -1,5 +1,4 @@
 components:
-  examples:
   responses:
     GetProfileLeaguesSuccess:
       description: League created successfully

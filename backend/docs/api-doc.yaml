@@ -60,6 +60,9 @@ components:
     LogoutSuccessResponseSchema:
       $ref: "./components/authComponents.yaml#/components/responses/LogoutUserResponseSuccess"
 
+    ProfileLeaguesResponseSuccessSchema:
+      $ref: "./components/profileComponents/profileLeaguesComponents.yaml#/components/schemas/GetProfileLeaguesSuccessSchema"
+
   securitySchemes:
     accessTokenCookie:
       type: apiKey

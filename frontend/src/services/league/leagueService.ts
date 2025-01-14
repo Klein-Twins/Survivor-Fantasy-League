@@ -1,9 +1,5 @@
 import { AxiosResponse } from "axios";
-import {
-  CreateLeagueRequest,
-  CreateLeagueResponse,
-  GetLeaguesForProfileResponse,
-} from "../../../generated-api";
+import { InlineResponse2012, ProfileLeaguesBody, ProfileLeaguesResponseSuccessSchema } from "../../../generated-api";
 import api from "../apiContainer";
 
 const leagueService = {
@@ -11,27 +7,35 @@ const leagueService = {
     name: string,
     seasonId: number,
     profileId: string
-  ): Promise<CreateLeagueResponse> => {
-    const apiRequest: CreateLeagueRequest = {
+  ): Promise<any> => {
+    const requestBody: ProfileLeaguesBody = {
       name,
       seasonId: Number(seasonId),
       profileId,
     };
 
-    const response: AxiosResponse<CreateLeagueResponse> = await api.league.createLeague(
-      apiRequest,
+    const response: AxiosResponse<InlineResponse2012> = await api.profile.createLeague(
+      requestBody,
+      profileId,
+      undefined,
       { withCredentials: true }
     );
+
+    console.log("Logging createLeague response:")
+    console.log(response.data);
 
     return response.data;
   },
 
   getLeaguesForProfile: async (
     profileId: string
-  ): Promise<AxiosResponse<GetLeaguesForProfileResponse>> => {
-    return await api.league.getLeaguesForProfile(profileId, {
+  ): Promise<ProfileLeaguesResponseSuccessSchema> => {
+    const response = await api.profile.getLeaguesForProfile(profileId, {
       withCredentials: true,
     });
+
+    console.log(response.data);
+    return response.data;
   },
 };
 
