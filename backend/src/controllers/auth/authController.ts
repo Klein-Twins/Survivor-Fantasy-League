@@ -29,7 +29,7 @@ const authController = {
             // Get account
             const account: Account | null = await authService.login(formattedLoginRequestData);
             if (!account) {
-                throw errorFactory({ statusCode: 500 })
+                throw errorFactory({ error: "InternalServerError", statusCode: 500 })
             }
 
             res.locals.message = "User logged in successfully"

@@ -1,16 +1,16 @@
-import { CreateOptions } from "sequelize";
-import { models } from "../config/db";
+import { CreateOptions, Transaction } from "sequelize";
+import { models, sequelize } from "../config/db";
 import { LeagueAttributes } from "../models/League";
 import { InviteStatusEnum, LeagueProfileAttributes } from "../models/LeagueProfile";
 
 const leagueRepository = {
-    createLeague: async (seasonId: number, name: string, options: CreateOptions) : Promise<LeagueAttributes> => {
+    createLeague: async (seasonId: number, name: string, options: CreateOptions): Promise<LeagueAttributes> => {
         return await models.League.create({
             seasonId: seasonId,
             name: name
         }, options)
     },
-    findLeagueByLeagueId: async (leagueId: string) : Promise<LeagueAttributes | null> => {
+    findLeagueByLeagueId: async (leagueId: string): Promise<LeagueAttributes | null> => {
         return await models.League.findByPk(leagueId, {
             include: [{
                 model: models.Seasons,
@@ -18,20 +18,41 @@ const leagueRepository = {
             }]
         })
     },
-    createLeagueProfile: async (profileId: string, leagueId: string, role: string, inviteStatus: InviteStatusEnum, options: CreateOptions) : Promise<LeagueProfileAttributes> => {
+    createLeagueProfile: async (profileId: string, leagueId: string, role: string, inviteStatus: InviteStatusEnum, options?: CreateOptions): Promise<LeagueProfileAttributes> => {
         return await models.LeagueProfile.create({
             leagueId: leagueId,
             profileId: profileId,
             role: role,
             inviteStatus: inviteStatus
         }, options)
+
     },
-    findLeagueProfileByProfileId: async (profileId: string) : Promise<LeagueProfileAttributes[]> => {
+    findLeagueProfileByProfileId: async (profileId: string): Promise<LeagueProfileAttributes[]> => {
         return await models.LeagueProfile.findAll({
             where: {
                 profileId: profileId
             }
         })
+    },
+    isProfileInLeague: async (profileId: string, leagueId: string): Promise<boolean> => {
+        const inDatabase = await models.LeagueProfile.findOne({
+            where: {
+                profileId: profileId,
+                leagueId: leagueId,
+                inviteStatus: InviteStatusEnum.Accepted
+            }
+        })
+        return inDatabase !== undefined && inDatabase !== null;
+    },
+    isProfileInInvited: async (profileId: string, leagueId: string): Promise<boolean> => {
+        const inDatabase = await models.LeagueProfile.findOne({
+            where: {
+                profileId: profileId,
+                leagueId: leagueId,
+                inviteStatus: InviteStatusEnum.Pending
+            }
+        })
+        return inDatabase !== undefined && inDatabase !== null;
     }
 };
 

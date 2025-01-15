@@ -1,7 +1,7 @@
-import { APIResponseData } from "../api/apiResponseTypes";
+import { APIResponse } from "../api/apiResponseTypes";
 import { LeagueWithDetails } from "./leagueTypes";
 
-export interface CreateLeagueResponse extends APIResponseData {
+export interface CreateLeagueResponse extends APIResponse {
     league: LeagueWithDetails;
 }
 
@@ -11,6 +11,6 @@ export interface CreateLeagueRequest {
     profileId: string;
 }
 
-export interface GetLeaguesForProfileResponse extends APIResponseData {
+export interface GetLeaguesForProfileResponse extends APIResponse {
     leagues: LeagueWithDetails[];
 }

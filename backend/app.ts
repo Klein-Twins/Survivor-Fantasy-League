@@ -9,8 +9,8 @@ import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
 import routes from './src/routes/index.ts';
 
 const corsOptions: cors.CorsOptions = {
-    origin: 'http://localhost:5173', // Replace with frontend URL in production
-    credentials: true
+  origin: 'http://localhost:5173', // Replace with frontend URL in production
+  credentials: true
 };
 
 const app = express();
@@ -32,10 +32,16 @@ app.use('/images/survivors', express.static(path.join(__dirname, 'src/assets/ima
 
 app.use(errorHandler);
 
+// Add a route to handle the root URL
+app.get('/', (req, res) => {
+  res.send('Backend is running');
+});
+
+
 const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173", 
+    origin: "http://localhost:5173",
     methods: ["GET", "POST"],
     credentials: true,
   }
@@ -48,7 +54,7 @@ io.on('connection', (socket) => {
   console.log('The following profileId connected to socket: ' + profileId);
 
   userSockets.set(profileId as string, socket.id)
-  
+
   socket.on('disconnect', () => {
     console.log('The following profileId disconnected to socket: ' + profileId);
     userSockets.delete(profileId as string)

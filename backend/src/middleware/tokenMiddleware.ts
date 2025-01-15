@@ -10,6 +10,13 @@ const tokenMiddleware = {
     authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
         logger.debug('In tokenMiddleware.authenticateToken');
 
+        // Check if the environment variable to skip authentication is set
+        if (process.env.SKIP_AUTH === 'true') {
+            logger.debug('Skipping authentication due to environment variable');
+            res.locals.isAuthenticated = true;
+            return next();
+        }
+
         const accessToken: string = req.cookies.accessToken;
         const refreshToken: string = req.cookies.refreshToken;
         const profileId = req.query.profileId as string;

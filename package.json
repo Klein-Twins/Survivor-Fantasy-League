@@ -4,7 +4,8 @@
     "generate-client": "./generate-swagger-client.sh && node post-process-swagger-client.js",
     "backend": "npm run dev --prefix backend",
     "frontend": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "dev-with-build": "concurrently \"npm run backend\" \"wait-on --http-get-status 200,404 http://localhost:3000 && npm run generate-client && npm run frontend\""
   },
   "dependencies": {
     "@headlessui/react": "^2.2.0",
@@ -12,6 +13,7 @@
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
-    "@types/yamljs": "^0.2.34"
+    "@types/yamljs": "^0.2.34",
+    "wait-on": "^5.3.0"
   }
 }
