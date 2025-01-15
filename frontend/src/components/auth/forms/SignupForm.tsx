@@ -10,9 +10,10 @@ import { AppDispatch, RootState } from "../../../store/store";
 import { closeModal } from "../../../store/slices/modalSlice";
 import SubmitButton from "../../ui/forms/SubmitButton";
 import { SignUpFormData, validateSignUp } from "../../../utils/auth/formValidation";
+import Form from "../../ui/forms/Form";
 
 const SignupForm: React.FC = () => {
-    const responseError = useSelector((state: RootState) => state.auth.error);
+    const responseError = useSelector((state: RootState) => state.auth.error)?.message;
     const loading = useSelector((state: RootState) => state.auth.loading);
     const navigate = useNavigate();
     const dispatch = useDispatch<AppDispatch>();
@@ -40,7 +41,13 @@ const SignupForm: React.FC = () => {
     });
 
     return (
-        <form onSubmit={handleSubmit} className="mx-auto p-4 bg-white">
+        <Form 
+        title="Log In" 
+        onSubmit={handleSubmit} 
+        isSubmitDisabled={isSubmitDisabled} 
+        isLoading={loading}
+        submitError={responseError}
+        >
             <FormInput
                 label="Username"
                 name="username"
@@ -99,9 +106,7 @@ const SignupForm: React.FC = () => {
                 onBlur={() => handleBlur("lastName")}
                 error={errors.lastName}
             />
-            {responseError && <p className="text-red-500 text-center py-2">{responseError.message}</p>}
-            <SubmitButton loading={loading} disabled={isSubmitDisabled} label="Sign Up" />
-        </form>
+        </Form>
     );
 };
 

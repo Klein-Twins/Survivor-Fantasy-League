@@ -12,7 +12,7 @@ interface UseFormReturn<T extends Record<string, any>> {
     values: T;
     errors: Partial<Record<keyof T, string>>;
     touched: Partial<Record<keyof T, boolean>>;
-    handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+    handleChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
     handleBlur: (name: keyof T) => void;
     handleSubmit: (e: React.FormEvent) => void;
     isSubmitDisabled: boolean;
@@ -28,18 +28,21 @@ function useForm<T extends Record<string, any>>({
     const [errors, setErrors] = useState<Partial<Record<keyof T, string>>>({});
     const [touched, setTouched] = useState<Partial<Record<keyof T, boolean>>>({});
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+      ) => {
         const { name, value } = e.target;
+      
         setValues((prevValues) => ({ ...prevValues, [name]: value }));
-
+      
         if (touched[name as keyof T]) {
-            const validationErrors = validate({ ...values, [name]: value });
-            setErrors((prevErrors) => ({
-                ...prevErrors,
-                [name]: validationErrors[name as keyof T],
-            }));
+          const validationErrors = validate({ ...values, [name]: value });
+          setErrors((prevErrors) => ({
+            ...prevErrors,
+            [name]: validationErrors[name as keyof T],
+          }));
         }
-    };
+      };
 
     const handleBlur = (name: keyof T) => {
         setTouched((prev) => ({ ...prev, [name]: true }));

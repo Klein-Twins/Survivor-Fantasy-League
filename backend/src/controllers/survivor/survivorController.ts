@@ -1,10 +1,14 @@
 import survivorService from "../../servicesAndHelpers/survivor/survivorService";
 import { Request, Response, NextFunction } from "express";
 import { validateQuery } from "../../utils/survivor/survivorUtils";
+import logger from "../../config/logger";
 
 const survivorController = {
-    getSurvivorWithDetailsForSeason : async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const seasonId : any = req.query.seasonId;
+    getSurvivors: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const seasonId: any = req.query.seasonId;
+        const withDetails: any = req.query.withDetails;
+
+        logger.debug(`In survivorController.getSurvivors with query parameters seasonId=${seasonId} and withDetails=${withDetails}`);
 
         try {
             validateQuery(seasonId);

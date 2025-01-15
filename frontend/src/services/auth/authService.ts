@@ -1,55 +1,46 @@
 import axios from 'axios';
 import { LogInFormData, SignUpFormData } from '../../utils/auth/formValidation';
-import { Account } from '../../types/auth';
+import { UserSessionResponseSuccess } from '../../../generated-api';
 
 const API_URL = 'http://localhost:3000/api/auth';
 
-export const loginUserService = async (userData: LogInFormData) : Promise<{account:Account}> => {
-    const response = await axios.post(`${API_URL}/login`, userData, {withCredentials: true});
+export const loginUserService = async (userData: LogInFormData): Promise<UserSessionResponseSuccess> => {
+    const response = await axios.post(`${API_URL}/login`, userData, { withCredentials: true });
+    const numSecondsRefreshTokenExpiresIn = response.data.numSecondsRefreshTokenExpiresIn;
     const account = response.data.account;
-    return { account };
+    const message = response.data.message;
+    const isAuthenticated = response.data.isAuthenticated;
+    return { numSecondsRefreshTokenExpiresIn, account, message, isAuthenticated };
 };
 
-export const signupUserService = async (userData: SignUpFormData) : Promise<{account:Account}> => {
-    const response = await axios.post(`${API_URL}/signup`, userData, {withCredentials: true});
+export const signupUserService = async (userData: SignUpFormData): Promise<UserSessionResponseSuccess> => {
+    const response = await axios.post(`${API_URL}/signup`, userData, { withCredentials: true });
     const account = response.data.account;
-    return { account };
+    const numSecondsRefreshTokenExpiresIn = response.data.numSecondsRefreshTokenExpiresIn;
+    const message = response.data.message;
+    const isAuthenticated = response.data.isAuthenticated;
+    return { account, numSecondsRefreshTokenExpiresIn, message, isAuthenticated };
 };
 
 export const logoutUserService = async () => {
-    const response = await axios.post(`${API_URL}/logout`, {}, {withCredentials:true});
+    const response = await axios.post(`${API_URL}/logout`, {}, { withCredentials: true });
     return response.data;
 }
 
-interface TokenExpirationResponse {
-    remainingTime: number;
-}
-export const getRefreshTokenExpirationService = async () : Promise<TokenExpirationResponse | null> => {
-    try {
-        const response = await axios.get<TokenExpirationResponse>(`${API_URL}/refresh-token-expires-in`, {
-            withCredentials: true
-        });
-        return response.data;
-    } catch (error) {
-        console.error(`Failed to fetch token expiration: ${error}`);
-        return null;
-    }
+export const checkAuthService = async (profileId?: string): Promise<UserSessionResponseSuccess> => {
+    const response = await axios.get(`${API_URL}/check-auth`, { withCredentials: true, params: { profileId } });
+    const isAuthenticated = response.data.isAuthenticated;
+    const account = response.data.account;
+    const numSecondsRefreshTokenExpiresIn = response.data.numSecondsRefreshTokenExpiresIn;
+    const message = response.data.message;
+    return { isAuthenticated, account, numSecondsRefreshTokenExpiresIn, message }
 }
 
-interface CheckAuthResponse {
-    isAuthenticated: boolean
-}
-export const checkAuthService = async () : Promise<boolean> => {
-    const response = await axios.get<CheckAuthResponse>(`${API_URL}/check-auth`, {withCredentials:true});
-    return response.data.isAuthenticated;
-}
-
-export const extendSessionService = async () => {
-    try {
-        await axios.post(`${API_URL}/extendSession`, {}, { withCredentials: true });
-        return true;
-    } catch (error) {
-        console.error("Failed to extend session:", error);
-        return false;
-    }
+export const extendSessionService = async (profileId?: string): Promise<UserSessionResponseSuccess> => {
+    const response = await axios.post(`${API_URL}/extend-session`, {}, { withCredentials: true, params: { profileId } });
+    const isAuthenticated = response.data.isAuthenticated;
+    const account = response.data.account;
+    const numSecondsRefreshTokenExpiresIn = response.data.numSecondsRefreshTokenExpiresIn;
+    const message = response.data.message;
+    return { isAuthenticated, account, numSecondsRefreshTokenExpiresIn, message }
 };

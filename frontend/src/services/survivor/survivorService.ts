@@ -2,11 +2,11 @@ import axios from "axios";
 import { SurvivorDetails } from "../../types/survivorTypes";
 
 
-const API_URL = "http://localhost:3000/api/survivor"
+const API_URL = "http://localhost:3000/api"
 
-export const getSurvivorsWithDetailsBySeasonService = async (seasonId: number) : Promise<SurvivorDetails[]> => {
-    const response = await axios.get(`${API_URL}/survivorsWithDetailsBySeason?seasonId=${seasonId}`);
-    const survivorsWithDetailsList : SurvivorDetails[] = normalizeSurvivor(response.data);
+export const getSurvivorsWithDetailsBySeasonService = async (seasonId: number): Promise<SurvivorDetails[]> => {
+    const response = await axios.get(`${API_URL}/survivor?seasonId=${seasonId}&withDetails=true`);
+    const survivorsWithDetailsList: SurvivorDetails[] = normalizeSurvivor(response.data);
     return survivorsWithDetailsList;
 }
 
@@ -15,10 +15,10 @@ export const getSurvivorsWithDetailsBySeasonService = async (seasonId: number) :
  * @param data 
  * @returns A normalized list (setting age and season id to number types for example) of SurvivorDetails
  */
-const normalizeSurvivor = (data:any): SurvivorDetails[] => {
-    const survivorDetailsListFromResponse : any[] = data.survivors;
+const normalizeSurvivor = (data: any): SurvivorDetails[] => {
+    const survivorDetailsListFromResponse: any[] = data.survivors;
 
-    const normalizedSurvivorDetailsList = survivorDetailsListFromResponse.map((survivorDetails : any) : SurvivorDetails => {
+    const normalizedSurvivorDetailsList = survivorDetailsListFromResponse.map((survivorDetails: any): SurvivorDetails => {
         return {
             survivorId: survivorDetails.survivorId,
             firstName: survivorDetails.firstName,

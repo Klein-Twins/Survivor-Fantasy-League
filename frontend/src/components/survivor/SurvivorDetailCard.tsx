@@ -5,10 +5,10 @@ interface SurvivorDetailCardProps {
     survivor: SurvivorDetails
 }
 
-const SurvivorDetailCard: React.FC<SurvivorDetailCardProps> = ({survivor}) => {
+const SurvivorDetailCard: React.FC<SurvivorDetailCardProps> = ({ survivor }) => {
     return (
         <div className="flex flex-col md:flex-row md:h-auto">
-            <div className="h-1/2 w-full md:w-1/2 md:min-h-72 overflow-hidden rounded-md">
+            <div className="w-full md:w-1/2 md:min-h-72 overflow-hidden rounded-md">
                 <img
                     className="h-full w-full object-cover object-center rounded-lg"
                     src={`http://localhost:3000/${survivor.imageUrl}`}

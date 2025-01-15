@@ -3,7 +3,8 @@ import { models } from "../config/db";
 import logger from "../config/logger";
 import { UserAttributes } from '../models/User';
 import errorFactory from "../utils/errors/errorFactory";
-import { EMAIL_NOT_FOUND, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
+import { EMAIL_NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
+import { UnauthorizedError } from "../utils/errors/errors";
 
 const userRepository = {
 
@@ -65,19 +66,8 @@ const userRepository = {
      * @returns The user record if found.
      * @throws A 404 error if no user is found.
      */
-    findUserRecordByEmail: async (email: UserAttributes["email"]): Promise<UserAttributes> => {
-        try {
-            const userRecord = await models.User.findOne({ where: { email } });
-            if (!userRecord) {
-                logger.error(`User with email: ${email} does not exist in the database.`)
-                throw errorFactory(EMAIL_NOT_FOUND);
-            }
-            logger.debug(`User found by email: ${email}`);
-            return userRecord;
-        } catch (error) {
-            logger.error(`Failed to get user record by email ${email}: ${error}`);
-            throw error;
-        }
+    findUserRecordByEmail: async (email: UserAttributes["email"]): Promise<UserAttributes | null> => {
+        return await models.User.findOne({ where: { email } });
     },
 
     /**
@@ -99,6 +89,15 @@ const userRepository = {
             throw error;
         }
     },
+
+    getUserIdByProfileId: async (profileId: string): Promise<string | null> => {
+        const user = await models.User.findOne({
+            where: {
+                profileId: profileId
+            }
+        })
+        return user ? user.userId : null
+    }
 };
 
 export default userRepository;

@@ -4,7 +4,7 @@ import { PasswordAttributes } from "../models/Password";
 import { UserAttributes } from "../models/User";
 import errorFactory from "../utils/errors/errorFactory";
 import logger from "../config/logger";
-import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD } from "../constants/auth/responseErrorConstants";
+import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD_ERROR } from "../constants/auth/responseErrorConstants";
 
 const passwordRepository = {
 
@@ -27,7 +27,7 @@ const passwordRepository = {
                 where: { userId },
             });
             logger.debug(`maxPasswordSequResult=${maxPasswordSeqResult}`);
-            
+
             const newPasswordSeq = (typeof maxPasswordSeqResult === 'number' ? maxPasswordSeqResult : 0) + 1;
             logger.debug(`newPasswordSeq = ${newPasswordSeq}`);
 
@@ -128,7 +128,7 @@ const passwordRepository = {
 
         if (userPasswords.length === 0) {
             logger.error(`No active passwords for user id: ${userId}`);
-            throw errorFactory(PLEASE_RESET_PASSWORD);
+            throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
         }
 
         // Deactivate any extraneous active passwords

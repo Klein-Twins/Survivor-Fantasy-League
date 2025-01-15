@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useTokenExpiration } from '../../hooks/auth/useRefreshTokenExpiration';
+import { useRefreshToken } from '../../hooks/auth/useRefreshToken';
 
 interface ToastProps {
 }
 
 const ExtendSessionToast: React.FC<ToastProps> = () => {
 
-  const { isExpiringSoon, remainingTime, isLoading, extendSession } = useTokenExpiration();
+  const { isExpiringSoon, remainingTime, isLoading, extendSession } = useRefreshToken();
   const [hasNotified, setHasNotified] = useState<boolean>(false);
 
   function handleClose() {

@@ -1,0 +1,197 @@
+Login:
+  post:
+    operationId: loginUser
+    summary: "Authenticate a user"
+    description: >-
+      Logs in a user by validating their credentials.
+      Upon success:
+      - Access and refresh tokens are set in `Set-Cookie` headers.
+      - A success message and account details are returned in the response body.
+    tags:
+      - "Authentication"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/authComponents.yaml#/components/requestBodies/LoginUserRequest"
+    responses:
+      "200":
+        description: "User logged in successfully"
+        headers:
+          Set-Cookie:
+            $ref: "../components/securityComponents.yaml#/components/headers/AuthCookies"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
+      "401":
+        description: "Unauthorized - Invalid email or password"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/errorComponents.yaml#/components/schemas/UnauthorizedError"
+            examples:
+              invalidCredentials:
+                summary: Invalid credentials
+                value:
+                  statusCode: 401
+                  error: "Unauthorized"
+                  message: "Invalid username/password"
+
+      "500":
+        $ref: "../components/errorComponents.yaml#/components/responses/InternalServerError"
+
+Logout:
+  post:
+    operationId: logoutUser
+    summary: Log out a user
+    description: |
+      Logs out a user by invalidating their JWT tokens, clearing any session information, 
+      and removing cookies from the client.
+      - If the cookies are missing or tampered with, appropriate errors are returned.
+    tags:
+      - Authentication
+    parameters:
+      - $ref: "../components/securityComponents.yaml#/components/parameters/ProfileId"
+    responses:
+      "200":
+        description: User logged out successfully
+        content:
+          application/json:
+            schema:
+              $ref: "../components/authComponents.yaml#/components/responses/LogoutUserResponseSuccess"
+            examples:
+              success:
+                summary: Successful logout
+                value:
+                  message: "User logged out successfully. All session data has been cleared."
+
+      "401":
+        description: Unauthorized Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/errorComponents.yaml#/components/schemas/UnauthorizedError"
+            examples:
+              UnauthorizedError:
+                $ref: "../components/errorComponents.yaml#/components/examples/UnauthorizedError"
+
+      "500":
+        $ref: "../components/errorComponents.yaml#/components/responses/InternalServerError"
+    security:
+      - accessTokenCookie: []
+      - refreshTokenCookie: []
+
+Signup:
+  post:
+    operationId: signupUser
+    summary: Registers a new user account
+    description: |
+      Creates a new user account and returns authentication tokens via cookies.
+      Upon success:
+      - Access and refresh tokens are set in `Set-Cookie` headers.
+      - A success message and account details are returned in the response body.
+    tags:
+      - Authentication
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../components/authComponents.yaml#/components/requestBodies/SignupUserRequest"
+    responses:
+      "201":
+        description: User created and authenticated successfully
+        headers:
+          Set-Cookie:
+            $ref: "../components/securityComponents.yaml#/components/headers/AuthCookies"
+        content:
+          application/json:
+            schema:
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
+            examples:
+              success:
+                summary: Successful response
+                value:
+                  message: "User signed up successfully"
+                  account:
+                    userName: "SurvivorFan69"
+                    profileId: "unique-profile-id"
+                    email: "user@example.com"
+                    imageUrl: "assets/images/profileImages/default.jpg"
+                    firstName: "Jeff"
+                    lastName: "Probst"
+                  numSecondsRefreshTokenExpiresIn: 1800
+                  isAuthenticated: true
+      "400":
+        description: Invalid input data
+        content:
+          application/json:
+            schema:
+              $ref: "../components/errorComponents.yaml#/components/schemas/BadRequestError"
+            examples:
+              missingEmail:
+                summary: Missing email error
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Missing email"
+              missingUserName:
+                summary: Missing userName error
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Missing userName"
+              missingPassword:
+                summary: Missing password error
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Missing password"
+              weakPassword:
+                summary: Weak password error
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Password is too weak"
+              invalidEmail:
+                summary: Invalid email error
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Invalid email"
+              invalidUserName:
+                summary: Invalid userName error
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Invalid user name - must be characters and numbers - no spaces"
+              invalidName:
+                summary: Invalid name error
+                value:
+                  statusCode: 400
+                  error: "Bad Request"
+                  message: "Invalid name - must be characters with spaces allowed"
+
+      "409":
+        description: Conflict - Email or username already exists
+        content:
+          application/json:
+            schema:
+              $ref: "../components/errorComponents.yaml#/components/schemas/ConflictError"
+            examples:
+              emailConflict:
+                summary: Email conflict
+                value:
+                  statusCode: 409
+                  error: "Conflict"
+                  message: "Email already tied to an account"
+              userNameConflict:
+                summary: userName conflict
+                value:
+                  statusCode: 409
+                  error: "Conflict"
+                  message: "Username already tied to an account"
+      "500":
+        $ref: "../components/errorComponents.yaml#/components/responses/InternalServerError"

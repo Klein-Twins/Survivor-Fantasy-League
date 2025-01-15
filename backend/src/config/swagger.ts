@@ -4,7 +4,8 @@ import { APP_HOST, APP_PORT, APP_PROTOCOL } from './config';
 import YAML from 'yamljs';
 import path from 'path';
 
-const swaggerDocument = YAML.load(path.join(__dirname, '../../docs/api-doc.yaml'));
+//const swaggerDocument = YAML.load(path.join(__dirname, '../../docs/api-doc.yaml'));
+const swaggerDocument = YAML.load(path.join(__dirname, '../../docs/bundled-api-doc.yaml'));
 
 
 // Define the swagger definition with proper TypeScript types
@@ -57,6 +58,7 @@ const options: {
 } = {
     swaggerDefinition: swaggerDocument,
     apis: [
+
     ],
 };
 

@@ -1,27 +1,42 @@
 import { AxiosResponse } from "axios";
-import {
-  CreateLeagueRequest,
-  CreateLeagueResponse,
-  GetLeaguesForProfileResponse,
-} from "../../../generated-api";
+import { InlineResponse2012, ProfileLeaguesBody, ProfileLeaguesResponseSuccessSchema } from "../../../generated-api";
 import api from "../apiContainer";
 
 const leagueService = {
   createLeague: async (
     name: string,
-    seasonId: string,
+    seasonId: number,
     profileId: string
-  ): Promise<AxiosResponse<CreateLeagueResponse>> => {
-    const apiRequest: CreateLeagueRequest = {
-      name: name,
+  ): Promise<any> => {
+    const requestBody: ProfileLeaguesBody = {
+      name,
       seasonId: Number(seasonId),
-      profileId: profileId
+      profileId,
     };
-    return await api.league.createLeague(apiRequest, {withCredentials: true});
+
+    const response: AxiosResponse<InlineResponse2012> = await api.profile.createLeague(
+      requestBody,
+      profileId,
+      undefined,
+      { withCredentials: true }
+    );
+
+    console.log("Logging createLeague response:")
+    console.log(response.data);
+
+    return response.data;
   },
-  getLeaguesForProfile: async (profileId: string): Promise<AxiosResponse<GetLeaguesForProfileResponse>> => {
-    return await api.league.getLeaguesForProfile(profileId, {withCredentials: true})
-  }
+
+  getLeaguesForProfile: async (
+    profileId: string
+  ): Promise<ProfileLeaguesResponseSuccessSchema> => {
+    const response = await api.profile.getLeaguesForProfile(profileId, {
+      withCredentials: true,
+    });
+
+    console.log(response.data);
+    return response.data;
+  },
 };
 
 export default leagueService;

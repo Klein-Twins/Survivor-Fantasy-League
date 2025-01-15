@@ -5,7 +5,7 @@ import passwordRepository from '../../repositories/passwordRepository';
 import errorFactory from '../../utils/errors/errorFactory';
 import passwordHelper from './passwordHelper';
 import logger from '../../config/logger';
-import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD, WEAK_PASSWORD_ERROR } from '../../constants/auth/responseErrorConstants';
+import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD_ERROR, WEAK_PASSWORD_ERROR } from '../../constants/auth/responseErrorConstants';
 import { AccountAndPassword } from '../../types/auth/authTypes';
 
 /**
@@ -63,7 +63,7 @@ const passwordService = {
 
         if (!activePassword) {
             logger.error(`No active password for user ${user.userId} found...`);
-            throw errorFactory(PLEASE_RESET_PASSWORD);
+            throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
         }
 
         // Compare the provided password with the stored password

@@ -6,7 +6,8 @@
   "scripts": {
     "install-dependencies": "npm install",
     "test": "jest",
-    "dev": "ts-node index.ts"
+    "bundle-swagger": "npx swagger-cli bundle ./docs/api-doc.yaml -o ./docs/bundled-api-doc.yaml --dereference --type yaml",
+    "dev": "npm run bundle-swagger && ts-node index.ts"
   },
   "author": "",
   "license": "ISC",
@@ -26,6 +27,7 @@
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.5",
     "sfl-nodejs-app": "file:",
+    "socket.io": "^4.8.1",
     "sqlite3": "^5.1.7",
     "stack-trace": "^1.0.0-pre2",
     "stacktrace-js": "^2.0.2",

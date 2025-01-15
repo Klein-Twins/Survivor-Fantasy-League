@@ -7,13 +7,17 @@ import { Response } from 'express';
 import { TokenType, UserJwtPayload } from '../../types/auth/tokenTypes';
 import { ProfileAttributes } from '../../models/Profile';
 import { UserAttributes } from '../../models/User';
+import userService from '../user/userService';
+import accountService from './accountService';
+import errorFactory from '../../utils/errors/errorFactory';
+import { INTERNAL_SERVER_ERROR, UNAUTHORIZED_ERROR } from '../../constants/auth/responseErrorConstants';
 
 
 export const blacklistedTokens = new Set<string>();
 
 
-const getTokenSecret = (tokenType : TokenType) => {
-    if(tokenType == 'access') {
+const getTokenSecret = (tokenType: TokenType) => {
+    if (tokenType == 'access') {
         return JWT_ACCESS_SECRET;
     } else {
         return JWT_REFRESH_SECRET;
@@ -21,7 +25,7 @@ const getTokenSecret = (tokenType : TokenType) => {
 }
 
 const getTokenExpiresIn = (tokenType: TokenType) => {
-    if(tokenType == 'access') { 
+    if (tokenType == 'access') {
         return JWT_ACCESS_EXPIRATION;
     } else {
         return JWT_REFRESH_EXPIRATION;
@@ -34,77 +38,111 @@ const getTokenExpiresIn = (tokenType: TokenType) => {
 const tokenService = {
 
     createToken: (payload: UserJwtPayload, tokenType: TokenType): string => {
-        return jwt.sign({userId : payload.userId}, getTokenSecret(tokenType), {expiresIn: getTokenExpiresIn(tokenType)});
+        return jwt.sign({ userId: payload.userId, profileId: payload.profileId }, getTokenSecret(tokenType), { expiresIn: getTokenExpiresIn(tokenType) });
     },
 
-    findTokenRecordByRefreshToken: async (refreshToken: string) : Promise<TokenAttributes | null> => {
-        return await tokenRepository.getTokenRecordByRefreshToken(refreshToken);
-    },
-
-    findTokenRecordByAccessToken: async (accessToken: string) : Promise<TokenAttributes | null> => {
-        return await tokenRepository.getTokenRecordByAccessToken(accessToken);
-    },
-
-    createTokenRecordWithAccessAndRefreshTokens: async (accessToken: string, refreshToken: string, userId: string) => {
+    isTokenExpired: async (token: string, tokenType: TokenType): Promise<boolean> => {
         try {
-            return await tokenRepository.createTokenRecordWithAccessAndRefreshTokens(accessToken, refreshToken, userId);
-        } catch (error) {
-            logger.error(`Could not persist token record with (accessToken, refreshToken, userId) (${accessToken}, ${refreshToken}, ${userId}) to DB`)
-        }
-    },
-
-    updateAccessTokenInTokenTableWithNewAccessToken : async (userId: string, accessToken : string) => {
-        await tokenRepository.updateAccessTokenInTokenTableWithNewAccessToken(userId, accessToken)
-    },
-
-    deleteTokenRecordsByUserId: async (userId: string) : Promise<number> => {
-        return await tokenRepository.deleteTokenRecordsByUserId(userId);
-    },
-
-    deleteTokenRecordsByRefreshToken: async (refreshToken: string) : Promise<number> => {
-        return await tokenRepository.deleteTokenRecordsByRefreshToken(refreshToken)
-    },
-
-    validateTokenAndPromiseDecode: async (token: string, tokenType: TokenType): Promise<UserJwtPayload | null> => {
-        try {
-            const decoded = await jwt.verify(token, getTokenSecret(tokenType)) as UserJwtPayload;
-            logger.debug(`${tokenType} token is valid`);
-            return decoded;
+            await jwt.verify(token, getTokenSecret(tokenType));
+            return false;
         } catch (err) {
-            logger.debug(`${tokenType} token is invalid: ${err}`);
-            return null;
+            return true;
         }
     },
 
-    createAndAttachTokensToResponse: async (userId: UserAttributes['userId'], profileId: ProfileAttributes['profileId'], res: Response) => {
-        const accessToken = tokenService.createToken({ userId, profileId }, 'access');
-        const refreshToken = tokenService.createToken({ userId, profileId }, 'refresh');
-    
-        await tokenService.deleteTokenRecordsByUserId(userId);
-        await tokenService.createTokenRecordWithAccessAndRefreshTokens(accessToken, refreshToken, userId);
-    
-        tokenService.attachTokensToResponse({accessToken, refreshToken}, res);
+    verifyTokensInDatabase: async (accessToken: string, refreshToken: string, userId: string): Promise<boolean> => {
+        const accessTokenInDB = await tokenRepository.verifyTokenWithUserIdInDatabase(accessToken, userId, 'access');
+        const refreshTokenInDB = await tokenRepository.verifyTokenWithUserIdInDatabase(refreshToken, userId, 'refresh');
+
+        return accessTokenInDB && refreshTokenInDB;
     },
 
-    attachTokensToResponse: (tokens: {accessToken? : string, refreshToken? : string}, res: Response) => {
-        if (tokens.accessToken) {
-            logger.debug(`Setting access token as a cookie\n${tokens.accessToken}`);
-            res.cookie('accessToken', tokens.accessToken, {
+    createAndAttachTokenToResponse: async (userId: UserAttributes['userId'], profileId: ProfileAttributes['profileId'], tokenType: TokenType, res: Response) => {
+        const token = tokenService.createToken({ userId, profileId }, tokenType);
+        await tokenRepository.upsertTokenIntoDatabase(token, userId, tokenType);
+        tokenService.attachTokenToResponse(token, tokenType, res);
+        return token;
+    },
+
+    createAndAttachTokensToResponse: async (userId: UserAttributes['userId'], profileId: ProfileAttributes['profileId'], res: Response): Promise<{ accessToken: string, refreshToken: string }> => {
+        const accessToken = await tokenService.createAndAttachTokenToResponse(userId, profileId, 'access', res);
+        const refreshToken = await tokenService.createAndAttachTokenToResponse(userId, profileId, 'refresh', res);
+        return { accessToken, refreshToken };
+    },
+
+    numSecondsTokenIsValid: (token: string): number => {
+        const decodedToken = jwt.decode(token) as UserJwtPayload | null;
+        if (!decodedToken || !decodedToken.exp) {
+            logger.error("Cannot decode token for calculating number of seconds the token is valid for.");
+            throw errorFactory(INTERNAL_SERVER_ERROR);
+        }
+        return decodedToken.exp - Math.floor(Date.now() / 1000);
+    },
+
+    attachTokenToResponse: (token: string, tokenType: TokenType, res: Response) => {
+        if (tokenType === 'access') {
+            logger.debug(`Setting access token as a cookie\n${token}`);
+            res.cookie('accessToken', token, {
                 httpOnly: true,
                 secure: NODE_ENV === 'production',
                 sameSite: 'strict'
             });
         }
-        if (tokens.refreshToken) {
-            logger.debug(`Setting refresh token as a cookie\n${tokens.refreshToken}`);
-            res.cookie('refreshToken', tokens.refreshToken, {
+        if (tokenType === 'refresh') {
+            logger.debug(`Setting refresh token as a cookie\n${token}`);
+            res.cookie('refreshToken', token, {
                 httpOnly: true,
                 secure: NODE_ENV === 'production',
                 sameSite: 'strict'
             });
         }
+    },
+
+    clearAllTokenData: async (
+        tokenData: {
+            accessTokenDecoded: UserJwtPayload | null,
+            refreshTokenDecoded: UserJwtPayload | null,
+            profileIdReqParam?: string,
+            refreshToken?: string,
+            accessToken?: string
+        }): Promise<number> => {
+
+        let numSessionsDeleted = 0;
+        try {
+            if (tokenData.accessTokenDecoded != null) {
+                const profileId = tokenData.accessTokenDecoded.profileId;
+                const userId = tokenData.accessTokenDecoded.userId
+
+                numSessionsDeleted += await tokenRepository.deleteTokenRecordsByUserId(userId);
+                numSessionsDeleted += await tokenRepository.deleteTokenRecordsByProfileId(profileId);
+            }
+            if (tokenData.refreshTokenDecoded != null) {
+                const profileId = tokenData.refreshTokenDecoded.profileId;
+                const userId = tokenData.refreshTokenDecoded.userId;
+
+                numSessionsDeleted += await tokenRepository.deleteTokenRecordsByUserId(userId);
+                numSessionsDeleted += await tokenRepository.deleteTokenRecordsByProfileId(profileId);
+            }
+            if (tokenData.profileIdReqParam != null) {
+                const profileId = tokenData.profileIdReqParam;
+
+                numSessionsDeleted += await tokenRepository.deleteTokenRecordsByProfileId(profileId);
+            }
+            if (tokenData.refreshToken != null) {
+                const refreshToken = tokenData.refreshToken;
+
+                numSessionsDeleted += await tokenRepository.deleteTokenRecordsByToken(refreshToken, 'refresh');
+            }
+            if (tokenData.accessToken != null) {
+                const accessToken = tokenData.accessToken;
+
+                numSessionsDeleted += await tokenRepository.deleteTokenRecordsByToken(accessToken, 'refresh');
+            }
+        } catch (error) {
+            logger.error("Caught error during extensiveLogout forced repository calls.");
+        }
+        return numSessionsDeleted;
     }
-
 };
 
 export default tokenService;

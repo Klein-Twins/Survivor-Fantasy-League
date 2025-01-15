@@ -1,0 +1,15 @@
+ApiResponse:
+  type: object
+  required:
+    - success
+    - message
+  properties:
+    success:
+      type: boolean
+      example: true
+    message:
+      type: string
+      example: "Operation completed succesfully."
+    data:
+      type: object
+      additionalProperties: true

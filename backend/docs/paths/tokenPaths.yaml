@@ -1,0 +1,72 @@
+CheckAuth:
+  get:
+    summary: Validate refresh token authenticity
+    operationId: checkAuth
+    description: |
+      This endpoint verifies if the refresh token is valid. It is used to confirm 
+      the user's authentication status, such as during a page reload. Requires the 
+      refresh token cookie and the associated profile ID as input.
+    tags:
+      - Token
+    parameters:
+      - $ref: "../components/securityComponents.yaml#/components/parameters/ProfileId"
+    responses:
+      "200":
+        description: User authentication status retrieved successfully.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
+
+      "401":
+        description: Unauthorized Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/errorComponents.yaml#/components/schemas/UnauthorizedError"
+            examples:
+              UnauthorizedError:
+                $ref: "../components/errorComponents.yaml#/components/examples/UnauthorizedError"
+
+      "500":
+        $ref: "../components/errorComponents.yaml#/components/responses/InternalServerError"
+    security:
+      - refreshTokenCookie: []
+
+ExtendSession:
+  post:
+    summary: Extend user session
+    operationId: extendSession
+    description: |
+      Extends the user session by generating a new refresh token and access token, 
+      if the refresh token is valid. The response includes both tokens set as cookies 
+      and a time-to-expiry value for the refresh token.
+    tags:
+      - Token
+    parameters:
+      - $ref: "../components/securityComponents.yaml#/components/parameters/ProfileId"
+    responses:
+      "200":
+        description: User session extended successfully.
+        content:
+          application/json:
+            schema:
+              $ref: "../components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
+        headers:
+          Set-Cookie:
+            $ref: "../components/securityComponents.yaml#/components/headers/AuthCookies"
+
+      "401":
+        description: Unauthorized Error
+        content:
+          application/json:
+            schema:
+              $ref: "../components/errorComponents.yaml#/components/schemas/UnauthorizedError"
+            examples:
+              UnauthorizedError:
+                $ref: "../components/errorComponents.yaml#/components/examples/UnauthorizedError"
+
+      "500":
+        $ref: "../components/errorComponents.yaml#/components/responses/InternalServerError"
+    security:
+      - refreshTokenCookie: []

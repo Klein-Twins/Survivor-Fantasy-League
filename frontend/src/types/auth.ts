@@ -7,12 +7,14 @@ export interface AuthState {
     account: Account | null;
     isAuthenticated: boolean;
     loading: boolean;
-    error: ResponseError | null
+    error: ResponseError | null;
+    sessionEndTime: number | null;
 }
 
 export interface ResponseError {
     message: string;
     statusCode: number;
+    error: string;
 }
 
 export type Account = {

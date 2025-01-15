@@ -1,12 +1,13 @@
 {
   "scripts": {
     "install-dependencies": "npm install && npm run install-dependencies --prefix backend && npm run install-dependencies --prefix frontend",
-    "generate-client": "./generate-swagger-client.sh",
+    "generate-client": "./generate-swagger-client.sh && node post-process-swagger-client.js",
     "backend": "npm run dev --prefix backend",
     "frontend": "npm start --prefix frontend",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "concurrently": "^9.1.0",
     "yamljs": "^0.3.0"
   },

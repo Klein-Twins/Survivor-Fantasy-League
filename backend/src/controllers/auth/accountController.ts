@@ -3,7 +3,7 @@ import { Account, SignupRequestFields } from "../../types/auth/authTypes";
 import accountService from "../../servicesAndHelpers/auth/accountService";
 import logger from "../../config/logger";
 import { formatSignupData, validateSignupData } from "../../utils/auth/accountUtils";
-import httpStatusCodes from 'http-status-codes';
+import errorFactory from "../../utils/errors/errorFactory";
 
 
 const accountController = {
@@ -25,12 +25,15 @@ const accountController = {
             const formattedSignupRequestData = formatSignupData(signupRequestData);
 
             //Create account
+            logger.debug("Attempting to create account");
             const account: Account = await accountService.createAccount(formattedSignupRequestData);
             if (!account) {
-                res.sendStatus(httpStatusCodes.INTERNAL_SERVER_ERROR)
+                throw errorFactory({ statusCode: 500 })
             }
 
+            res.locals.message = "User signed up successfully"
             res.locals.account = account;
+            res.status(201);
             next();
         } catch (error) {
             logger.error(`Error in creating account: ${error}`);

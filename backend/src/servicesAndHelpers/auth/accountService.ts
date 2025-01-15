@@ -4,7 +4,7 @@ import accountRepository from '../../repositories/accountRepository';
 import userRepository from '../../repositories/userRepository';
 import errorFactory from '../../utils/errors/errorFactory';
 import { UserAttributes } from '../../models/User';
-import { EMAIL_UNAVAILABLE, USERNAME_UNAVAILABLE } from '../../constants/auth/responseErrorConstants';
+import { EMAIL_UNAVAILABLE_ERROR, USERNAME_UNAVAILABLE_ERROR } from '../../constants/auth/responseErrorConstants';
 import logger from '../../config/logger';
 
 /**
@@ -37,10 +37,10 @@ const accountService = {
             imageUrl: 'TBD',
             PASSWORD: fields.password,
         };
-        
-        const {profileRecord, userRecord} = await accountRepository.createAccount(accountAndPassword);
 
-        const account : Account = {
+        const { profileRecord, userRecord } = await accountRepository.createAccount(accountAndPassword);
+
+        const account: Account = {
             profileId: profileRecord.profileId,
             userId: userRecord.userId,
             email: userRecord.email,
@@ -53,8 +53,8 @@ const accountService = {
         return account;
     },
 
-    getAccountForResponse: (account : Account): AccountForResponses => {
-        const { userId, ...accountForResponse} = account;
+    getAccountForResponse: (account: Account): AccountForResponses => {
+        const { userId, ...accountForResponse } = account;
         return accountForResponse;
     },
 
@@ -70,13 +70,13 @@ const accountService = {
         // Check if the email is available
         if (!(await userRepository.isEmailAvailable(email))) {
             logger.debug(`${email} is unavailable`)
-            throw errorFactory(EMAIL_UNAVAILABLE);
+            throw errorFactory(EMAIL_UNAVAILABLE_ERROR);
         }
 
         // Check if the username is available
         if (!(await userRepository.isUsernameAvailable(username))) {
             logger.debug(`${username} is unavailable`)
-            throw errorFactory(USERNAME_UNAVAILABLE);
+            throw errorFactory(USERNAME_UNAVAILABLE_ERROR);
         }
     },
 
@@ -86,10 +86,19 @@ const accountService = {
      * @param email - The email of the account to retrieve.
      * @returns A promise that resolves to the account details.
      */
-    getAccountByEmail: async (email: UserAttributes["email"]): Promise<Account> => {
-        const account: UserIncludeProfile = await accountRepository.getAccountByEmail(email);
+    getAccount: async (params: { email?: UserAttributes["email"], profileId?: UserAttributes["profileId"] }): Promise<Account | null> => {
 
-        const formattedAccount : Account = {
+        if (!params.email && !params.profileId) {
+            logger.error("Called accountService.getAccount(params) without any defined params.");
+            return null;
+        }
+
+        const account: UserIncludeProfile | null = await accountRepository.getAccount(params);
+        if (account === null) {
+            return null;
+        }
+
+        const formattedAccount: Account = {
             userId: account.userId,
             userName: account.userName,
             profileId: account.profileId,
@@ -98,8 +107,6 @@ const accountService = {
             lastName: account.profile.lastName,
             imageUrl: account.profile.imageUrl
         }
-        
-        logger.debug(formattedAccount);
 
         return formattedAccount;
     },
