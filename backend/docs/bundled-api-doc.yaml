@@ -168,12 +168,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 400
+                        type: integer
                         example: 400
                       error:
-                        enum:
-                          - Bad Request
+                        type: string
                         example: Bad Request
                       message:
                         example: The request contains invalid or missing parameters.
@@ -247,12 +245,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 409
+                        type: integer
                         example: 409
                       error:
-                        enum:
-                          - Conflict
+                        type: string
                         example: Conflict
                       message:
                         example: The resource already exists or conflicts with another resource.
@@ -296,12 +292,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -437,12 +431,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -480,12 +472,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -527,8 +517,6 @@ paths:
                   message:
                     type: string
                     description: Success message for logout
-                    enum:
-                      - User logged out successfully. All session data has been cleared.
                     example: User logged out successfully. All session data has been cleared.
               examples:
                 success:
@@ -562,12 +550,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -605,12 +591,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -727,12 +711,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -770,12 +752,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -903,12 +883,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -946,12 +924,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -1099,12 +1075,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -1142,12 +1116,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -1213,7 +1185,54 @@ paths:
                 type: object
                 properties:
                   league:
-                    $ref: '#components/schemas/League'
+                    type: object
+                    required:
+                      - leagueId
+                      - seasonId
+                      - name
+                      - season
+                    properties:
+                      leagueId:
+                        type: integer
+                        description: The unique identifier of the newly created league
+                        example: 1
+                      seasonId:
+                        type: integer
+                        description: The ID of the season associated with the league
+                        example: 47
+                      name:
+                        type: string
+                        description: The name of the league
+                        example: Corner By The Bookshelf
+                      createdAt:
+                        type: string
+                        format: date-time
+                        description: The timestamp when the league was created
+                        example: '2024-11-10T16:35:09.034Z'
+                      updatedAt:
+                        type: string
+                        format: date-time
+                        description: The timestamp when the league was last updated
+                        example: '2024-11-10T16:35:09.034Z'
+                      season:
+                        type: object
+                        properties:
+                          seasonId:
+                            type: integer
+                            description: The unique identifier of the season
+                            example: 47
+                          theme:
+                            type: string
+                            description: The theme of the season
+                            example: The New Era 2.0
+                          location:
+                            type: string
+                            description: The location of the season
+                            example: 'Fiji, Oceania'
+                          name:
+                            type: string
+                            description: The name of the season (optional)
+                            example: null
                   statusCode:
                     type: integer
                     description: The HTTP status code indicating the result of the operation
@@ -1249,12 +1268,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 400
+                        type: integer
                         example: 400
                       error:
-                        enum:
-                          - Bad Request
+                        type: string
                         example: Bad Request
                       message:
                         example: The request contains invalid or missing parameters.
@@ -1298,12 +1315,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -1341,12 +1356,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 404
+                        type: integer
                         example: 404
                       error:
-                        enum:
-                          - Not Found
+                        type: string
                         example: Not Found
                       message:
                         example: The requested resource was not found.
@@ -1383,12 +1396,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -1439,8 +1450,6 @@ paths:
                     properties:
                       message:
                         type: string
-                        enum:
-                          - Survivors with details successfully retrieved
                         example: Survivors with details successfully retrieved
                       survivorsWithDetails:
                         type: array
@@ -1515,8 +1524,6 @@ paths:
                     properties:
                       message:
                         type: string
-                        enum:
-                          - Survivors successfully retrieved
                         example: Survivors successfully retrieved
                       survivors:
                         type: array
@@ -1607,12 +1614,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 404
+                        type: integer
                         example: 404
                       error:
-                        enum:
-                          - Not Found
+                        type: string
                         example: Not Found
                       message:
                         example: The requested resource was not found.
@@ -1654,12 +1659,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -1867,12 +1870,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 400
+                        type: integer
                         example: 400
                       error:
-                        enum:
-                          - Bad Request
+                        type: string
                         example: Bad Request
                       message:
                         example: The request contains invalid or missing parameters.
@@ -1916,12 +1917,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -1965,12 +1964,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -2075,12 +2072,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 400
+                        type: integer
                         example: 400
                       error:
-                        enum:
-                          - Bad Request
+                        type: string
                         example: Bad Request
                       message:
                         example: The request contains invalid or missing parameters.
@@ -2130,12 +2125,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 401
+                        type: integer
                         example: 401
                       error:
-                        enum:
-                          - Unauthorized
+                        type: string
                         example: Unauthorized
                       message:
                         example: Authentication is required or failed.
@@ -2179,12 +2172,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 409
+                        type: integer
                         example: 409
                       error:
-                        enum:
-                          - Conflict
+                        type: string
                         example: Conflict
                       message:
                         example: The resource already exists or conflicts with another resource.
@@ -2228,12 +2219,10 @@ paths:
                   - type: object
                     properties:
                       statusCode:
-                        enum:
-                          - 500
+                        type: integer
                         example: 500
                       error:
-                        enum:
-                          - Internal Server Error
+                        type: string
                         example: Internal Server Error
                       message:
                         example: An unexpected error occurred on the server.
@@ -2249,220 +2238,6 @@ paths:
         - AccessTokenCookie: []
 components:
   schemas:
-    Errors:
-      type: object
-      properties:
-        ApiError:
-          type: object
-          required:
-            - statusCode
-            - error
-            - message
-          properties:
-            statusCode:
-              type: integer
-              description: HTTP status code of the error
-              example: 400
-            error:
-              type: string
-              description: A short label or type of the error
-              example: Bad Request
-            message:
-              type: string
-              description: A detailed message explaining the error
-              example: 'Invalid input, missing required fields.'
-        BadRequestError:
-          allOf:
-            - type: object
-              required:
-                - statusCode
-                - error
-                - message
-              properties:
-                statusCode:
-                  type: integer
-                  description: HTTP status code of the error
-                  example: 400
-                error:
-                  type: string
-                  description: A short label or type of the error
-                  example: Bad Request
-                message:
-                  type: string
-                  description: A detailed message explaining the error
-                  example: 'Invalid input, missing required fields.'
-            - type: object
-              properties:
-                statusCode:
-                  enum:
-                    - 400
-                  example: 400
-                error:
-                  enum:
-                    - Bad Request
-                  example: Bad Request
-                message:
-                  example: The request contains invalid or missing parameters.
-        NotFoundError:
-          allOf:
-            - type: object
-              required:
-                - statusCode
-                - error
-                - message
-              properties:
-                statusCode:
-                  type: integer
-                  description: HTTP status code of the error
-                  example: 400
-                error:
-                  type: string
-                  description: A short label or type of the error
-                  example: Bad Request
-                message:
-                  type: string
-                  description: A detailed message explaining the error
-                  example: 'Invalid input, missing required fields.'
-            - type: object
-              properties:
-                statusCode:
-                  enum:
-                    - 404
-                  example: 404
-                error:
-                  enum:
-                    - Not Found
-                  example: Not Found
-                message:
-                  example: The requested resource was not found.
-        ConflictError:
-          allOf:
-            - type: object
-              required:
-                - statusCode
-                - error
-                - message
-              properties:
-                statusCode:
-                  type: integer
-                  description: HTTP status code of the error
-                  example: 400
-                error:
-                  type: string
-                  description: A short label or type of the error
-                  example: Bad Request
-                message:
-                  type: string
-                  description: A detailed message explaining the error
-                  example: 'Invalid input, missing required fields.'
-            - type: object
-              properties:
-                statusCode:
-                  enum:
-                    - 409
-                  example: 409
-                error:
-                  enum:
-                    - Conflict
-                  example: Conflict
-                message:
-                  example: The resource already exists or conflicts with another resource.
-        UnauthorizedError:
-          allOf:
-            - type: object
-              required:
-                - statusCode
-                - error
-                - message
-              properties:
-                statusCode:
-                  type: integer
-                  description: HTTP status code of the error
-                  example: 400
-                error:
-                  type: string
-                  description: A short label or type of the error
-                  example: Bad Request
-                message:
-                  type: string
-                  description: A detailed message explaining the error
-                  example: 'Invalid input, missing required fields.'
-            - type: object
-              properties:
-                statusCode:
-                  enum:
-                    - 401
-                  example: 401
-                error:
-                  enum:
-                    - Unauthorized
-                  example: Unauthorized
-                message:
-                  example: Authentication is required or failed.
-        ForbiddenError:
-          allOf:
-            - type: object
-              required:
-                - statusCode
-                - error
-                - message
-              properties:
-                statusCode:
-                  type: integer
-                  description: HTTP status code of the error
-                  example: 400
-                error:
-                  type: string
-                  description: A short label or type of the error
-                  example: Bad Request
-                message:
-                  type: string
-                  description: A detailed message explaining the error
-                  example: 'Invalid input, missing required fields.'
-            - type: object
-              properties:
-                statusCode:
-                  enum:
-                    - 403
-                  example: 403
-                error:
-                  enum:
-                    - Forbidden
-                  example: Forbidden
-                message:
-                  example: You do not have permission to perform this action.
-        InternalServerError:
-          allOf:
-            - type: object
-              required:
-                - statusCode
-                - error
-                - message
-              properties:
-                statusCode:
-                  type: integer
-                  description: HTTP status code of the error
-                  example: 400
-                error:
-                  type: string
-                  description: A short label or type of the error
-                  example: Bad Request
-                message:
-                  type: string
-                  description: A detailed message explaining the error
-                  example: 'Invalid input, missing required fields.'
-            - type: object
-              properties:
-                statusCode:
-                  enum:
-                    - 500
-                  example: 500
-                error:
-                  enum:
-                    - Internal Server Error
-                  example: Internal Server Error
-                message:
-                  example: An unexpected error occurred on the server.
     Account:
       type: object
       required:
@@ -2497,131 +2272,6 @@ components:
           type: string
           description: Last name of the user
           example: Probst
-    UserSessionResponseSuccess:
-      type: object
-      required:
-        - message
-        - account
-        - numSecondsRefreshTokenExpiresIn
-        - isAuthenticated
-      properties:
-        message:
-          type: string
-          description: Success message for auth
-          example: User signed up successfully
-        account:
-          type: object
-          required:
-            - userName
-            - profileId
-            - email
-            - imageUrl
-          properties:
-            userName:
-              type: string
-              description: The username of the account holder
-              example: SurvivorFan69
-            profileId:
-              type: string
-              description: Unique identifier for the profile
-              example: Unique-Profile-Id-String
-            email:
-              type: string
-              format: email
-              description: Email address associated with the account
-              example: user@example.com
-            imageUrl:
-              type: string
-              format: uri
-              description: URL to the profile image
-              example: assets/images/profileImages/genericProfileImage.jpg
-            firstName:
-              type: string
-              description: First name of the user
-              example: Jeff
-            lastName:
-              type: string
-              description: Last name of the user
-              example: Probst
-        numSecondsRefreshTokenExpiresIn:
-          type: number
-          description: Number of seconds the session is valid for
-          example: 1800
-        isAuthenticated:
-          type: boolean
-          example: true
-    LogoutSuccessResponseSchema:
-      type: object
-      required:
-        - message
-      properties:
-        message:
-          type: string
-          description: Success message for logout
-          enum:
-            - User logged out successfully. All session data has been cleared.
-          example: User logged out successfully. All session data has been cleared.
-    ProfileLeaguesResponseSuccessSchema:
-      type: object
-      required:
-        - leagues
-        - message
-      properties:
-        message:
-          type: string
-          description: Leagues sucessfully retrived for profile
-          example: Leagues for profile successfully retrieved
-        leagues:
-          type: array
-          items:
-            type: object
-            required:
-              - leagueId
-              - seasonId
-              - name
-              - season
-            properties:
-              leagueId:
-                type: integer
-                description: The unique identifier of the newly created league
-                example: 1
-              seasonId:
-                type: integer
-                description: The ID of the season associated with the league
-                example: 47
-              name:
-                type: string
-                description: The name of the league
-                example: Corner By The Bookshelf
-              createdAt:
-                type: string
-                format: date-time
-                description: The timestamp when the league was created
-                example: '2024-11-10T16:35:09.034Z'
-              updatedAt:
-                type: string
-                format: date-time
-                description: The timestamp when the league was last updated
-                example: '2024-11-10T16:35:09.034Z'
-              season:
-                type: object
-                properties:
-                  seasonId:
-                    type: integer
-                    description: The unique identifier of the season
-                    example: 47
-                  theme:
-                    type: string
-                    description: The theme of the season
-                    example: The New Era 2.0
-                  location:
-                    type: string
-                    description: The location of the season
-                    example: 'Fiji, Oceania'
-                  name:
-                    type: string
-                    description: The name of the season (optional)
-                    example: null
   securitySchemes:
     accessTokenCookie:
       type: apiKey

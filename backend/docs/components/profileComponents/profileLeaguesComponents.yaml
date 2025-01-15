@@ -59,7 +59,7 @@ components:
       type: object
       properties:
         league:
-          $ref: "#components/schemas/League"
+          $ref: "#/components/schemas/League"
         statusCode:
           type: integer
           description: The HTTP status code indicating the result of the operation

@@ -57,8 +57,6 @@ components:
         message:
           type: string
           description: Success message for logout
-          enum:
-            - "User logged out successfully. All session data has been cleared."
           example: "User logged out successfully. All session data has been cleared."
 
     UserCreateSessionResponseSuccess:

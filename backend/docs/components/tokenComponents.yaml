@@ -9,8 +9,6 @@ components:
         message:
           type: string
           description: Success message for session extension.
-          enum:
-            - "User session extended successfully."
           example: "User session extended successfully."
         numSecondsRefreshTokenExpiresIn:
           type: integer

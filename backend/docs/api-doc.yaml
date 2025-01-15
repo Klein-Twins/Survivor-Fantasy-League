@@ -35,33 +35,8 @@ paths:
   #   $ref: "./paths/notificationPaths.yaml#/MarkNotificationAsRead"
 components:
   schemas:
-    Errors:
-      type: object
-      properties:
-        ApiError:
-          $ref: "./components/errorComponents.yaml#/components/schemas/ApiError"
-        BadRequestError:
-          $ref: "./components/errorComponents.yaml#/components/schemas/BadRequestError"
-        NotFoundError:
-          $ref: "./components/errorComponents.yaml#/components/schemas/NotFoundError"
-        ConflictError:
-          $ref: "./components/errorComponents.yaml#/components/schemas/ConflictError"
-        UnauthorizedError:
-          $ref: "./components/errorComponents.yaml#/components/schemas/UnauthorizedError"
-        ForbiddenError:
-          $ref: "./components/errorComponents.yaml#/components/schemas/ForbiddenError"
-        InternalServerError:
-          $ref: "./components/errorComponents.yaml#/components/schemas/InternalServerError"
     Account:
       $ref: "./components/authComponents.yaml#/components/schemas/Account"
-
-    UserSessionResponseSuccess:
-      $ref: "./components/authComponents.yaml#/components/responses/UserCreateSessionResponseSuccess"
-    LogoutSuccessResponseSchema:
-      $ref: "./components/authComponents.yaml#/components/responses/LogoutUserResponseSuccess"
-
-    ProfileLeaguesResponseSuccessSchema:
-      $ref: "./components/profileComponents/profileLeaguesComponents.yaml#/components/schemas/GetProfileLeaguesSuccessSchema"
 
   securitySchemes:
     accessTokenCookie:

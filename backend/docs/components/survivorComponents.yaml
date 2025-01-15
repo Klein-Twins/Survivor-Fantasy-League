@@ -8,8 +8,6 @@ components:
       properties:
         message:
           type: string
-          enum:
-            - "Survivors with details successfully retrieved"
           example: "Survivors with details successfully retrieved"
         survivorsWithDetails:
           type: array
@@ -89,8 +87,6 @@ components:
       properties:
         message:
           type: string
-          enum:
-            - "Survivors successfully retrieved"
           example: "Survivors successfully retrieved"
         survivors:
           type: array
