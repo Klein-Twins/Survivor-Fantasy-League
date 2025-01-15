@@ -7,6 +7,7 @@ import { LeagueInviteRequest, LeagueInviteResponse } from "../../types/league/le
 import errorFactory from "../../utils/errors/errorFactory";
 import profileService from "../profile/profileService";
 import userService from "../user/userService";
+import { checkInviteeConflict, validateInviteeProfile, validateInviterInLeague, validateInviterProfile, validateLeague } from "./leagueHelper";
 
 const leagueService = {
   createLeague: async (
@@ -74,38 +75,9 @@ const leagueService = {
   inviteProfileToLeague: async (leagueInviteRequest: LeagueInviteRequest): Promise<LeagueInviteResponse> => {
 
     try {
-      //Check league exists
-      const leagueAttributes: LeagueAttributes | null = await leagueRepository.findLeagueByLeagueId(leagueInviteRequest.leagueId);
-      if (!leagueAttributes) {
-        return {
-          statusCode: 404,
-          message: `League with league id ${leagueInviteRequest.leagueId} not found`,
-          success: false,
-          error: "Not Found"
-        }
-      }
-
-      //Check inviterProfile exists
-      const inviterUserId: string | null = await userService.getUserIdByProfileId(leagueInviteRequest.inviterProfileId);
-      if (!inviterUserId) {
-        return {
-          statusCode: 404,
-          message: `Inviter Profile with profile id ${leagueInviteRequest.inviterProfileId} not found`,
-          success: false,
-          error: "Not Found"
-        }
-      }
-
-      //Check inviterProfile is in league
-      const isProfileInLeague: boolean = await leagueRepository.isProfileInLeague(leagueInviteRequest.inviterProfileId, leagueInviteRequest.leagueId);
-      if (!isProfileInLeague) {
-        return {
-          statusCode: 401,
-          message: `Inviter Profile with profile id ${leagueInviteRequest.inviterProfileId} is not in league with league id ${leagueInviteRequest.leagueId}`,
-          success: false,
-          error: "Unauthorized"
-        }
-      }
+      await validateLeague(leagueInviteRequest.leagueId);
+      await validateInviterProfile(leagueInviteRequest.inviterProfileId);
+      await validateInviterInLeague(leagueInviteRequest.inviterProfileId, leagueInviteRequest.leagueId);
 
       if (leagueInviteRequest.inviteeProfileId === leagueInviteRequest.inviterProfileId) {
         return {
@@ -116,36 +88,8 @@ const leagueService = {
         }
       }
 
-      //Check inviteeProfile exists
-      const inviteeUserId: string | null = await userService.getUserIdByProfileId(leagueInviteRequest.inviteeProfileId);
-      if (!inviteeUserId) {
-        return {
-          statusCode: 404,
-          message: `Invited Profile with profile id ${leagueInviteRequest.inviteeProfileId} not found`,
-          success: false,
-          error: "Not Found"
-        }
-      }
-
-      //Check inviteeProfile is not in league already
-      //Check inviteeProfile is not already invited to league
-      let conflictMessage: string | undefined = undefined;
-      const inviteeProfileInLeague: boolean = await leagueRepository.isProfileInLeague(leagueInviteRequest.inviteeProfileId, leagueInviteRequest.leagueId);
-      if (inviteeProfileInLeague) {
-        conflictMessage = `Invited Profile with profile id ${leagueInviteRequest.inviteeProfileId} is already in league with league id ${leagueInviteRequest.leagueId}`;
-      }
-      const inviteeProfileAlreadyInvited: boolean = await leagueRepository.isProfileInInvited(leagueInviteRequest.inviteeProfileId, leagueInviteRequest.leagueId);
-      if (inviteeProfileAlreadyInvited) {
-        conflictMessage = `Invited Profile with profile id ${leagueInviteRequest.inviteeProfileId} is already invited to league with league id ${leagueInviteRequest.leagueId}`;
-      }
-      if (conflictMessage) {
-        return {
-          statusCode: 409,
-          message: conflictMessage,
-          success: false,
-          error: "Conflict"
-        }
-      }
+      await validateInviteeProfile(leagueInviteRequest.inviteeProfileId);
+      await checkInviteeConflict(leagueInviteRequest);
 
       //Create a Sequelize transaction to commit after the database has been updated and the notification has been sent to the invited user.
       const transaction = await sequelize.transaction();
@@ -172,11 +116,15 @@ const leagueService = {
       }
 
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error inviting profile to league:", error);
-      throw error;
+      return {
+        statusCode: error.statusCode || 500,
+        message: error.message || 'An error occurred',
+        success: false,
+        error: error.error || 'Internal Server Error',
+      };
     }
   }
-}
-
+};
 export default leagueService;
