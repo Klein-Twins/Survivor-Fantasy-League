@@ -1,11 +1,13 @@
 import { AxiosResponse } from "axios";
 import api from "../apiContainer";
+import { ProfileSearchResultsResponse } from "../../../generated-api";
 
-export interface GetProfilesBySearchParams {
+export interface GetProfilesBySearchRequestData {
+    profileId: string;
     userName?: string;
     firstName?: string;
     lastName?: string;
-    leagueId?: string;
+    leagueId: string;
     page?: number;
     limit?: number;
     sortBy?: "firstName" | "lastName" | "userName";
@@ -47,13 +49,14 @@ export type Pagination = {
 }
 
 const profileService = {
-    getProfilesBySearch: async (params: GetProfilesBySearchParams): Promise<AxiosResponse<GetProfilesBySearchResponse>> => {
+    getProfilesBySearch: async (params: GetProfilesBySearchRequestData): Promise<GetProfilesBySearchResponse> => {
         console.log(params);
-        const response = await api.profile.apiProfileGetProfilesBySearchGet(
+        const response: AxiosResponse<ProfileSearchResultsResponse> = await api.league.searchProfilesForLeagueInvite(
+            params.leagueId,
+            params.profileId,
             params.userName,
             params.firstName,
             params.lastName,
-            params.leagueId,
             params.page,
             params.limit,
             params.sortBy,
@@ -61,7 +64,29 @@ const profileService = {
             { withCredentials: true }
         );
 
-        return response as AxiosResponse<GetProfilesBySearchResponse>;
+        const data = response.data;
+        if (!data.results || !data.results.searchResults || !data.results.pagination) {
+            throw new Error("Invalid response structure");
+        }
+
+        if (!data.message) {
+            data.message = "No message provided";
+        }
+
+        if (data.foundResults === undefined) {
+            data.foundResults = false;
+        }
+
+
+        const validSearchResults = data.results.searchResults.filter(result => result.profileId !== undefined) as ProfileSearchResults;
+        return {
+            results: {
+                searchResults: validSearchResults,
+                pagination: data.results.pagination,
+            },
+            message: data.message,
+            foundResults: data.foundResults
+        };
     }
 }
 

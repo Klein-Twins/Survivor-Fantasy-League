@@ -7,12 +7,19 @@ import SortOrderSwitch from "./SortOrderSwitch";
 import NumResultsPerPageDropdown from "./NumResultsPerPageDropdown";
 
 import { ProfileSearchFormValues } from "../../../../../services/profile/profileService";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../store/store";
 
 interface ProfileSearchFormProps {
     onSearchSubmit: (searchParams: ProfileSearchFormValues) => void;
+    leagueId: string;
+    profileId: string;
 }
 
-const ProfileSearchForm: React.FC<ProfileSearchFormProps> = ({ onSearchSubmit }) => {
+const ProfileSearchForm: React.FC<ProfileSearchFormProps> = ({ onSearchSubmit, leagueId, profileId }) => {
+
+    const account = useSelector((state: RootState) => state.auth.account);
+
     const [firstName, setFirstName] = useState<string>();
     const [lastName, setLastName] = useState<string>();
     const [userName, setUserName] = useState<string>();
@@ -31,7 +38,11 @@ const ProfileSearchForm: React.FC<ProfileSearchFormProps> = ({ onSearchSubmit })
             isAsc: isAscending,
             numProfilesPerPage,
         };
-        onSearchSubmit(searchParams);
+        if (account?.profileId) {
+            onSearchSubmit(searchParams, leagueId, profileId);
+        } else {
+            console.error("Profile ID is required for search");
+        }
     };
 
     return (

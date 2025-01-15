@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
-import profileService, { GetProfilesBySearchParams, GetProfilesBySearchResponse, ProfileSearchFormValues } from "../../services/profile/profileService";
+import profileService, { GetProfilesBySearchRequestData, GetProfilesBySearchResponse, ProfileSearchFormValues } from "../../services/profile/profileService";
 import useGetApi from "../useGetApi";
 
-const useLeagueInviteSearch = (leagueId: string) => {
+const useLeagueInviteSearch = (leagueId: string, profileId: string) => {
     const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
 
     // Define default values for search form
@@ -16,8 +16,8 @@ const useLeagueInviteSearch = (leagueId: string) => {
     });
 
     // Hook call with proper types for API function and params
-    const { data, isLoading, error, fetchData } = useGetApi<GetProfilesBySearchResponse, GetProfilesBySearchParams>(
-        profileService.getProfilesBySearch // No type casting needed as the types now align perfectly
+    const { responseData, isLoading, error, fetchData } = useGetApi<GetProfilesBySearchResponse, GetProfilesBySearchRequestData>(
+        (params: GetProfilesBySearchRequestData) => profileService.getProfilesBySearch(params)
     );
 
     // Handle the search form submission
@@ -30,9 +30,10 @@ const useLeagueInviteSearch = (leagueId: string) => {
                 limit: values.numProfilesPerPage,
                 page: 1,
                 leagueId, // Add leagueId to params
+                profileId, // Add profileId to params
             });
         },
-        [fetchData, leagueId]
+        [fetchData, leagueId, profileId]
     );
 
     // Handle page changes for pagination
@@ -44,13 +45,14 @@ const useLeagueInviteSearch = (leagueId: string) => {
                 limit: searchFormValues.numProfilesPerPage,
                 page: pageNumber,
                 leagueId, // Add leagueId to params
+                profileId, // Add profileId to params
             });
         },
-        [fetchData, leagueId, searchFormValues]
+        [fetchData, leagueId, profileId, searchFormValues]
     );
 
     return {
-        data,
+        responseData,
         isLoading,
         error,
         handleSearchSubmit,
