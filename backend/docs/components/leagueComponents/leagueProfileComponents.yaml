@@ -90,7 +90,7 @@ components:
           description: The unique ID of the league where the invitation is being sent.
           example: "leagueId"
 
-    GetLeagueInviteSuccessResponse:
+    GetLeagueInvitesSuccessResponse:
       type: object
       properties:
         leagueInvites:
@@ -109,22 +109,22 @@ components:
           type: integer
           description: The HTTP status code indicating the result of the operation.
           example: 200
+        message:
+          type: string
+          description: A message indicating the success of the operation.
+          example: "League invites successfully retrieved."
 
     LeagueInvite:
       type: object
       properties:
-        leagueId:
-          type: string
-          description: The ID of the league.
-          example: "c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f"
+        league:
+          $ref: "./leagueComponents.yaml#/components/schemas/League"
         message:
           type: string
           description: A message indicating the success of the operation.
           example: "Tony Stark has invited you to join a league"
-        inviterProfileId:
-          type: string
-          description: The ID of the profile that sent the invitation.
-          example: "c43223e4-6d61-4875-9750-b842b82e4934"
+        inviterProfile:
+          $ref: "../profileComponents/profileComponents.yaml#/components/schemas/Profile"
 
   parameters:
     profileSearchForLeagueInviteParameters:

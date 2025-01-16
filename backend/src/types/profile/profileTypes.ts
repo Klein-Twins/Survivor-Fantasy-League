@@ -49,3 +49,13 @@ export enum ProfileSearchSortDirection {
     Ascending = 'ASC',
     Descending = 'DESC'
 }
+
+export interface Profile {
+    profileId: string;
+    userName: string;
+    firstName: string | null;
+    lastName: string | null;
+    profileImageUrl: string | null;
+
+
+}

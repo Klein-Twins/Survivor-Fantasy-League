@@ -2,8 +2,13 @@ import { sequelize } from "../../config/db";
 import logger from "../../config/logger";
 import { LeagueAttributes } from "../../models/League";
 import { InviteStatusEnum, LeagueProfileAttributes } from "../../models/LeagueProfile";
+import { ProfileAttributes } from "../../models/Profile";
+import { UserAttributes } from "../../models/User";
 import leagueRepository from "../../repositories/leagueRepository";
-import { LeagueInviteRequest, LeagueInviteResponse } from "../../types/league/leagueTypes";
+import profileRepository from "../../repositories/profileRepository";
+import userRepository from "../../repositories/userRepository";
+import { GetProfilesBySearchResponseData, League, LeagueInvite, LeagueInviteRequest, LeagueInviteResponse } from "../../types/league/leagueTypes";
+import { Profile } from "../../types/profile/profileTypes";
 import errorFactory from "../../utils/errors/errorFactory";
 import profileService from "../profile/profileService";
 import userService from "../user/userService";
@@ -20,7 +25,7 @@ const leagueService = {
       const league: LeagueAttributes = await leagueRepository.createLeague(seasonId, leagueName, { transaction });
 
       const leagueProfile: LeagueProfileAttributes =
-        await leagueRepository.createLeagueProfile(profileId, league.leagueId, "LEAGUE_OWNER", InviteStatusEnum.Accepted, { transaction }
+        await leagueRepository.createLeagueProfile(profileId, league.leagueId, "LEAGUE_OWNER", InviteStatusEnum.Accepted, null, { transaction }
         );
 
       if (!leagueProfile) {
@@ -72,6 +77,67 @@ const leagueService = {
       throw new Error("Could not fetch leagues for profile");
     }
   },
+
+  getLeagueInvitesForProfile: async (profileId: string): Promise<GetProfilesBySearchResponseData> => {
+    const leagueProfileAttributesArray: LeagueProfileAttributes[] = await leagueRepository.getAllLeagueInvitesForProfile(profileId);
+    if (!leagueProfileAttributesArray || leagueProfileAttributesArray.length === 0) {
+      return {
+        statusCode: 200,
+        message: `No league invites found for profile with profile id ${profileId}`,
+        error: undefined,
+        leagueInvites: [],
+        numLeagueInvites: 0
+      }
+    }
+
+    const leagueInvites: LeagueInvite[] = [];
+
+    for (let i = 0; i < leagueProfileAttributesArray.length; i++) {
+
+      //Build league object
+      const leagueAttributes: LeagueAttributes = await leagueService.getLeagueByLeagueId(leagueProfileAttributesArray[i].leagueId);
+      const league: League = {
+        leagueId: leagueAttributes.leagueId,
+        name: leagueAttributes.name,
+        season: leagueAttributes.seasonId
+      }
+
+      const inviterProfileId = leagueProfileAttributesArray[i].inviterProfileId;
+      let message = '';
+      let inviterProfile: Profile | null = null;
+      if (!inviterProfileId) {
+        inviterProfile = null;
+        message = `You have been invited to join the league ${league.name}`;
+      } else {
+        const inviterProfileAttributes: ProfileAttributes = await profileRepository.getProfileRecordByProfileId(inviterProfileId);
+        const inviterUserAttributes: UserAttributes = await userRepository.getUserByProfileId(inviterProfileId);
+        const inviterProfile: Profile = {
+          profileId: inviterProfileAttributes.profileId,
+          userName: inviterUserAttributes.userName,
+          firstName: inviterProfileAttributes.firstName || null,
+          lastName: inviterProfileAttributes.lastName || null,
+          profileImageUrl: inviterProfileAttributes.imageUrl || null
+        }
+        message = `${inviterProfileAttributes.firstName ? inviterProfileAttributes.firstName : inviterUserAttributes.userName} has invited you to join the league ${league.name}`;
+      }
+
+      leagueInvites.push({
+        league: league,
+        message: message,
+        inviterProfile: inviterProfile
+      });
+    }
+
+    return {
+      statusCode: 200,
+      message: `League invite${leagueInvites.length > 1 ? 's' : ''} found for profile with profile id ${profileId}`,
+      error: undefined,
+      leagueInvites: leagueInvites,
+      numLeagueInvites: leagueInvites.length
+    }
+
+  },
+
   inviteProfileToLeague: async (leagueInviteRequest: LeagueInviteRequest): Promise<LeagueInviteResponse> => {
 
     try {
@@ -94,7 +160,7 @@ const leagueService = {
       //Create a Sequelize transaction to commit after the database has been updated and the notification has been sent to the invited user.
       const transaction = await sequelize.transaction();
       //Create League Profile association for invitee
-      const leagueProfile: LeagueProfileAttributes = await leagueRepository.createLeagueProfile(leagueInviteRequest.inviteeProfileId, leagueInviteRequest.leagueId, "LEAGUE_MEMBER", InviteStatusEnum.Pending, {});
+      const leagueProfile: LeagueProfileAttributes = await leagueRepository.createLeagueProfile(leagueInviteRequest.inviteeProfileId, leagueInviteRequest.leagueId, "LEAGUE_MEMBER", InviteStatusEnum.Pending, leagueInviteRequest.inviterProfileId, {});
       if (!leagueProfile) {
         await transaction.rollback();
         logger.error("Could not create League Profile Association in Database whenever inviting profile to league");

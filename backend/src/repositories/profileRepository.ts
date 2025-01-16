@@ -113,7 +113,7 @@ const profileRepository = {
 
         const offset = (page - 1) * limit;
         const sortDirection = isAsc === 'true' ? "ASC" : "DESC";
-        let leagueId = uuidv4();
+        const leagueId = params.leagueId;
 
         const whereConditions: string[] = [];
         const replacements: any = {
@@ -166,7 +166,8 @@ const profileRepository = {
             INNER JOIN "USR_USERS" AS "User"
                 ON "Profile"."PROFILE_ID" = "User"."USER_PROFILE_ID"
             LEFT OUTER JOIN "LGE_LEAGUES_PROFILES" AS "leagueProfiles"
-                ON "Profile"."PROFILE_ID" = "leagueProfiles"."PROFILE_ID"
+                ON "Profile"."PROFILE_ID" = "leagueProfiles"."PROFILE_ID" 
+                AND "leagueProfiles"."LEAGUE_ID" = :leagueId
             WHERE
                 ${whereClause}
             ${orderClause}

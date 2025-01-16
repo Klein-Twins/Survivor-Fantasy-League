@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get('/search', tokenMiddleware.authenticateToken, leagueProfileController.getProfilesBySearch);
 router.post('/invite', tokenMiddleware.authenticateToken, leagueProfileController.inviteProfileToLeague);
+router.get('/invite', tokenMiddleware.authenticateToken, leagueProfileController.getLeagueInvitesForProfile);
 
 
 export default router;

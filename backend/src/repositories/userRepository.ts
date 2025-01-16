@@ -5,6 +5,7 @@ import { UserAttributes } from '../models/User';
 import errorFactory from "../utils/errors/errorFactory";
 import { EMAIL_NOT_FOUND_ERROR, INTERNAL_SERVER_ERROR, NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
 import { UnauthorizedError } from "../utils/errors/errors";
+import { ProfileAttributes } from "../models/Profile";
 
 const userRepository = {
 
@@ -56,6 +57,19 @@ const userRepository = {
             return userRecord;
         } catch (error) {
             logger.error(`Failed to get user record by username ${userName}: ${error}`);
+            throw error;
+        }
+    },
+    getUserByProfileId: async (profileId: ProfileAttributes["profileId"]): Promise<UserAttributes> => {
+        try {
+            const userRecord = await models.User.findOne({ where: { profileId } });
+            if (!userRecord) {
+                throw errorFactory(INTERNAL_SERVER_ERROR);
+            }
+            logger.debug(`User found by profileId: ${profileId}`);
+            return userRecord;
+        } catch (error) {
+            logger.error(`Failed to get user record by profileId: ${profileId}: ${error}`);
             throw error;
         }
     },

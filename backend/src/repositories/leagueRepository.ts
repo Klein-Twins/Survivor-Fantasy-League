@@ -18,12 +18,13 @@ const leagueRepository = {
             }]
         })
     },
-    createLeagueProfile: async (profileId: string, leagueId: string, role: string, inviteStatus: InviteStatusEnum, options?: CreateOptions): Promise<LeagueProfileAttributes> => {
+    createLeagueProfile: async (profileId: string, leagueId: string, role: string, inviteStatus: InviteStatusEnum, inviterProfileId: string | null, options?: CreateOptions): Promise<LeagueProfileAttributes> => {
         return await models.LeagueProfile.create({
             leagueId: leagueId,
             profileId: profileId,
             role: role,
-            inviteStatus: inviteStatus
+            inviteStatus: inviteStatus,
+            inviterProfileId: inviterProfileId
         }, options)
 
     },
@@ -44,6 +45,15 @@ const leagueRepository = {
         })
         return inDatabase !== undefined && inDatabase !== null;
     },
+    getAllLeagueInvitesForProfile: async (profileId: string): Promise<LeagueProfileAttributes[]> => {
+        return await models.LeagueProfile.findAll({
+            where: {
+                profileId: profileId,
+                inviteStatus: InviteStatusEnum.Pending
+            }
+        })
+    },
+
     isProfileInInvited: async (profileId: string, leagueId: string): Promise<boolean> => {
         const inDatabase = await models.LeagueProfile.findOne({
             where: {

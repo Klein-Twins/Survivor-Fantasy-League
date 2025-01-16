@@ -6,6 +6,7 @@ import profileService from "../../servicesAndHelpers/profile/profileService";
 import { validate } from "uuid";
 import leagueService from "../../servicesAndHelpers/leagues/leagueService";
 import { LeagueInviteRequest, LeagueInviteResponse } from "../../types/league/leagueTypes";
+import userService from "../../servicesAndHelpers/user/userService";
 
 
 const leagueProfileController = {
@@ -73,6 +74,28 @@ const leagueProfileController = {
             })
 
             res.status(leagueInviteResponse.statusCode).json(leagueInviteResponse);
+
+        } catch (error) {
+            next(error);
+        }
+    },
+
+    getLeagueInvitesForProfile: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const profileId = req.query.profileId as string | undefined;
+        try {
+            if (!profileId || !validate(profileId)) {
+                throw errorFactory({ statusCode: 400, error: "Bad Request" });
+            }
+
+            const user = await userService.getUserIdByProfileId(profileId);
+            if (!user) {
+                res.status(404).json({ message: "Profile not found" });
+                return;
+            }
+
+            const leagueInvites = await leagueService.getLeagueInvitesForProfile(profileId);
+
+            res.status(200).json(leagueInvites);
 
         } catch (error) {
             next(error);

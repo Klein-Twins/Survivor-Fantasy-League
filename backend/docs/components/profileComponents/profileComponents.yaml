@@ -1,0 +1,15 @@
+components:
+  schemas:
+    Profile:
+      type: object
+      properties:
+        profileId:
+          type: string
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        profileImageUrl:
+          type: string

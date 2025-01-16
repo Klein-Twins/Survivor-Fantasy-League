@@ -109,7 +109,12 @@ LeagueInvite:
         content:
           application/json:
             schema:
-              $ref: "../../components/leagueComponents/leagueProfileComponents.yaml#/components/schemas/GetLeagueInviteSuccessResponse"
+              type: object
+              properties:
+                leagueInvites:
+                  type: array
+                  items:
+                    $ref: "../../components/leagueComponents/leagueProfileComponents.yaml#/components/schemas/GetLeagueInvitesSuccessResponse"
   post:
     summary: Invite a profile to a league
     tags:

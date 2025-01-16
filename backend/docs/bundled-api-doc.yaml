@@ -2009,30 +2009,59 @@ paths:
                     items:
                       type: object
                       properties:
-                        leagueId:
+                        leagueInvites:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              league:
+                                type: object
+                                properties:
+                                  leagueId:
+                                    type: string
+                                    description: The ID of the league.
+                                    example: c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f
+                                  name:
+                                    type: string
+                                    description: The name of the league.
+                                    example: Corner By The Bookshelf
+                                  season:
+                                    type: string
+                                    description: The season the league belongs to.
+                                    example: 47
+                              message:
+                                type: string
+                                description: A message indicating the success of the operation.
+                                example: Tony Stark has invited you to join a league
+                              inviterProfile:
+                                type: object
+                                properties:
+                                  profileId:
+                                    type: string
+                                  username:
+                                    type: string
+                                  firstName:
+                                    type: string
+                                  lastName:
+                                    type: string
+                                  profileImageUrl:
+                                    type: string
+                        numLeagueInvites:
+                          type: integer
+                          description: The number of league invites returned
+                          example: 4
+                        error:
                           type: string
-                          description: The ID of the league.
-                          example: c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f
+                          description: A message indicating the error of the operation.
+                          example: null
+                        statusCode:
+                          type: integer
+                          description: The HTTP status code indicating the result of the operation.
+                          example: 200
                         message:
                           type: string
                           description: A message indicating the success of the operation.
-                          example: Tony Stark has invited you to join a league
-                        inviterProfileId:
-                          type: string
-                          description: The ID of the profile that sent the invitation.
-                          example: c43223e4-6d61-4875-9750-b842b82e4934
-                  numLeagueInvites:
-                    type: integer
-                    description: The number of league invites returned
-                    example: 4
-                  error:
-                    type: string
-                    description: A message indicating the error of the operation.
-                    example: null
-                  statusCode:
-                    type: integer
-                    description: The HTTP status code indicating the result of the operation.
-                    example: 200
+                          example: League invites successfully retrieved.
     post:
       summary: Invite a profile to a league
       tags:
