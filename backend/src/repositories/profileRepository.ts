@@ -167,7 +167,6 @@ const profileRepository = {
                 ON "Profile"."PROFILE_ID" = "User"."USER_PROFILE_ID"
             LEFT OUTER JOIN "LGE_LEAGUES_PROFILES" AS "leagueProfiles"
                 ON "Profile"."PROFILE_ID" = "leagueProfiles"."PROFILE_ID"
-                AND "leagueProfiles"."LEAGUE_ID" = :leagueId
             WHERE
                 ${whereClause}
             ${orderClause}

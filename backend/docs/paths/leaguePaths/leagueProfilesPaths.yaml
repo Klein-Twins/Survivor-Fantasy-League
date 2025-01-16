@@ -99,7 +99,7 @@ InviteProfileToLeague:
     summary: Invite a profile to a league
     tags:
       - League
-    operationId: inviteMemberToLeague
+    operationId: inviteToLeague
     description: This endpoint allows the inviter to send an invitation to a profile to join a league. The inviter must be a member of the league and have a valid token.
     parameters:
       - $ref: "../../components/securityComponents.yaml#/components/parameters/ProfileId"
