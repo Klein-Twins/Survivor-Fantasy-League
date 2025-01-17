@@ -5,6 +5,7 @@ interface UseGetApiResult<T, P> {
   isLoading: boolean;
   error: string | null;
   fetchData: (params: P) => Promise<void>; // P enforces stricter type for params
+  setResponseData: React.Dispatch<React.SetStateAction<T | null>>;
 }
 
 export function useGetApi<T, P = void>(
@@ -31,7 +32,7 @@ export function useGetApi<T, P = void>(
     [] // Remove apiFunction from dependency array
   );
 
-  return { responseData, isLoading, error, fetchData };
+  return { responseData, isLoading, error, fetchData, setResponseData };
 }
 
 export default useGetApi;

@@ -12,7 +12,7 @@ const LeagueInvitesPanel: React.FC = () => {
     const account = useSelector((state: RootState) => state.auth.account);
     const profileId = account?.profileId;
 
-    const { responseData, isLoading, error, fetchData } = useGetApi<InviteMemberResponse, string>(
+    const { responseData, isLoading, error, fetchData, setResponseData } = useGetApi<InviteMemberResponse, string>(
         (profileId: string) => profileService.getLeagueInvitationsForProfile(profileId)
     );
 
@@ -24,6 +24,17 @@ const LeagueInvitesPanel: React.FC = () => {
 
     const toggleOpen = () => {
         setIsOpen(!isOpen);
+    };
+
+    const handleRemoveInvite = (leagueId: string) => {
+        if (responseData && responseData.leagueInvites) {
+            const updatedInvites = responseData.leagueInvites.filter(invite => invite.league!.leagueId !== leagueId);
+            setResponseData({
+                ...responseData,
+                leagueInvites: updatedInvites,
+                numLeagueInvites: updatedInvites.length
+            });
+        }
     };
 
     let bgColor = "bg-slate-100";
@@ -45,7 +56,7 @@ const LeagueInvitesPanel: React.FC = () => {
                             {isLoading && <h1 className='text-lg text-center'>Loading League Invitations...</h1>}
                             {!isLoading && error && <p>{error}</p>}
                             {!isLoading && !error && responseData && responseData.numLeagueInvites && responseData.numLeagueInvites > 0 ? (
-                                <LeagueInvitesList leagueInvites={responseData.leagueInvites as LeagueInvite[]} />
+                                <LeagueInvitesList leagueInvites={responseData.leagueInvites as LeagueInvite[]} onRemoveInvite={handleRemoveInvite} />
                             ) : (
                                 <h1 className='text-lg text-left'>You have no league invitations at the moment.</h1>
                             )}

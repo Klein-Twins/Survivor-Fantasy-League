@@ -19,5 +19,7 @@
   "InlineResponse2003LeagueInvites1": "GetLeagueInviteResponseData",
   "InlineResponse2003LeagueInvites": "LeagueInvite",
   "InlineResponse2003League": "League",
-  "InlineResponse2003InviterProfile": "InviterProfile"
+  "InlineResponse2003InviterProfile": "InviterProfile",
+
+  "InlineResponse2004": "ApiResponse"
 }
