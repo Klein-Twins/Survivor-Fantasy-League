@@ -7,6 +7,7 @@ import LeagueList from "./LeagueList";
 import useGetApi from "../../../hooks/useGetApi";
 import NoLeagues from "./NoLeagues";
 import CreateLeagueForm from "./forms/CreateNewLeagueForm";
+import { League } from "../../../../generated-api";
 
 
 
@@ -21,7 +22,7 @@ const LeaguesPanel: React.FC = () => {
     leagueService.getLeaguesForProfile(profileId)
   );
 
-  const leagues = responseData?.leagues || [];
+  const leagues: League[] = (responseData && responseData?.leagues) ? responseData.leagues : []
   console.log(leagues);
 
 

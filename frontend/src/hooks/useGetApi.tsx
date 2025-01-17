@@ -1,5 +1,4 @@
 import { useState, useCallback } from "react";
-import { AxiosResponse } from "axios";
 
 interface UseGetApiResult<T, P> {
   responseData: T | null;
@@ -29,7 +28,7 @@ export function useGetApi<T, P = void>(
         setIsLoading(false);
       }
     },
-    [apiFunction]
+    [] // Remove apiFunction from dependency array
   );
 
   return { responseData, isLoading, error, fetchData };

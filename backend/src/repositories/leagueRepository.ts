@@ -31,7 +31,8 @@ const leagueRepository = {
     findLeagueProfileByProfileId: async (profileId: string): Promise<LeagueProfileAttributes[]> => {
         return await models.LeagueProfile.findAll({
             where: {
-                profileId: profileId
+                profileId: profileId,
+                inviteStatus: InviteStatusEnum.Accepted
             }
         })
     },

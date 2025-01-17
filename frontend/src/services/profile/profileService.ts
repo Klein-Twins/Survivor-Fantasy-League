@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import api from "../apiContainer";
-import { ProfileSearchResultsResponse } from "../../../generated-api";
+import { InviteMemberResponse, ProfileSearchResultsResponse } from "../../../generated-api";
 
 export interface GetProfilesBySearchRequestData {
     profileId: string;
@@ -87,6 +87,10 @@ const profileService = {
             message: data.message,
             foundResults: data.foundResults
         };
+    },
+    getLeagueInvitationsForProfile: async (profileId: string): Promise<InviteMemberResponse> => {
+        const response = await api.league.getLeagueInvites(profileId, { withCredentials: true });
+        return response.data;
     }
 }
 

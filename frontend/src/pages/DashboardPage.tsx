@@ -2,6 +2,7 @@ import React from "react";
 import LeaguesPanel from "../components/dashboard/leaguesPanel/LeaguesPanel";
 import { RootState } from "../store/store";
 import { useSelector } from "react-redux";
+import LeagueInvitesPanel from "../components/dashboard/leagueInvitations/LeagueInvitesPanel";
 
 const DashboardPage: React.FC = () => {
   const account = useSelector((state: RootState) => state.auth.account);
@@ -15,6 +16,7 @@ const DashboardPage: React.FC = () => {
       <h3 className="text-3xl text-center font-semibold text-gray-800 mb-6">
         Hello {account.userName}, welcome to your dashboard!
       </h3>
+      <LeagueInvitesPanel />
       <LeaguesPanel />
     </div>
   );

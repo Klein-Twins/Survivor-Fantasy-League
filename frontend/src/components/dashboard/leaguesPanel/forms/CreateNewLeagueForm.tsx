@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../store/store";
 
-import { League, CreateLeagueResponse } from "../../../../../generated-api";
+import { League } from "../../../../../generated-api";
 import leagueService from "../../../../services/league/leagueService";
 
 import usePostApi from "../../../../hooks/usePostApi";
@@ -43,7 +43,7 @@ const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({
     isLoading,
     error,
     execute: createLeague,
-  } = usePostApi<CreateLeagueResponse>(leagueService.createLeague);
+  } = usePostApi<any>(leagueService.createLeague);
 
   const {
     values,
