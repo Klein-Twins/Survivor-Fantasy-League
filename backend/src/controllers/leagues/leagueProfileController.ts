@@ -5,8 +5,11 @@ import { ProfileSearchParams, ProfileSearchResultsWithPagination } from "../../t
 import profileService from "../../servicesAndHelpers/profile/profileService";
 import { validate } from "uuid";
 import leagueService from "../../servicesAndHelpers/leagues/leagueService";
-import { LeagueInviteRequest, LeagueInviteResponse } from "../../types/league/leagueTypes";
+import { LeagueInviteRequest, RespondLeagueInvite } from "../../types/league/leagueTypes";
 import userService from "../../servicesAndHelpers/user/userService";
+import { APIResponse, APIResponseError } from "../../types/api/apiResponseTypes";
+import { InviteStatusEnum } from "../../models/LeagueProfile";
+import { RespondToLeagueInviteRequest, RespondToLeagueInviteResponse } from "../../types/league/leagueDto";
 
 
 const leagueProfileController = {
@@ -66,7 +69,7 @@ const leagueProfileController = {
                 inviteMessage: requestBody.inviteMessage
             }
 
-            const leagueInviteResponse: LeagueInviteResponse = await leagueService.inviteProfileToLeague({
+            const leagueInviteResponse: APIResponse = await leagueService.inviteProfileToLeague({
                 leagueId: requestBody.leagueId,
                 inviteeProfileId: requestBody.inviteeProfileId,
                 inviterProfileId: requestBody.inviterProfileId,
@@ -100,6 +103,27 @@ const leagueProfileController = {
         } catch (error) {
             next(error);
         }
+    },
+
+    respondToLeagueInvite: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const profileId = req.query.profileId as string
+        const requestBody = req.body;
+        const inviteResponse = requestBody.inviteResponse;
+        const leagueId = requestBody.leagueId;
+
+        try {
+            validateRespondToLeagueInviteRequest(profileId, requestBody);
+
+            const leagueInviteResponse = await leagueService.respondToLeagueInvite({
+                leagueId: requestBody.leagueId,
+                inviteResponse: requestBody.inviteResponse
+            }, profileId);
+
+            res.status(leagueInviteResponse.statusCode).json(leagueInviteResponse);
+
+        } catch (error) {
+            next(error);
+        }
     }
 }
 
@@ -116,6 +140,23 @@ function validateInviteProfileToLeagueRequest(profileId: string | undefined, req
 
     if (!requestBody.inviteMessage) {
         requestBody.inviteMessage = '';
+    }
+}
+
+function validateRespondToLeagueInviteRequest(profileId: string | undefined, requestBody: RespondToLeagueInviteRequest) {
+    if (!requestBody.leagueId || !requestBody.inviteResponse) {
+        logger.debug("League Invite Response: Request Body is missing leagueId or inviteResponse");
+        throw errorFactory({ statusCode: 400, error: "Bad Request" });
+    }
+
+    if (requestBody.inviteResponse !== RespondLeagueInvite.Accept && requestBody.inviteResponse !== RespondLeagueInvite.Decline) {
+        logger.debug("League Invite Response: Request Body has invalid inviteResponse");
+        throw errorFactory({ statusCode: 400, error: "Bad Request" });
+    }
+
+    if (!profileId) {
+        logger.debug("Missing Profile ID in request params");
+        throw errorFactory({ statusCode: 400, error: "Bad Request" });
     }
 }
 

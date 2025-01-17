@@ -30,7 +30,7 @@ export interface LeagueInvite {
     inviterProfile: Profile | null;
 }
 
-export interface LeagueInviteResponse extends APIResponse {
-    success: boolean;
-    data?: any;
+export enum RespondLeagueInvite {
+    Accept = "ACCEPT",
+    Decline = "DECLINE"
 }

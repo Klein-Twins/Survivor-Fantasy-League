@@ -94,6 +94,29 @@ ProfileSearchForLeagueInvite:
       - accessTokenCookie: []
       - refreshTokenCookie: []
 
+RespondToLeagueInvitePath:
+  post:
+    summary: Responds to a league invite
+    description: This endpoint allows you to respond with ACCEPT or DECLINE on league invitations
+    operationId: respondToLeagueInvite
+    tags:
+      - League
+    parameters:
+      - $ref: "../../components/securityComponents.yaml#/components/parameters/ProfileId"
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "../../components/leagueComponents/leagueProfileComponents.yaml#/components/schemas/RespondToLeagueInviteRequest"
+    responses:
+      "200":
+        description: A list of league invites for the profile
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/commonComponents.yaml#/ApiResponse"
+
 LeagueInvite:
   get:
     summary: Retrieve league invites for a profile

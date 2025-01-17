@@ -64,6 +64,15 @@ const leagueRepository = {
             }
         })
         return inDatabase !== undefined && inDatabase !== null;
+    },
+    getLeagueProfileAssociation: async (profileId: string, leagueId: string, inviteStatus: InviteStatusEnum): Promise<LeagueProfileAttributes | null> => {
+        return await models.LeagueProfile.findOne({
+            where: {
+                profileId: profileId,
+                leagueId: leagueId,
+                inviteStatus: inviteStatus
+            }
+        })
     }
 };
 

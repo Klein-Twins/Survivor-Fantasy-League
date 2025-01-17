@@ -2321,6 +2321,60 @@ paths:
       security:
         - refreshTokenCookie: []
         - AccessTokenCookie: []
+  /api/league/profile/invite/respond:
+    post:
+      summary: Responds to a league invite
+      description: This endpoint allows you to respond with ACCEPT or DECLINE on league invitations
+      operationId: respondToLeagueInvite
+      tags:
+        - League
+      parameters:
+        - in: query
+          name: profileId
+          required: true
+          schema:
+            type: string
+          description: Unique identifier for the user session's profile.
+          example: unique-profile-id
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - leagueId
+                - inviteResponse
+              properties:
+                leagueId:
+                  type: string
+                  description: The unique ID of the league the user is being invited to.
+                inviteResponse:
+                  type: string
+                  description: The response status to the league invite.
+                  enum:
+                    - ACCEPT
+                    - DECLINE
+      responses:
+        '200':
+          description: A list of league invites for the profile
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: Operation completed succesfully.
+                  responseData:
+                    type: object
+                    additionalProperties: true
+                  statusCode:
+                    type: string
+                    example: Status code of the operation
 components:
   schemas:
     Account:

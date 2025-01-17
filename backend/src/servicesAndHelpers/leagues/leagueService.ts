@@ -1,3 +1,4 @@
+import { UUID } from "crypto";
 import { sequelize } from "../../config/db";
 import logger from "../../config/logger";
 import { LeagueAttributes } from "../../models/League";
@@ -7,12 +8,13 @@ import { UserAttributes } from "../../models/User";
 import leagueRepository from "../../repositories/leagueRepository";
 import profileRepository from "../../repositories/profileRepository";
 import userRepository from "../../repositories/userRepository";
-import { GetProfilesBySearchResponseData, League, LeagueInvite, LeagueInviteRequest, LeagueInviteResponse } from "../../types/league/leagueTypes";
+import { APIResponse } from "../../types/api/apiResponseTypes";
+import { GetProfilesBySearchResponseData, League, LeagueInvite, LeagueInviteRequest, RespondLeagueInvite } from "../../types/league/leagueTypes";
 import { Profile } from "../../types/profile/profileTypes";
 import errorFactory from "../../utils/errors/errorFactory";
-import profileService from "../profile/profileService";
-import userService from "../user/userService";
 import { checkInviteeConflict, validateInviteeProfile, validateInviterInLeague, validateInviterProfile, validateLeague } from "./leagueHelper";
+import leagueProfileRepository from "../../repositories/league/leagueProfileRepository";
+import { RespondToLeagueInviteRequest, RespondToLeagueInviteResponse } from "../../types/league/leagueDto";
 
 const leagueService = {
   createLeague: async (
@@ -138,7 +140,7 @@ const leagueService = {
 
   },
 
-  inviteProfileToLeague: async (leagueInviteRequest: LeagueInviteRequest): Promise<LeagueInviteResponse> => {
+  inviteProfileToLeague: async (leagueInviteRequest: LeagueInviteRequest): Promise<APIResponse> => {
 
     try {
       await validateLeague(leagueInviteRequest.leagueId);
@@ -191,6 +193,55 @@ const leagueService = {
         error: error.error || 'Internal Server Error',
       };
     }
+  },
+
+  respondToLeagueInvite: async ({ leagueId, inviteResponse }: RespondToLeagueInviteRequest, profileId: string): Promise<RespondToLeagueInviteResponse> => {
+
+    //Check if the profile exists
+    const profileAttributes: ProfileAttributes = await profileRepository.getProfileRecordByProfileId(profileId);
+    if (!profileAttributes) {
+      throw errorFactory({ error: 'Not Found: Profile not found', statusCode: 404 });
+    }
+    //Check if the league exists
+    const leagueAttributes: LeagueAttributes | null = await leagueRepository.findLeagueByLeagueId(leagueId);
+    if (!leagueAttributes) {
+      throw errorFactory({ error: 'Not Found: League not found', statusCode: 404 })
+    };
+
+    //Check if the league profile association exists with a pending invite
+    const leagueProfileAttributes: LeagueProfileAttributes | null = await leagueRepository.getLeagueProfileAssociation(profileId, leagueId, InviteStatusEnum.Pending);
+    if (!leagueProfileAttributes) {
+      throw errorFactory({ error: 'Unauthorized: Profile was not invited to league', statusCode: 401 });
+    }
+
+
+    //If the response is ACCEPT, update the league profile association to accepted
+    if (inviteResponse === RespondLeagueInvite.Accept) {
+      const updatedLeagueProfile = await leagueProfileRepository.respondToLeagueInvite(leagueId, profileId, inviteResponse);
+      if (!updatedLeagueProfile) {
+        throw errorFactory({ error: 'Internal Server Error: Unable to update league profile association', statusCode: 500 });
+      }
+      return {
+        success: true,
+        statusCode: 200,
+        message: `Profile with profile id ${profileId} has accepted the invitation to join league with league id ${leagueId}`,
+      }
+    }
+
+    //If the response is DECLINE, delete the league profile association
+    if (inviteResponse === RespondLeagueInvite.Decline) {
+      const deletedLeagueProfile = await leagueProfileRepository.respondToLeagueInvite(leagueId, profileId, inviteResponse);
+      if (!deletedLeagueProfile) {
+        throw errorFactory({ error: 'Internal Server Error: Unable to delete league profile association', statusCode: 500 });
+      }
+      return {
+        success: true,
+        statusCode: 200,
+        message: `Profile with profile id ${profileId} has declined the invitation to join league with league id ${leagueId}`,
+      }
+    }
+
+    throw errorFactory({ error: 'Bad Request: Invalid inviteResponse Status - must be ACCEPT or DECLINE', statusCode: 400 });
   }
 };
 export default leagueService;

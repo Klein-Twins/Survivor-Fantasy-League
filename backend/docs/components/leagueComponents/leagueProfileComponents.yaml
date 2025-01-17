@@ -70,6 +70,22 @@ components:
           description: The total number of profiles that match the search criteria.
           example: 8
 
+    RespondToLeagueInviteRequest:
+      type: object
+      required:
+        - leagueId
+        - inviteResponse
+      properties:
+        leagueId:
+          type: string
+          description: The unique ID of the league the user is being invited to.
+        inviteResponse:
+          type: string
+          description: The response status to the league invite.
+          enum:
+            - ACCEPT
+            - DECLINE
+
     InviteMemberToLeagueRequest:
       type: object
       required:

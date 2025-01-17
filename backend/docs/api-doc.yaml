@@ -31,6 +31,8 @@ paths:
     $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/ProfileSearchForLeagueInvite"
   /api/league/profile/invite:
     $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/LeagueInvite"
+  /api/league/profile/invite/respond:
+    $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/RespondToLeagueInvitePath"
   # /api/notification/{notificationId}:
   #   $ref: "./paths/notificationPaths.yaml#/MarkNotificationAsRead"
 components:

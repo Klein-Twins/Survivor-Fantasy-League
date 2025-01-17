@@ -1,8 +1,5 @@
 ApiResponse:
   type: object
-  required:
-    - success
-    - message
   properties:
     success:
       type: boolean
@@ -10,6 +7,9 @@ ApiResponse:
     message:
       type: string
       example: "Operation completed succesfully."
-    data:
+    responseData:
       type: object
       additionalProperties: true
+    statusCode:
+      type: string
+      example: Status code of the operation

@@ -8,6 +8,7 @@ export interface APIResponse {
     statusCode: number;
     message?: string;
     error?: string;
+    success?: boolean | null | undefined
 }
 
 /**
