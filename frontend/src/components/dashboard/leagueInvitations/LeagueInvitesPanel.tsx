@@ -44,7 +44,11 @@ const LeagueInvitesPanel: React.FC = () => {
                         <div className='w-full'>
                             {isLoading && <h1 className='text-lg text-center'>Loading League Invitations...</h1>}
                             {!isLoading && error && <p>{error}</p>}
-                            {!isLoading && !error && responseData && <LeagueInvitesList leagueInvites={responseData.leagueInvites as LeagueInvite[]} />}
+                            {!isLoading && !error && responseData && responseData.numLeagueInvites && responseData.numLeagueInvites > 0 ? (
+                                <LeagueInvitesList leagueInvites={responseData.leagueInvites as LeagueInvite[]} />
+                            ) : (
+                                <h1 className='text-lg text-left'>You have no league invitations at the moment.</h1>
+                            )}
                         </div>
                     </div>
                 </div>
