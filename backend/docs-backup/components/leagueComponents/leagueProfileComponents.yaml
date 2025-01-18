@@ -1,5 +1,29 @@
 components:
   schemas:
+    GetLeagueInvitesResponse:
+      type: object
+      allOf:
+        - $ref: "../commonComponents.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/GetLeagueInvitesResponseData"
+
+    GetLeagueInvitesResponseData:
+      type: object
+      properties:
+        leagueInvites:
+          type: array
+          items:
+            $ref: "../../components/leagueComponents/leagueProfileComponents.yaml#/components/schemas/LeagueInvite"
+        numLeagueInvites:
+          type: integer
+          description: The number of league invites returned
+          example: 4
+        profileId:
+          type: string
+          description: The profileId to look for invites for.
+
     ProfileSearchForLeagueInviteResponseSuccess:
       type: object
       properties:
@@ -106,35 +130,35 @@ components:
           description: The unique ID of the league where the invitation is being sent.
           example: "leagueId"
 
-    GetLeagueInvitesSuccessResponse:
-      type: object
-      properties:
-        leagueInvites:
-          type: array
-          items:
-            $ref: "#/components/schemas/LeagueInvite"
-        numLeagueInvites:
-          type: integer
-          description: The number of league invites returned
-          example: 4
-        error:
-          type: string
-          description: A message indicating the error of the operation.
-          example: null
-        statusCode:
-          type: integer
-          description: The HTTP status code indicating the result of the operation.
-          example: 200
-        message:
-          type: string
-          description: A message indicating the success of the operation.
-          example: "League invites successfully retrieved."
+    # GetLeagueInvitesResponse:
+    #   type: object
+    #   properties:
+    #     leagueInvites:
+    #       type: array
+    #       items:
+    #         $ref: "#/components/schemas/LeagueInvite"
+    #     numLeagueInvites:
+    #       type: integer
+    #       description: The number of league invites returned
+    #       example: 4
+    #     error:
+    #       type: string
+    #       description: A message indicating the error of the operation.
+    #       example: null
+    #     statusCode:
+    #       type: integer
+    #       description: The HTTP status code indicating the result of the operation.
+    #       example: 200
+    #     message:
+    #       type: string
+    #       description: A message indicating the success of the operation.
+    #       example: "League invites successfully retrieved."
 
     LeagueInvite:
       type: object
       properties:
         league:
-          $ref: "./leagueComponents.yaml#/components/schemas/League"
+          $ref: "../../api-doc.yaml#/components/schemas/League"
         message:
           type: string
           description: A message indicating the success of the operation.
@@ -143,7 +167,7 @@ components:
           $ref: "../profileComponents/profileComponents.yaml#/components/schemas/Profile"
 
   parameters:
-    profileSearchForLeagueInviteParameters:
+    ProfileSearchParametersForLeagueInvite:
       type: object
       properties:
         userName:

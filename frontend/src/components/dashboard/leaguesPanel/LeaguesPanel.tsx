@@ -10,9 +10,11 @@ import CreateLeagueForm from "./forms/CreateNewLeagueForm";
 import { League } from "../../../../generated-api";
 
 
+interface LeaguesPanelProps {
+  className?: string;
+}
 
-
-const LeaguesPanel: React.FC = () => {
+const LeaguesPanel: React.FC<LeaguesPanelProps> = ({ className }) => {
 
   const [showCreateLeagueForm, setShowCreateLeagueForm] = useState(false);
   const account = useSelector((state: RootState) => state.auth.account);
@@ -36,7 +38,7 @@ const LeaguesPanel: React.FC = () => {
 
 
   return (
-    <div className="flex flex-col mx-auto bg-white p-8 rounded-lg shadow-lg w-auto">
+    <div className={`flex flex-col p-8 w-full ${className}`}>
       <div className="flex justify-between items-center">
         <h2 className="text-xl">{isLoading && leagues.length == 0 ? "Loading Your Leagues" : "Your Leagues"}</h2>
         <div

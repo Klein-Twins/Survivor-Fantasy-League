@@ -9,17 +9,15 @@
   "InlineResponse201Account": "UserAccount",
   "InlineResponse400": "GenericApiResponse",
   "InlineResponse2001Survivors": "SurvivorItem",
-  "InlineResponse2003": "InviteMemberResponse",
+
   "InlineResponse2011": "ProfileLeaguesResponse",
   "InlineResponse2012": "LeagueResponse",
   "InlineResponse2002ResultsSearchResultsInviteStatusEnum": "ProfileSearchResultsProfileInviteStatusEnum",
   "InlineResponse2011Leagues": "League",
   "InlineResponse2011Season": "Season",
 
-  "InlineResponse2003LeagueInvites1": "GetLeagueInviteResponseData",
-  "InlineResponse2003LeagueInvites": "LeagueInvite",
-  "InlineResponse2003League": "League",
-  "InlineResponse2003InviterProfile": "InviterProfile",
+  "InlineResponse2004": "ApiResponse",
 
-  "InlineResponse2004": "ApiResponse"
+  "InlineResponse2003": "getLeagueInvitesResponse",
+  "InlineResponse2003ResponseData": "getLeagueInvitesResponseData"
 }

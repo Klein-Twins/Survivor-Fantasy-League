@@ -13,33 +13,10 @@ servers:
   - url: "http://localhost:3000"
     variables: {}
 paths:
-  /api/auth/signup:
-    $ref: "./paths/authPaths.yaml#/Signup"
-  /api/auth/login:
-    $ref: "./paths/authPaths.yaml#/Login"
-  /api/auth/logout:
-    $ref: "./paths/authPaths.yaml#/Logout"
-  /api/auth/check-auth:
-    $ref: "./paths/tokenPaths.yaml#/CheckAuth"
-  /api/auth/extend-session:
-    $ref: "./paths/tokenPaths.yaml#/ExtendSession"
-  /api/profile/leagues:
-    $ref: "./paths/profilePaths/profileLeaguesPaths.yaml#/ProfileLeagues"
-  /api/survivor:
-    $ref: "./paths/survivorPaths.yaml#/Survivors"
-  /api/league/profile/search:
-    $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/ProfileSearchForLeagueInvite"
-  /api/league/profile/invite:
-    $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/LeagueInvite"
-  /api/league/profile/invite/respond:
-    $ref: "./paths/leaguePaths/leagueProfilesPaths.yaml#/RespondToLeagueInvitePath"
-  # /api/notification/{notificationId}:
-  #   $ref: "./paths/notificationPaths.yaml#/MarkNotificationAsRead"
-components:
-  schemas:
-    Account:
-      $ref: "./components/authComponents.yaml#/components/schemas/Account"
+  /api/profile/leagueInvite:
+    $ref: "./paths/profile/leagueInvite.yaml#/paths/leagueInvite"
 
+components:
   securitySchemes:
     accessTokenCookie:
       type: apiKey

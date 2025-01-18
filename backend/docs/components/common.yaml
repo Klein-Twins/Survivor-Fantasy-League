@@ -1,0 +1,29 @@
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: "Operation completed successfully."
+        statusCode:
+          type: integer
+          example: 200
+        error:
+          type: string
+          nullable: true
+          example: "An error occurred."
+  securitySchemes:
+    accessTokenCookie:
+      type: apiKey
+      in: cookie
+      name: accessToken
+      description: JWT token for authentication.
+    refreshTokenCookie:
+      type: apiKey
+      in: cookie
+      name: refreshToken
+      description: JWT token used to refresh access tokens.

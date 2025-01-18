@@ -7,7 +7,11 @@ import profileService from '../../../services/profile/profileService';
 import { InviteMemberResponse, LeagueInvite } from '../../../../generated-api';
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/16/solid';
 
-const LeagueInvitesPanel: React.FC = () => {
+interface LeagueInvitesPanelProps {
+    className?: string;
+}
+
+const LeagueInvitesPanel: React.FC<LeagueInvitesPanelProps> = ({ className }) => {
     const [isOpen, setIsOpen] = useState(true);
     const account = useSelector((state: RootState) => state.auth.account);
     const profileId = account?.profileId;
@@ -44,7 +48,7 @@ const LeagueInvitesPanel: React.FC = () => {
 
     return (
         <>
-            <div className="flex flex-col mx-auto bg-slate-300 py-2 px-2 rounded-lg shadow-lg w-auto">
+            <div className={`w-full flex flex-col py-2 px-2 ${className}`}>
                 <div onClick={toggleOpen} className="flex justify-between items-center hover:cursor-pointer px-2">
                     <h1 className='text-xl text-center font-bold'>League Invitations {responseData?.numLeagueInvites ? `(${responseData.numLeagueInvites})` : '(0)'}</h1>
                     {isOpen ? <ChevronUpIcon className="h-6 w-6 text-gray-700" /> : <ChevronDownIcon className="h-6 w-6 text-gray-700" />}

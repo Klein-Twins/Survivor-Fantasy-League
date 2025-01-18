@@ -1,0 +1,25 @@
+paths:
+  leagueInvite:
+    get:
+      summary: Retrieve league invites for a profile
+      description: This endpoint allows you to retrieve league invites for a profile. The profile must have a valid token and profileId query parameters.
+      operationId: getLeagueInvites
+      tags:
+        - League
+      parameters:
+        - name: profileId
+          in: query
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+      responses:
+        "200":
+          description: A list of league invites for the profile
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/GetLeagueInvitesResponse"
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []

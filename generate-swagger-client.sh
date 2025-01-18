@@ -10,17 +10,21 @@ fi
 echo "Making directory: "$DIRECTORY""
 mkdir -p "$DIRECTORY"
 
-# Debugging output
-echo "Current working directory: $(pwd)"
-echo "Configuration file content:"
-cat ./swagger-codegen-config.json
+# docker run --rm \
+#   -v $(pwd):/local \
+#   swaggerapi/swagger-codegen-cli-v3 generate \
+#   -i http://host.docker.internal:3000/swagger.json \
+#   -l typescript-axios \
+#   -c /local/swagger-codegen-config.json \
+#   -o /local/frontend/generated-api
+
+#-i http://host.docker.internal:3000/swagger.json \
 
 docker run --rm \
-  -v $(pwd):/local \
+  -v ${PWD}:/local \
   swaggerapi/swagger-codegen-cli-v3 generate \
-  -i http://host.docker.internal:3000/swagger.json \
+  -i /local/backend/docs/api-doc.yaml \
   -l typescript-axios \
-  -c /local/swagger-codegen-config.json \
   -o /local/frontend/generated-api
 
 echo "Generated files in $DIRECTORY:"
