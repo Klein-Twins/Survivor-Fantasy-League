@@ -1,0 +1,113 @@
+paths:
+  login:
+    post:
+      operationId: loginUser
+      summary: "Login a user"
+      description: >-
+        Logs in a user by validating their credentials.
+        Upon success:
+        - Access and refresh tokens are set in `Set-Cookie` headers.
+        - A success message and account details are returned in the response body.
+      tags:
+        - UserSessionService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/auth/userSession.yaml#/components/requestBodies/LoginUserRequestBody"
+      responses:
+        "200":
+          description: "User logged in successfully"
+          headers:
+            Set-Cookie:
+              $ref: "../../components/security.yaml#/components/headers/AuthCookies"
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/auth/userSession.yaml#/components/responses/LoginUserResponse"
+  signup:
+    post:
+      operationId: signupUser
+      summary: Registers a new user account
+      description: |
+        Creates a new user account and returns authentication tokens via cookies.
+        Upon success:
+        - Access and refresh tokens are set in `Set-Cookie` headers.
+        - A success message and account details are returned in the response body.
+      tags:
+        - UserSessionService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/auth/userSession.yaml#/components/requestBodies/SignupUserRequestBody"
+      responses:
+        "200":
+          description: Signed up and logged in user successfully
+          headers:
+            Set-Cookie:
+              $ref: "../../components/security.yaml#/components/headers/AuthCookies"
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/auth/userSession.yaml#/components/responses/SignupUserResponse"
+
+  extendSession:
+    post:
+      summary: Extend user session
+      operationId: extendSession
+      description: |
+        Extends the user session by generating a new refresh token and access token, 
+        if the refresh token is valid. The response includes both tokens set as cookies 
+        and a time-to-expiry value for the refresh token.
+      tags:
+        - UserSessionService
+      responses:
+        "200":
+          description: User session extended successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/auth/userSession.yaml#/components/responses/ExtendSessionResponse"
+      security:
+        - refreshTokenCookie: []
+
+  logout:
+    post:
+      operationId: logoutUser
+      summary: Log out a user
+      description: |
+        Logs out a user by invalidating their JWT tokens, clearing any session information, 
+        and removing cookies from the client.
+        - If the cookies are missing or tampered with, appropriate errors are returned.
+      tags:
+        - UserSessionService
+      responses:
+        "200":
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/auth/userSession.yaml#/components/responses/LogoutUserResponse"
+
+  checkAuth:
+    get:
+      summary: Validate refresh token authenticity
+      operationId: checkAuth
+      description: |
+        This endpoint verifies if the refresh token is valid. It is used to confirm 
+        the user's authentication status, such as during a page reload. Requires the 
+        refresh token cookie and the associated profile ID as input.
+      tags:
+        - UserSessionService
+      responses:
+        "200":
+          description: User authentication status retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/auth/userSession.yaml#/components/responses/CheckAuthResponse"
+      security:
+        - refreshTokenCookie: []

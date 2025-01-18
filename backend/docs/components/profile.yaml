@@ -13,3 +13,12 @@ components:
           type: string
         profileImageUrl:
           type: string
+    Account:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/Profile"
+        - type: object
+          properties:
+            email:
+              type: string
+              description: Email of user

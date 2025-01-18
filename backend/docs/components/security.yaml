@@ -1,0 +1,13 @@
+components:
+  headers:
+    AuthCookies:
+      description: |
+        Authentication cookies included in the response:
+          - `accessToken`: Used for API authorization.
+          - `refreshToken`: Used for session renewal.
+        Both cookies are set with `HttpOnly`, `Secure`, and `SameSite=Strict` flags.
+      schema:
+        type: string
+        example: |
+          accessToken=your-access-token-here; HttpOnly; Secure; SameSite=Strict
+          refreshToken=your-refresh-token-here; HttpOnly; Secure; SameSite=Strict

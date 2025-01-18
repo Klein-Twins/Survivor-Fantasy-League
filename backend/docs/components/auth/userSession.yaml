@@ -1,0 +1,145 @@
+components:
+  schemas:
+    UserSession:
+      type: object
+      properties:
+        numSecondsRefreshTokenExpiresIn:
+          type: number
+          description: Number of seconds the session is valid for
+          example: 1800
+        isAuthenticated:
+          type: boolean
+          example: true
+
+    LoginUserResponseData:
+      type: object
+      properties:
+        account:
+          $ref: "../profile.yaml#/components/schemas/Account"
+        userSession:
+          $ref: "#/components/schemas/UserSession"
+
+    LogoutUserResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Your torch has been extinguished for now...
+          description: A logout message to be passed for the user.
+
+    SignupUserResponseData:
+      type: object
+      properties:
+        account:
+          $ref: "../profile.yaml#/components/schemas/Account"
+        userSession:
+          $ref: "#/components/schemas/UserSession"
+
+    ExtendSessionResponseData:
+      type: object
+      properties:
+        account:
+          $ref: "../profile.yaml#/components/schemas/Account"
+        userSession:
+          $ref: "#/components/schemas/UserSession"
+
+    CheckAuthResponseData:
+      type: object
+      properties:
+        account:
+          $ref: "../profile.yaml#/components/schemas/Account"
+        userSession:
+          $ref: "#/components/schemas/UserSession"
+
+  requestBodies:
+    LoginUserRequestBody:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          description: Password for the user account
+          minLength: 8
+          example: StrongPassword123!
+    SignupUserRequestBody:
+      type: object
+      required:
+        - email
+        - password
+        - username
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address for the new user
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          description: Password for the new account
+          example: StrongPassword123!
+        username:
+          type: string
+          description: Unique username for the account
+          example: SurvivorFan69
+        firstName:
+          type: string
+          description: First name of the user
+          example: Jeff
+        lastName:
+          type: string
+          description: Last name of the user
+          example: Probst
+
+  responses:
+    LoginUserResponse:
+      type: object
+      allOf:
+        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/LoginUserResponseData"
+    LogoutUserResponse:
+      type: object
+      allOf:
+        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/LogoutUserResponseData"
+
+    SignupUserResponse:
+      type: object
+      allOf:
+        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/SignupUserResponseData"
+
+    ExtendSessionResponse:
+      type: object
+      allOf:
+        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/ExtendSessionResponseData"
+
+    CheckAuthResponse:
+      type: object
+      allOf:
+        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/CheckAuthResponseData"

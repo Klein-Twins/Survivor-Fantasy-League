@@ -13,13 +13,407 @@ servers:
   - url: 'http://localhost:3000'
     variables: {}
 paths:
+  /api/auth/signup:
+    post:
+      operationId: signupUser
+      summary: Registers a new user account
+      description: |
+        Creates a new user account and returns authentication tokens via cookies.
+        Upon success:
+        - Access and refresh tokens are set in `Set-Cookie` headers.
+        - A success message and account details are returned in the response body.
+      tags:
+        - UserSessionService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - username
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email address for the new user
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  description: Password for the new account
+                  example: StrongPassword123!
+                username:
+                  type: string
+                  description: Unique username for the account
+                  example: SurvivorFan69
+                firstName:
+                  type: string
+                  description: First name of the user
+                  example: Jeff
+                lastName:
+                  type: string
+                  description: Last name of the user
+                  example: Probst
+      responses:
+        '200':
+          description: Signed up and logged in user successfully
+          headers:
+            Set-Cookie:
+              description: |
+                Authentication cookies included in the response:
+                  - `accessToken`: Used for API authorization.
+                  - `refreshToken`: Used for session renewal.
+                Both cookies are set with `HttpOnly`, `Secure`, and `SameSite=Strict` flags.
+              schema:
+                type: string
+                example: |
+                  accessToken=your-access-token-here; HttpOnly; Secure; SameSite=Strict
+                  refreshToken=your-refresh-token-here; HttpOnly; Secure; SameSite=Strict
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          account:
+                            type: object
+                            allOf:
+                              - type: object
+                                properties:
+                                  profileId:
+                                    type: string
+                                  username:
+                                    type: string
+                                  firstName:
+                                    type: string
+                                  lastName:
+                                    type: string
+                                  profileImageUrl:
+                                    type: string
+                              - type: object
+                                properties:
+                                  email:
+                                    type: string
+                                    description: Email of user
+                          userSession:
+                            type: object
+                            properties:
+                              numSecondsRefreshTokenExpiresIn:
+                                type: number
+                                description: Number of seconds the session is valid for
+                                example: 1800
+                              isAuthenticated:
+                                type: boolean
+                                example: true
+  /api/auth/login:
+    post:
+      operationId: loginUser
+      summary: Login a user
+      description: 'Logs in a user by validating their credentials. Upon success: - Access and refresh tokens are set in `Set-Cookie` headers. - A success message and account details are returned in the response body.'
+      tags:
+        - UserSessionService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email address of the user
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  description: Password for the user account
+                  minLength: 8
+                  example: StrongPassword123!
+      responses:
+        '200':
+          description: User logged in successfully
+          headers:
+            Set-Cookie:
+              description: |
+                Authentication cookies included in the response:
+                  - `accessToken`: Used for API authorization.
+                  - `refreshToken`: Used for session renewal.
+                Both cookies are set with `HttpOnly`, `Secure`, and `SameSite=Strict` flags.
+              schema:
+                type: string
+                example: |
+                  accessToken=your-access-token-here; HttpOnly; Secure; SameSite=Strict
+                  refreshToken=your-refresh-token-here; HttpOnly; Secure; SameSite=Strict
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          account:
+                            type: object
+                            allOf:
+                              - type: object
+                                properties:
+                                  profileId:
+                                    type: string
+                                  username:
+                                    type: string
+                                  firstName:
+                                    type: string
+                                  lastName:
+                                    type: string
+                                  profileImageUrl:
+                                    type: string
+                              - type: object
+                                properties:
+                                  email:
+                                    type: string
+                                    description: Email of user
+                          userSession:
+                            type: object
+                            properties:
+                              numSecondsRefreshTokenExpiresIn:
+                                type: number
+                                description: Number of seconds the session is valid for
+                                example: 1800
+                              isAuthenticated:
+                                type: boolean
+                                example: true
+  /api/auth/logout:
+    post:
+      operationId: logoutUser
+      summary: Log out a user
+      description: |
+        Logs out a user by invalidating their JWT tokens, clearing any session information, 
+        and removing cookies from the client.
+        - If the cookies are missing or tampered with, appropriate errors are returned.
+      tags:
+        - UserSessionService
+      responses:
+        '200':
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          message:
+                            type: string
+                            example: Your torch has been extinguished for now...
+                            description: A logout message to be passed for the user.
+  /api/auth/extend-session:
+    post:
+      summary: Extend user session
+      operationId: extendSession
+      description: |
+        Extends the user session by generating a new refresh token and access token, 
+        if the refresh token is valid. The response includes both tokens set as cookies 
+        and a time-to-expiry value for the refresh token.
+      tags:
+        - UserSessionService
+      responses:
+        '200':
+          description: User session extended successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          account:
+                            type: object
+                            allOf:
+                              - type: object
+                                properties:
+                                  profileId:
+                                    type: string
+                                  username:
+                                    type: string
+                                  firstName:
+                                    type: string
+                                  lastName:
+                                    type: string
+                                  profileImageUrl:
+                                    type: string
+                              - type: object
+                                properties:
+                                  email:
+                                    type: string
+                                    description: Email of user
+                          userSession:
+                            type: object
+                            properties:
+                              numSecondsRefreshTokenExpiresIn:
+                                type: number
+                                description: Number of seconds the session is valid for
+                                example: 1800
+                              isAuthenticated:
+                                type: boolean
+                                example: true
+      security:
+        - refreshTokenCookie: []
+  /api/auth/check-auth:
+    get:
+      summary: Validate refresh token authenticity
+      operationId: checkAuth
+      description: |
+        This endpoint verifies if the refresh token is valid. It is used to confirm 
+        the user's authentication status, such as during a page reload. Requires the 
+        refresh token cookie and the associated profile ID as input.
+      tags:
+        - UserSessionService
+      responses:
+        '200':
+          description: User authentication status retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          account:
+                            type: object
+                            allOf:
+                              - type: object
+                                properties:
+                                  profileId:
+                                    type: string
+                                  username:
+                                    type: string
+                                  firstName:
+                                    type: string
+                                  lastName:
+                                    type: string
+                                  profileImageUrl:
+                                    type: string
+                              - type: object
+                                properties:
+                                  email:
+                                    type: string
+                                    description: Email of user
+                          userSession:
+                            type: object
+                            properties:
+                              numSecondsRefreshTokenExpiresIn:
+                                type: number
+                                description: Number of seconds the session is valid for
+                                example: 1800
+                              isAuthenticated:
+                                type: boolean
+                                example: true
+      security:
+        - refreshTokenCookie: []
   /api/profile/leagueInvite:
     get:
-      summary: Retrieve league invites for a profile
-      description: This endpoint allows you to retrieve league invites for a profile. The profile must have a valid token and profileId query parameters.
-      operationId: getLeagueInvites
+      summary: Retrieve league invites for a player
+      description: This endpoint will retrieve all pending league invitations for a player.
+      operationId: getLeagueInvitesForPlayer
       tags:
-        - League
+        - LeagueInviteService
       parameters:
         - name: profileId
           in: query
@@ -99,6 +493,506 @@ paths:
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
+    post:
+      summary: Create and send league invite for a profile
+      description: This endpoint allows the user to create a new league invite for a profile and then send the invite to them.
+      operationId: createAndSendLeagueInvite
+      tags:
+        - LeagueInviteService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - inviterProfileId
+                - inviteeProfileId
+                - leagueId
+              properties:
+                inviterProfileId:
+                  type: string
+                invitedProfileId:
+                  type: string
+                leagueId:
+                  type: string
+      responses:
+        '200':
+          description: Created a new league invite and sent invite.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+    put:
+      summary: Respond to a league invite
+      description: This endpoint allows the user to accept or decline a league invitation.
+      operationId: respondToLeagueInvite
+      tags:
+        - LeagueInviteService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - leagueId
+                - inviteResponse
+              properties:
+                leagueId:
+                  type: string
+                  description: The unique ID of the league the user is being invited to.
+                profileId:
+                  type: string
+                  description: THe unique ID of the profile that is responding to the invite
+                inviteResponse:
+                  type: string
+                  description: The response status to the league invite.
+                  enum:
+                    - ACCEPT
+                    - DECLINE
+      responses:
+        '200':
+          description: Responded to league invite (accept or decline) successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+  /api/profile/search:
+    get:
+      summary: Retrieve profiles by search criteria
+      description: 'This endpoint allows you to search for profiles based on username, first name, and league ID, with pagination options.'
+      operationId: searchProfilesForLeagueInvite
+      tags:
+        - ProfileService
+      parameters:
+        - name: userName
+          in: query
+          required: false
+          description: The username of the profile.
+          schema:
+            type: string
+        - name: firstName
+          in: query
+          required: false
+          description: The first name of the profile.
+          schema:
+            type: string
+        - name: lastName
+          in: query
+          required: false
+          description: The last name of the profile.
+          schema:
+            type: string
+        - name: leagueId
+          in: query
+          required: true
+          description: The ID of the league the profile is associated with.
+          schema:
+            type: string
+        - name: page
+          in: query
+          required: false
+          description: The page number for pagination.
+          schema:
+            type: integer
+            example: 1
+        - name: limit
+          in: query
+          required: false
+          description: The number of profiles to return per page.
+          schema:
+            type: integer
+            example: 10
+        - name: sortBy
+          in: query
+          required: false
+          description: 'The field to sort the profiles by. Options are "firstName", "lastName", and "userName". Defaults to "firstName" if not provided.'
+          schema:
+            type: string
+            enum:
+              - firstName
+              - lastName
+              - userName
+            example: firstName
+        - name: isAsc
+          in: query
+          required: false
+          description: A boolean indicating whether to sort in ascending (true) or descending (false) order. Defaults to true (ascending).
+          schema:
+            type: boolean
+            example: true
+      responses:
+        '200':
+          description: A list of profiles matching the search criteria
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          profilesFound:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                profile:
+                                  type: object
+                                  properties:
+                                    profileId:
+                                      type: string
+                                    username:
+                                      type: string
+                                    firstName:
+                                      type: string
+                                    lastName:
+                                      type: string
+                                    profileImageUrl:
+                                      type: string
+                                isInvited:
+                                  type: boolean
+                                  description: Indicates if the profile has been invited to the league.
+                                isJoined:
+                                  type: boolean
+                                  description: Indicates if the profile has joined the league.
+                          pagination:
+                            type: object
+                            required:
+                              - currentPage
+                              - totalPages
+                              - totalCount
+                            properties:
+                              currentPage:
+                                type: integer
+                                description: The current page of the result set.
+                                example: 1
+                              totalPages:
+                                type: integer
+                                description: The total number of pages available.
+                                example: 1
+                              totalCount:
+                                type: integer
+                                description: The total number of profiles that match the search criteria.
+                                example: 8
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+  /api/profile/league:
+    get:
+      summary: Get leagues for a profile
+      description: Gets profile's enrolled leagues
+      tags:
+        - LeagueService
+      operationId: getLeaguesForProfile
+      parameters:
+        - in: query
+          name: profileId
+          required: true
+          schema:
+            type: string
+          description: Profile Id for the getLeaguesQuery
+      responses:
+        '200':
+          description: A list of leagues for the profile
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          leagues:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                leagueId:
+                                  type: string
+                                  description: The ID of the league.
+                                  example: c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f
+                                name:
+                                  type: string
+                                  description: The name of the league.
+                                  example: Corner By The Bookshelf
+                                season:
+                                  type: string
+                                  description: The season the league belongs to.
+                                  example: 47
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+    post:
+      summary: Create a new League
+      description: Creates a new league for a given season.
+      tags:
+        - LeagueService
+      operationId: createLeague
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The name of the league
+                  example: Corner By The Bookshelf
+                seasonId:
+                  type: integer
+                  description: The ID of the season the league belongs to
+                  example: 47
+                profileId:
+                  type: string
+                  description: The profileId of the user creating the league
+                  example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+              required:
+                - name
+                - seasonId
+                - profileId
+      responses:
+        '201':
+          description: League created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          league:
+                            type: object
+                            properties:
+                              leagueId:
+                                type: string
+                                description: The ID of the league.
+                                example: c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f
+                              name:
+                                type: string
+                                description: The name of the league.
+                                example: Corner By The Bookshelf
+                              season:
+                                type: string
+                                description: The season the league belongs to.
+                                example: 47
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+  /api/season/survivors:
+    get:
+      summary: Get survivors
+      operationId: getSurvivors
+      description: 'Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.'
+      tags:
+        - SurvivorService
+      parameters:
+        - in: query
+          name: seasonId
+          required: false
+          schema:
+            type: integer
+            description: 'The ID of the season to retrieve survivors from. If omitted, returns all survivors.'
+            example: 47
+        - in: query
+          name: withDetails
+          required: false
+          schema:
+            type: boolean
+            default: false
+            description: Whether to include detailed information about the survivors. Defaults to false.
+            example: true
+      responses:
+        '200':
+          description: Retrieves a list of survivors per season
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - properties:
+                      responseData:
+                        type: object
+                        properties:
+                          survivors:
+                            type: array
+                            items:
+                              oneOf:
+                                - type: object
+                                  allOf:
+                                    - type: object
+                                      properties:
+                                        survivorId:
+                                          type: integer
+                                          description: The survivor's unique identifier
+                                          example: 1
+                                        firstName:
+                                          type: string
+                                          description: The survivor's first name
+                                          example: Andy
+                                        lastName:
+                                          type: string
+                                          description: The survivor's last name
+                                          example: Rueda
+                                    - type: object
+                                      properties:
+                                        seasonId:
+                                          type: integer
+                                          description: The season tied with this survivor's details
+                                          example: 47I
+                                        nickName:
+                                          type: string
+                                          description: The survivor's nickname
+                                          example: The Brain
+                                        fromCity:
+                                          type: string
+                                          description: The city the survivor is from
+                                          example: Brooklyn
+                                        fromState:
+                                          type: string
+                                          description: The state the survivor is from
+                                          example: New York
+                                        fromCountry:
+                                          type: string
+                                          description: The country the survivor is from
+                                          example: US
+                                        age:
+                                          type: integer
+                                          description: The survivor's age at the time of the season
+                                          example: 31
+                                        description:
+                                          type: string
+                                          description: A short description about the survivor
+                                          example: An outgoing and energetic person.
+                                        job:
+                                          type: string
+                                          description: The survivor's job/occupation
+                                          example: AI Research Assistant
+                                        imageUrl:
+                                          type: string
+                                          description: The path of the survivor image
+                                          example: /assets/images/survivors/AndyRueda47.jpeg
+                                - type: object
+                                  properties:
+                                    survivorId:
+                                      type: integer
+                                      description: The survivor's unique identifier
+                                      example: 1
+                                    firstName:
+                                      type: string
+                                      description: The survivor's first name
+                                      example: Andy
+                                    lastName:
+                                      type: string
+                                      description: The survivor's last name
+                                      example: Rueda
 components:
   securitySchemes:
     accessTokenCookie:

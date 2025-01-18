@@ -15,3 +15,53 @@ components:
           type: string
           description: The season the league belongs to.
           example: 47
+    CreateLeagueRequestBody:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the league
+          example: "Corner By The Bookshelf"
+        seasonId:
+          type: integer
+          description: The ID of the season the league belongs to
+          example: 47
+        profileId:
+          type: string
+          description: The profileId of the user creating the league
+          example: "49e27bd8-dc24-4159-9630-e989025bf8fd"
+      required:
+        - name
+        - seasonId
+        - profileId
+    CreateLeagueResponse:
+      type: object
+      allOf:
+        - $ref: "./common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/CreateLeagueResponseData"
+
+    CreateLeagueResponseData:
+      type: object
+      properties:
+        league:
+          $ref: "#/components/schemas/League"
+
+    GetLeaguesForProfileResponse:
+      type: object
+      allOf:
+        - $ref: "./common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/GetLeaguesForProfileResponseData"
+
+    GetLeaguesForProfileResponseData:
+      type: object
+      properties:
+        leagues:
+          type: array
+          items:
+            $ref: "#/components/schemas/League"

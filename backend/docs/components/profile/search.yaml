@@ -1,0 +1,33 @@
+components:
+  schemas:
+    SearchProfilesForLeagueInviteResponse:
+      type: object
+      allOf:
+        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/SearchProfilesForLeagueInviteResponseData"
+
+    SearchProfilesForLeagueInviteResponseData:
+      type: object
+      properties:
+        profilesFound:
+          type: array
+          items:
+            $ref: "#/components/schemas/ProfileAndLeagueInviteStatus"
+
+        pagination:
+          $ref: "../common.yaml#/components/schemas/Pagination"
+
+    ProfileAndLeagueInviteStatus:
+      type: object
+      properties:
+        profile:
+          $ref: "../profile.yaml#/components/schemas/Profile"
+        isInvited:
+          type: boolean
+          description: Indicates if the profile has been invited to the league.
+        isJoined:
+          type: boolean
+          description: Indicates if the profile has joined the league.

@@ -1,11 +1,11 @@
 paths:
   leagueInvite:
     get:
-      summary: Retrieve league invites for a profile
-      description: This endpoint allows you to retrieve league invites for a profile. The profile must have a valid token and profileId query parameters.
-      operationId: getLeagueInvites
+      summary: Retrieve league invites for a player
+      description: This endpoint will retrieve all pending league invitations for a player.
+      operationId: getLeagueInvitesForPlayer
       tags:
-        - League
+        - LeagueInviteService
       parameters:
         - name: profileId
           in: query
@@ -19,7 +19,53 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/GetLeagueInvitesResponse"
+                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/GetLeagueInvitesForPlayerResponse"
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+    post:
+      summary: Create and send league invite for a profile
+      description: This endpoint allows the user to create a new league invite for a profile and then send the invite to them.
+      operationId: createAndSendLeagueInvite
+      tags:
+        - LeagueInviteService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/CreateAndSendLeagueInviteRequestBody"
+      responses:
+        "200":
+          description: Created a new league invite and sent invite.
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/CreateAndSendLeagueInviteResponse"
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+    put:
+      summary: Respond to a league invite
+      description: This endpoint allows the user to accept or decline a league invitation.
+      operationId: respondToLeagueInvite
+      tags:
+        - LeagueInviteService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/RespondToLeagueInviteRequestBody"
+      responses:
+        "200":
+          description: Responded to league invite (accept or decline) successfully
+          content:
+            application/json:
+              schema:
+                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/RespondToLeagueInviteResponse"
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []

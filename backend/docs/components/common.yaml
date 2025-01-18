@@ -16,6 +16,27 @@ components:
           type: string
           nullable: true
           example: "An error occurred."
+
+    Pagination:
+      type: object
+      required:
+        - currentPage
+        - totalPages
+        - totalCount
+      properties:
+        currentPage:
+          type: integer
+          description: The current page of the result set.
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of pages available.
+          example: 1
+        totalCount:
+          type: integer
+          description: The total number of profiles that match the search criteria.
+          example: 8
+
   securitySchemes:
     accessTokenCookie:
       type: apiKey

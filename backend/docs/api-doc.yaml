@@ -13,8 +13,26 @@ servers:
   - url: "http://localhost:3000"
     variables: {}
 paths:
+  /api/auth/signup:
+    $ref: "./paths/auth/userSession.yaml#/paths/signup"
+  /api/auth/login:
+    $ref: "./paths/auth/userSession.yaml#/paths/login"
+  /api/auth/logout:
+    $ref: "./paths/auth/userSession.yaml#/paths/logout"
+  /api/auth/extend-session:
+    $ref: "./paths/auth/userSession.yaml#/paths/extendSession"
+
+  /api/auth/check-auth:
+    $ref: "./paths/auth/userSession.yaml#/paths/checkAuth"
+
   /api/profile/leagueInvite:
     $ref: "./paths/profile/leagueInvite.yaml#/paths/leagueInvite"
+  /api/profile/search:
+    $ref: "./paths/profile/search.yaml#/paths/search"
+  /api/profile/league:
+    $ref: "./paths/league.yaml#/paths/league"
+  /api/season/survivors:
+    $ref: "./paths/survivors.yaml#/paths/survivors"
 
 components:
   securitySchemes:
