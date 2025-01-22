@@ -42,12 +42,22 @@ components:
       type: object
       allOf:
         - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - type: object
+          properties:
+            responseData:
+              $ref: "#/components/schemas/RespondToLeagueInviteResponseData"
+
+    RespondToLeagueInviteResponseData:
+      type: object
+      properties:
+        league:
+          $ref: "../league.yaml#/components/schemas/League"
 
     CreateAndSendLeagueInviteRequestBody:
       type: object
       required:
         - inviterProfileId
-        - inviteeProfileId
+        - invitedProfileId
         - leagueId
       properties:
         inviterProfileId:
@@ -62,6 +72,7 @@ components:
       required:
         - leagueId
         - inviteResponse
+        - profileId
       properties:
         leagueId:
           type: string
@@ -75,3 +86,9 @@ components:
           enum:
             - ACCEPT
             - DECLINE
+
+  InviteStatusEnum:
+    type: string
+    enum:
+      - ACCEPT
+      - DECLINE

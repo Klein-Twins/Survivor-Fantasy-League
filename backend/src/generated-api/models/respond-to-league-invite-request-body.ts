@@ -34,7 +34,7 @@ export interface RespondToLeagueInviteRequestBody {
      * @type {string}
      * @memberof RespondToLeagueInviteRequestBody
      */
-    profileId?: string;
+    profileId: string;
 
     /**
      * The response status to the league invite.

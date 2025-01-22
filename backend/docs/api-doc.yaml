@@ -25,7 +25,7 @@ paths:
   /api/auth/check-auth:
     $ref: "./paths/auth/userSession.yaml#/paths/checkAuth"
 
-  /api/profile/leagueInvite:
+  /api/league/invite:
     $ref: "./paths/profile/leagueInvite.yaml#/paths/leagueInvite"
   /api/profile/search:
     $ref: "./paths/profile/search.yaml#/paths/search"

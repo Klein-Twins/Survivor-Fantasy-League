@@ -12,19 +12,18 @@
  * Do not edit the class manually.
  */
 
-import { ApiResponse } from './api-response';
-import { RespondToLeagueInviteResponseData } from './respond-to-league-invite-response-data';
+import { League } from './league';
  /**
  * 
  *
  * @export
- * @interface RespondToLeagueInviteResponse
+ * @interface RespondToLeagueInviteResponseData
  */
-export interface RespondToLeagueInviteResponse extends ApiResponse {
+export interface RespondToLeagueInviteResponseData {
 
     /**
-     * @type {RespondToLeagueInviteResponseData}
-     * @memberof RespondToLeagueInviteResponse
+     * @type {League}
+     * @memberof RespondToLeagueInviteResponseData
      */
-    responseData?: RespondToLeagueInviteResponseData;
+    league?: League;
 }

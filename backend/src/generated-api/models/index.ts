@@ -30,6 +30,7 @@ export * from './profile';
 export * from './profile-and-league-invite-status';
 export * from './respond-to-league-invite-request-body';
 export * from './respond-to-league-invite-response';
+export * from './respond-to-league-invite-response-data';
 export * from './search-profiles-for-league-invite-response';
 export * from './search-profiles-for-league-invite-response-data';
 export * from './season';

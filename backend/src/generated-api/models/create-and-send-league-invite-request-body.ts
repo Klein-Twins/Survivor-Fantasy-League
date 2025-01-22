@@ -30,7 +30,7 @@ export interface CreateAndSendLeagueInviteRequestBody {
      * @type {string}
      * @memberof CreateAndSendLeagueInviteRequestBody
      */
-    invitedProfileId?: string;
+    invitedProfileId: string;
 
     /**
      * @type {string}

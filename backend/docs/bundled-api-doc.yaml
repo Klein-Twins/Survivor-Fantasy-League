@@ -475,7 +475,7 @@ paths:
                                 example: true
       security:
         - refreshTokenCookie: []
-  /api/profile/leagueInvite:
+  /api/league/invite:
     get:
       summary: Retrieve league invites for a player
       description: This endpoint will retrieve all pending league invitations for a player.
@@ -665,7 +665,7 @@ paths:
               type: object
               required:
                 - inviterProfileId
-                - inviteeProfileId
+                - invitedProfileId
                 - leagueId
               properties:
                 inviterProfileId:
@@ -719,6 +719,7 @@ paths:
               required:
                 - leagueId
                 - inviteResponse
+                - profileId
               properties:
                 leagueId:
                   type: string
@@ -759,6 +760,106 @@ paths:
                         type: string
                         nullable: true
                         example: An error occurred.
+                  - type: object
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          league:
+                            type: object
+                            required:
+                              - leagueId
+                              - name
+                              - season
+                              - leagueMembers
+                            properties:
+                              leagueId:
+                                type: string
+                                description: The ID of the league.
+                                example: c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f
+                              name:
+                                type: string
+                                description: The name of the league.
+                                example: Corner By The Bookshelf
+                              season:
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    format: int64
+                                    description: The unique identifier of the season.
+                                  name:
+                                    type: string
+                                    description: The name of the season.
+                                  start_date:
+                                    type: string
+                                    format: date
+                                    description: The start date of the season.
+                                  end_date:
+                                    type: string
+                                    format: date
+                                    description: The end date of the season.
+                                  location:
+                                    type: string
+                                    description: The location of the season.
+                                  theme:
+                                    type: string
+                                    description: The theme of the season.
+                                required:
+                                  - id
+                                  - name
+                                  - start_date
+                                  - end_date
+                                  - location
+                                  - theme
+                              leagueMembers:
+                                type: array
+                                items:
+                                  type: object
+                                  required:
+                                    - account
+                                    - role
+                                  properties:
+                                    account:
+                                      type: object
+                                      required:
+                                        - email
+                                        - userId
+                                      allOf:
+                                        - type: object
+                                          required:
+                                            - profileId
+                                            - userName
+                                            - profileImageUrl
+                                          properties:
+                                            profileId:
+                                              type: string
+                                            userName:
+                                              type: string
+                                            firstName:
+                                              type: string
+                                              nullable: true
+                                            lastName:
+                                              type: string
+                                              nullable: true
+                                            profileImageUrl:
+                                              type: string
+                                        - type: object
+                                          properties:
+                                            email:
+                                              type: string
+                                              description: Email of user
+                                            userId:
+                                              type: string
+                                              description: User Id of user
+                                    role:
+                                      type: string
+                                      description: The role of the league member
+                                      example: member
+                                      enum:
+                                        - OWNER
+                                        - ADMIN
+                                        - MEMBER
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
