@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from "sequelize";
+import { LeagueMemberRoleEnum } from "../generated-api";
 
 export enum InviteStatusEnum {
   Pending = "pending",
@@ -20,7 +21,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     public leagueId!: string;
     public profileId!: string;
     public inviterProfileId!: string | null;
-    public role!: string;
+    public role!: LeagueMemberRoleEnum;
     public inviteStatus!: InviteStatusEnum;
 
     static associate(models: any) {
@@ -67,7 +68,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
       hooks: {
         // beforeCreate Hook: Enforce single Owner per league
         beforeCreate: async (leagueProfile: LeagueProfile, options) => {
-          if (leagueProfile.role === "Owner") {
+          if (leagueProfile.role === LeagueMemberRoleEnum.Owner) {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,
@@ -91,11 +92,11 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
             throw new Error("League profile not found.");
           }
 
-          if (leagueProfile.changed("role") && originalLeagueProfile.role === "Owner") {
+          if (leagueProfile.changed("role") && originalLeagueProfile.role === LeagueMemberRoleEnum.Owner) {
             throw new Error("An Owner role cannot be changed.");
           }
 
-          if (leagueProfile.role === "Owner") {
+          if (leagueProfile.role === LeagueMemberRoleEnum.Owner) {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,

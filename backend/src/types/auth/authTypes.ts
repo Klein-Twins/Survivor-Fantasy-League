@@ -1,3 +1,5 @@
+
+import { Account } from "../../generated-api";
 import { ProfileAttributes } from "../../models/Profile";
 import { UserAttributes } from "../../models/User";
 
@@ -27,7 +29,6 @@ export type AccountForResponses = Omit<Account, "userId">;
 /**
  * Account for backend. DO NOT SEND THIS BACK IN THE RESPONSES AS WE WILL KEEP USERID HIDDEN FROM FRONT END
  */
-export type Account = UserAttributes & Omit<ProfileAttributes, "profileId">
 export type AccountAndPassword = Account & {
     PASSWORD: string
 }

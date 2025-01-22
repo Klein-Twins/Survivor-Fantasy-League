@@ -8,8 +8,6 @@ import authService from '../servicesAndHelpers/auth/authService';
 
 const tokenMiddleware = {
     authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        logger.debug('In tokenMiddleware.authenticateToken');
-
         // Check if the environment variable to skip authentication is set
         if (process.env.SKIP_AUTH === 'true') {
             logger.debug('Skipping authentication due to environment variable');
@@ -19,14 +17,20 @@ const tokenMiddleware = {
 
         const accessToken: string = req.cookies.accessToken;
         const refreshToken: string = req.cookies.refreshToken;
-        const profileId = req.query.profileId as string;
 
         try {
 
-            await authService.authenticateTokens({ profileId, accessToken, refreshToken }, res)
-            logger.debug('Tokens are valid. Proceeding with the request.');
-            res.locals.isAuthenticated = true;
-            next();
+            const isAccessTokenAuthenticated = await authService.authenticateToken(accessToken, 'access');
+            const isRefreshTokenAuthenticated = await authService.authenticateToken(refreshToken, 'refresh');
+            if (isAccessTokenAuthenticated && isRefreshTokenAuthenticated) {
+                logger.debug('Tokens are valid. Proceeding with the request.');
+                next();
+                return;
+            }
+            if (!isAccessTokenAuthenticated && isRefreshTokenAuthenticated) {
+                logger.debug('Access token is invalid. Refresh token is valid. Generating new access token for user');
+                tokenService.createNewAccessTokenFromRefreshToken(refreshToken);
+            }
 
         } catch (error) {
             logger.error('Error in authenticateToken middleware:', error);

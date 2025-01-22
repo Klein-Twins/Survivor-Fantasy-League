@@ -78,6 +78,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -99,17 +103,26 @@ paths:
                         properties:
                           account:
                             type: object
+                            required:
+                              - email
+                              - userId
                             allOf:
                               - type: object
+                                required:
+                                  - profileId
+                                  - userName
+                                  - profileImageUrl
                                 properties:
                                   profileId:
                                     type: string
-                                  username:
+                                  userName:
                                     type: string
                                   firstName:
                                     type: string
+                                    nullable: true
                                   lastName:
                                     type: string
+                                    nullable: true
                                   profileImageUrl:
                                     type: string
                               - type: object
@@ -117,6 +130,9 @@ paths:
                                   email:
                                     type: string
                                     description: Email of user
+                                  userId:
+                                    type: string
+                                    description: User Id of user
                           userSession:
                             type: object
                             properties:
@@ -176,6 +192,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -197,17 +217,26 @@ paths:
                         properties:
                           account:
                             type: object
+                            required:
+                              - email
+                              - userId
                             allOf:
                               - type: object
+                                required:
+                                  - profileId
+                                  - userName
+                                  - profileImageUrl
                                 properties:
                                   profileId:
                                     type: string
-                                  username:
+                                  userName:
                                     type: string
                                   firstName:
                                     type: string
+                                    nullable: true
                                   lastName:
                                     type: string
+                                    nullable: true
                                   profileImageUrl:
                                     type: string
                               - type: object
@@ -215,6 +244,9 @@ paths:
                                   email:
                                     type: string
                                     description: Email of user
+                                  userId:
+                                    type: string
+                                    description: User Id of user
                           userSession:
                             type: object
                             properties:
@@ -244,6 +276,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -286,6 +322,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -307,17 +347,26 @@ paths:
                         properties:
                           account:
                             type: object
+                            required:
+                              - email
+                              - userId
                             allOf:
                               - type: object
+                                required:
+                                  - profileId
+                                  - userName
+                                  - profileImageUrl
                                 properties:
                                   profileId:
                                     type: string
-                                  username:
+                                  userName:
                                     type: string
                                   firstName:
                                     type: string
+                                    nullable: true
                                   lastName:
                                     type: string
+                                    nullable: true
                                   profileImageUrl:
                                     type: string
                               - type: object
@@ -325,6 +374,9 @@ paths:
                                   email:
                                     type: string
                                     description: Email of user
+                                  userId:
+                                    type: string
+                                    description: User Id of user
                           userSession:
                             type: object
                             properties:
@@ -356,6 +408,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -377,17 +433,26 @@ paths:
                         properties:
                           account:
                             type: object
+                            required:
+                              - email
+                              - userId
                             allOf:
                               - type: object
+                                required:
+                                  - profileId
+                                  - userName
+                                  - profileImageUrl
                                 properties:
                                   profileId:
                                     type: string
-                                  username:
+                                  userName:
                                     type: string
                                   firstName:
                                     type: string
+                                    nullable: true
                                   lastName:
                                     type: string
+                                    nullable: true
                                   profileImageUrl:
                                     type: string
                               - type: object
@@ -395,6 +460,9 @@ paths:
                                   email:
                                     type: string
                                     description: Email of user
+                                  userId:
+                                    type: string
+                                    description: User Id of user
                           userSession:
                             type: object
                             properties:
@@ -430,6 +498,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -456,6 +528,11 @@ paths:
                               properties:
                                 league:
                                   type: object
+                                  required:
+                                    - leagueId
+                                    - name
+                                    - season
+                                    - leagueMembers
                                   properties:
                                     leagueId:
                                       type: string
@@ -466,24 +543,105 @@ paths:
                                       description: The name of the league.
                                       example: Corner By The Bookshelf
                                     season:
-                                      type: string
-                                      description: The season the league belongs to.
-                                      example: 47
+                                      type: object
+                                      properties:
+                                        id:
+                                          type: integer
+                                          format: int64
+                                          description: The unique identifier of the season.
+                                        name:
+                                          type: string
+                                          description: The name of the season.
+                                        start_date:
+                                          type: string
+                                          format: date
+                                          description: The start date of the season.
+                                        end_date:
+                                          type: string
+                                          format: date
+                                          description: The end date of the season.
+                                        location:
+                                          type: string
+                                          description: The location of the season.
+                                        theme:
+                                          type: string
+                                          description: The theme of the season.
+                                      required:
+                                        - id
+                                        - name
+                                        - start_date
+                                        - end_date
+                                        - location
+                                        - theme
+                                    leagueMembers:
+                                      type: array
+                                      items:
+                                        type: object
+                                        required:
+                                          - account
+                                          - role
+                                        properties:
+                                          account:
+                                            type: object
+                                            required:
+                                              - email
+                                              - userId
+                                            allOf:
+                                              - type: object
+                                                required:
+                                                  - profileId
+                                                  - userName
+                                                  - profileImageUrl
+                                                properties:
+                                                  profileId:
+                                                    type: string
+                                                  userName:
+                                                    type: string
+                                                  firstName:
+                                                    type: string
+                                                    nullable: true
+                                                  lastName:
+                                                    type: string
+                                                    nullable: true
+                                                  profileImageUrl:
+                                                    type: string
+                                              - type: object
+                                                properties:
+                                                  email:
+                                                    type: string
+                                                    description: Email of user
+                                                  userId:
+                                                    type: string
+                                                    description: User Id of user
+                                          role:
+                                            type: string
+                                            description: The role of the league member
+                                            example: member
+                                            enum:
+                                              - owner
+                                              - admin
+                                              - member
                                 message:
                                   type: string
                                   description: A message indicating the success of the operation.
                                   example: Tony Stark has invited you to join a league
                                 inviterProfile:
                                   type: object
+                                  required:
+                                    - profileId
+                                    - userName
+                                    - profileImageUrl
                                   properties:
                                     profileId:
                                       type: string
-                                    username:
+                                    userName:
                                       type: string
                                     firstName:
                                       type: string
+                                      nullable: true
                                     lastName:
                                       type: string
+                                      nullable: true
                                     profileImageUrl:
                                       type: string
                           numLeagueInvites:
@@ -525,6 +683,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -579,6 +741,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -669,6 +835,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -695,15 +865,21 @@ paths:
                               properties:
                                 profile:
                                   type: object
+                                  required:
+                                    - profileId
+                                    - userName
+                                    - profileImageUrl
                                   properties:
                                     profileId:
                                       type: string
-                                    username:
+                                    userName:
                                       type: string
                                     firstName:
                                       type: string
+                                      nullable: true
                                     lastName:
                                       type: string
+                                      nullable: true
                                     profileImageUrl:
                                       type: string
                                 isInvited:
@@ -757,6 +933,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -775,11 +955,18 @@ paths:
                     properties:
                       responseData:
                         type: object
+                        required:
+                          - leagues
                         properties:
                           leagues:
                             type: array
                             items:
                               type: object
+                              required:
+                                - leagueId
+                                - name
+                                - season
+                                - leagueMembers
                               properties:
                                 leagueId:
                                   type: string
@@ -790,9 +977,84 @@ paths:
                                   description: The name of the league.
                                   example: Corner By The Bookshelf
                                 season:
-                                  type: string
-                                  description: The season the league belongs to.
-                                  example: 47
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: integer
+                                      format: int64
+                                      description: The unique identifier of the season.
+                                    name:
+                                      type: string
+                                      description: The name of the season.
+                                    start_date:
+                                      type: string
+                                      format: date
+                                      description: The start date of the season.
+                                    end_date:
+                                      type: string
+                                      format: date
+                                      description: The end date of the season.
+                                    location:
+                                      type: string
+                                      description: The location of the season.
+                                    theme:
+                                      type: string
+                                      description: The theme of the season.
+                                  required:
+                                    - id
+                                    - name
+                                    - start_date
+                                    - end_date
+                                    - location
+                                    - theme
+                                leagueMembers:
+                                  type: array
+                                  items:
+                                    type: object
+                                    required:
+                                      - account
+                                      - role
+                                    properties:
+                                      account:
+                                        type: object
+                                        required:
+                                          - email
+                                          - userId
+                                        allOf:
+                                          - type: object
+                                            required:
+                                              - profileId
+                                              - userName
+                                              - profileImageUrl
+                                            properties:
+                                              profileId:
+                                                type: string
+                                              userName:
+                                                type: string
+                                              firstName:
+                                                type: string
+                                                nullable: true
+                                              lastName:
+                                                type: string
+                                                nullable: true
+                                              profileImageUrl:
+                                                type: string
+                                          - type: object
+                                            properties:
+                                              email:
+                                                type: string
+                                                description: Email of user
+                                              userId:
+                                                type: string
+                                                description: User Id of user
+                                      role:
+                                        type: string
+                                        description: The role of the league member
+                                        example: member
+                                        enum:
+                                          - owner
+                                          - admin
+                                          - member
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -808,6 +1070,10 @@ paths:
           application/json:
             schema:
               type: object
+              required:
+                - name
+                - seasonId
+                - profileId
               properties:
                 name:
                   type: string
@@ -821,10 +1087,6 @@ paths:
                   type: string
                   description: The profileId of the user creating the league
                   example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-              required:
-                - name
-                - seasonId
-                - profileId
       responses:
         '201':
           description: League created successfully
@@ -834,6 +1096,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -852,9 +1118,16 @@ paths:
                     properties:
                       responseData:
                         type: object
+                        required:
+                          - league
                         properties:
                           league:
                             type: object
+                            required:
+                              - leagueId
+                              - name
+                              - season
+                              - leagueMembers
                             properties:
                               leagueId:
                                 type: string
@@ -865,9 +1138,84 @@ paths:
                                 description: The name of the league.
                                 example: Corner By The Bookshelf
                               season:
-                                type: string
-                                description: The season the league belongs to.
-                                example: 47
+                                type: object
+                                properties:
+                                  id:
+                                    type: integer
+                                    format: int64
+                                    description: The unique identifier of the season.
+                                  name:
+                                    type: string
+                                    description: The name of the season.
+                                  start_date:
+                                    type: string
+                                    format: date
+                                    description: The start date of the season.
+                                  end_date:
+                                    type: string
+                                    format: date
+                                    description: The end date of the season.
+                                  location:
+                                    type: string
+                                    description: The location of the season.
+                                  theme:
+                                    type: string
+                                    description: The theme of the season.
+                                required:
+                                  - id
+                                  - name
+                                  - start_date
+                                  - end_date
+                                  - location
+                                  - theme
+                              leagueMembers:
+                                type: array
+                                items:
+                                  type: object
+                                  required:
+                                    - account
+                                    - role
+                                  properties:
+                                    account:
+                                      type: object
+                                      required:
+                                        - email
+                                        - userId
+                                      allOf:
+                                        - type: object
+                                          required:
+                                            - profileId
+                                            - userName
+                                            - profileImageUrl
+                                          properties:
+                                            profileId:
+                                              type: string
+                                            userName:
+                                              type: string
+                                            firstName:
+                                              type: string
+                                              nullable: true
+                                            lastName:
+                                              type: string
+                                              nullable: true
+                                            profileImageUrl:
+                                              type: string
+                                        - type: object
+                                          properties:
+                                            email:
+                                              type: string
+                                              description: Email of user
+                                            userId:
+                                              type: string
+                                              description: User Id of user
+                                    role:
+                                      type: string
+                                      description: The role of the league member
+                                      example: member
+                                      enum:
+                                        - owner
+                                        - admin
+                                        - member
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -903,6 +1251,10 @@ paths:
                 type: object
                 allOf:
                   - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
                     properties:
                       success:
                         type: boolean
@@ -1005,3 +1357,34 @@ components:
       in: cookie
       name: refreshToken
       description: JWT token used to refresh access tokens.
+  schemas:
+    ApiResponseError:
+      type: object
+      allOf:
+        - type: object
+          required:
+            - success
+            - message
+            - statusCode
+          properties:
+            success:
+              type: boolean
+              example: true
+            message:
+              type: string
+              example: Operation completed successfully.
+            statusCode:
+              type: integer
+              example: 200
+            error:
+              type: string
+              nullable: true
+              example: An error occurred.
+        - type: object
+          required:
+            - error
+          properties:
+            error:
+              type: string
+              description: Error message describing what went wrong
+              example: Invalid Credentials provided

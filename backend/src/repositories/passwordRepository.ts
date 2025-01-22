@@ -17,7 +17,7 @@ const passwordRepository = {
      * 
      * @returns A promise resolving to the newly created password record.
      */
-    createPasswordForUserId: async (
+    createPasswordRecordForUserId: async (
         userId: UserAttributes['userId'],
         hashedPassword: string,
         transaction?: Transaction
@@ -26,7 +26,6 @@ const passwordRepository = {
             const maxPasswordSeqResult = await models.Password.max('passwordSeq', {
                 where: { userId },
             });
-            logger.debug(`maxPasswordSequResult=${maxPasswordSeqResult}`);
 
             const newPasswordSeq = (typeof maxPasswordSeqResult === 'number' ? maxPasswordSeqResult : 0) + 1;
             logger.debug(`newPasswordSeq = ${newPasswordSeq}`);

@@ -1,0 +1,10 @@
+{
+  "modelPackage": "models",
+  "apiPackage": "unused",
+  "supportingFiles": [],
+  "supportsES6": true,
+  "npmVersion": "6.9.0",
+  "typescriptThreePlus": true,
+  "ensureUniqueParams": true,
+  "nullSafeAdditionalProps": true
+}

@@ -7,68 +7,86 @@ import passwordHelper from './passwordHelper';
 import logger from '../../config/logger';
 import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD_ERROR, WEAK_PASSWORD_ERROR } from '../../constants/auth/responseErrorConstants';
 import { AccountAndPassword } from '../../types/auth/authTypes';
+import { Account } from '../../generated-api';
+import { models } from '../../config/db';
+import userService from '../user/userService';
+import userRepository from '../../repositories/userRepository';
 
 /**
  * Service functions related to password management, including creating passwords, 
  * checking passwords, and ensuring password security.
  */
-const passwordService = {
 
-    /**
-     * Creates a hashed password for a given account, ensuring the password is strong.
-     * 
-     * @param accountAndPassword - The account and password details.
-     * @param transaction - The Sequelize transaction for DB consistency.
-     * @returns A promise that resolves to the created password object.
-     * @throws A 400 error if the password is weak, or a 500 error if hashing fails.
-     */
-    createPasswordForAccount: async (
-        accountAndPassword: AccountAndPassword,
-        transaction: Transaction
-    ): Promise<PasswordAttributes> => {
-        // Ensure password strength before proceeding
-        if (!passwordHelper.isPasswordStrong(accountAndPassword.PASSWORD)) {
+async function doesAccountPasswordMatch(account: Account, password: string): Promise<boolean> {
+    // Retrieve the active password for the user
+    const activePassword = await passwordRepository.getActivePasswordForUserId(account.userId);
+
+    if (!activePassword) {
+        logger.error(`No active password for user ${account.userId} found...`);
+        throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
+    }
+
+    // Compare the provided password with the stored password
+    const doPasswordsMatch: boolean = await passwordHelper.doPasswordsMatch(password, activePassword.password);
+    return doPasswordsMatch;
+}
+
+async function createPasswordForAccount(account: Account, password: string, transaction?: Transaction): Promise<PasswordAttributes | null> {
+    try {
+        // Verify password strength
+        if (!passwordHelper.isPasswordStrong(password)) {
+            logger.error("Password is not strong enough");
             throw errorFactory(WEAK_PASSWORD_ERROR);
         }
 
-        // Hash the password
-        const hashedPassword = await passwordHelper.getHashedPassword(accountAndPassword.PASSWORD);
-        if (!hashedPassword) {
-            logger.error(`Failed to hash password: ${accountAndPassword.PASSWORD}`)
+        // Verify user exists
+        const userExists = await userRepository.getUserByProfileId(account.profileId, transaction);
+        if (!userExists) {
+            logger.error(`User ${account.userId} not found when creating password`);
             throw errorFactory(INTERNAL_SERVER_ERROR);
         }
 
-        // Store the hashed password
-        return await passwordRepository.createPasswordForUserId(
-            accountAndPassword.userId,
+        // Hash password
+        const hashedPassword: string = await passwordHelper.getHashedPassword(password);
+
+        // Create password record
+        return await passwordRepository.createPasswordRecordForUserId(
+            account.userId,
             hashedPassword,
             transaction
         );
-    },
-
-    /**
-     * Compares a plain-text password against the stored password for a user.
-     * 
-     * @param user - The user record containing the user details.
-     * @param password - The plain-text password to check.
-     * @returns A promise that resolves to `true` if the passwords match, otherwise `false`.
-     * @throws A 500 error if no active password is found for the user.
-     */
-    checkPasswordAgainstUserPassword: async (
-        user: UserAttributes,
-        password: string
-    ): Promise<boolean> => {
-        // Retrieve the active password for the user
-        const activePassword = await passwordRepository.getActivePasswordForUserId(user.userId);
-
-        if (!activePassword) {
-            logger.error(`No active password for user ${user.userId} found...`);
-            throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
-        }
-
-        // Compare the provided password with the stored password
-        return await passwordHelper.doPasswordsMatch(password, activePassword.password);
+    } catch (error) {
+        logger.error(`Error creating password for account: ${error}`);
+        throw error;
     }
-};
+}
+
+const passwordService = {
+    doesAccountPasswordMatch,
+    createPasswordForAccount
+}
+
+
+
+// const passwordService = {
+
+
+
+//     checkPasswordAgainstUserPassword: async (
+//         user: UserAttributes,
+//         password: string
+//     ): Promise<boolean> => {
+//         // Retrieve the active password for the user
+//         const activePassword = await passwordRepository.getActivePasswordForUserId(user.userId);
+
+//         if (!activePassword) {
+//             logger.error(`No active password for user ${user.userId} found...`);
+//             throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
+//         }
+
+//         // Compare the provided password with the stored password
+//         return await passwordHelper.doPasswordsMatch(password, activePassword.password);
+//     }
+// };
 
 export default passwordService;

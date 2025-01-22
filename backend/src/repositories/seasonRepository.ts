@@ -3,35 +3,33 @@ import logger from "../config/logger";
 import errorFactory from "../utils/errors/errorFactory";
 import { NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
 import { SeasonsAttributes } from "../models/Seasons";
+import { Season } from "../generated-api";
 
 const seasonRepository = {
+    getSeasonBySeasonId
+}
 
-    /**
-     * Retrieves a pr∏ofile by its Profile ID.
-     * 
-     * @param profileId - The ID of the profile to retrieve.
-     * 
-     * @returns A promise that resolves to the profile record.
-     */
-    getSeasonBySeasonId: async (
-        seasonId: SeasonsAttributes["seasonId"]
-    ): Promise<SeasonsAttributes | null> => {
-        try {
-            const season = await models.Seasons.findOne({
-                where: { seasonId: seasonId },
-            });
-            if (season) {
-                logger.debug('Season record found by Season ID:', season.toJSON());
-                return season;
-            } else {
-                logger.debug(`Season record was NOT found using Season ID: ${seasonId}`);
-                return null;
-            }
-        } catch (error) {
-            logger.error(`Failed to get season record by season id ${seasonId}: ${error}`);
-            throw error;
-        }
+function buildSeasonObject(seasonData: SeasonsAttributes): Season {
+    return {
+        id: seasonData.seasonId,
+        name: seasonData.name,
+        startDate: seasonData.startDate.toString(),
+        endDate: seasonData.endDate.toString(),
+        location: seasonData.location,
+        theme: seasonData.theme
     }
-};
+}
+
+async function getSeasonBySeasonId(seasonId: SeasonsAttributes["seasonId"]): Promise<Season | null> {
+    const seasonAttributes: SeasonsAttributes | null = await models.Seasons.findOne({
+        where: { seasonId: seasonId },
+    });
+
+    if (!seasonAttributes) {
+        return null;
+    }
+
+    return buildSeasonObject(seasonAttributes);
+}
 
 export default seasonRepository;

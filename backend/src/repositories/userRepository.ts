@@ -60,11 +60,11 @@ const userRepository = {
             throw error;
         }
     },
-    getUserByProfileId: async (profileId: ProfileAttributes["profileId"]): Promise<UserAttributes> => {
+    getUserByProfileId: async (profileId: ProfileAttributes["profileId"], transaction?: Transaction): Promise<UserAttributes | null> => {
         try {
-            const userRecord = await models.User.findOne({ where: { profileId } });
+            const userRecord = await models.User.findOne({ where: { profileId }, transaction });
             if (!userRecord) {
-                throw errorFactory(INTERNAL_SERVER_ERROR);
+                return null;
             }
             logger.debug(`User found by profileId: ${profileId}`);
             return userRecord;
@@ -104,11 +104,12 @@ const userRepository = {
         }
     },
 
-    getUserIdByProfileId: async (profileId: string): Promise<string | null> => {
+    getUserIdByProfileId: async (profileId: string, transaction?: Transaction): Promise<string | null> => {
         const user = await models.User.findOne({
             where: {
                 profileId: profileId
-            }
+            },
+            transaction
         })
         return user ? user.userId : null
     }

@@ -2,6 +2,11 @@ components:
   schemas:
     League:
       type: object
+      required:
+        - leagueId
+        - name
+        - season
+        - leagueMembers
       properties:
         leagueId:
           type: string
@@ -12,11 +17,17 @@ components:
           description: The name of the league.
           example: Corner By The Bookshelf
         season:
-          type: string
-          description: The season the league belongs to.
-          example: 47
+          $ref: "./season.yaml#/components/schemas/Season"
+        leagueMembers:
+          type: array
+          items:
+            $ref: "./leagueMember.yaml#/components/schemas/LeagueMember"
     CreateLeagueRequestBody:
       type: object
+      required:
+        - name
+        - seasonId
+        - profileId
       properties:
         name:
           type: string
@@ -30,10 +41,6 @@ components:
           type: string
           description: The profileId of the user creating the league
           example: "49e27bd8-dc24-4159-9630-e989025bf8fd"
-      required:
-        - name
-        - seasonId
-        - profileId
     CreateLeagueResponse:
       type: object
       allOf:
@@ -45,6 +52,8 @@ components:
 
     CreateLeagueResponseData:
       type: object
+      required:
+        - league
       properties:
         league:
           $ref: "#/components/schemas/League"
@@ -60,6 +69,8 @@ components:
 
     GetLeaguesForProfileResponseData:
       type: object
+      required:
+        - leagues
       properties:
         leagues:
           type: array

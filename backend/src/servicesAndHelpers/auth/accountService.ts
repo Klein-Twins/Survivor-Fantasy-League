@@ -1,115 +1,89 @@
 import { v4 as uuidv4 } from 'uuid';
-import { Account, AccountAndPassword, AccountForResponses, SignupRequestFields, UserIncludeProfile } from '../../types/auth/authTypes';
+import { AccountAndPassword } from '../../types/auth/authTypes';
 import accountRepository from '../../repositories/accountRepository';
 import userRepository from '../../repositories/userRepository';
 import errorFactory from '../../utils/errors/errorFactory';
 import { UserAttributes } from '../../models/User';
 import { EMAIL_UNAVAILABLE_ERROR, USERNAME_UNAVAILABLE_ERROR } from '../../constants/auth/responseErrorConstants';
 import logger from '../../config/logger';
+import { Account, SignupUserRequestBody } from '../../generated-api';
+import accountHelper from './accountHelper';
 
-/**
- * Service for handling account creation, validation, and retrieval.
- */
+
+
+async function createAccount(signupData: SignupUserRequestBody): Promise<Account | null> {
+    const isUserNameAvailable = await accountHelper.checkIsUserNameAvailable(signupData.username);
+    const isEmailAvailable = await accountHelper.checkIsEmailAvailable(signupData.email);
+
+    if (!isUserNameAvailable) {
+        throw errorFactory(USERNAME_UNAVAILABLE_ERROR);
+    }
+    if (!isEmailAvailable) {
+        throw errorFactory(EMAIL_UNAVAILABLE_ERROR);
+    }
+
+    const userProfileId = uuidv4();
+    const userId = uuidv4();
+
+    const accountData: Account = {
+        email: signupData.email,
+        userId: userId,
+        userName: signupData.username,
+        profileId: userProfileId,
+        firstName: signupData.firstName,
+        lastName: signupData.lastName,
+        profileImageUrl: "InsertTempImageHere"
+    };
+
+    return await accountRepository.createAccount(accountData, signupData.password);
+}
+
+async function getAccountByEmail(email: string): Promise<Account> {
+    const account = await accountRepository.getAccountByEmail(email);
+    if (!account) {
+        throw errorFactory({
+            error: "Account not found",
+            message: "Account not found",
+            statusCode: 404,
+            success: false
+        })
+    }
+    return account;
+}
+
+async function getAccountByUserId(userId: string): Promise<Account> {
+    const account = await accountRepository.getAccountByUserId(userId);
+    if (!account) {
+        throw errorFactory({
+            error: "Account not found",
+            message: "Account not found",
+            statusCode: 404,
+            success: false
+        })
+    }
+    return account;
+}
+
+async function getAccountByProfileId(profileId: string): Promise<Account> {
+    const account: Account | null = await accountRepository.getAccountByProfileId(profileId);
+    if (!account) {
+        throw errorFactory({
+            error: "Account not found",
+            message: "Account not found",
+            statusCode: 404,
+            success: false
+        })
+    }
+    return account;
+}
+
+
 const accountService = {
-    /**
-     * Creates a new account by checking availability of the email and username,
-     * generating a user profile, and then creating the account record.
-     *
-     * @param fields - The signup fields provided by the user.
-     * @returns A promise that resolves to the created account details.
-     * @throws A 400 error if the email or username is already tied to an account.
-     */
-    createAccount: async (fields: SignupRequestFields): Promise<Account> => {
-        await accountService.checkAccountAvailable(fields.email, fields.username);
-        logger.debug("Email and Username are available");
+    createAccount,
+    getAccountByEmail,
+    getAccountByUserId,
+    getAccountByProfileId,
+}
 
-        // Generate UUIDs for user profile and user ID
-        const userProfileId = uuidv4();
-        const userId = uuidv4();
-
-        const accountAndPassword: AccountAndPassword = {
-            email: fields.email,
-            userId: userId,
-            userName: fields.username,
-            profileId: userProfileId,
-            firstName: fields.firstName,
-            lastName: fields.lastName,
-            imageUrl: 'TBD',
-            PASSWORD: fields.password,
-        };
-
-        const { profileRecord, userRecord } = await accountRepository.createAccount(accountAndPassword);
-
-        const account: Account = {
-            profileId: profileRecord.profileId,
-            userId: userRecord.userId,
-            email: userRecord.email,
-            userName: userRecord.userName,
-            firstName: profileRecord.firstName,
-            lastName: profileRecord.lastName,
-            imageUrl: profileRecord.imageUrl,
-        }
-
-        return account;
-    },
-
-    getAccountForResponse: (account: Account): AccountForResponses => {
-        const { userId, ...accountForResponse } = account;
-        return accountForResponse;
-    },
-
-    /**
-     * Checks if an account with the provided email and username is available.
-     * Throws an error if either is already taken.
-     *
-     * @param email - The email to check.
-     * @param username - The username to check.
-     * @throws A 400 error if the email or username is already tied to an account.
-     */
-    checkAccountAvailable: async (email: UserAttributes["email"], username: UserAttributes["userName"]): Promise<void> => {
-        // Check if the email is available
-        if (!(await userRepository.isEmailAvailable(email))) {
-            logger.debug(`${email} is unavailable`)
-            throw errorFactory(EMAIL_UNAVAILABLE_ERROR);
-        }
-
-        // Check if the username is available
-        if (!(await userRepository.isUsernameAvailable(username))) {
-            logger.debug(`${username} is unavailable`)
-            throw errorFactory(USERNAME_UNAVAILABLE_ERROR);
-        }
-    },
-
-    /**
-     * Retrieves an account by email.
-     *
-     * @param email - The email of the account to retrieve.
-     * @returns A promise that resolves to the account details.
-     */
-    getAccount: async (params: { email?: UserAttributes["email"], profileId?: UserAttributes["profileId"] }): Promise<Account | null> => {
-
-        if (!params.email && !params.profileId) {
-            logger.error("Called accountService.getAccount(params) without any defined params.");
-            return null;
-        }
-
-        const account: UserIncludeProfile | null = await accountRepository.getAccount(params);
-        if (account === null) {
-            return null;
-        }
-
-        const formattedAccount: Account = {
-            userId: account.userId,
-            userName: account.userName,
-            profileId: account.profileId,
-            email: account.email,
-            firstName: account.profile.firstName,
-            lastName: account.profile.lastName,
-            imageUrl: account.profile.imageUrl
-        }
-
-        return formattedAccount;
-    },
-};
 
 export default accountService;

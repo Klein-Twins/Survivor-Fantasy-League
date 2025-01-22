@@ -4,8 +4,9 @@ import { isValidEmail, isValidName, isValidUsername } from "../../servicesAndHel
 import passwordHelper from "../../servicesAndHelpers/password/passwordHelper";
 import { INVALID_EMAIL_ERROR, INVALID_FIRST_NAME_ERROR, INVALID_LAST_NAME_ERROR, INVALID_USERNAME_ERROR, MISSING_EMAIL_ERROR, MISSING_PASSWORD_ERROR, MISSING_USERNAME_ERROR, WEAK_PASSWORD_ERROR } from "../../constants/auth/responseErrorConstants";
 import logger from "../../config/logger";
+import { SignupUserRequestBody } from "../../../generated-api/models/signup-user-request-body";
 
-export const validateSignupData = (signupData: SignupRequestFields): void => {
+export const validateSignupData = (signupData: SignupUserRequestBody): void => {
     const checks = [
         { condition: !signupData.email, error: MISSING_EMAIL_ERROR },
         { condition: !signupData.password, error: MISSING_PASSWORD_ERROR },
@@ -23,13 +24,4 @@ export const validateSignupData = (signupData: SignupRequestFields): void => {
             throw errorFactory(error);
         }
     }
-};
-
-export const formatSignupData = (signupData: SignupRequestFields): SignupRequestFields => {
-    const formattedData = {
-        ...signupData,
-        email: signupData.email.toLowerCase(),
-    };
-    logger.debug("Formatted Signup Request Data:", JSON.stringify(formattedData));
-    return formattedData;
 };

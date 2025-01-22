@@ -46,3 +46,7 @@ components:
       in: cookie
       name: refreshToken
       description: JWT token used to refresh access tokens.
+
+  schemas:
+    ApiResponseError:
+      $ref: "./components/common.yaml#/components/schemas/ApiError"

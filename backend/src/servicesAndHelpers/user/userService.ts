@@ -28,18 +28,20 @@ const userService = {
     return userRepository.isEmailAvailable(email);
   },
 
-  authenticateUser: async (userRecord: UserAttributes, password: string): Promise<boolean> => {
-    // Retrieve the active password record for the user
-    const activePasswordRecord = await passwordRepository.getActivePasswordForUserId(userRecord.userId);
+  // authenticateUser: async (userRecord: UserAttributes, password: string): Promise<boolean> => {
+  //   // Retrieve the active password record for the user
+  //   const activePasswordRecord = await passwordRepository.getActivePasswordForUserId(userRecord.userId);
 
-    if (!activePasswordRecord) {
-      logger.error(`No active password found for user id: ${userRecord.userId}`);
-      throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
-    }
+  //   if (!activePasswordRecord) {
+  //     logger.error(`No active password found for user id: ${userRecord.userId}`);
+  //     throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
+  //   }
 
-    // Check the provided password against the stored password
-    return await passwordService.checkPasswordAgainstUserPassword(userRecord, password);
-  },
+  //   await passwordService.
+  //   // Check the provided password against the stored password
+  //   return await passwordService.checkPasswordAgainstUserPassword(userRecord, password);
+
+  // },
 
   getUserIdByProfileId: async (profileId: string): Promise<string | null> => {
     return await userRepository.getUserIdByProfileId(profileId);

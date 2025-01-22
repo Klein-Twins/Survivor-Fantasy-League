@@ -25,7 +25,7 @@ const profileService = {
 
         const profileRecordCreationInput: ProfileAttributes = {
             profileId: accountAndPassword.profileId,
-            imageUrl: accountAndPassword.imageUrl,
+            imageUrl: accountAndPassword.profileImageUrl,
             firstName: accountAndPassword.firstName,
             lastName: accountAndPassword.lastName,
         };

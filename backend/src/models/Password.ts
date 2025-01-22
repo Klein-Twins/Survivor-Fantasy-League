@@ -15,7 +15,7 @@ const PasswordModel = (sequelize: Sequelize) => {
     public active!: boolean;
 
     static associate(models: any) {
-      this.belongsTo(models.User, { foreignKey: 'USER_ID', as: 'User' });
+      this.belongsTo(models.User, { foreignKey: 'userId', as: 'User' });
     }
   }
 

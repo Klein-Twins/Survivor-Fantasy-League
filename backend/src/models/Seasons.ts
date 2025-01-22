@@ -1,21 +1,25 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface SeasonsAttributes {
-  seasonId: number;          // Primary key of type INTEGER
-  theme?: string | null;      // Theme of the season (optional)
-  location?: string | null;   // Location where the season takes place (optional)
-  name?: string | null;       // Name of the season (optional)
+  seasonId: number;   // Primary key of type INTEGER
+  theme: string;      // Theme of the season (optional)
+  location: string;   // Location where the season takes place (optional)
+  name: string;       // Name of the season (optional)
+  startDate: Date;    // Start date of the season
+  endDate: Date;      // End date of the season
 }
 
 const SeasonsModel = (sequelize: Sequelize) => {
   class Seasons extends Model<SeasonsAttributes> implements SeasonsAttributes {
     public seasonId!: number;
-    public theme?: string | null;
-    public location?: string | null;
-    public name?: string | null;
+    public theme!: string;
+    public location!: string;
+    public name!: string;
+    public startDate!: Date;
+    public endDate!: Date;
 
     static associate(models: any) {
-      this.hasMany(models.League, {foreignKey: 'seasonId'})
+      this.hasMany(models.League, { foreignKey: 'seasonId' })
       this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'seasonId', as: 'SurvivorDetailsOnSeason' });
     }
   }
@@ -30,19 +34,29 @@ const SeasonsModel = (sequelize: Sequelize) => {
       },
       theme: {
         type: DataTypes.STRING(100),
-        allowNull: true,
+        allowNull: false,
         field: 'THEME',
       },
       location: {
         type: DataTypes.STRING(100),
-        allowNull: true,
+        allowNull: false,
         field: 'LOCATION',
       },
       name: {
         type: DataTypes.STRING(100),
-        allowNull: true,
+        allowNull: false,
         field: 'NAME',
       },
+      startDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'START_DATE',
+      },
+      endDate: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'END_DATE',
+      }
     },
     {
       sequelize,

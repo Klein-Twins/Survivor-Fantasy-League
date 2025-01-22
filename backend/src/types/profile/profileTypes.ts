@@ -53,9 +53,15 @@ export enum ProfileSearchSortDirection {
 export interface Profile {
     profileId: string;
     userName: string;
-    firstName: string | null;
-    lastName: string | null;
-    profileImageUrl: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    profileImageUrl?: string | null;
+}
 
-
+export interface ProfileDTO {
+    profileId: string;
+    userName: string;
+    firstName?: string | null;
+    lastName?: string | null;
+    profileImageUrl: string;
 }
