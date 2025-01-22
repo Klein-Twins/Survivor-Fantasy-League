@@ -47,7 +47,7 @@ const sequelize = new Sequelize(currentConfig.database!, currentConfig.username!
   host: currentConfig.host,
   port: currentConfig.port,
   dialect: currentConfig.dialect,
-  logging: true, // Set to true for visibility of SQL queries
+  logging: false, // Set to true for visibility of SQL queries
 });
 
 // Testing the connection

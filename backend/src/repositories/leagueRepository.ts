@@ -36,7 +36,7 @@ async function createLeague(seasonId: number, name: string, profileId: string, o
         name: name
     }, options);
 
-    const leagueOwner: LeagueMember | null = await leagueMemberRepository.createLeagueMember(leagueAttributes.leagueId, profileId, LeagueMemberRoleEnum.Owner, InviteStatusEnum.Accepted, options);
+    const leagueOwner: LeagueMember | null = await leagueMemberRepository.createLeagueMember(leagueAttributes.leagueId, profileId, LeagueMemberRoleEnum.OWNER, InviteStatusEnum.Accepted, options);
     if (!leagueOwner) {
         logger.error(`Failed to create league member for profile ${profileId}`);
         return null;

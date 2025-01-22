@@ -12,8 +12,8 @@
  * Do not edit the class manually.
  */
 
+import { Survivor } from './survivor';
 import { SurvivorBasic } from './survivor-basic';
-import { SurvivorWithDetails } from './survivor-with-details';
  /**
  * 
  *
@@ -23,8 +23,8 @@ import { SurvivorWithDetails } from './survivor-with-details';
 export interface GetSurvivorsResponseData {
 
     /**
-     * @type {Array<SurvivorWithDetails | SurvivorBasic>}
+     * @type {Array<Survivor | SurvivorBasic>}
      * @memberof GetSurvivorsResponseData
      */
-    survivors?: Array<SurvivorWithDetails | SurvivorBasic>;
+    survivors?: Array<Survivor | SurvivorBasic>;
 }

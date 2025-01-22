@@ -15,14 +15,18 @@ components:
           type: array
           items:
             oneOf:
-              - $ref: "#/components/schemas/SurvivorWithDetails"
+              - $ref: "#/components/schemas/Survivor"
               - $ref: "#/components/schemas/SurvivorBasic"
 
     SurvivorBasic:
       type: object
+      required:
+        - survivorId
+        - firstName
+        - lastName
       properties:
         survivorId:
-          type: integer
+          type: string
           description: The survivor's unique identifier
           example: 1
         firstName:
@@ -34,11 +38,19 @@ components:
           description: The survivor's last name
           example: "Rueda"
 
-    SurvivorWithDetails:
+    Survivor:
       type: object
       allOf:
         - $ref: "#/components/schemas/SurvivorBasic"
         - type: object
+          required:
+            - seasonId
+            - fromState
+            - fromCountry
+            - age
+            - description
+            - job
+            - imageUrl
           properties:
             seasonId:
               type: integer
@@ -48,10 +60,12 @@ components:
               type: string
               description: The survivor's nickname
               example: "The Brain"
+              nullable: true
             fromCity:
               type: string
               description: The city the survivor is from
               example: "Brooklyn"
+              nullable: true
             fromState:
               type: string
               description: The state the survivor is from

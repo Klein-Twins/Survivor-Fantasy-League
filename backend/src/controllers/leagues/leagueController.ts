@@ -15,6 +15,7 @@ import { InviteStatusEnum } from "../../models/LeagueProfile";
 
 const leagueController = {
     createLeague,
+    getLeaguesForProfile
 }
 
 
@@ -54,10 +55,18 @@ async function createLeague(req: Request, res: Response, next: NextFunction): Pr
 }
 async function getLeaguesForProfile(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
-        const profileId: string = req.params.profileId;
+        const profileId: string = req.query.profileId as string;
 
-        leagueControllerHelper.validateGetLeaguesForProfileRequest(profileId);
-        const account = accountService.getAccountByProfileId(profileId);
+        if (!leagueControllerHelper.validateGetLeaguesForProfileRequest(profileId)) {
+            const error: ApiError = {
+                error: "Bad Request",
+                statusCode: 400,
+                success: false,
+                message: "Invalid profileId"
+            }
+            throw error;
+        }
+        const account = await accountService.getAccountByProfileId(profileId);
 
         const leagues: League[] = await leagueService.getLeaguesForProfileId(profileId, InviteStatusEnum.Accepted);
 

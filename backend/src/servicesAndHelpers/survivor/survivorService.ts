@@ -1,33 +1,13 @@
 import logger from "../../config/logger";
+import { Survivor } from "../../generated-api";
 import survivorRepository from "../../repositories/survivorRepository";
-import { SurvivorDetailsOnSeasonIncludeSurvivors, SurvivorWithDetails } from "../../types/survivor/survivorTypes";
 
 const survivorService = {
+    getSurvivorsBySeason
+}
 
-    getSurvivorsWithDetailsBySeason: async (seasonId: number): Promise<SurvivorWithDetails[]> => {
-
-        const survivorsWithDetails : SurvivorDetailsOnSeasonIncludeSurvivors[] = await survivorRepository.getSurvivorsWithDetailsInSeason(seasonId);
-
-        const transformedSurvivorsWithDetails : SurvivorWithDetails[] = survivorsWithDetails.map((survivor: SurvivorDetailsOnSeasonIncludeSurvivors): SurvivorWithDetails => {
-            return {
-                survivorId: survivor.survivorId,
-                firstName: survivor.Survivor.firstName,
-                lastName: survivor.Survivor.lastName,
-                fromCity: survivor.Survivor.fromCity,
-                fromState: survivor.Survivor.fromState,
-                fromCountry: survivor.Survivor.fromCountry,
-                nickName: survivor.Survivor.nickName,
-                seasonId: survivor.seasonId,
-                originalTribeId: survivor.originalTribeId,
-                age: survivor.age,
-                description: survivor.description,
-                job: survivor.job,
-                imageUrl: survivor.imageUrl
-            }
-        })
-
-        return transformedSurvivorsWithDetails;
-    },
-};
+async function getSurvivorsBySeason(seasonId: number): Promise<Survivor[]> {
+    return await survivorRepository.getSurvivorsBySeasonId(seasonId);
+}
 
 export default survivorService;

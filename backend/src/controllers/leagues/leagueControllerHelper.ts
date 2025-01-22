@@ -9,10 +9,11 @@ const leagueControllerHelper = {
 }
 
 
-function validateGetLeaguesForProfileRequest(profileId: string | undefined): void {
+function validateGetLeaguesForProfileRequest(profileId: string | undefined): boolean {
     if (!profileId) {
-        throw errorFactory(INVALID_PROFILE_ID_ERROR)
+        return false;
     }
+    return true;
 }
 function validateCreateLeagueRequest(reqBody: CreateLeagueRequest): void {
     if (!reqBody.seasonId) {

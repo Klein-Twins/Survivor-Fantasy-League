@@ -17,87 +17,87 @@ import { SurvivorBasic } from './survivor-basic';
  * 
  *
  * @export
- * @interface SurvivorWithDetails
+ * @interface Survivor
  */
-export interface SurvivorWithDetails extends SurvivorBasic {
+export interface Survivor extends SurvivorBasic {
 
     /**
      * The season tied with this survivor's details
      *
      * @type {number}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      */
-    seasonId?: number;
+    seasonId: number;
 
     /**
      * The survivor's nickname
      *
      * @type {string}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example The Brain
      */
-    nickName?: string;
+    nickName?: string | null;
 
     /**
      * The city the survivor is from
      *
      * @type {string}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example Brooklyn
      */
-    fromCity?: string;
+    fromCity?: string | null;
 
     /**
      * The state the survivor is from
      *
      * @type {string}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example New York
      */
-    fromState?: string;
+    fromState: string;
 
     /**
      * The country the survivor is from
      *
      * @type {string}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example US
      */
-    fromCountry?: string;
+    fromCountry: string;
 
     /**
      * The survivor's age at the time of the season
      *
      * @type {number}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example 31
      */
-    age?: number;
+    age: number;
 
     /**
      * A short description about the survivor
      *
      * @type {string}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example An outgoing and energetic person.
      */
-    description?: string;
+    description: string;
 
     /**
      * The survivor's job/occupation
      *
      * @type {string}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example AI Research Assistant
      */
-    job?: string;
+    job: string;
 
     /**
      * The path of the survivor image
      *
      * @type {string}
-     * @memberof SurvivorWithDetails
+     * @memberof Survivor
      * @example /assets/images/survivors/AndyRueda47.jpeg
      */
-    imageUrl?: string;
+    imageUrl: string;
 }

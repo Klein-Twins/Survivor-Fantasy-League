@@ -42,8 +42,8 @@ export interface LeagueMember {
  * @enum {string}
  */
 export enum LeagueMemberRoleEnum {
-    Owner = 'owner',
-    Admin = 'admin',
-    Member = 'member'
+    OWNER = 'OWNER',
+    ADMIN = 'ADMIN',
+    MEMBER = 'MEMBER'
 }
 

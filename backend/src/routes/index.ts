@@ -10,8 +10,8 @@ import notificationRoutes from './notification/notificationRoutes';
 
 router.use('/auth', authRoutes);
 router.use('/league/profile', leagueProfileRoutes);
-router.use('/survivor', survivorRoute);
-router.use('/profile/leagues', profileLeagueRoutes);
+router.use('/season/survivors', survivorRoute);
+router.use('/profile', profileLeagueRoutes)
 router.use('/notification', notificationRoutes)
 
 export default router;

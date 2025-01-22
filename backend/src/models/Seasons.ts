@@ -44,7 +44,7 @@ const SeasonsModel = (sequelize: Sequelize) => {
       },
       name: {
         type: DataTypes.STRING(100),
-        allowNull: false,
+        allowNull: true,
         field: 'NAME',
       },
       startDate: {

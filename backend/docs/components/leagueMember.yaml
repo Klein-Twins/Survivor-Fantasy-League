@@ -13,6 +13,6 @@ components:
           description: The role of the league member
           example: member
           enum:
-            - owner
-            - admin
-            - member
+            - OWNER
+            - ADMIN
+            - MEMBER

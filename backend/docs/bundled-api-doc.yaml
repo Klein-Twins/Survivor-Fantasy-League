@@ -618,9 +618,9 @@ paths:
                                             description: The role of the league member
                                             example: member
                                             enum:
-                                              - owner
-                                              - admin
-                                              - member
+                                              - OWNER
+                                              - ADMIN
+                                              - MEMBER
                                 message:
                                   type: string
                                   description: A message indicating the success of the operation.
@@ -773,59 +773,60 @@ paths:
         - name: userName
           in: query
           required: false
-          description: The username of the profile.
+          description: The username of the profile
           schema:
             type: string
         - name: firstName
           in: query
           required: false
-          description: The first name of the profile.
+          description: The first name of the profile
           schema:
             type: string
         - name: lastName
           in: query
           required: false
-          description: The last name of the profile.
+          description: The last name of the profile
           schema:
             type: string
         - name: leagueId
           in: query
           required: true
-          description: The ID of the league the profile is associated with.
+          description: The ID of the league
           schema:
             type: string
         - name: page
           in: query
           required: false
-          description: The page number for pagination.
+          description: The page number
           schema:
             type: integer
-            example: 1
+            default: 1
         - name: limit
           in: query
           required: false
-          description: The number of profiles to return per page.
+          description: Items per page
           schema:
             type: integer
-            example: 10
+            default: 10
         - name: sortBy
           in: query
           required: false
-          description: 'The field to sort the profiles by. Options are "firstName", "lastName", and "userName". Defaults to "firstName" if not provided.'
+          description: Field to sort by
           schema:
             type: string
             enum:
               - firstName
               - lastName
               - userName
-            example: firstName
+              - createdAt
+            default: createdAt
         - name: isAsc
           in: query
           required: false
-          description: A boolean indicating whether to sort in ascending (true) or descending (false) order. Defaults to true (ascending).
+          description: Sort direction
           schema:
             type: boolean
-            example: true
+            default: true
       responses:
         '200':
           description: A list of profiles matching the search criteria
@@ -1052,9 +1053,9 @@ paths:
                                         description: The role of the league member
                                         example: member
                                         enum:
-                                          - owner
-                                          - admin
-                                          - member
+                                          - OWNER
+                                          - ADMIN
+                                          - MEMBER
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -1213,9 +1214,9 @@ paths:
                                       description: The role of the league member
                                       example: member
                                       enum:
-                                        - owner
-                                        - admin
-                                        - member
+                                        - OWNER
+                                        - ADMIN
+                                        - MEMBER
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -1280,9 +1281,13 @@ paths:
                                 - type: object
                                   allOf:
                                     - type: object
+                                      required:
+                                        - survivorId
+                                        - firstName
+                                        - lastName
                                       properties:
                                         survivorId:
-                                          type: integer
+                                          type: string
                                           description: The survivor's unique identifier
                                           example: 1
                                         firstName:
@@ -1294,6 +1299,14 @@ paths:
                                           description: The survivor's last name
                                           example: Rueda
                                     - type: object
+                                      required:
+                                        - seasonId
+                                        - fromState
+                                        - fromCountry
+                                        - age
+                                        - description
+                                        - job
+                                        - imageUrl
                                       properties:
                                         seasonId:
                                           type: integer
@@ -1303,10 +1316,12 @@ paths:
                                           type: string
                                           description: The survivor's nickname
                                           example: The Brain
+                                          nullable: true
                                         fromCity:
                                           type: string
                                           description: The city the survivor is from
                                           example: Brooklyn
+                                          nullable: true
                                         fromState:
                                           type: string
                                           description: The state the survivor is from
@@ -1332,9 +1347,13 @@ paths:
                                           description: The path of the survivor image
                                           example: /assets/images/survivors/AndyRueda47.jpeg
                                 - type: object
+                                  required:
+                                    - survivorId
+                                    - firstName
+                                    - lastName
                                   properties:
                                     survivorId:
-                                      type: integer
+                                      type: string
                                       description: The survivor's unique identifier
                                       example: 1
                                     firstName:

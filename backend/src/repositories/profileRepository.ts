@@ -6,101 +6,32 @@ import { ProfileAttributes } from "../models/Profile";
 import { UserAttributes } from "../models/User";
 import errorFactory from "../utils/errors/errorFactory";
 import { INTERNAL_SERVER_ERROR } from "../constants/auth/responseErrorConstants";
-import { ProfileSearchParams, ProfileSearchResult, ProfileSearchResultWithTotalCount, ProfileSearchSortBy } from "../types/profile/profileTypes";
+import { ProfileSearchSortBy } from "../types/profile/profileTypes";
 
 import { col } from 'sequelize';
 
 import { v4 as uuidv4 } from 'uuid';
+import { Profile, ProfileAndLeagueInviteStatus, SortByEnum } from "../generated-api";
+import { InviteStatusEnum, LeagueProfileAttributes } from "../models/LeagueProfile";
+import { ProfileSearchParams } from "../controllers/profile/profileController";
+import userRepository from "./userRepository";
+
+
+export interface ProfileSearchResultWithTotalCount extends ProfileSearchResult {
+    totalCount: number;
+}
+
+export interface ProfileSearchResult {
+    profileId: ProfileAttributes["profileId"],
+    // lastName?: ProfileAttributes["lastName"],
+    // firstName?: ProfileAttributes["firstName"],
+    // imageUrl: ProfileAttributes["imageUrl"],
+    // userName: UserAttributes["userName"],
+    inviteStatus: InviteStatusEnum
+}
 
 const profileRepository = {
-
-    /**
-     * Creates a new profile record for a user.
-     * 
-     * @param input - The profile data to create a new profile.
-     * @param transaction - The transaction used for atomic operations (optional).
-     * 
-     * @returns A promise that resolves to the newly created profile record.
-     */
-    createProfileRecord: async (
-        input: ProfileAttributes,
-        transaction?: Transaction
-    ): Promise<ProfileAttributes> => {
-        try {
-            const profileRecord = (await models.Profile.create(input, { transaction })).get({ plain: true }) as ProfileAttributes;
-
-            if (!profileRecord) {
-                throw errorFactory(INTERNAL_SERVER_ERROR);
-            }
-
-            return profileRecord;
-        } catch (error) {
-            logger.error(`Failed to createProfile record for profile id ${input.profileId}: ${error}`);
-            throw error;
-        }
-    },
-
-    /**
-     * Retrieves a profile by its Profile ID.
-     * 
-     * @param profileId - The ID of the profile to retrieve.
-     * 
-     * @returns A promise that resolves to the profile record.
-     */
-    getProfileRecordByProfileId: async (
-        profileId: ProfileAttributes["profileId"]
-    ): Promise<ProfileAttributes> => {
-        try {
-            const profileRecord = await models.Profile.findOne({
-                where: { profileId },
-            });
-
-            if (!profileRecord) {
-                throw errorFactory(INTERNAL_SERVER_ERROR);
-            }
-
-            logger.debug('Profile record found by Profile ID:', profileRecord.toJSON());
-            return profileRecord;
-        } catch (error) {
-            logger.error(`Failed to get profile record by profile id ${profileId}: ${error}`);
-            throw error;
-        }
-    },
-
-    /**
-     * Retrieves a profile by its associated User ID.
-     * 
-     * @param userId - The ID of the user whose profile is to be retrieved.
-     * 
-     * @returns A promise that resolves to the profile record.
-     */
-    getProfileRecordByUserId: async (
-        userId: UserAttributes["userId"]
-    ): Promise<ProfileAttributes> => {
-
-        try {
-            const profileRecord = await models.Profile.findOne({
-                include: {
-                    model: models.User,
-                    required: true,
-                    where: { USER_ID: userId },
-                },
-            });
-
-            if (!profileRecord) {
-                throw errorFactory(INTERNAL_SERVER_ERROR);
-            }
-
-            logger.debug('Profile record found by User ID:', profileRecord);
-            return profileRecord;
-        } catch (error) {
-            logger.error(`Failed to get profile record by userId ${userId}: ${error}`);
-            throw error;
-        }
-
-    },
-
-    getProfilesBySearchForLeagueInvites: async (params: ProfileSearchParams): Promise<{ foundProfiles: ProfileSearchResult[], totalCount: number }> => {
+    profileSearchQuery: async (params: ProfileSearchParams): Promise<{ foundProfiles: ProfileAndLeagueInviteStatus[], totalCount: number }> => {
         const {
             firstName,
             lastName,
@@ -137,29 +68,45 @@ const profileRepository = {
 
         let orderClause = '';
         switch (sortBy) {
-            case 'userName':
+            case SortByEnum.UserName:
                 orderClause = `ORDER BY "User"."USER_NAME" ${sortDirection}`;
                 break;
-            case 'firstName':
+            case SortByEnum.FirstName:
                 orderClause = `ORDER BY "Profile"."FIRST_NAME" ${sortDirection}`;
                 break;
-            case 'lastName':
+            case SortByEnum.LastName:
                 orderClause = `ORDER BY "Profile"."LAST_NAME" ${sortDirection}`;
                 break;
-            case 'updatedAt':
+            case SortByEnum.CreatedAt:
             default:
                 orderClause = `ORDER BY "Profile"."UPDATED_AT" ${sortDirection}`;
                 break;
         }
 
+        // const sql = `
+        //     SELECT 
+        //         "Profile"."PROFILE_ID" AS "profileId",
+        //         "Profile"."FIRST_NAME" AS "firstName",
+        //         "Profile"."LAST_NAME" AS "lastName",
+        //         "Profile"."IMAGE_URL" AS "imageUrl",
+        //         "Profile"."UPDATED_AT" AS "updatedAt",
+        //         "User"."USER_NAME" AS "userName",
+        //         "leagueProfiles"."INVITE_STATUS" AS "inviteStatus",
+        //         CAST(COUNT(*) OVER () AS INTEGER) AS "totalCount"
+        //     FROM "PRF_PROFILE" AS "Profile"
+        //     INNER JOIN "USR_USERS" AS "User"
+        //         ON "Profile"."PROFILE_ID" = "User"."USER_PROFILE_ID"
+        //     LEFT OUTER JOIN "LGE_LEAGUES_PROFILES" AS "leagueProfiles"
+        //         ON "Profile"."PROFILE_ID" = "leagueProfiles"."PROFILE_ID" 
+        //         AND "leagueProfiles"."LEAGUE_ID" = :leagueId
+        //     WHERE
+        //         ${whereClause}
+        //     ${orderClause}
+        //     LIMIT :limit OFFSET :offset;
+        // `;
         const sql = `
             SELECT 
                 "Profile"."PROFILE_ID" AS "profileId",
-                "Profile"."FIRST_NAME" AS "firstName",
-                "Profile"."LAST_NAME" AS "lastName",
-                "Profile"."IMAGE_URL" AS "imageUrl",
-                "Profile"."UPDATED_AT" AS "updatedAt",
-                "User"."USER_NAME" AS "userName",
                 "leagueProfiles"."INVITE_STATUS" AS "inviteStatus",
                 CAST(COUNT(*) OVER () AS INTEGER) AS "totalCount"
             FROM "PRF_PROFILE" AS "Profile"
@@ -188,18 +135,52 @@ const profileRepository = {
 
         logger.error(results);
 
+        const foundProfiles: ProfileAndLeagueInviteStatus[] = [];
+        for (const result of results) {
+            const profile: Profile | null = await getProfileByProfileId(result.profileId);
+            const isInvited: boolean = result.inviteStatus !== InviteStatusEnum.Pending;
+            const isJoined: boolean = result.inviteStatus === InviteStatusEnum.Accepted;
+            if (!profile) {
+                continue;
+            }
+            foundProfiles.push({
+                profile,
+                isInvited,
+                isJoined,
+            });
+        }
+
         return {
-            foundProfiles: results.map(result => ({
-                profileId: result.profileId,
-                firstName: result.firstName,
-                lastName: result.lastName,
-                imageUrl: result.imageUrl,
-                userName: result.userName,
-                inviteStatus: result.inviteStatus,
-            })) as ProfileSearchResult[],
+            foundProfiles,
             totalCount: results.length > 0 ? results[0].totalCount : 0,
         };
     },
 };
+
+async function getProfileByProfileId(profileId: string): Promise<Profile | null> {
+    const profileAttributes = await models.Profile.findOne({
+        where: {
+            profileId,
+        },
+    });
+
+    if (!profileAttributes) {
+        return null;
+    }
+
+    const userName = await userRepository.getUserIdByProfileId(profileAttributes.profileId);
+    if (!userName) {
+        return null;
+    }
+
+    const profile: Profile = {
+        profileId: profileAttributes.profileId,
+        userName,
+        firstName: profileAttributes.firstName,
+        lastName: profileAttributes.lastName,
+        profileImageUrl: profileAttributes.imageUrl || "BACKUP LINK",
+    }
+    return profile;
+}
 
 export default profileRepository;

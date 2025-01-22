@@ -45,12 +45,12 @@ keep_files=(
     ".swagger-codegen"
     "models"
     ".gitignore"
-    ".npmignore"
-    ".swagger-codegen-ignore"
+    # ".npmignore"
+    # ".swagger-codegen-ignore"
     "index.ts"
-    "package.json"
-    "README.md"
-    "tsconfig.json"
+    # "package.json"
+    # "README.md"
+    # "tsconfig.json"
 )
 
 # Delete everything except items in keep_files
@@ -60,6 +60,11 @@ for file in *; do
     fi
 done
 
+# Modify index.ts to only export models
+sed -i '' \
+    -e '/export \* from "\.\/api";/d' \
+    -e '/export \* from "\.\/configuration";/d' \
+    "./index.ts"
 
 
 echo "Generated files in $FRONTEND_DIRECTORY:"

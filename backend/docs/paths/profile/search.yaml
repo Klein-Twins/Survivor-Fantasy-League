@@ -7,59 +7,14 @@ paths:
       tags:
         - ProfileService
       parameters:
-        - name: userName
-          in: query
-          required: false
-          description: The username of the profile.
-          schema:
-            type: string
-        - name: firstName
-          in: query
-          required: false
-          description: The first name of the profile.
-          schema:
-            type: string
-        - name: lastName
-          in: query
-          required: false
-          description: The last name of the profile.
-          schema:
-            type: string
-        - name: leagueId
-          in: query
-          required: true
-          description: The ID of the league the profile is associated with.
-          schema:
-            type: string
-        - name: page
-          in: query
-          required: false
-          description: The page number for pagination.
-          schema:
-            type: integer
-            example: 1
-        - name: limit
-          in: query
-          required: false
-          description: The number of profiles to return per page.
-          schema:
-            type: integer
-            example: 10
-        - name: sortBy
-          in: query
-          required: false
-          description: The field to sort the profiles by. Options are "firstName", "lastName", and "userName". Defaults to "firstName" if not provided.
-          schema:
-            type: string
-            enum: [firstName, lastName, userName]
-            example: firstName
-        - name: isAsc
-          in: query
-          required: false
-          description: A boolean indicating whether to sort in ascending (true) or descending (false) order. Defaults to true (ascending).
-          schema:
-            type: boolean
-            example: true
+        - $ref: "../../components/profile/search.yaml#/components/parameters/userNameParam"
+        - $ref: "../../components/profile/search.yaml#/components/parameters/firstNameParam"
+        - $ref: "../../components/profile/search.yaml#/components/parameters/lastNameParam"
+        - $ref: "../../components/profile/search.yaml#/components/parameters/leagueIdParam"
+        - $ref: "../../components/profile/search.yaml#/components/parameters/pageParam"
+        - $ref: "../../components/profile/search.yaml#/components/parameters/limitParam"
+        - $ref: "../../components/profile/search.yaml#/components/parameters/sortByParam"
+        - $ref: "../../components/profile/search.yaml#/components/parameters/isAscParam"
       responses:
         "200":
           description: A list of profiles matching the search criteria

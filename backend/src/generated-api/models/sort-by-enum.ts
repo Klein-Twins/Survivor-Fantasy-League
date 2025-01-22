@@ -11,9 +11,16 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
-export * from './unused/league-invite-service-api';
-export * from './unused/league-service-api';
-export * from './unused/profile-service-api';
-export * from './unused/survivor-service-api';
-export * from './unused/user-session-service-api';
+
+/**
+ * 
+ * @export
+ * @enum {string}
+ */
+export enum SortByEnum {
+    FirstName = 'firstName',
+    LastName = 'lastName',
+    UserName = 'userName',
+    CreatedAt = 'createdAt'
+}
 

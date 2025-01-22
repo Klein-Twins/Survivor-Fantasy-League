@@ -1,3 +1,4 @@
+DELETE FROM "PRF_PROFILE";
 insert into "PRF_PROFILE" ("PROFILE_ID", "FIRST_NAME", "LAST_NAME", "CREATED_AT", "UPDATED_AT") 
 values 
     ('48175a74-822b-4172-8665-355952d3bdc4', 'Tony', 'Stark', NOW(), NOW()),
@@ -13,7 +14,7 @@ values
     ('fa9f6cfb-300f-42a1-91f2-b29f7082d438', 'Stephen', 'Strange', NOW(), NOW()),
     ('e23223e4-6d61-4875-9750-b842b82e4933', 'TChalla', 'Wakanda', NOW(), NOW());
 
-
+DELETE FROM "USR_USERS";
 insert into "USR_USERS" ("USER_ID", "USER_NAME", "USER_PROFILE_ID", "USER_EMAIL", "CREATED_AT", "UPDATED_AT") 
 values 
     ('a103ac43-6e48-4625-8480-51d72293f765', 'tonystark', '48175a74-822b-4172-8665-355952d3bdc4', 'tony.stark@test.com', NOW(), NOW()),
@@ -29,11 +30,10 @@ values
     ('80fae062-35c9-4cfa-8ca9-df79fc43e687', 'doctorstrange', 'fa9f6cfb-300f-42a1-91f2-b29f7082d438', 'stephen.strange@test.com', NOW(), NOW()),
     ('9b367473-492b-471e-9d4f-2e3f1e5fa274', 'blackpanther', 'e23223e4-6d61-4875-9750-b842b82e4933', 'tchalla.wakanda@test.com', NOW(), NOW());
 
-
+DELETE FROM "USR_PASSWORDS";
 insert into "USR_PASSWORDS" ("PASSWORD_SEQ", "USER_ID", "PASSWORD", "ACTIVE", "CREATED_AT", "UPDATED_AT") 
 values 
-    (1, 'a103ac43-6e48-4625-8480-51d72293f765', '$2b$10$zk8ke7G5h4htiPcdQ0AHoOVL2WupxtQb.4zUYyWRWfpQVSM6grXBu', false, NOW(), NOW()),
-    (2, 'a103ac43-6e48-4625-8480-51d72293f765', '$2b$10$zk8ke7G5h4htiPcdQ0AHoOVL2WupxtQb.4zUYyWRWfpQVSM6grXBu', true, NOW(), NOW()),
+    (1, 'a103ac43-6e48-4625-8480-51d72293f765', '$2b$10$zk8ke7G5h4htiPcdQ0AHoOVL2WupxtQb.4zUYyWRWfpQVSM6grXBu', true, NOW(), NOW()),
     (1, '2f4824e4-0159-43da-ab37-4af63f482418', '$2b$10$zk8ke7G5h4htiPcdQ0AHoOVL2WupxtQb.4zUYyWRWfpQVSM6grXBu', true, NOW(), NOW()),
     (1, 'a4fd4566-2d92-4c6e-b6a7-3f2e436edc9c', '$2b$10$zk8ke7G5h4htiPcdQ0AHoOVL2WupxtQb.4zUYyWRWfpQVSM6grXBu', true, NOW(), NOW()),
     (1, 'c87da514-f51f-4d44-9482-d8c4d8f84db6', '$2b$10$zk8ke7G5h4htiPcdQ0AHoOVL2WupxtQb.4zUYyWRWfpQVSM6grXBu', true, NOW(), NOW()),

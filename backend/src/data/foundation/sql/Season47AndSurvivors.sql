@@ -23,7 +23,7 @@ VALUES
     (uuid_generate_v4(), 'Tiyana', null, 'Hallums', 'Oahu', 'Hawaii', 'US');
 
 DELETE FROM "SSN_SEASONS";
-INSERT INTO "SSN_SEASONS" ("SEASON_ID", "THEME", "LOCATION", "NAME") VALUES (47, 'The New Era 2.0', 'Fiji, Oceania', null);
+INSERT INTO "SSN_SEASONS" ("SEASON_ID", "THEME", "LOCATION", "NAME", "START_DATE", "END_DATE") VALUES (47, 'The New Era 2.0', 'Fiji, Oceania', null, '2023-09-13', '2023-12-20');
 
 DELETE FROM "SSN_SURVIVORS";
 

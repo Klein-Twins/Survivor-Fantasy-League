@@ -23,11 +23,11 @@ export interface SurvivorBasic {
     /**
      * The survivor's unique identifier
      *
-     * @type {number}
+     * @type {string}
      * @memberof SurvivorBasic
      * @example 1
      */
-    survivorId?: number;
+    survivorId: string;
 
     /**
      * The survivor's first name
@@ -36,7 +36,7 @@ export interface SurvivorBasic {
      * @memberof SurvivorBasic
      * @example Andy
      */
-    firstName?: string;
+    firstName: string;
 
     /**
      * The survivor's last name
@@ -45,5 +45,5 @@ export interface SurvivorBasic {
      * @memberof SurvivorBasic
      * @example Rueda
      */
-    lastName?: string;
+    lastName: string;
 }

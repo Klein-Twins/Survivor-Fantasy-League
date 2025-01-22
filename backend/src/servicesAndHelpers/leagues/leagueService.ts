@@ -9,7 +9,6 @@ import leagueRepository from "../../repositories/leagueRepository";
 import profileRepository from "../../repositories/profileRepository";
 import userRepository from "../../repositories/userRepository";
 import { APIResponse } from "../../types/api/apiResponseTypes";
-import { Profile } from "../../types/profile/profileTypes";
 import errorFactory from "../../utils/errors/errorFactory";
 import { checkInviteeConflict, validateInviteeProfile, validateInviterInLeague, validateInviterProfile, validateLeague } from "./leagueHelper";
 import leagueProfileRepository from "../../repositories/league/leagueProfileRepository";

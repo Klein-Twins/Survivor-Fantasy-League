@@ -9,7 +9,7 @@ export enum InviteStatusEnum {
 export interface LeagueProfileAttributes {
   profileId: string;
   leagueId: string;
-  role: string;
+  role: LeagueMemberRoleEnum;
   inviteStatus: InviteStatusEnum;
   inviterProfileId: string | null;
 }
@@ -43,7 +43,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         field: "LEAGUE_ID"
       },
       role: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(...Object.values(LeagueMemberRoleEnum)),
         allowNull: false,
         field: "ROLE"
       },
@@ -68,11 +68,11 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
       hooks: {
         // beforeCreate Hook: Enforce single Owner per league
         beforeCreate: async (leagueProfile: LeagueProfile, options) => {
-          if (leagueProfile.role === LeagueMemberRoleEnum.Owner) {
+          if (leagueProfile.role === LeagueMemberRoleEnum.OWNER) {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,
-                role: "Owner",
+                role: "OWNER",
               },
             });
 
@@ -92,15 +92,15 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
             throw new Error("League profile not found.");
           }
 
-          if (leagueProfile.changed("role") && originalLeagueProfile.role === LeagueMemberRoleEnum.Owner) {
+          if (leagueProfile.changed("role") && originalLeagueProfile.role === LeagueMemberRoleEnum.OWNER) {
             throw new Error("An Owner role cannot be changed.");
           }
 
-          if (leagueProfile.role === LeagueMemberRoleEnum.Owner) {
+          if (leagueProfile.role === LeagueMemberRoleEnum.OWNER) {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,
-                role: "Owner",
+                role: "OWNER",
               },
             });
 

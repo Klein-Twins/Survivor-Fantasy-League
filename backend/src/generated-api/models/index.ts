@@ -36,6 +36,7 @@ export * from './season';
 export * from './signup-user-request-body';
 export * from './signup-user-response';
 export * from './signup-user-response-data';
+export * from './sort-by-enum';
+export * from './survivor';
 export * from './survivor-basic';
-export * from './survivor-with-details';
 export * from './user-session';
