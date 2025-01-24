@@ -112,7 +112,17 @@ const userRepository = {
             transaction
         })
         return user ? user.userId : null
-    }
+    },
+    getUserNameByProfileId: async (profileId: string, transaction?: Transaction): Promise<string | null> => {
+        const user = await models.User.findOne({
+            where: {
+                profileId: profileId
+            },
+            transaction
+        })
+        return user ? user.userName : null
+    },
+
 };
 
 export default userRepository;

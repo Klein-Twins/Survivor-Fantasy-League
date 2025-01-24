@@ -1,11 +1,14 @@
-import { LeagueApi, SurvivorsApi, AuthenticationApi, Configuration, ProfileApi } from "../../generated-api/index"
+import { Configuration, LeagueInviteServiceApi, LeagueServiceApi, ProfileServiceApi, SurvivorServiceApi, UserSessionServiceApi } from "../../generated-api";
 
 const config = new Configuration({
     basePath: 'http://localhost:3000'
 });
 
 const api = {
-    league: new LeagueApi(config),
-    profile: new ProfileApi(config),
+    leagueService: new LeagueServiceApi(config),
+    profileService: new ProfileServiceApi(config),
+    leagueInviteService: new LeagueInviteServiceApi(config),
+    survivorService: new SurvivorServiceApi(config),
+    UserSessionServiceApi: new UserSessionServiceApi(config),
 }
 export default api;

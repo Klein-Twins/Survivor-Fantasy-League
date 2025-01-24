@@ -3,10 +3,13 @@ components:
     GetSurvivorsResponse:
       type: object
       allOf:
-        - $ref: "./common.yaml#/components/schemas/ApiResponse"
-        - properties:
+        - $ref: './common.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
             responseData:
-              $ref: "#/components/schemas/GetSurvivorsResponseData"
+              $ref: '#/components/schemas/GetSurvivorsResponseData'
 
     GetSurvivorsResponseData:
       type: object
@@ -14,9 +17,10 @@ components:
         survivors:
           type: array
           items:
-            oneOf:
-              - $ref: "#/components/schemas/Survivor"
-              - $ref: "#/components/schemas/SurvivorBasic"
+            # oneOf:
+            $ref:
+              '#/components/schemas/Survivor'
+              # - $ref: "#/components/schemas/SurvivorBasic"
 
     SurvivorBasic:
       type: object
@@ -32,16 +36,16 @@ components:
         firstName:
           type: string
           description: The survivor's first name
-          example: "Andy"
+          example: 'Andy'
         lastName:
           type: string
           description: The survivor's last name
-          example: "Rueda"
+          example: 'Rueda'
 
     Survivor:
       type: object
       allOf:
-        - $ref: "#/components/schemas/SurvivorBasic"
+        - $ref: '#/components/schemas/SurvivorBasic'
         - type: object
           required:
             - seasonId
@@ -59,21 +63,21 @@ components:
             nickName:
               type: string
               description: The survivor's nickname
-              example: "The Brain"
+              example: 'The Brain'
               nullable: true
             fromCity:
               type: string
               description: The city the survivor is from
-              example: "Brooklyn"
+              example: 'Brooklyn'
               nullable: true
             fromState:
               type: string
               description: The state the survivor is from
-              example: "New York"
+              example: 'New York'
             fromCountry:
               type: string
               description: The country the survivor is from
-              example: "US"
+              example: 'US'
             age:
               type: integer
               description: The survivor's age at the time of the season
@@ -81,12 +85,12 @@ components:
             description:
               type: string
               description: A short description about the survivor
-              example: "An outgoing and energetic person."
+              example: 'An outgoing and energetic person.'
             job:
               type: string
               description: The survivor's job/occupation
-              example: "AI Research Assistant"
+              example: 'AI Research Assistant'
             imageUrl:
               type: string
               description: The path of the survivor image
-              example: "/assets/images/survivors/AndyRueda47.jpeg"
+              example: '/assets/images/survivors/AndyRueda47.jpeg'

@@ -7,6 +7,7 @@ export enum InviteStatusEnum {
 }
 
 export interface LeagueProfileAttributes {
+  id: string;
   profileId: string;
   leagueId: string;
   role: LeagueMemberRoleEnum;
@@ -18,6 +19,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
   class LeagueProfile
     extends Model<LeagueProfileAttributes>
     implements LeagueProfileAttributes {
+    public id!: string
     public leagueId!: string;
     public profileId!: string;
     public inviterProfileId!: string | null;
@@ -57,6 +59,12 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         primaryKey: false,
         allowNull: true,
         field: "INVITER_PROFILE_ID"
+      },
+      id: {
+         type: DataTypes.UUID,
+         primaryKey: true,
+         allowNull: false,
+         field: "ID"
       }
     },
     {

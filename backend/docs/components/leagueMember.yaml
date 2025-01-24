@@ -3,11 +3,11 @@ components:
     LeagueMember:
       type: object
       required:
-        - account
+        - profile
         - role
       properties:
-        account:
-          $ref: "./profile.yaml#/components/schemas/Account"
+        profile:
+          $ref: './profile.yaml#/components/schemas/Profile'
         role:
           type: string
           description: The role of the league member

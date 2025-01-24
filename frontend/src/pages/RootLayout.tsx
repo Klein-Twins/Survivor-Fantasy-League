@@ -5,7 +5,7 @@ import { AppDispatch, RootState } from "../store/store";
 import Navbar from "../components/navbar/Navbar";
 import Modal from "../components/ui/Modal";
 import ExtendSessionToast from "../components/auth/ExtendSessionToast";
-import { checkAuthentication } from "../store/slices/authSlice";
+// import { checkAuthentication } from "../store/slices/authSlice";
 
 const RootLayout : React.FC = () => {
 
@@ -15,7 +15,7 @@ const RootLayout : React.FC = () => {
     const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
 
     useEffect(() => {
-        dispatch(checkAuthentication());
+        // dispatch(checkAuthentication());
     }, [dispatch])
 
     return (

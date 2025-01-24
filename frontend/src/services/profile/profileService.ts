@@ -1,17 +1,18 @@
 import { AxiosResponse } from "axios";
 import api from "../apiContainer";
-import { ApiResponse, InviteMemberResponse, InviteRespondBodyInviteResponseEnum, ProfileSearchResultsResponse } from "../../../generated-api";
+import { ApiResponse, RespondToLeagueInviteRequestBody, RespondToLeagueInviteResponse, SearchProfilesForLeagueInviteResponse, SortByEnum } from "../../../generated-api";
 import { InviteStatusEnum } from "../../types/leagueProfile";
+import { ApiRequestParams } from "../../hooks/useApi";
 
 export interface GetProfilesBySearchRequestData {
-    profileId: string;
+    // profileId: string;
     userName?: string;
     firstName?: string;
     lastName?: string;
     leagueId: string;
     page?: number;
     limit?: number;
-    sortBy?: "firstName" | "lastName" | "userName";
+    sortBy?: SortByEnum
     isAsc?: boolean;
 }
 
@@ -19,7 +20,7 @@ export interface ProfileSearchFormValues {
     userName?: string;
     firstName?: string;
     lastName?: string;
-    sortBy?: "firstName" | "lastName" | "userName";
+    sortBy?: SortByEnum
     isAsc?: boolean;
     numProfilesPerPage: number
 }
@@ -50,53 +51,22 @@ export type Pagination = {
 }
 
 const profileService = {
-    getProfilesBySearch: async (params: GetProfilesBySearchRequestData): Promise<GetProfilesBySearchResponse> => {
+    getProfilesBySearch: async (params: ApiRequestParams<void, GetProfilesBySearchRequestData>): Promise<AxiosResponse<SearchProfilesForLeagueInviteResponse>> => {
         console.log(params);
-        const response: AxiosResponse<ProfileSearchResultsResponse> = await api.league.searchProfilesForLeagueInvite(
-            params.leagueId,
-            params.profileId,
-            params.userName,
-            params.firstName,
-            params.lastName,
-            params.page,
-            params.limit,
-            params.sortBy,
-            params.isAsc,
+        const response: AxiosResponse<SearchProfilesForLeagueInviteResponse> = await api.profileService.searchProfilesForLeagueInvite(
+            params.queryParams.leagueId,
+            //params.queryParams.profileId,
+            params.queryParams.userName,
+            params.queryParams.firstName,
+            params.queryParams.lastName,
+            params.queryParams.page,
+            params.queryParams.limit,
+            params.queryParams.sortBy,
+            params.queryParams.isAsc,
             { withCredentials: true }
         );
-
-        const data = response.data;
-        if (!data.results || !data.results.searchResults || !data.results.pagination) {
-            throw new Error("Invalid response structure");
-        }
-
-        if (!data.message) {
-            data.message = "No message provided";
-        }
-
-        if (data.foundResults === undefined) {
-            data.foundResults = false;
-        }
-
-
-        const validSearchResults = data.results.searchResults.filter(result => result.profileId !== undefined) as ProfileSearchResults;
-        return {
-            results: {
-                searchResults: validSearchResults,
-                pagination: data.results.pagination,
-            },
-            message: data.message,
-            foundResults: data.foundResults
-        };
+        return response;
     },
-    getLeagueInvitationsForProfile: async (profileId: string): Promise<InviteMemberResponse> => {
-        const response = await api.league.getLeagueInvites(profileId, { withCredentials: true });
-        return response.data;
-    },
-    respondToLeagueInvite: async (profileId: string, leagueId: string, inviteResponse: InviteRespondBodyInviteResponseEnum) => {
-        const response = await api.league.respondToLeagueInvite({ leagueId, inviteResponse }, profileId, { withCredentials: true })
-        return response.data;
-    }
 }
 
 export default profileService;

@@ -17,11 +17,11 @@ components:
           description: The name of the league.
           example: Corner By The Bookshelf
         season:
-          $ref: "./season.yaml#/components/schemas/Season"
+          $ref: './season.yaml#/components/schemas/Season'
         leagueMembers:
           type: array
           items:
-            $ref: "./leagueMember.yaml#/components/schemas/LeagueMember"
+            $ref: './leagueMember.yaml#/components/schemas/LeagueMember'
     CreateLeagueRequestBody:
       type: object
       required:
@@ -32,7 +32,7 @@ components:
         name:
           type: string
           description: The name of the league
-          example: "Corner By The Bookshelf"
+          example: 'Corner By The Bookshelf'
         seasonId:
           type: integer
           description: The ID of the season the league belongs to
@@ -40,15 +40,17 @@ components:
         profileId:
           type: string
           description: The profileId of the user creating the league
-          example: "49e27bd8-dc24-4159-9630-e989025bf8fd"
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
     CreateLeagueResponse:
       type: object
       allOf:
-        - $ref: "./common.yaml#/components/schemas/ApiResponse"
+        - $ref: './common.yaml#/components/schemas/ApiResponse'
         - type: object
+          required:
+            - responseData
           properties:
             responseData:
-              $ref: "#/components/schemas/CreateLeagueResponseData"
+              $ref: '#/components/schemas/CreateLeagueResponseData'
 
     CreateLeagueResponseData:
       type: object
@@ -56,16 +58,18 @@ components:
         - league
       properties:
         league:
-          $ref: "#/components/schemas/League"
+          $ref: '#/components/schemas/League'
 
     GetLeaguesForProfileResponse:
       type: object
       allOf:
-        - $ref: "./common.yaml#/components/schemas/ApiResponse"
+        - $ref: './common.yaml#/components/schemas/ApiResponse'
         - type: object
+          required:
+            - responseData
           properties:
             responseData:
-              $ref: "#/components/schemas/GetLeaguesForProfileResponseData"
+              $ref: '#/components/schemas/GetLeaguesForProfileResponseData'
 
     GetLeaguesForProfileResponseData:
       type: object
@@ -75,4 +79,4 @@ components:
         leagues:
           type: array
           items:
-            $ref: "#/components/schemas/League"
+            $ref: '#/components/schemas/League'

@@ -13,7 +13,6 @@
  */
 
 import { Survivor } from './survivor';
-import { SurvivorBasic } from './survivor-basic';
  /**
  * 
  *
@@ -23,8 +22,8 @@ import { SurvivorBasic } from './survivor-basic';
 export interface GetSurvivorsResponseData {
 
     /**
-     * @type {Array<Survivor | SurvivorBasic>}
+     * @type {Array<Survivor>}
      * @memberof GetSurvivorsResponseData
      */
-    survivors?: Array<Survivor | SurvivorBasic>;
+    survivors?: Array<Survivor>;
 }

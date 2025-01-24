@@ -26,5 +26,5 @@ export interface GetLeagueInvitesForPlayerResponse extends ApiResponse {
      * @type {GetLeagueInvitesForPlayerResponseData}
      * @memberof GetLeagueInvitesForPlayerResponse
      */
-    responseData?: GetLeagueInvitesForPlayerResponseData;
+    responseData: GetLeagueInvitesForPlayerResponseData;
 }

@@ -2,6 +2,11 @@ components:
   schemas:
     LeagueInvite:
       type: object
+      required:
+        - league
+        - message
+        - inviterProfile
+        - inviteId
       properties:
         league:
           $ref: "../league.yaml#/components/schemas/League"
@@ -11,9 +16,16 @@ components:
           example: Tony Stark has invited you to join a league
         inviterProfile:
           $ref: "../profile.yaml#/components/schemas/Profile"
+        inviteId:
+          type: string
+          description: The unique ID of the league invite.
+          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
 
     GetLeagueInvitesForPlayerResponseData:
       type: object
+      required:
+        - leagueInvites
+        - numLeagueInvites
       properties:
         leagueInvites:
           type: array
@@ -29,6 +41,8 @@ components:
       allOf:
         - $ref: "../common.yaml#/components/schemas/ApiResponse"
         - type: object
+          required:
+            - responseData
           properties:
             responseData:
               $ref: "#/components/schemas/GetLeagueInvitesForPlayerResponseData"
@@ -43,6 +57,8 @@ components:
       allOf:
         - $ref: "../common.yaml#/components/schemas/ApiResponse"
         - type: object
+          required:
+            - responseData
           properties:
             responseData:
               $ref: "#/components/schemas/RespondToLeagueInviteResponseData"

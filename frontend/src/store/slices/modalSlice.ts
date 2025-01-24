@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SurvivorDetails } from "../../types/survivorTypes";
 
 type ModalType = 'login' | 'signup' | 'logout' | 'notify' | 'survivorDetail'  | null;
 

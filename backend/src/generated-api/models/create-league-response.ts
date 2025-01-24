@@ -26,5 +26,5 @@ export interface CreateLeagueResponse extends ApiResponse {
      * @type {CreateLeagueResponseData}
      * @memberof CreateLeagueResponse
      */
-    responseData?: CreateLeagueResponseData;
+    responseData: CreateLeagueResponseData;
 }

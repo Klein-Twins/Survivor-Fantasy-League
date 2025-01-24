@@ -1,7 +1,7 @@
 import React from 'react';
-import { SurvivorDetails } from '../../types/survivorTypes';
+import { Survivor } from '../../../generated-api';
 
-const SurvivorCard: React.FC<{ survivor: SurvivorDetails }> = ({ survivor }) => {
+const SurvivorCard: React.FC<{ survivor: Survivor }> = ({ survivor }) => {
     return (
       <div className="max-w-xs w-11/12 mx-auto bg-white rounded-lg shadow-lg overflow-hidden mb-6">
         <img

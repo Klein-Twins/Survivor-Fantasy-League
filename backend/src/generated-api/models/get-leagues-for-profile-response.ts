@@ -26,5 +26,5 @@ export interface GetLeaguesForProfileResponse extends ApiResponse {
      * @type {GetLeaguesForProfileResponseData}
      * @memberof GetLeaguesForProfileResponse
      */
-    responseData?: GetLeaguesForProfileResponseData;
+    responseData: GetLeaguesForProfileResponseData;
 }

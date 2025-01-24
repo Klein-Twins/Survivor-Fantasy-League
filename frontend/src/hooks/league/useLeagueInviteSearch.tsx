@@ -1,6 +1,8 @@
 import { useCallback, useState } from "react";
-import profileService, { GetProfilesBySearchRequestData, GetProfilesBySearchResponse, ProfileSearchFormValues } from "../../services/profile/profileService";
-import useGetApi from "../useGetApi";
+import profileService, { GetProfilesBySearchRequestData, ProfileSearchFormValues } from "../../services/profile/profileService";
+import { useApi } from "../useApi";
+import { SearchProfilesForLeagueInviteResponse } from "../../../generated-api";
+
 
 const useLeagueInviteSearch = (leagueId: string, profileId: string) => {
     const [currentPageNumber, setCurrentPageNumber] = useState<number>(1);
@@ -16,8 +18,8 @@ const useLeagueInviteSearch = (leagueId: string, profileId: string) => {
     });
 
     // Hook call with proper types for API function and params
-    const { responseData, isLoading, error, fetchData } = useGetApi<GetProfilesBySearchResponse, GetProfilesBySearchRequestData>(
-        (params: GetProfilesBySearchRequestData) => profileService.getProfilesBySearch(params)
+    const { data:responseData, isLoading, error, execute:fetchData } = useApi<void, GetProfilesBySearchRequestData, SearchProfilesForLeagueInviteResponse>(
+        profileService.getProfilesBySearch
     );
 
     // Handle the search form submission
@@ -25,13 +27,20 @@ const useLeagueInviteSearch = (leagueId: string, profileId: string) => {
         (values: ProfileSearchFormValues) => {
             setSearchFormValues(values); // Update form state
             setCurrentPageNumber(1); // Reset to the first page
-            fetchData({
-                ...values,
-                limit: values.numProfilesPerPage,
-                page: 1,
-                leagueId, // Add leagueId to params
-                profileId, // Add profileId to params
-            });
+            fetchData(
+                {
+                    queryParams: {
+                        userName: values.userName,
+                        firstName: values.firstName,
+                        lastName: values.lastName,
+                        leagueId: leagueId,
+                        page: 1,
+                        limit: values.numProfilesPerPage,
+                        sortBy: values.sortBy,
+                        isAsc: values.isAsc,
+                    }
+                }
+            );
         },
         [fetchData, leagueId, profileId]
     );
@@ -40,13 +49,13 @@ const useLeagueInviteSearch = (leagueId: string, profileId: string) => {
     const handlePageChange = useCallback(
         (pageNumber: number) => {
             setCurrentPageNumber(pageNumber); // Update current page
-            fetchData({
+            fetchData({queryParams:{
                 ...searchFormValues,
                 limit: searchFormValues.numProfilesPerPage,
                 page: pageNumber,
                 leagueId, // Add leagueId to params
-                profileId, // Add profileId to params
-            });
+                //profileId, // Add profileId to params
+        }});
         },
         [fetchData, leagueId, profileId, searchFormValues]
     );

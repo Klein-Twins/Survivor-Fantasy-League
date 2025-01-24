@@ -62,8 +62,14 @@ async function signup(req: Request, res: Response, next: NextFunction): Promise<
             account,
             userSession
         }
+        const response : SignupUserResponse = {
+            success: true,
+            statusCode: 200,
+            message: `Welcome to the island, ${account.firstName ? account.firstName : account.userName}.`,
+            responseData
+        }
 
-        res.status(200).json(responseData);
+        res.status(200).json(response);
     } catch (error) {
         logger.error(`Error in accountController.signup: ${error}`);
         next(error);
@@ -187,7 +193,8 @@ async function checkAuth(req: Request, res: Response, next: NextFunction): Promi
             statusCode: 200,
             responseData: {
                 userSession: {
-                    isAuthenticated: false
+                    isAuthenticated: false,
+                    numSecondsRefreshTokenExpiresIn: 0
                 }
             }
         };
@@ -206,7 +213,8 @@ async function checkAuth(req: Request, res: Response, next: NextFunction): Promi
                 message: 'Refresh token is not authenticated',
                 responseData: {
                     userSession: {
-                        isAuthenticated: false
+                        isAuthenticated: false,
+                        numSecondsRefreshTokenExpiresIn: 0
                     }
                 }
             }
@@ -226,7 +234,8 @@ async function checkAuth(req: Request, res: Response, next: NextFunction): Promi
                 statusCode: 200,
                 responseData: {
                     userSession: {
-                        isAuthenticated: false
+                        isAuthenticated: false,
+                        numSecondsRefreshTokenExpiresIn: 0
                     }
                 }
             };

@@ -26,5 +26,5 @@ export interface GetSurvivorsResponse extends ApiResponse {
      * @type {GetSurvivorsResponseData}
      * @memberof GetSurvivorsResponse
      */
-    responseData?: GetSurvivorsResponseData;
+    responseData: GetSurvivorsResponseData;
 }

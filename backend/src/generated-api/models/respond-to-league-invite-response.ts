@@ -26,5 +26,5 @@ export interface RespondToLeagueInviteResponse extends ApiResponse {
      * @type {RespondToLeagueInviteResponseData}
      * @memberof RespondToLeagueInviteResponse
      */
-    responseData?: RespondToLeagueInviteResponseData;
+    responseData: RespondToLeagueInviteResponseData;
 }

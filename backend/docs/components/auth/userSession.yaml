@@ -2,6 +2,9 @@ components:
   schemas:
     UserSession:
       type: object
+      required:
+        - numSecondsRefreshTokenExpiresIn
+        - isAuthenticated
       properties:
         numSecondsRefreshTokenExpiresIn:
           type: number
@@ -122,6 +125,8 @@ components:
       allOf:
         - $ref: "../common.yaml#/components/schemas/ApiResponse"
         - type: object
+          required:
+            - responseData
           properties:
             responseData:
               $ref: "#/components/schemas/SignupUserResponseData"

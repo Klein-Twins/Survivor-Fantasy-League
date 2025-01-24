@@ -1,10 +1,11 @@
 import { createSlice, createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import { AuthState, User, ResponseError, Account } from "../../types/auth.ts";
-import { SignUpFormData, LogInFormData } from "../../utils/auth/formValidation.ts";
-import { checkAuthService, extendSessionService, loginUserService, logoutUserService, signupUserService } from "../../services/auth/authService.ts";
+import { AuthState } from "../../types/auth.ts";
 
 import { closeModal } from "./modalSlice.ts";
 import { RootState } from "../store.ts";
+import authService from "../../services/auth/authService.ts";
+import { Account, ApiError, LoginUserRequestBody, SignupUserRequestBody, SignupUserResponse, UserSession } from "../../../generated-api/index.ts";
+import { ApiRequestParams } from "../../hooks/useApi.tsx";
 
 enum AuthActionTypes {
     Signup = 'auth/signupUser',
@@ -60,84 +61,113 @@ const initialState: AuthState = {
     sessionEndTime: sessionManager.getSessionEndTime(),
 }
 
-const handleError = (error: any): ResponseError => ({
+const handleError = (error: any): ApiError => ({
     message: error.response?.data?.message || 'Unexpected error...',
     statusCode: error.response?.status || 500,
-    error: error.response.error || 'Error'
+    error: error.response.error || 'Error',
+    success: false
 });
 
 interface AccountActionPayload {
     account: Account;
-    numSecondsRefreshTokenExpiresIn: number;
-    isAuthenticated: boolean
+    userSession: UserSession;
 }
-export const signupUser = createAsyncThunk<AccountActionPayload, SignUpFormData, { rejectValue: ResponseError }>(
+export const signupUser = createAsyncThunk<
+    AccountActionPayload,
+    ApiRequestParams<SignupUserRequestBody, void>,
+    { rejectValue: ApiError }
+>(
     AuthActionTypes.Signup,
     async (userData, { rejectWithValue }) => {
         try {
-            return await signupUserService(userData);
+
+            const response = await authService.signupUser(userData);
+            if (!response.data.responseData || !response.data.responseData.account || !response.data.responseData.userSession) {
+                throw new Error('Invalid response data: Failed to signup User');
+            }
+            const payload: AccountActionPayload = { account: response.data.responseData.account, userSession: response.data.responseData.userSession };
+            return payload;
         } catch (error: any) {
-            return rejectWithValue(handleError(error));
+            if (error.response?.data) {
+                return rejectWithValue(error.response.data as ApiError);
+            }
+            return rejectWithValue({
+                error: 'Unknown Error',
+                message: 'An unexpected error occurred',
+                statusCode: 500,
+                success: false
+            });
         }
     }
 );
-export const loginUser = createAsyncThunk<AccountActionPayload, LogInFormData, { rejectValue: ResponseError }>(
+export const loginUser = createAsyncThunk<
+    AccountActionPayload,
+    ApiRequestParams<LoginUserRequestBody, void>,
+    { rejectValue: ApiError }
+>(
     AuthActionTypes.Login,
     async (userData, { rejectWithValue }) => {
         try {
-            return await loginUserService(userData);
+            const response = await authService.loginUser(userData);
+            if (!response || !response.responseData?.account || !response.responseData.userSession) {
+                throw new Error('Invalid response data: Failed to login User');
+            }
+            const payload: AccountActionPayload = { account: response.responseData.account, userSession: response.responseData.userSession };
+            return payload;
         } catch (error: any) {
             return rejectWithValue(handleError(error));
         }
     }
 );
 
-export const extendSession = createAsyncThunk<AccountActionPayload, { profileId: string }, { rejectValue: ResponseError }>(
-    AuthActionTypes.ExtendSession,
-    async ({ profileId }, { rejectWithValue }) => {
-        try {
-            return await extendSessionService(profileId)
-        } catch (error: any) {
-            return rejectWithValue(handleError(error))
-        }
-    }
-);
+// export const extendSession = createAsyncThunk<AccountActionPayload, { profileId: string }, { rejectValue: ApiError }>(
+//     AuthActionTypes.ExtendSession,
+//     async ({ profileId }, { rejectWithValue }) => {
+//         try {
+//             return await extendSessionService(profileId)
+//         } catch (error: any) {
+//             return rejectWithValue(handleError(error))
+//         }
+//     }
+// );
 
-export const logoutUser = createAsyncThunk<void, void, { rejectValue: ResponseError }>(
+export const logoutUser = createAsyncThunk<void, void, { rejectValue: ApiError }>(
     AuthActionTypes.Logout,
     async (_, { rejectWithValue }) => {
         sessionManager.clear();
         try {
-            return await logoutUserService();
+            const response = await authService.logoutUser();
+            return;
         } catch (error: any) {
             return rejectWithValue(handleError(error));
         }
     }
 )
 
-export const checkAuthentication = createAsyncThunk<AccountActionPayload, void, { state: RootState, rejectValue: ResponseError }>(
-    AuthActionTypes.CheckAuth,
-    async (_, { getState, rejectWithValue }) => {
-        try {
-            const { auth } = getState();
-            const profileId = auth.account?.profileId;
-            return await checkAuthService(profileId);
-        } catch (error: any) {
-            return rejectWithValue(handleError(error));
-        }
-    }
-)
+// export const checkAuthentication = createAsyncThunk<AccountActionPayload, void, { state: RootState, rejectValue: ApiError }>(
+//     AuthActionTypes.CheckAuth,
+//     async (_, { getState, rejectWithValue }) => {
+//         try {
+//             const { auth } = getState();
+//             const profileId = auth.account?.profileId;
+//             return await checkAuthService(profileId);
+//         } catch (error: any) {
+//             return rejectWithValue(handleError(error));
+//         }
+//     }
+// )
 
 const setUserState = (state: AuthState, action: { payload: AccountActionPayload }) => {
     state.loading = false;
     state.account = action.payload?.account || null;
     state.isAuthenticated = !!action.payload;
     state.error = action.payload ? null : {
+        success: false,
         message: 'Unexpected error - no payload on action...',
         statusCode: 500,
         error: 'Error'
     };
-    const sessionEndTime = calculateSessionEndTime(action.payload.numSecondsRefreshTokenExpiresIn)
+    const sessionEndTime = calculateSessionEndTime(action.payload.userSession.numSecondsRefreshTokenExpiresIn)
     state.sessionEndTime = sessionEndTime;
     sessionManager.setAccount(action.payload.account);
     sessionManager.setSessionEndTime(sessionEndTime)
@@ -161,9 +191,10 @@ const setLoadingState = (state: AuthState) => {
     state.loading = true;
     state.error = null;
 }
-const setRejectedState = (state: AuthState, action: { payload?: ResponseError }, actionType: string) => {
+const setRejectedState = (state: AuthState, action: { payload?: ApiError }, actionType: string) => {
     state.loading = false;
     state.error = action.payload || {
+        success: false,
         message: `${actionType} Failed`,
         statusCode: 500,
         error: 'Error'
@@ -201,19 +232,19 @@ const authSlice = createSlice({
             .addCase(closeModal, (state) => {
                 state.error = null;
             })
-            .addCase(checkAuthentication.pending, setLoadingState)
-            .addCase(checkAuthentication.fulfilled, (state, action) => {
-                if (action.payload.isAuthenticated == true) {
-                    setUserState(state, action)
-                }
-                else {
-                    clearUserState(state);
-                }
-            })
-            .addCase(checkAuthentication.rejected, clearUserState)
-            .addCase(extendSession.pending, setLoadingState)
-            .addCase(extendSession.fulfilled, setUserState)
-            .addCase(extendSession.rejected, (state, action) => setRejectedState(state, action, 'Extend Session'))
+        // .addCase(checkAuthentication.pending, setLoadingState)
+        // .addCase(checkAuthentication.fulfilled, (state, action) => {
+        //     if (action.payload.isAuthenticated == true) {
+        //         setUserState(state, action)
+        //     }
+        //     else {
+        //         clearUserState(state);
+        //     }
+        // })
+        // .addCase(checkAuthentication.rejected, clearUserState)
+        // .addCase(extendSession.pending, setLoadingState)
+        // .addCase(extendSession.fulfilled, setUserState)
+        // .addCase(extendSession.rejected, (state, action) => setRejectedState(state, action, 'Extend Session'))
     },
 });
 

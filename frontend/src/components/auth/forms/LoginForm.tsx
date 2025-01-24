@@ -8,6 +8,8 @@ import { loginUser } from "../../../store/slices/authSlice";
 import { closeModal } from "../../../store/slices/modalSlice";
 import { LogInFormData, validateLogin } from "../../../utils/auth/formValidation";
 import Form from "../../ui/forms/Form";
+import { LoginUserRequestBody } from "../../../../generated-api";
+import { ApiRequestParams } from "../../../hooks/useApi";
 
 const LoginForm: React.FC = () => {
   const responseError = useSelector((state: RootState) => state.auth.error)?.message;
@@ -16,7 +18,17 @@ const LoginForm: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = async (values: LogInFormData) => {
-    const resultAction = await dispatch(loginUser(values));
+
+    const loginUserRequestData: ApiRequestParams<LoginUserRequestBody, void> = {
+      body: {
+        email: values.email,
+        password: values.password,
+      }
+    }
+
+
+
+    const resultAction = await dispatch(loginUser(loginUserRequestData));
     if (loginUser.fulfilled.match(resultAction)) {
       dispatch(closeModal());
       navigate("/");

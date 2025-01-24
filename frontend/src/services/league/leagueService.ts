@@ -1,47 +1,42 @@
 import { AxiosResponse } from "axios";
-import { InviteMemberResponse, LeagueResponse, ProfileInviteBody, ProfileLeaguesBody, ProfileLeaguesResponse } from "../../../generated-api";
 import api from "../apiContainer";
+import { CreateLeagueRequestBody, CreateLeagueResponse, GetLeaguesForProfileResponse } from "../../../generated-api";
+import { ApiRequestParams } from "../../hooks/useApi";
+
+
+
+export interface GetLeaguesForProfileRequestParams {
+  profileId: string
+}
+
+export interface CreateLeagueRequestParams {
+
+}
 
 const leagueService = {
-  createLeague: async (
-    name: string,
-    seasonId: number,
-    profileId: string
-  ): Promise<any> => {
-    const requestBody: ProfileLeaguesBody = {
-      name,
-      seasonId: Number(seasonId),
-      profileId,
-    };
+  createLeague,
+  getLeaguesForProfile
+}
 
-    const response: AxiosResponse<LeagueResponse> = await api.profile.createLeague(
-      requestBody,
-      profileId,
-      undefined,
-      { withCredentials: true }
-    );
+async function createLeague(
+  requestData: ApiRequestParams<CreateLeagueRequestBody, void>
+): Promise<AxiosResponse<CreateLeagueResponse>>  {
+  const response: AxiosResponse<CreateLeagueResponse> = await api.leagueService.createLeague(requestData.body, { withCredentials: true })
+  return response;
+}
 
-    console.log("Logging createLeague response:")
-    console.log(response.data);
+async function getLeaguesForProfile(
+  requestData: ApiRequestParams<void, GetLeaguesForProfileRequestParams>
+): Promise<AxiosResponse<GetLeaguesForProfileResponse>> {
+  const response = await api.leagueService.getLeaguesForProfile(requestData.queryParams.profileId, { withCredentials: true });
+  return response;
 
-    return response.data;
-  },
+}
 
-  getLeaguesForProfile: async (
-    profileId: string
-  ): Promise<ProfileLeaguesResponse> => {
-    const response = await api.profile.getLeaguesForProfile(profileId, {
-      withCredentials: true,
-    });
+  // inviteLeagueMember: async (body: ProfileInviteBody, profileId: string): Promise<InviteMemberResponse> => {
+  //   const response = await api.league.inviteToLeague(body, profileId, { withCredentials: true });
+  //   return response.data;
+  // }
 
-    console.log(response.data);
-    return response.data;
-  },
-
-  inviteLeagueMember: async (body: ProfileInviteBody, profileId: string): Promise<InviteMemberResponse> => {
-    const response = await api.league.inviteToLeague(body, profileId, { withCredentials: true });
-    return response.data;
-  }
-};
 
 export default leagueService;

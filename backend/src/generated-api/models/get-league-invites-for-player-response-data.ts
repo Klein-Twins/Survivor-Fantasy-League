@@ -25,7 +25,7 @@ export interface GetLeagueInvitesForPlayerResponseData {
      * @type {Array<LeagueInvite>}
      * @memberof GetLeagueInvitesForPlayerResponseData
      */
-    leagueInvites?: Array<LeagueInvite>;
+    leagueInvites: Array<LeagueInvite>;
 
     /**
      * The number of league invites returned
@@ -34,5 +34,5 @@ export interface GetLeagueInvitesForPlayerResponseData {
      * @memberof GetLeagueInvitesForPlayerResponseData
      * @example 4
      */
-    numLeagueInvites?: number;
+    numLeagueInvites: number;
 }

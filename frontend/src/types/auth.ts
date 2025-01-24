@@ -1,3 +1,5 @@
+import { ApiError } from "../../generated-api";
+
 export interface User {
     username: string;
     userProfileId: string;
@@ -7,15 +9,10 @@ export interface AuthState {
     account: Account | null;
     isAuthenticated: boolean;
     loading: boolean;
-    error: ResponseError | null;
+    error: ApiError | null;
     sessionEndTime: number | null;
 }
 
-export interface ResponseError {
-    message: string;
-    statusCode: number;
-    error: string;
-}
 
 export type Account = {
     userName: string;

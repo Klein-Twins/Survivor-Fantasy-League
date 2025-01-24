@@ -11,6 +11,8 @@ import { closeModal } from "../../../store/slices/modalSlice";
 import SubmitButton from "../../ui/forms/SubmitButton";
 import { SignUpFormData, validateSignUp } from "../../../utils/auth/formValidation";
 import Form from "../../ui/forms/Form";
+import { SignupUserRequestBody } from "../../../../generated-api";
+import { ApiRequestData } from "../../../hooks/useApi";
 
 const SignupForm: React.FC = () => {
     const responseError = useSelector((state: RootState) => state.auth.error)?.message;
@@ -19,8 +21,18 @@ const SignupForm: React.FC = () => {
     const dispatch = useDispatch<AppDispatch>();
 
     const onSubmit = async (values: SignUpFormData) => {
-        const resultAction = await dispatch(signupUser(values));
-        if(signupUser.fulfilled.match(resultAction)) {
+        const signupUserRequestData: ApiRequestData<SignupUserRequestBody> = {
+            queryParams: undefined,
+            body: {
+                username: values.username,
+                email: values.email,
+                password: values.password,
+                firstName: values.firstName,
+                lastName: values.lastName
+            }
+        }
+        const resultAction = await dispatch(signupUser(signupUserRequestData));
+        if (signupUser.fulfilled.match(resultAction)) {
             dispatch(closeModal());
             navigate("/");
         }
@@ -41,12 +53,12 @@ const SignupForm: React.FC = () => {
     });
 
     return (
-        <Form 
-        title="Log In" 
-        onSubmit={handleSubmit} 
-        isSubmitDisabled={isSubmitDisabled} 
-        isLoading={loading}
-        submitError={responseError}
+        <Form
+            title="Log In"
+            onSubmit={handleSubmit}
+            isSubmitDisabled={isSubmitDisabled}
+            isLoading={loading}
+            submitError={responseError}
         >
             <FormInput
                 label="Username"

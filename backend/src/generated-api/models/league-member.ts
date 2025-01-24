@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { Account } from './account';
+import { Profile } from './profile';
  /**
  * 
  *
@@ -22,10 +22,10 @@ import { Account } from './account';
 export interface LeagueMember {
 
     /**
-     * @type {Account}
+     * @type {Profile}
      * @memberof LeagueMember
      */
-    account: Account;
+    profile: Profile;
 
     /**
      * The role of the league member

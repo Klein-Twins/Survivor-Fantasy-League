@@ -1,13 +1,13 @@
 import { useDispatch } from "react-redux";
-import { SurvivorDetails } from "../../types/survivorTypes";
 import SurvivorCard from "./SurvivorCard";
 import { openModal } from "../../store/slices/modalSlice";
+import { Survivor } from "../../../generated-api";
 
-const SurvivorCardList: React.FC<{ survivors: SurvivorDetails[] }> = ({ survivors }) => {
+const SurvivorCardList: React.FC<{ survivors: Survivor[] }> = ({ survivors }) => {
 
     const dispatch = useDispatch();
 
-    const handleSurvivorCardClick = (survivor: SurvivorDetails) => {
+    const handleSurvivorCardClick = (survivor: Survivor) => {
       dispatch(openModal({type: 'survivorDetail', props: {survivor: survivor}}))
     }
 

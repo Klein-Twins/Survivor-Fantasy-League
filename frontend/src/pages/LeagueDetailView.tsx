@@ -1,9 +1,7 @@
-import React from "react";
-import { useLocation } from "react-router-dom";
-import LeagueMembersPanel from "../components/leagues/LeagueMembersPanel";
-import { useSelector } from "react-redux";
-import { RootState } from "../store/store";
-import { LeagueProvider } from "../components/leagueDetail/LeagueContext";
+import React from 'react';
+import { useLocation } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { RootState } from '../store/store';
 
 const LeagueDetailView: React.FC = () => {
   const location = useLocation();
@@ -16,11 +14,12 @@ const LeagueDetailView: React.FC = () => {
   if (!leagueId) return <h1>You cannot navigate here this way</h1>;
 
   return (
-    <LeagueProvider leagueId={leagueId} profileId={account.profileId}>
-      <div className="min-h-screen">
-        <LeagueMembersPanel />
-      </div>
-    </LeagueProvider>
+    // <LeagueProvider leagueId={leagueId} profileId={account.profileId}>
+    //   <div className='min-h-screen'>
+    //     <LeagueMembersPanel />
+    //   </div>
+    // </LeagueProvider>
+    <></>
   );
 };
 

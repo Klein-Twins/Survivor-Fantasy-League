@@ -6,6 +6,8 @@ components:
         - profileId
         - userName
         - profileImageUrl
+        - firstName
+        - lastName
       properties:
         profileId:
           type: string
@@ -25,7 +27,7 @@ components:
         - email
         - userId
       allOf:
-        - $ref: "#/components/schemas/Profile"
+        - $ref: '#/components/schemas/Profile'
         - type: object
           properties:
             email:

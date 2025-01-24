@@ -1,16 +1,16 @@
-import { models, sequelize } from "../config/db";
-import logger from "../config/logger";
-import { ACCOUNT_NOT_FOUND_ERROR } from "../constants/auth/responseErrorConstants";
-import { Account, SignupUserRequestBody } from "../generated-api";
-import { PasswordAttributes } from "../models/Password";
-import { ProfileAttributes } from "../models/Profile";
-import { UserAttributes } from "../models/User";
-import passwordService from "../servicesAndHelpers/password/passwordService";
-import profileService from "../servicesAndHelpers/profile/profileService";
-import userService from "../servicesAndHelpers/user/userService";
-import { AccountAndPassword, UserIncludeProfile } from "../types/auth/authTypes";
-import errorFactory from "../utils/errors/errorFactory";
-import { InternalServerError } from "../utils/errors/errors";
+import { models, sequelize } from '../config/db';
+import logger from '../config/logger';
+import { ACCOUNT_NOT_FOUND_ERROR } from '../constants/auth/responseErrorConstants';
+import { Account, SignupUserRequestBody } from '../generated-api';
+import { PasswordAttributes } from '../models/Password';
+import { ProfileAttributes } from '../models/Profile';
+import { UserAttributes } from '../models/User';
+import passwordService from '../servicesAndHelpers/password/passwordService';
+import profileService from '../servicesAndHelpers/profile/profileService';
+import userService from '../servicesAndHelpers/user/userService';
+import { AccountAndPassword, UserIncludeProfile } from '../types/auth/authTypes';
+import errorFactory from '../utils/errors/errorFactory';
+import { InternalServerError } from '../utils/errors/errors';
 
 /**
  * Repository for managing account-related operations, including creating accounts
@@ -18,147 +18,147 @@ import { InternalServerError } from "../utils/errors/errors";
  */
 
 async function getAccountByEmail(email: string): Promise<Account | null> {
-    const userRecord: UserAttributes | null = await models.User.findOne({
-        where: {
-            email
-        }
-    });
-    if (!userRecord) {
-        return null;
-    }
+  const userRecord: UserAttributes | null = await models.User.findOne({
+    where: {
+      email,
+    },
+  });
+  if (!userRecord) {
+    return null;
+  }
 
-    const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
-        where: {
-            profileId: userRecord.profileId
-        }
-    });
-    if (!profileRecord) {
-        return null;
-    }
+  const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
+    where: {
+      profileId: userRecord.profileId,
+    },
+  });
+  if (!profileRecord) {
+    return null;
+  }
 
-    return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
+  return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
 }
 
 async function getAccountByUserName(userName: string): Promise<Account | null> {
-    const userRecord: UserAttributes | null = await models.User.findOne({
-        where: {
-            userName
-        }
-    });
-    if (!userRecord) {
-        return null;
-    }
+  const userRecord: UserAttributes | null = await models.User.findOne({
+    where: {
+      userName,
+    },
+  });
+  if (!userRecord) {
+    return null;
+  }
 
-    const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
-        where: {
-            profileId: userRecord.profileId
-        }
-    });
-    if (!profileRecord) {
-        return null;
-    }
+  const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
+    where: {
+      profileId: userRecord.profileId,
+    },
+  });
+  if (!profileRecord) {
+    return null;
+  }
 
-    return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
+  return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
 }
 
 async function getAccountByUserId(userId: string): Promise<Account | null> {
-    const userRecord: UserAttributes | null = await models.User.findOne({
-        where: {
-            userId
-        }
-    });
-    if (!userRecord) {
-        return null;
-    }
+  const userRecord: UserAttributes | null = await models.User.findOne({
+    where: {
+      userId,
+    },
+  });
+  if (!userRecord) {
+    return null;
+  }
 
-    const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
-        where: {
-            profileId: userRecord.profileId
-        }
-    });
-    if (!profileRecord) {
-        return null;
-    }
+  const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
+    where: {
+      profileId: userRecord.profileId,
+    },
+  });
+  if (!profileRecord) {
+    return null;
+  }
 
-    return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
+  return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
 }
 
 function buildAccountFromUserAndProfileRecords(userRecord: UserAttributes, profileRecord: ProfileAttributes): Account {
-    return {
-        email: userRecord.email,
-        userId: userRecord.userId,
-        userName: userRecord.userName,
-        profileId: profileRecord.profileId,
-        firstName: profileRecord.firstName,
-        lastName: profileRecord.lastName,
-        profileImageUrl: profileRecord.imageUrl || "test"
-    }
+  return {
+    email: userRecord.email,
+    userId: userRecord.userId,
+    userName: userRecord.userName,
+    profileId: profileRecord.profileId,
+    firstName: profileRecord.firstName || null,
+    lastName: profileRecord.lastName || null,
+    profileImageUrl: profileRecord.imageUrl || 'test',
+  };
 }
 
 async function createAccount(accountData: Account, password: string): Promise<Account | null> {
-    const transaction = await sequelize.transaction();
+  const transaction = await sequelize.transaction();
 
-    try {
+  try {
+    const profileRecord: ProfileAttributes = await models.Profile.create(
+      {
+        profileId: accountData.profileId,
+        firstName: accountData.firstName,
+        lastName: accountData.lastName,
+        imageUrl: accountData.profileImageUrl,
+      },
+      { transaction }
+    );
 
+    const userRecord: UserAttributes = await models.User.create(
+      {
+        userId: accountData.userId,
+        userName: accountData.userName,
+        email: accountData.email,
+        profileId: accountData.profileId,
+      },
+      { transaction }
+    );
 
-        const profileRecord: ProfileAttributes = await models.Profile.create(
-            {
-                profileId: accountData.profileId,
-                firstName: accountData.firstName,
-                lastName: accountData.lastName,
-                imageUrl: accountData.profileImageUrl
-            },
-            { transaction }
-        );
-
-        const userRecord: UserAttributes = await models.User.create(
-            {
-                userId: accountData.userId,
-                userName: accountData.userName,
-                email: accountData.email,
-                profileId: accountData.profileId
-            },
-            { transaction }
-        )
-
-        const passwordRecord: PasswordAttributes | null = await passwordService.createPasswordForAccount(accountData, password, transaction);
-        if (!passwordRecord) {
-            throw errorFactory(new InternalServerError())
-        }
-
-        await transaction.commit();
-        logger.debug("Transaction committed. Account created in DB");
-        return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
-
-    } catch (error) {
-        await transaction.rollback();
-        logger.error(`Transaction rolledback. Error creating and persisting account into DB: ${error}`)
-        throw error;
+    const passwordRecord: PasswordAttributes | null = await passwordService.createPasswordForAccount(
+      accountData,
+      password,
+      transaction
+    );
+    if (!passwordRecord) {
+      throw errorFactory(new InternalServerError());
     }
+
+    await transaction.commit();
+    logger.debug('Transaction committed. Account created in DB');
+    return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
+  } catch (error) {
+    await transaction.rollback();
+    logger.error(`Transaction rolledback. Error creating and persisting account into DB: ${error}`);
+    throw error;
+  }
 }
 
 async function getAccountByProfileId(profileId: string): Promise<Account | null> {
-    const userRecord: UserAttributes | null = await models.User.findOne({
-        where: {
-            profileId
-        }
-    });
-    if (!userRecord) {
-        return null
-    }
+  const userRecord: UserAttributes | null = await models.User.findOne({
+    where: {
+      profileId,
+    },
+  });
+  if (!userRecord) {
+    return null;
+  }
 
-    const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
-        where: {
-            profileId
-        }
-    });
-    if (!profileRecord) {
-        return null;
-    }
+  const profileRecord: ProfileAttributes | null = await models.Profile.findOne({
+    where: {
+      profileId,
+    },
+  });
+  if (!profileRecord) {
+    return null;
+  }
 
-    return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
+  return buildAccountFromUserAndProfileRecords(userRecord, profileRecord);
 }
-
 
 /*
 const accountRepository = {
@@ -209,14 +209,12 @@ const accountRepository = {
 }
 */
 
-
-
 const accountRepository = {
-    getAccountByUserName,
-    getAccountByEmail,
-    getAccountByUserId,
-    getAccountByProfileId,
-    createAccount
-}
+  getAccountByUserName,
+  getAccountByEmail,
+  getAccountByUserId,
+  getAccountByProfileId,
+  createAccount,
+};
 
 export default accountRepository;

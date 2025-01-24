@@ -26,7 +26,7 @@ export interface LeagueInvite {
      * @type {League}
      * @memberof LeagueInvite
      */
-    league?: League;
+    league: League;
 
     /**
      * A message indicating the success of the operation.
@@ -35,11 +35,20 @@ export interface LeagueInvite {
      * @memberof LeagueInvite
      * @example Tony Stark has invited you to join a league
      */
-    message?: string;
+    message: string;
 
     /**
      * @type {Profile}
      * @memberof LeagueInvite
      */
-    inviterProfile?: Profile;
+    inviterProfile: Profile;
+
+    /**
+     * The unique ID of the league invite.
+     *
+     * @type {string}
+     * @memberof LeagueInvite
+     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
+     */
+    inviteId: string;
 }

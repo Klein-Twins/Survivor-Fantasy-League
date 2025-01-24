@@ -26,5 +26,5 @@ export interface SignupUserResponse extends ApiResponse {
      * @type {SignupUserResponseData}
      * @memberof SignupUserResponse
      */
-    responseData?: SignupUserResponseData;
+    responseData: SignupUserResponseData;
 }

@@ -36,13 +36,13 @@ export interface Profile {
      * @type {string}
      * @memberof Profile
      */
-    firstName?: string | null;
+    firstName: string | null;
 
     /**
      * @type {string}
      * @memberof Profile
      */
-    lastName?: string | null;
+    lastName: string | null;
 
     /**
      * @type {string}
