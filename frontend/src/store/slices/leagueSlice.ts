@@ -76,6 +76,18 @@ const leagueSlice = createSlice({
       .addCase(getLeagues.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || null;
+      })
+      .addCase(createLeague.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createLeague.fulfilled, (state, action) => {
+        state.loading = false;
+        state.leagues.push(action.payload.responseData.league);
+      })
+      .addCase(createLeague.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || null;
       });
   },
 });

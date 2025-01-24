@@ -1,0 +1,91 @@
+import { useDispatch, useSelector } from 'react-redux';
+import { CreateLeagueRequestBody } from '../../../../generated-api';
+import { ApiRequestParams } from '../../../hooks/useApi';
+import useForm from '../../../hooks/useForm';
+import { CreateLeagueFormData, validateCreateLeague } from '../../../utils/league/formValidation';
+import { AppDispatch, RootState } from '../../../store/store';
+import { createLeague } from '../../../store/slices/leagueSlice';
+import Form from '../../ui/forms/Form';
+import FormInput from '../../ui/forms/FormInput';
+import Select from '../../ui/forms/Select';
+
+const seasonOptions = [
+  { label: 'Season 47', value: '47' },
+  { label: 'Season 48', value: '48' },
+  { label: 'Season 49', value: '49' },
+];
+
+const CreateLeagueForm: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const account = useSelector((state: RootState) => state.auth.account);
+  const createLeagueLoading = useSelector((state: RootState) => state.league.loading);
+  const createLeagueError = useSelector((state: RootState) => state.league.error);
+
+  const {
+    values,
+    errors: formValidationError,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitDisabled,
+  } = useForm<CreateLeagueFormData>({
+    initialValues: { name: '', seasonId: 47 },
+    validate: validateCreateLeague,
+    onSubmit: (values) => {
+      try {
+        const requestData: ApiRequestParams<CreateLeagueRequestBody, undefined> = {
+          body: {
+            name: values.name,
+            seasonId: values.seasonId,
+            profileId: account!.profileId || '',
+          },
+          queryParams: undefined,
+        };
+        dispatch(createLeague(requestData));
+      } catch (error) {
+        console.error('Error creating league', error);
+      }
+    },
+    requiredFields: ['name', 'seasonId'],
+  });
+
+  return (
+    <div className='relative'>
+      {/* Form with Input Fields */}
+      <Form
+        title='Create a new league'
+        onSubmit={handleSubmit}
+        isSubmitDisabled={isSubmitDisabled || createLeagueLoading}
+        submitError={createLeagueError?.error} // Use hook's error state
+        isLoading={createLeagueLoading} // Use hook's loading state
+      >
+        <div className='flex flex-col items-center space-y-2 md:flex-row md:items-start md:space-y-0 md:space-x-2 w-full'>
+          <FormInput
+            label='Name'
+            name='name'
+            type='text'
+            value={values.name}
+            onChange={handleChange}
+            onBlur={() => handleBlur('name')}
+            error={formValidationError.name}
+            required
+            className='w-full md:w-3/4'
+          />
+          <Select
+            label='Season'
+            name='seasonId'
+            value={values.seasonId}
+            onChange={handleChange}
+            options={seasonOptions}
+            onBlur={() => handleBlur('seasonId')}
+            error={formValidationError.seasonId}
+            required
+            className='w-full md:w-1/4'
+          />
+        </div>
+      </Form>
+    </div>
+  );
+};
+
+export default CreateLeagueForm;
