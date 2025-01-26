@@ -12,7 +12,7 @@ export const LeaguesPanel: React.FC = () => {
 
   return (
     <div className='bg-background-dp02 rounded-lg p-2 flex flex-col space-y-2'>
-      <div className='flex justify-between border-b border-background-dp03'>
+      <div className='flex justify-between border-b border-background-dp03 mb-2'>
         <div>
           {' '}
           <button
@@ -48,14 +48,18 @@ export const LeaguesPanel: React.FC = () => {
 
       {activeTab === 'leagues' &&
         (leagues.length > 0 ? (
-          leagues.map((league) => <LeagueCard key={league.leagueId} league={league} />)
+          leagues.map((league) => (
+            <LeagueCard key={league.leagueId} league={league} classname='dark:bg-surface-a2-dark' />
+          ))
         ) : (
           <p className='text-center text-subtitle text-text-primary p-8'>You have not joined any leagues</p>
         ))}
 
       {activeTab === 'invites' &&
         (leagueInvites.length > 0 ? (
-          leagueInvites.map((invite) => <LeagueInviteCard key={invite.inviteId} leagueInvite={invite} />)
+          leagueInvites.map((invite) => (
+            <LeagueInviteCard key={invite.inviteId} leagueInvite={invite} className='dark:bg-surface-a2-dark' />
+          ))
         ) : (
           <p className='text-center text-subtitle text-text-primary p-8'>You have no pending league invites</p>
         ))}

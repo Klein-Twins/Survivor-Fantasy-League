@@ -8,12 +8,14 @@
     "dev-with-build": "concurrently \"npm run backend\" \"wait-on --http-get-status 200,404 http://localhost:3000 && npm run generate-client && npm run frontend\""
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.735.0",
     "@headlessui/react": "^2.2.0",
     "concurrently": "^9.1.0",
     "swagger-cli": "^4.0.4",
     "yamljs": "^0.3.0"
   },
   "devDependencies": {
+    "@types/aws-sdk": "^0.0.42",
     "@types/yamljs": "^0.2.34",
     "wait-on": "^5.3.0"
   }

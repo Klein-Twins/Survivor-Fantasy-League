@@ -8,9 +8,10 @@ import { LeagueDisplay } from './LeagueDisplay';
 
 interface LeagueInviteCardProps {
   leagueInvite: LeagueInvite;
+  className?: string;
 }
 
-export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({ leagueInvite }) => {
+export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({ leagueInvite, className }) => {
   const dispatch = useDispatch<AppDispatch>();
   const account = useSelector((state: RootState) => state.auth.account);
   const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +47,7 @@ export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({ leagueInvite
   const handleRemove = () => dispatch(removeLeagueInvite(leagueInvite));
 
   return (
-    <div className='w-full flex relative'>
+    <div className={`w-full flex relative ${className}`}>
       {canDelete && (
         <button
           onClick={handleRemove}

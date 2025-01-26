@@ -4,6 +4,7 @@ import { AppDispatch, RootState } from '../store/store';
 import { getLeagues } from '../store/slices/leagueSlice';
 import { getLeagueInvites } from '../store/slices/leagueInviteSlice';
 import { LeaguesPanel } from '../components/dashboard/leagues/LeaguePanel';
+import Image from '../components/ui/image/Image';
 
 const HomePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,7 +14,12 @@ const HomePage: React.FC = () => {
   const leagues = useSelector((state: RootState) => state.league.leagues);
 
   if (!account) {
-    return <p>STatic home page.</p>;
+    return (
+      <>
+        <h1>Test Image from S3</h1>
+        <Image src='league1Image.jpg' />
+      </>
+    );
   }
 
   useEffect(() => {

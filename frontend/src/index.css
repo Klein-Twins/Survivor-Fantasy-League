@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* .dark {
+  --tw-text-opacity: 1;
+  --primary-color: #acd1dd;
+  --secondary-color: #97c6d5;
+  --tertiary-color: #81bacd;
+
+  --bg-primary-color: #3f3f3f;
+  --bg-secondary-color: #282828;
+  --bg-tertiary-color: #121212;
+}
+
+:root {
+  --primary-color: #8b8b8b;
+  --secondary-color: #717171;
+  --tertiary-color: #575757;
+
+  --bg-primary-color: #acd1dd;
+  --bg-secondary-color: #97c6d5;
+  --bg-tertiary-color: #81bacd;
+} */

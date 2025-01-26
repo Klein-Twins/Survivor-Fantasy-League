@@ -1,68 +1,61 @@
-export const content = [
-  './index.html',
-  './src/**/*.{js,jsx,ts,tsx}', // Adjust this path as needed
-];
-export const theme = {
-  extend: {
-    backgroundImage: {
-      'gradient-to-l': 'linear-gradient(to left, var(--tw-gradient-stops))',
-      'gradient-to-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
-    },
-    colors: {
-      background: {
-        base: '#080808', // Main background color
-        dp01: '#121212',
-        dp02: '#1c1c1c',
-        dp03: '#262626',
-        dp04: '#2f2f2f',
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  darkMode: 'class',
+  content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
+  theme: {
+    extend: {
+      backgroundImage: {
+        'gradient-to-l': 'linear-gradient(to left, var(--tw-gradient-stops))',
+        'gradient-to-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
       },
-      error: {
-        light: '#FFEBEE', // Light background
-        main: '#F44336', // Primary error
-        dark: '#C62828', // Dark/hover state
-        text: '#D32F2F', // Error text
-        bg: '#FDE7E9', // Error background
+      colors: {
+        'surface-a5-dark': '#8b8b8b',
+        'surface-a4-dark': '#717171',
+        'surface-a3-dark': '#575757',
+        'surface-a2-dark': '#3f3f3f',
+        'surface-a1-dark': '#282828',
+        'surface-a0-dark': '#121212',
+        'primary-a0-dark': '#3199b4',
+        'primary-a1-dark': '#51a4bc',
+        'primary-a2-dark': '#6aafc4',
+        'primary-a3-dark': '#81bacd',
+        'primary-a4-dark': '#97c6d5',
+        'primary-a5-dark': '#acd1dd',
       },
-      text: {
-        primary: '#f4f4f4', // Highest contrast for main content
-        secondary: '#e0e0e0', // Clear but less prominent
-        tertiary: '#cccccc', // Subtle text, still readable
-        link: {
-          default: '#82B1FF', // Brighter blue for dark theme
-          hover: '#448AFF', // More saturated on hover
-          visited: '#B388FF', // Purple tint for visited
-        },
-        emphasis: '#FFFFFF', // Pure white for maximum contrast
-        muted: 'rgba(255, 255, 255, 0.20)', // Background text, hints
-        success: '#69F0AE', // Bright green for success
-        warning: '#FFD740', // Bright amber for warnings
-        error: '#FF5252', // Bright red for errors
-      },
-      button: {
-        primary: {
-          base: '#1976D2', // Default state
-          hover: '#1565C0', // Hover state
-          active: '#0D47A1', // Active/pressed state
-          disabled: '#90CAF9', // Disabled state
-          text: '#FFFFFF', // Button text
-        },
-        secondary: {
-          base: '#424242', // Default state
-          hover: '#303030', // Hover state
-          active: '#212121', // Active/pressed state
-          disabled: '#757575', // Disabled state
-          text: '#FFFFFF', // Button text
-        },
-      },
-    },
-    fontSize: {
-      display: ['4rem', { lineHeight: '1.2' }], // 64px
-      header: ['2rem', { lineHeight: '1.2' }], // 40px
-      title: ['1.5rem', { lineHeight: '1.2' }], // 32px
-      subtitle: ['1.25rem', { lineHeight: '1.4' }], // 24px
-      body: ['0.875rem', { lineHeight: '1.5' }], // 18px
-      caption: ['0.875rem', { lineHeight: '1.4' }], // 14px
     },
   },
+  plugins: [],
 };
-export const plugins = [];
+
+/*
+
+        bg: {
+          a0: '#8b8b8b',
+          a1: '#717171',
+          a2: '#575757',
+          a3: '#3f3f3f',
+          a4: '#282828',
+          a5: '#121212',
+          'a0-dark': '#121212',
+          'a1-dark': '#282828',
+          'a2-dark': '#3f3f3f',
+          'a3-dark': '#575757',
+          'a4-dark': '#717171',
+          'a5-dark': '#8b8b8b',
+        },
+        text: {
+          a0: '#3199b4',
+          a1: '#51a4bc',
+          a2: '#6aafc4',
+          a3: '#81bacd',
+          a4: '#97c6d5',
+          a5: '#acd1dd',
+          'a0-dark': '#3199b4',
+          'a1-dark': '#51a4bc',
+          'a2-dark': '#6aafc4',
+          'a3-dark': '#81bacd',
+          'a4-dark': '#97c6d5',
+          'a5-dark': '#acd1dd',
+        },
+
+        */

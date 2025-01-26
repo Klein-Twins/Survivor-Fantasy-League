@@ -5,7 +5,7 @@ import useForm from '../../../hooks/useForm';
 import { CreateLeagueFormData, validateCreateLeague } from '../../../utils/league/formValidation';
 import { AppDispatch, RootState } from '../../../store/store';
 import { createLeague } from '../../../store/slices/leagueSlice';
-import Form from '../../ui/forms/Form';
+import Form, { FormClassName } from '../../ui/forms/Form';
 import FormInput from '../../ui/forms/FormInput';
 import Select from '../../ui/forms/Select';
 
@@ -15,7 +15,11 @@ const seasonOptions = [
   { label: 'Season 49', value: '49' },
 ];
 
-const CreateLeagueForm: React.FC = () => {
+interface CreateLeagueFormProps {
+  className?: FormClassName;
+}
+
+const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({ className }) => {
   const dispatch = useDispatch<AppDispatch>();
   const account = useSelector((state: RootState) => state.auth.account);
   const createLeagueLoading = useSelector((state: RootState) => state.league.loading);
@@ -58,6 +62,14 @@ const CreateLeagueForm: React.FC = () => {
         isSubmitDisabled={isSubmitDisabled || createLeagueLoading}
         submitError={createLeagueError?.error} // Use hook's error state
         isLoading={createLeagueLoading} // Use hook's loading state
+        // className={{
+        //   formBackgroundColor: 'dark:bg-surface-a4-dark',
+        //   formErrorTextColor: 'dark:text-red-500',
+        //   formTextColor: 'dark:text-primary-a0-dark,',
+        //   formSubmitButtonBackgroundColor: 'dark:bg-primary-a0-dark',
+        //   formSubmitButtonHoverBackgroundColor: 'dark:hover:bg-primary-a1-dark',
+        //   formSubmitButtonTextColor: 'dark:text-primary-a0-dark',
+        // }}>\
       >
         <div className='flex flex-col items-center space-y-2 md:flex-row md:items-start md:space-y-0 md:space-x-2 w-full'>
           <FormInput
@@ -69,7 +81,9 @@ const CreateLeagueForm: React.FC = () => {
             onBlur={() => handleBlur('name')}
             error={formValidationError.name}
             required
-            className='w-full md:w-3/4'
+            className={{
+              other: 'w-full md:w-3/4',
+            }}
           />
           <Select
             label='Season'

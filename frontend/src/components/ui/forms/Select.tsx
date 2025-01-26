@@ -32,18 +32,18 @@ const Select: React.FC<SelectProps> = ({
 }) => {
   return (
     <div className={`${className} mb-4`}>
-      <label htmlFor={name} className='block text-text-primary mb-1'>
+      <label htmlFor={name} className='block mb-1'>
         {required ? label + '*' : label}
       </label>
       <Menu as='div' className='relative inline-block w-full'>
         <div>
           <MenuButton
-            className={`inline-flex w-full justify-between gap-x-1.5 p-2 h-10 rounded-md bg-white text-sm text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:ring-2 focus:ring-blue-500`}>
+            className={`inline-flex w-full justify-between gap-x-1.5 p-2 h-10 rounded dark:border-surface-a2-dark dark:bg-surface-a3-dark dark: text-primary-a0-dark focus:outline-none`}>
             {options.find((option) => option.value === value)?.label || 'Select an option'}
           </MenuButton>
         </div>
 
-        <MenuItems className='absolute right-0 z-10 mt-2 w-full origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black/5 focus:outline-none'>
+        <MenuItems className='absolute right-0 z-10 mt-2 w-full origin-top-right rounded-md dark:bg-surface-a3-dark dark:text-primary-a1-dark'>
           <div className='py-1'>
             {options.map((option) => (
               <MenuItem
@@ -53,8 +53,8 @@ const Select: React.FC<SelectProps> = ({
                 }>
                 {({ active }: { active: boolean }) => (
                   <button
-                    className={`block w-full px-4 py-2 text-sm text-gray-700 ${
-                      active ? 'bg-gray-100 text-gray-900' : ''
+                    className={`block w-full px-4 py-2 ${
+                      active ? 'dark:bg-surface-a4-dark text-primary-a0-dark' : ''
                     }`}>
                     {option.label}
                   </button>
