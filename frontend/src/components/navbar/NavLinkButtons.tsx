@@ -6,38 +6,31 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 
 interface NavLinkButtonsProps {
-    onClick : () => void
+  onClick: () => void;
 }
 
-const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({onClick}) => {
+const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({ onClick }) => {
+  const isAuthenticated: boolean = useSelector((state: RootState) => state.auth.isAuthenticated);
 
-    const isAuthenticated : boolean = useSelector((state: RootState) => state.auth.isAuthenticated);
-
-    return (
-        <ul className="flex flex-col lg:flex-row justify-start items-center space-y-2 lg:space-y-0 lg:space-x-4 ">
-            <li>
-                <NavLink
-                    to="/"
-                    className={({ isActive }) =>
-                        isActive ? styles.activeLink : styles.linkButton
-                    }
-                    onClick={onClick}
-                >
-                    Home
-                </NavLink>
-            </li>
-            <li>
-                <NavLink
-                    to="/survivor-cast"
-                    className={({ isActive }) =>
-                        isActive ? styles.activeLink : styles.linkButton
-                    }
-                    onClick={onClick}
-                >
-                    Survivor Cast
-                </NavLink>
-            </li>
-            {isAuthenticated && (
+  return (
+    <ul className='flex flex-col lg:flex-row justify-start items-center space-y-2 lg:space-y-0 lg:space-x-4 '>
+      <li>
+        <NavLink
+          to='/'
+          className={({ isActive }) => (isActive ? styles.activeLink : styles.linkButton)}
+          onClick={onClick}>
+          Home
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to='/survivor-cast'
+          className={({ isActive }) => (isActive ? styles.activeLink : styles.linkButton)}
+          onClick={onClick}>
+          Survivor Cast
+        </NavLink>
+      </li>
+      {/* {isAuthenticated && (
                 <li>
                     <NavLink
                         to="/dashboard"
@@ -49,9 +42,17 @@ const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({onClick}) => {
                         Dashboard
                     </NavLink>
                 </li>
-            )}
-        </ul>
-    );
-}
+            )} */}
+      <li>
+        <NavLink
+          to='/about'
+          className={({ isActive }) => (isActive ? styles.activeLink : styles.linkButton)}
+          onClick={onClick}>
+          Meet the Developer
+        </NavLink>
+      </li>
+    </ul>
+  );
+};
 
 export default NavLinkButtons;

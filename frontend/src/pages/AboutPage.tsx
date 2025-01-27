@@ -76,7 +76,7 @@ const AboutPage: React.FC = () => {
           </div>
         </Drawer>
 
-        <Drawer title='Project Highlights' defaultOpen={true}>
+        <Drawer title='Project Highlights' defaultOpen={false}>
           <div className='space-y-2'>
             <p>Key features implemented in this project:</p>
             <ul className='list-disc list-inside'>
@@ -89,7 +89,7 @@ const AboutPage: React.FC = () => {
           </div>
         </Drawer>
 
-        <Drawer title='Professional Background' defaultOpen={true}>
+        <Drawer title='Professional Background' defaultOpen={false}>
           <h2 className='text-2xl font-bold'>Professional Background</h2>
           <p>
             With 4 years of experience in software development, primarily focused on Java and retail systems, I've
