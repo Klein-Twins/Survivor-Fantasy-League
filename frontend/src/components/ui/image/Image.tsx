@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getImageFromS3 } from '../../../utils/aws/s3';
+import api from '../../../services/apiContainer';
 
 interface ImageProps {
   src: string;
@@ -12,8 +13,10 @@ const Image: React.FC<ImageProps> = (props) => {
   useEffect(() => {
     async function loadImage() {
       try {
-        const imageBlob = await getImageFromS3(props.src);
-        const url = URL.createObjectURL(imageBlob);
+        const response = await api.ImageServiceApi.getProfileImage('');
+        // Cast response to Blob since we know the API returns image data
+        const blob = new Blob([response as any], { type: 'image/jpeg' });
+        const url = URL.createObjectURL(blob);
         setImageUrl(url);
       } catch (error) {
         console.error('Failed to load image:', error);

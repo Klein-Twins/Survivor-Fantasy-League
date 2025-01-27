@@ -14,12 +14,7 @@ const HomePage: React.FC = () => {
   const leagues = useSelector((state: RootState) => state.league.leagues);
 
   if (!account) {
-    return (
-      <>
-        <h1>Test Image from S3</h1>
-        <Image src='league1Image.jpg' />
-      </>
-    );
+    return <></>;
   }
 
   useEffect(() => {

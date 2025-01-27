@@ -1,20 +1,23 @@
 import { LeagueMember } from '../../../../generated-api';
+import ProfileImage from '../../ui/image/ProfileImage';
 
 interface LeagueCardProfileProps {
   leagueMember: LeagueMember;
 }
 
 const LeagueCardProfile: React.FC<LeagueCardProfileProps> = ({ leagueMember }) => {
+  const userName = leagueMember.profile.userName;
+  const firstName = leagueMember.profile.firstName;
+  const lastName = leagueMember.profile.lastName;
+
   return (
-    <div className='flex-col items-center' key={leagueMember.profile.profileId}>
-      <div className='w-12 h-12 rounded-full overflow-hidden mx-auto'>
-        <img
-          src='/leagueImage.jpg'
-          alt={`${leagueMember.profile.userName}'s avatar`}
-          className='w-full h-full object-cover'
-        />
-      </div>
-      <p className='text-center'>{leagueMember.profile.userName}</p>
+    <div className='flex flex-col items-center justify-center' key={leagueMember.profile.profileId}>
+      <ProfileImage
+        className='mx-auto transform transition-transform duration-300 hover:scale-110'
+        profileId={leagueMember.profile.profileId}
+        size='small'
+        shape='circle'
+      />
     </div>
   );
 };

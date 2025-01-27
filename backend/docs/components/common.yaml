@@ -12,19 +12,19 @@ components:
           example: true
         message:
           type: string
-          example: "Operation completed successfully."
+          example: 'Operation completed successfully.'
         statusCode:
           type: integer
           example: 200
         error:
           type: string
           nullable: true
-          example: "An error occurred."
+          example: 'An error occurred.'
 
     ApiError:
       type: object
       allOf:
-        - $ref: "#/components/schemas/ApiResponse"
+        - $ref: '#/components/schemas/ApiResponse'
         - type: object
           required:
             - error
@@ -32,7 +32,11 @@ components:
             error:
               type: string
               description: Error message describing what went wrong
-              example: "Invalid Credentials provided"
+              example: 'Invalid Credentials provided'
+    Image:
+      type: string
+      format: binary
+      contentEncoding: base64
 
     Pagination:
       type: object

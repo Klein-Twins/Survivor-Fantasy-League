@@ -1,38 +1,41 @@
-openapi: "3.0.3"
+openapi: '3.0.3'
 info:
-  title: "Survivor Fantasy League - OpenAPI 3.0.3"
+  title: 'Survivor Fantasy League - OpenAPI 3.0.3'
   description: "This is the Survivor Fantasy League Spec for API's"
-  termsOfService: "http://swagger.io/terms/"
+  termsOfService: 'http://swagger.io/terms/'
   contact:
-    email: "pklein111697@gmail.com"
+    email: 'pklein111697@gmail.com'
   license:
-    name: "Apache 2.0"
-    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
-  version: "1.0.11"
+    name: 'Apache 2.0'
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+  version: '1.0.11'
 servers:
-  - url: "http://localhost:3000"
+  - url: 'http://localhost:3000'
     variables: {}
 paths:
   /api/auth/signup:
-    $ref: "./paths/auth/userSession.yaml#/paths/signup"
+    $ref: './paths/auth/userSession.yaml#/paths/signup'
   /api/auth/login:
-    $ref: "./paths/auth/userSession.yaml#/paths/login"
+    $ref: './paths/auth/userSession.yaml#/paths/login'
   /api/auth/logout:
-    $ref: "./paths/auth/userSession.yaml#/paths/logout"
+    $ref: './paths/auth/userSession.yaml#/paths/logout'
   /api/auth/extend-session:
-    $ref: "./paths/auth/userSession.yaml#/paths/extendSession"
+    $ref: './paths/auth/userSession.yaml#/paths/extendSession'
 
   /api/auth/check-auth:
-    $ref: "./paths/auth/userSession.yaml#/paths/checkAuth"
+    $ref: './paths/auth/userSession.yaml#/paths/checkAuth'
 
   /api/league/invite:
-    $ref: "./paths/profile/leagueInvite.yaml#/paths/leagueInvite"
+    $ref: './paths/profile/leagueInvite.yaml#/paths/leagueInvite'
   /api/profile/search:
-    $ref: "./paths/profile/search.yaml#/paths/search"
+    $ref: './paths/profile/search.yaml#/paths/search'
   /api/profile/league:
-    $ref: "./paths/league.yaml#/paths/league"
+    $ref: './paths/league.yaml#/paths/league'
   /api/season/survivors:
-    $ref: "./paths/survivors.yaml#/paths/survivors"
+    $ref: './paths/survivors.yaml#/paths/survivors'
+
+  /api/image/profile/{profileId}:
+    $ref: './paths/image/profile.yaml#/paths/profileImage'
 
 components:
   securitySchemes:
@@ -49,4 +52,4 @@ components:
 
   schemas:
     ApiResponseError:
-      $ref: "./components/common.yaml#/components/schemas/ApiError"
+      $ref: './components/common.yaml#/components/schemas/ApiError'

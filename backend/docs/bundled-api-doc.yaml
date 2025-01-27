@@ -1451,6 +1451,97 @@ paths:
                                       type: string
                                       description: The path of the survivor image
                                       example: /assets/images/survivors/AndyRueda47.jpeg
+  '/api/image/profile/{profileId}':
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve profile image
+      description: This endpoint allows you to retrieve a profile image by profile ID.
+      operationId: getProfileImage
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+                contentEncoding: base64
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
 components:
   securitySchemes:
     accessTokenCookie:

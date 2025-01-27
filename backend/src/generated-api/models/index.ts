@@ -17,6 +17,7 @@ export * from './get-leagues-for-profile-response';
 export * from './get-leagues-for-profile-response-data';
 export * from './get-survivors-response';
 export * from './get-survivors-response-data';
+export * from './image';
 export * from './league';
 export * from './league-invite';
 export * from './league-member';
