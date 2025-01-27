@@ -5,6 +5,7 @@ import { AppDispatch, RootState } from '../store/store';
 import Navbar from '../components/navbar/Navbar';
 import Modal from '../components/ui/Modal';
 import ExtendSessionToast from '../components/auth/ExtendSessionToast';
+import Footer from '../components/footer/Footer';
 // import { checkAuthentication } from "../store/slices/authSlice";
 
 const RootLayout: React.FC = () => {
@@ -25,6 +26,9 @@ const RootLayout: React.FC = () => {
       </main>
       {isOpen && <Modal isOpen={isOpen} />}
       {isAuthenticated && <ExtendSessionToast />}
+      <footer>
+        <Footer />
+      </footer>
     </>
   );
 };

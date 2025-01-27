@@ -29,8 +29,8 @@ export default function FeaturesSection() {
               key={index}
               className='shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 dark:bg-surface-a2-dark p-6'>
               <div className='flex items-center justify-center mb-4'>{feature.icon}</div>
-              <h3 className='text-xl font-semibold text-gray-700'>{feature.title}</h3>
-              <p className='text-sm text-gray-600 mt-2'>{feature.description}</p>
+              <h3 className='text-xl font-semibold dark:text-primary-a1-dark'>{feature.title}</h3>
+              <p className='text-sm dark:text-primary-a3-dark mt-2'>{feature.description}</p>
             </div>
           ))}
         </div>
