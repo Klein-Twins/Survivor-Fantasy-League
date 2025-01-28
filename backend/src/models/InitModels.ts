@@ -16,6 +16,7 @@ import PickOptionsModel from './picks/PCK_PICK_OPTIONS';
 import PickPointsModel from './picks/PCK_PICK_POINTS';
 import PickTypeModel from './picks/PCK_PICK_TYPE';
 import ProfilePickModel from './picks/PCK_PROFILE_PICKS';
+import TribeModel from './season/SSN_TRIBES';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -35,6 +36,8 @@ const initModels = (sequelize: Sequelize) => {
   const PickType = PickTypeModel(sequelize);
   const ProfilePick = ProfilePickModel(sequelize);
   const PickSolution = PickSolutionModel(sequelize);
+
+  const Tribe = TribeModel(sequelize);
 
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
@@ -65,6 +68,7 @@ const initModels = (sequelize: Sequelize) => {
     PickType,
     ProfilePick,
     PickSolution,
+    Tribe,
   };
 };
 
