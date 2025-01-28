@@ -17,6 +17,7 @@ import PickPointsModel from './picks/PCK_PICK_POINTS';
 import PickTypeModel from './picks/PCK_PICK_TYPE';
 import ProfilePickModel from './picks/PCK_PROFILE_PICKS';
 import TribeModel from './season/SSN_TRIBES';
+import EpisodeModel from './season/SSN_EPISODES';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -37,18 +38,25 @@ const initModels = (sequelize: Sequelize) => {
   const ProfilePick = ProfilePickModel(sequelize);
   const PickSolution = PickSolutionModel(sequelize);
 
+  const Episode = EpisodeModel(sequelize);
   const Tribe = TribeModel(sequelize);
 
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
   League.associate({ Seasons, LeagueProfile });
   Survivors.associate({ SurvivorDetailsOnSeason });
-  Seasons.associate({ SurvivorDetailsOnSeason, League });
+  Seasons.associate({ SurvivorDetailsOnSeason, League, Episode });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
   Profile.associate({ User, LeagueProfile, Notification });
   Tokens.associate({ User });
-  LeagueProfile.associate({ League, Profile });
+  LeagueProfile.associate({ League, Profile, ProfilePick });
   Notification.associate({ Profile });
+
+  Episode.associate({ Seasons, ProfilePick });
+
+  Picks.associate({ PickOptions, ProfilePick });
+  PickOptions.associate({ Picks });
+  ProfilePick.associate({ Picks, LeagueProfile, League, Episode });
 
   return {
     sequelize,

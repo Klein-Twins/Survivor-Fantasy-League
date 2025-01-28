@@ -19,7 +19,7 @@ const PickTypeModel = (sequelize: Sequelize) => {
     public type!: PickTypeEnum;
 
     static associate(models: any) {
-      // this.hasMany(models.PickOptions, { foreignKey: 'pickId', as: 'pickOptions' });
+      this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
     }
   }
 

@@ -1,5 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { PickTypeEnum } from './PCK_PICK_TYPE';
 
 export enum ProfilePickAnswerStatus {
   correct = 'correct',
@@ -10,9 +11,10 @@ export enum ProfilePickAnswerStatus {
 
 export interface ProfilePickAttributes {
   pickId: UUID;
-  profileId: UUID;
+  leagueProfileId: string;
   leagueId: UUID;
   episodeId: UUID;
+  pickOptionType: PickTypeEnum;
   pickAnswerSurvivorId?: UUID | null;
   pickAnswerTribeId: UUID | null;
   pickAnswerBinary: boolean | null;
@@ -23,22 +25,21 @@ export interface ProfilePickAttributes {
 const ProfilePickModel = (sequelize: Sequelize) => {
   class ProfilePick extends Model<ProfilePickAttributes> implements ProfilePickAttributes {
     public pickId!: UUID;
-    public profileId!: UUID;
+    public leagueProfileId!: string;
     public leagueId!: UUID;
     public episodeId!: UUID;
     public pickAnswerSurvivorId!: UUID | null;
     public pickAnswerTribeId!: UUID | null;
     public pickAnswerBinary!: boolean | null;
     public pickAnswerCustom!: string | null;
+    public pickOptionType!: PickTypeEnum;
     public pickAnswerStatus!: ProfilePickAnswerStatus;
 
     static associate(models: any) {
-      // this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
-      // this.belongsTo(models.Profiles, { foreignKey: 'profileId', as: 'profile' });
-      // this.belongsTo(models.Leagues, { foreignKey: 'leagueId', as: 'league' });
-      // this.belongsTo(models.Episodes, { foreignKey: 'episodeId', as: 'episode' });
-      // this.belongsTo(models.PickOptions, { foreignKey: 'pickAnswerSurvivorId', as: 'pickAnswerSurvivor' });
-      // this.belongsTo(models.PickOptions, { foreignKey: 'pickAnswerTribeId', as: 'pickAnswerTribe' });
+      this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
+      this.belongsTo(models.LeagueProfile, { foreignKey: 'leagueProfileId', as: 'leagueProfile' });
+      this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
+      this.belongsTo(models.Episode, { foreignKey: 'episodeId', as: 'episode' });
     }
   }
 
@@ -50,7 +51,7 @@ const ProfilePickModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'PICK_ID',
       },
-      profileId: {
+      leagueProfileId: {
         type: DataTypes.UUID,
         primaryKey: true,
         allowNull: false,
@@ -68,40 +69,43 @@ const ProfilePickModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'EPISODE_ID',
       },
+      pickOptionType: {
+        type: DataTypes.ENUM(...Object.values(PickTypeEnum)),
+        allowNull: false,
+        field: 'PICK_OPTION_TYPE',
+      },
       pickAnswerSurvivorId: {
-        type: DataTypes.UUID,
+        type: DataTypes.STRING(100),
         allowNull: true,
-        field: 'SURVIVOR_ANSWER',
+        field: 'PICK_ANSWER_SURVIVOR_ID',
       },
       pickAnswerTribeId: {
-        type: DataTypes.UUID,
+        type: DataTypes.STRING(100),
         allowNull: true,
-        field: 'TRIBE_ANSWER',
+        field: 'PICK_ANSWER_TRIBE_ID',
       },
       pickAnswerBinary: {
         type: DataTypes.BOOLEAN,
         allowNull: true,
-        field: 'BINARY_ANSWER',
+        field: 'PICK_ANSWER_BINARY',
       },
       pickAnswerCustom: {
-        type: DataTypes.STRING(300),
+        type: DataTypes.STRING(100),
         allowNull: true,
-        field: 'CUSTOM_ANSWER',
+        field: 'PICK_ANSWER_CUSTOM',
       },
       pickAnswerStatus: {
-        type: DataTypes.ENUM,
-        values: Object.values(ProfilePickAnswerStatus),
+        type: DataTypes.ENUM(...Object.values(ProfilePickAnswerStatus)),
         allowNull: false,
-        defaultValue: ProfilePickAnswerStatus.pending,
         field: 'PICK_ANSWER_STATUS',
       },
     },
     {
       sequelize,
       tableName: 'PCK_PROFILE_PICKS',
-      timestamps: true,
     }
   );
+
   return ProfilePick;
 };
 

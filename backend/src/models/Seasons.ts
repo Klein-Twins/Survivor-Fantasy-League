@@ -1,12 +1,12 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface SeasonsAttributes {
-  seasonId: number;   // Primary key of type INTEGER
-  theme: string;      // Theme of the season (optional)
-  location: string;   // Location where the season takes place (optional)
-  name: string;       // Name of the season (optional)
-  startDate: Date;    // Start date of the season
-  endDate: Date;      // End date of the season
+  seasonId: number; // Primary key of type INTEGER
+  theme: string; // Theme of the season (optional)
+  location: string; // Location where the season takes place (optional)
+  name: string; // Name of the season (optional)
+  startDate: Date; // Start date of the season
+  endDate: Date; // End date of the season
 }
 
 const SeasonsModel = (sequelize: Sequelize) => {
@@ -19,8 +19,9 @@ const SeasonsModel = (sequelize: Sequelize) => {
     public endDate!: Date;
 
     static associate(models: any) {
-      this.hasMany(models.League, { foreignKey: 'seasonId' })
+      this.hasMany(models.League, { foreignKey: 'seasonId' });
       this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'seasonId', as: 'SurvivorDetailsOnSeason' });
+      this.hasMany(models.Episode, { foreignKey: 'seasonId', as: 'episode' });
     }
   }
 
@@ -56,7 +57,7 @@ const SeasonsModel = (sequelize: Sequelize) => {
         type: DataTypes.DATE,
         allowNull: false,
         field: 'END_DATE',
-      }
+      },
     },
     {
       sequelize,

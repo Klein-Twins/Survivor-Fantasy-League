@@ -1,9 +1,9 @@
-import { DataTypes, Model, Sequelize } from "sequelize";
-import { LeagueMemberRoleEnum } from "../generated-api";
+import { DataTypes, Model, Sequelize } from 'sequelize';
+import { LeagueMemberRoleEnum } from '../generated-api';
 
 export enum InviteStatusEnum {
-  Pending = "pending",
-  Accepted = "accepted",
+  Pending = 'pending',
+  Accepted = 'accepted',
 }
 
 export interface LeagueProfileAttributes {
@@ -16,10 +16,8 @@ export interface LeagueProfileAttributes {
 }
 
 const LeagueProfileModel = (sequelize: Sequelize) => {
-  class LeagueProfile
-    extends Model<LeagueProfileAttributes>
-    implements LeagueProfileAttributes {
-    public id!: string
+  class LeagueProfile extends Model<LeagueProfileAttributes> implements LeagueProfileAttributes {
+    public id!: string;
     public leagueId!: string;
     public profileId!: string;
     public inviterProfileId!: string | null;
@@ -29,6 +27,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     static associate(models: any) {
       this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
       this.belongsTo(models.Profile, { foreignKey: 'profileId', as: 'profile' });
+      this.hasMany(models.ProfilePick, { foreignKey: 'leagueProfileId', as: 'profilePicks' });
     }
   }
 
@@ -37,42 +36,42 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
       profileId: {
         type: DataTypes.UUID,
         primaryKey: true,
-        field: "PROFILE_ID"
+        field: 'PROFILE_ID',
       },
       leagueId: {
         type: DataTypes.UUID,
         primaryKey: true,
-        field: "LEAGUE_ID"
+        field: 'LEAGUE_ID',
       },
       role: {
         type: DataTypes.ENUM(...Object.values(LeagueMemberRoleEnum)),
         allowNull: false,
-        field: "ROLE"
+        field: 'ROLE',
       },
       inviteStatus: {
         type: DataTypes.ENUM(...Object.values(InviteStatusEnum)),
         allowNull: false,
-        field: "INVITE_STATUS"
+        field: 'INVITE_STATUS',
       },
       inviterProfileId: {
         type: DataTypes.UUID,
         primaryKey: false,
         allowNull: true,
-        field: "INVITER_PROFILE_ID"
+        field: 'INVITER_PROFILE_ID',
       },
       id: {
-         type: DataTypes.UUID,
-         primaryKey: true,
-         allowNull: false,
-         field: "ID"
-      }
+        type: DataTypes.UUID,
+        primaryKey: true,
+        allowNull: false,
+        field: 'ID',
+      },
     },
     {
       sequelize,
-      tableName: "LGE_LEAGUES_PROFILES",
+      tableName: 'LGE_LEAGUES_PROFILES',
       timestamps: true,
-      createdAt: "CREATED_AT",
-      updatedAt: "UPDATED_AT",
+      createdAt: 'CREATED_AT',
+      updatedAt: 'UPDATED_AT',
       hooks: {
         // beforeCreate Hook: Enforce single Owner per league
         beforeCreate: async (leagueProfile: LeagueProfile, options) => {
@@ -80,12 +79,12 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,
-                role: "OWNER",
+                role: 'OWNER',
               },
             });
 
             if (existingOwner) {
-              throw new Error("A league can only have one Owner.");
+              throw new Error('A league can only have one Owner.');
             }
           }
         },
@@ -93,31 +92,31 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         // beforeUpdate Hook: Prevent updates to the Owner role
         beforeUpdate: async (leagueProfile: LeagueProfile, options) => {
           const originalLeagueProfile = await LeagueProfile.findOne({
-            where: { leagueId: leagueProfile.leagueId, profileId: leagueProfile.profileId }
+            where: { leagueId: leagueProfile.leagueId, profileId: leagueProfile.profileId },
           });
 
           if (!originalLeagueProfile) {
-            throw new Error("League profile not found.");
+            throw new Error('League profile not found.');
           }
 
-          if (leagueProfile.changed("role") && originalLeagueProfile.role === LeagueMemberRoleEnum.OWNER) {
-            throw new Error("An Owner role cannot be changed.");
+          if (leagueProfile.changed('role') && originalLeagueProfile.role === LeagueMemberRoleEnum.OWNER) {
+            throw new Error('An Owner role cannot be changed.');
           }
 
           if (leagueProfile.role === LeagueMemberRoleEnum.OWNER) {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,
-                role: "OWNER",
+                role: 'OWNER',
               },
             });
 
             if (existingOwner && existingOwner.profileId !== leagueProfile.profileId) {
-              throw new Error("A league can only have one Owner.");
+              throw new Error('A league can only have one Owner.');
             }
           }
-        }
-      }
+        },
+      },
     }
   );
 

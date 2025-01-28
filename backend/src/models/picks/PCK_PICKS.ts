@@ -21,7 +21,8 @@ const PicksModel = (sequelize: Sequelize) => {
     public isCustom!: boolean;
 
     static associate(models: any) {
-      // this.hasMany(models.PickOption, { foreignKey: 'pickId', as: 'pickOptions' });
+      this.hasOne(models.PickOptions, { foreignKey: 'pickId', as: 'pickOptions' });
+      this.hasMany(models.ProfilePick, { foreignKey: 'pickId', as: 'profilePicks' });
     }
   }
 

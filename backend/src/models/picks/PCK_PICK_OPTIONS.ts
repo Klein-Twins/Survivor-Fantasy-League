@@ -13,7 +13,17 @@ const PickOptionsModel = (sequelize: Sequelize) => {
     public choice!: string;
 
     static associate(models: any) {
-      // this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
+      //   this.hasMany(models.ProfilePick, {
+      //     foreignKey: {
+      //       name: 'pickAnswerSurvivorId',
+      //       allowNull: true,
+      //     },
+      //     scope: {
+      //       type: 'survivor',
+      //     },
+      //     as: 'survivorPicks',
+      //     constraints: true,
+      //   });
     }
   }
 
