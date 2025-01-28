@@ -22,6 +22,7 @@ const SurvivorsModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'survivorId', as: 'SurvivorDetailsOnSeason' });
+      this.hasMany(models.ProfilePick, { foreignKey: 'pickAnswerSurvivorId', as: 'profilePick' });
     }
   }
 
@@ -60,8 +61,8 @@ const SurvivorsModel = (sequelize: Sequelize) => {
       nickName: {
         type: DataTypes.STRING(100),
         allowNull: true,
-        field: 'NICK_NAME'
-      }
+        field: 'NICK_NAME',
+      },
     },
     {
       sequelize,

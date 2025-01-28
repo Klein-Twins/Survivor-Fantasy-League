@@ -40,6 +40,9 @@ const ProfilePickModel = (sequelize: Sequelize) => {
       this.belongsTo(models.LeagueProfile, { foreignKey: 'leagueProfileId', as: 'leagueProfile' });
       this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
       this.belongsTo(models.Episode, { foreignKey: 'episodeId', as: 'episode' });
+      //TODO: Add association to pickOptionType
+      this.belongsTo(models.Survivors, { foreignKey: 'pickAnswerSurvivorId', as: 'survivor' });
+      this.belongsTo(models.Tribe, { foreignKey: 'pickAnswerTribeId', as: 'tribe' });
     }
   }
 
@@ -75,12 +78,12 @@ const ProfilePickModel = (sequelize: Sequelize) => {
         field: 'PICK_OPTION_TYPE',
       },
       pickAnswerSurvivorId: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.UUID, // Changed from STRING to UUID
         allowNull: true,
         field: 'PICK_ANSWER_SURVIVOR_ID',
       },
       pickAnswerTribeId: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.UUID,
         allowNull: true,
         field: 'PICK_ANSWER_TRIBE_ID',
       },

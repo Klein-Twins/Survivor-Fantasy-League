@@ -17,6 +17,11 @@ const TribeModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       //    this.belongsTo(models.Season, { foreignKey: 'seasonId', as: 'season' });
+      this.hasMany(models.ProfilePick, {
+        foreignKey: 'pickAnswerTribeId',
+        sourceKey: 'id',
+        as: 'profilePicks',
+      });
     }
   }
 

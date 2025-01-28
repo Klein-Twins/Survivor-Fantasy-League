@@ -44,7 +44,7 @@ const initModels = (sequelize: Sequelize) => {
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
   League.associate({ Seasons, LeagueProfile });
-  Survivors.associate({ SurvivorDetailsOnSeason });
+  Survivors.associate({ SurvivorDetailsOnSeason, ProfilePick });
   Seasons.associate({ SurvivorDetailsOnSeason, League, Episode });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
   Profile.associate({ User, LeagueProfile, Notification });
@@ -52,11 +52,12 @@ const initModels = (sequelize: Sequelize) => {
   LeagueProfile.associate({ League, Profile, ProfilePick });
   Notification.associate({ Profile });
 
+  Tribe.associate({ ProfilePick });
   Episode.associate({ Seasons, ProfilePick });
 
   Picks.associate({ PickOptions, ProfilePick });
   PickOptions.associate({ Picks });
-  ProfilePick.associate({ Picks, LeagueProfile, League, Episode });
+  ProfilePick.associate({ Picks, LeagueProfile, League, Episode, Tribe, Survivors });
 
   return {
     sequelize,
