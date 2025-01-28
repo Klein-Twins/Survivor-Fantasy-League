@@ -1,15 +1,21 @@
-import { Sequelize } from "sequelize";
-import UserModel from "./User";
-import PasswordModel from "./Password";
-import SurvivorsModel from "./Survivors";
-import SeasonsModel from "./Seasons";
-import LeagueModel from "./League";
-import SurvivorDetailsOnSeasonModel from "./SurvivorDetailsOnSeason";
-import ProfileModel from "./Profile";
-import TokensModel from "./Tokens";
-import LeagueProfileModel from "./LeagueProfile";
-import NotificationModel from "./Notification";
+import { Sequelize } from 'sequelize';
+import UserModel from './User';
+import PasswordModel from './Password';
+import SurvivorsModel from './Survivors';
+import SeasonsModel from './Seasons';
+import LeagueModel from './League';
+import SurvivorDetailsOnSeasonModel from './SurvivorDetailsOnSeason';
+import ProfileModel from './Profile';
+import TokensModel from './Tokens';
+import LeagueProfileModel from './LeagueProfile';
+import NotificationModel from './Notification';
 import { sequelize } from '../config/db';
+import PickSolutionModel from './picks/PCK_CORRECT_ANSWERS';
+import PicksModel from './picks/PCK_PICKS';
+import PickOptionsModel from './picks/PCK_PICK_OPTIONS';
+import PickPointsModel from './picks/PCK_PICK_POINTS';
+import PickTypeModel from './picks/PCK_PICK_TYPE';
+import ProfilePickModel from './picks/PCK_PROFILE_PICKS';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -23,9 +29,16 @@ const initModels = (sequelize: Sequelize) => {
   const LeagueProfile = LeagueProfileModel(sequelize);
   const Notification = NotificationModel(sequelize);
 
+  const Picks = PicksModel(sequelize);
+  const PickOptions = PickOptionsModel(sequelize);
+  const PickPoints = PickPointsModel(sequelize);
+  const PickType = PickTypeModel(sequelize);
+  const ProfilePick = ProfilePickModel(sequelize);
+  const PickSolution = PickSolutionModel(sequelize);
+
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
-  League.associate({ Seasons, LeagueProfile })
+  League.associate({ Seasons, LeagueProfile });
   Survivors.associate({ SurvivorDetailsOnSeason });
   Seasons.associate({ SurvivorDetailsOnSeason, League });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
@@ -45,7 +58,13 @@ const initModels = (sequelize: Sequelize) => {
     Profile,
     Tokens,
     LeagueProfile,
-    Notification
+    Notification,
+    Picks,
+    PickOptions,
+    PickPoints,
+    PickType,
+    ProfilePick,
+    PickSolution,
   };
 };
 
