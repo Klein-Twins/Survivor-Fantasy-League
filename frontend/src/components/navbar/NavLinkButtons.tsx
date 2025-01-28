@@ -13,7 +13,7 @@ const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({ onClick }) => {
   const isAuthenticated: boolean = useSelector((state: RootState) => state.auth.isAuthenticated);
 
   return (
-    <ul className='flex flex-col lg:flex-row justify-start items-center space-y-2 lg:space-y-0 lg:space-x-4 '>
+    <ul className='flex flex-col md:flex-row justify-start items-center space-y-2 md:space-y-0 md:space-x-4 '>
       <li>
         <NavLink
           to='/'

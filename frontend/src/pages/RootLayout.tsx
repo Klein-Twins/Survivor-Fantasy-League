@@ -21,7 +21,7 @@ const RootLayout: React.FC = () => {
   return (
     <>
       <Navbar />
-      <main className='min-h-screen dark:bg-surface-a0-dark dark:text-primary-a5-dark'>
+      <main className='min-h-screen dark:bg-surface-a0-dark dark:text-primary-a0-dark'>
         <Outlet />
       </main>
       {isOpen && <Modal isOpen={isOpen} />}

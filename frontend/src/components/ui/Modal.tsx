@@ -6,7 +6,7 @@ import SignupForm from '../auth/forms/SignupForm.tsx';
 import LoginForm from '../auth/forms/LoginForm.tsx';
 import Form from './forms/Form.tsx';
 import LogoutConfirmation from '../auth/LogoutConfirmation.tsx';
-import SurvivorDetailCard from '../survivor/SurvivorDetailCard.tsx';
+import SurvivorDetailCard from '../survivorPage/SurvivorDetailCard.tsx';
 import Notification from './Notifcation.tsx';
 
 interface ModalProps {

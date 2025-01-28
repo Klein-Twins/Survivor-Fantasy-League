@@ -1,5 +1,4 @@
 import { S3Client } from '@aws-sdk/client-s3';
-import dotenv from 'dotenv';
 
 export const s3Client = new S3Client({
   region: import.meta.env.VITE_AWS_REGION,

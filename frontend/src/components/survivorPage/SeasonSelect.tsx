@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
 interface SeasonSelectProps {
   seasons: number[];
@@ -8,6 +8,7 @@ interface SeasonSelectProps {
 const SeasonSelect: React.FC<SeasonSelectProps> = ({ seasons, onSeasonChange }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedSeason, setSelectedSeason] = useState<number>(seasons[0]);
+  const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleSelectSeason = (season: number) => {
     setSelectedSeason(season);
@@ -15,17 +16,14 @@ const SeasonSelect: React.FC<SeasonSelectProps> = ({ seasons, onSeasonChange }) 
     setIsOpen(false);
   };
 
-  const handleMouseLeave = () => {
-    setIsOpen(false);
-  };
-
   return (
     <div className='relative inline-block text-left'>
       <button
+        ref={buttonRef}
         type='button'
-        className='inline-flex justify-between w-full rounded-md border dark:border-surface-a1 dark:bg-surface-a2-dark py-2 px-4 text-sm font-medium text-gray-700 hover:outline-none focus:outline-none'
+        className='inline-flex justify-between items-center w-full rounded-md dark:border dark:border-surface-a1-dark dark:bg-surface-a2-dark py-2 px-4 text-sm font-medium hover:outline-none focus:outline-none'
         onClick={() => setIsOpen(!isOpen)}>
-        {selectedSeason ? `Season ${selectedSeason}` : 'Select Season'}
+        <span className='text-left flex-1'>{selectedSeason ? `Season ${selectedSeason}` : 'Select Season'}</span>
         <svg
           xmlns='http://www.w3.org/2000/svg'
           className='ml-2 h-5 w-5'
@@ -42,15 +40,16 @@ const SeasonSelect: React.FC<SeasonSelectProps> = ({ seasons, onSeasonChange }) 
 
       {isOpen && (
         <div
-          className='absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10'
-          onMouseLeave={handleMouseLeave}>
-          <div className='max-h-60 overflow-y-auto'>
+          style={{ width: buttonRef.current?.offsetWidth }}
+          className='absolute right-0 mt-2 rounded-md shadow-lg dark:bg-surface-a2-dark z-10'
+          onMouseLeave={() => setIsOpen(false)}>
+          <div className='max-h-60 overflow-y-auto w-full'>
             <div className='py-1'>
               {seasons.map((season) => (
                 <button
                   key={season}
                   onClick={() => handleSelectSeason(season)}
-                  className='block w-full px-4 py-2 text-sm text-gray-700 hover:bg-indigo-100 focus:outline-none'>
+                  className='block w-full text-left px-4 py-2 text-sm dark:text-primary-a0-dark hover:bg-surface-a3-dark focus:outline-none'>
                   Season {season}
                 </button>
               ))}
