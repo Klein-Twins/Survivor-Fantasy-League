@@ -5,6 +5,7 @@ export interface TribeAttributes {
   id: UUID;
   name: string;
   seasonId: UUID;
+  tribeColor: string;
   mergeTribe: boolean;
 }
 
@@ -13,6 +14,7 @@ const TribeModel = (sequelize: Sequelize) => {
     public id!: UUID;
     public name!: string;
     public seasonId!: UUID;
+    public tribeColor!: string;
     public mergeTribe!: boolean;
 
     static associate(models: any) {
@@ -47,6 +49,11 @@ const TribeModel = (sequelize: Sequelize) => {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         field: 'MERGE_TRIBE',
+      },
+      tribeColor: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        field: 'TRIBE_COLOR',
       },
     },
     {

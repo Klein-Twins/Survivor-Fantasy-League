@@ -1,0 +1,26 @@
+components:
+  schemas:
+    Tribe:
+      type: object
+      required:
+        - id
+        - name
+        - color
+        - imageUrl
+      properties:
+        id:
+          type: string
+          description: The tribe's unique identifier
+          example: 1
+        name:
+          type: string
+          description: The tribe's name
+          example: 'Luzon'
+        color:
+          type: string
+          description: The tribe's color
+          example: '#FF0000'
+        imageUrl:
+          type: string
+          description: The tribe's image URL
+          example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'

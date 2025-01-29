@@ -1,0 +1,28 @@
+paths:
+  picks:
+    get:
+      summary: Get picks for a league
+      description: Retrieves a list of picks for a league
+      operationId: getPicksForLeague
+      tags:
+        - PickService
+      parameters:
+        - in: query
+          name: leagueId
+          required: true
+          schema:
+            type: string
+            description: The ID of the league to retrieve picks for.
+        - in: query
+          name: surveyType
+          required: false
+          schema:
+            $ref: '../../../components/common.yaml#/components/schemas/SurveyType'
+            description: Filter picks by survey type. Defaults to 'All' if not specified.
+      responses:
+        '200':
+          description: Retrieves a list of picks per league based on weekly or premier
+          content:
+            application/json:
+              schema:
+                $ref: '../../../components/leagues/picks/picks.yaml#/components/responses/GetPicksForLeagueResponse'
