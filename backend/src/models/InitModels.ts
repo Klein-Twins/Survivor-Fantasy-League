@@ -9,7 +9,6 @@ import ProfileModel from './Profile';
 import TokensModel from './Tokens';
 import LeagueProfileModel from './LeagueProfile';
 import NotificationModel from './Notification';
-import { sequelize } from '../config/db';
 import PickSolutionModel from './picks/PCK_CORRECT_ANSWERS';
 import PicksModel from './picks/PCK_PICKS';
 import PickOptionsModel from './picks/PCK_PICK_OPTIONS';

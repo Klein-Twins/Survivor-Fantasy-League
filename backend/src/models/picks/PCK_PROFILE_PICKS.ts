@@ -36,7 +36,7 @@ const ProfilePickModel = (sequelize: Sequelize) => {
     public pickAnswerStatus!: ProfilePickAnswerStatus;
 
     static associate(models: any) {
-      this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
+      // this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
       this.belongsTo(models.LeagueProfile, { foreignKey: 'leagueProfileId', as: 'leagueProfile' });
       this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
       this.belongsTo(models.Episode, { foreignKey: 'episodeId', as: 'episode' });

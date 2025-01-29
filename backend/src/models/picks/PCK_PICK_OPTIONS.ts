@@ -13,7 +13,7 @@ const PickOptionsModel = (sequelize: Sequelize) => {
     public choice!: string;
 
     static associate(models: any) {
-      //   this.hasMany(models.ProfilePick, {
+      //   this.hasMany(models.ProfilePicks, {
       //     foreignKey: {
       //       name: 'pickAnswerSurvivorId',
       //       allowNull: true,
@@ -24,6 +24,8 @@ const PickOptionsModel = (sequelize: Sequelize) => {
       //     as: 'survivorPicks',
       //     constraints: true,
       //   });
+
+      this.belongsToMany(models.Picks, { through: 'PCK_PICK_OPTIONS_PICKS' });
     }
   }
 
@@ -34,13 +36,11 @@ const PickOptionsModel = (sequelize: Sequelize) => {
         values: Object.values(PickType),
         field: 'PICK_OPTION_TYPE',
         allowNull: false,
-        primaryKey: true,
       },
       choice: {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'CHOICE',
-        primaryKey: true,
       },
     },
     {
