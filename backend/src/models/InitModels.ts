@@ -77,6 +77,7 @@ const initModels = (sequelize: Sequelize) => {
     ProfilePick,
     PickSolution,
     Tribe,
+    Episode,
   };
 };
 

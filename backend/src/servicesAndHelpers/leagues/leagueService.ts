@@ -1,56 +1,64 @@
-import { UUID } from "crypto";
-import { sequelize } from "../../config/db";
-import logger from "../../config/logger";
-import { LeagueAttributes } from "../../models/League";
-import { InviteStatusEnum, LeagueProfileAttributes } from "../../models/LeagueProfile";
-import { ProfileAttributes } from "../../models/Profile";
-import { UserAttributes } from "../../models/User";
-import leagueRepository from "../../repositories/leagueRepository";
-import profileRepository from "../../repositories/profileRepository";
-import userRepository from "../../repositories/userRepository";
-import { APIResponse } from "../../types/api/apiResponseTypes";
-import errorFactory from "../../utils/errors/errorFactory";
-import { checkInviteeConflict, validateInviteeProfile, validateInviterInLeague, validateInviterProfile, validateLeague } from "./leagueHelper";
-import leagueProfileRepository from "../../repositories/league/leagueProfileRepository";
-import { CreateLeagueRequest, RespondToLeagueInviteRequest, RespondToLeagueInviteResponse } from "../../types/league/leagueDto";
-import { League, LeagueMember } from "../../generated-api";
-import leagueMemberRepository from "../../repositories/league/leagueMemberRepository";
-import accountService from "../auth/accountService";
+import { UUID } from 'crypto';
+import { sequelize } from '../../config/db';
+import logger from '../../config/logger';
+import { LeagueAttributes } from '../../models/League';
+import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/LeagueProfile';
+import { ProfileAttributes } from '../../models/Profile';
+import { UserAttributes } from '../../models/User';
+import leagueRepository from '../../repositories/leagueRepository';
+import profileRepository from '../../repositories/profileRepository';
+import userRepository from '../../repositories/userRepository';
+import { APIResponse } from '../../types/api/apiResponseTypes';
+import errorFactory from '../../utils/errors/errorFactory';
+import {
+  checkInviteeConflict,
+  validateInviteeProfile,
+  validateInviterInLeague,
+  validateInviterProfile,
+  validateLeague,
+} from './leagueHelper';
+import leagueProfileRepository from '../../repositories/league/leagueProfileRepository';
+import {
+  CreateLeagueRequest,
+  RespondToLeagueInviteRequest,
+  RespondToLeagueInviteResponse,
+} from '../../types/league/leagueDto';
+import { League, LeagueMember } from '../../generated-api';
+import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
+import accountService from '../auth/accountService';
 
 const leagueService = {
   createLeague,
-  getLeaguesForProfileId
-}
+  getLeaguesForProfileId,
+};
 
 async function createLeague({ name, seasonId, profileId }: CreateLeagueRequest): Promise<League> {
   const transaction = await sequelize.transaction();
-  logger.debug("New Transaction created for creating league");
+  logger.debug('New Transaction created for creating league');
   try {
     const league: League | null = await leagueRepository.createLeague(seasonId, name, profileId, { transaction });
     if (!league) {
       throw errorFactory({
-        error: "Failed to create league. Please try again.",
+        error: 'Failed to create league. Please try again.',
         statusCode: 500,
       });
     }
     await transaction.commit();
     return league;
-
-
   } catch (error) {
     await transaction.rollback();
-    logger.error("Transaction rolled back. Error creating league:", error);
+    logger.error('Transaction rolled back. Error creating league:', error);
     throw error;
   }
 }
 
 async function getLeaguesForProfileId(profileId: string, inviteStatus: InviteStatusEnum): Promise<League[]> {
   try {
-    if (!await accountService.getAccountByProfileId(profileId)) {
+    if (!(await accountService.getAccountByProfileId(profileId))) {
       throw errorFactory({
         success: false,
         statusCode: 404,
-        error: `Profile with profile id ${profileId} not found`
+        error: `Profile with profile id ${profileId} not found`,
       });
     }
 
@@ -66,12 +74,10 @@ async function getLeaguesForProfileId(profileId: string, inviteStatus: InviteSta
       }
     }
     return leagues;
-
   } catch (error) {
     throw error;
   }
 }
-
 
 // const leagueService = {
 //   createLeague: async (
@@ -244,7 +250,6 @@ async function getLeaguesForProfileId(profileId: string, inviteStatus: InviteSta
 //         success: true
 //       }
 
-
 //     } catch (error: any) {
 //       console.error("Error inviting profile to league:", error);
 //       return {
@@ -274,7 +279,6 @@ async function getLeaguesForProfileId(profileId: string, inviteStatus: InviteSta
 //     if (!leagueProfileAttributes) {
 //       throw errorFactory({ error: 'Unauthorized: Profile was not invited to league', statusCode: 401 });
 //     }
-
 
 //     //If the response is ACCEPT, update the league profile association to accepted
 //     if (inviteResponse === RespondLeagueInvite.Accept) {

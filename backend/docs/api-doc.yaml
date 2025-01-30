@@ -37,8 +37,8 @@ paths:
   /api/image/profile/{profileId}:
     $ref: './paths/image/profile.yaml#/paths/profileImage'
 
-  /api/league/picks:
-    $ref: './paths/league/picks/picks.yaml#/paths/picks'
+  /api/league/survey:
+    $ref: './paths/league/picks/survey.yaml#/paths/survey'
 
 components:
   securitySchemes:

@@ -1,0 +1,72 @@
+components:
+  responses:
+    GetSurveyForEpisodeForLeagueMember:
+      type: object
+      allOf:
+        - $ref: '../../common.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetSurveyForEpisodeForLeagueMemberResponseData'
+  schemas:
+    GetSurveyForEpisodeForLeagueMemberResponseData:
+      type: object
+      required:
+        - survey
+      properties:
+        survey:
+          $ref: '#/components/schemas/Survey'
+
+    Survey:
+      type: object
+      properties:
+        id:
+          type: string
+          description: The ID of the survey
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
+        episode:
+          $ref: '#/components/schemas/Episode'
+        surveyType:
+          $ref: '#/components/schemas/SurveyType'
+        picks:
+          type: array
+          items:
+            $ref: './picks.yaml#/components/schemas/Pick'
+
+    SurveyType:
+      type: string
+      enum: ['Weekly', 'Premier', 'Finale', 'All']
+      default: 'All'
+      description: The type of survey
+      example: 'Weekly'
+
+    Episode:
+      type: object
+      properties:
+        seasonId:
+          type: number
+          description: The ID of the season the episode is in
+          example: '47'
+        episodeNumber:
+          type: number
+          description: The number of the episode
+          example: '1'
+        episodeAirDate:
+          type: string
+          format: date
+          description: The air date of the episode
+          example: '2021-09-22'
+        episodeTitle:
+          type: string
+          description: The title of the episode
+          example: 'The Beginning'
+        episodeDescription:
+          type: string
+          description: The description of the episode
+          example: 'The first episode of the season'
+        episodeImage:
+          type: string
+          description: The image of the episode
+          example: 'https://www.image.com/episode.jpg'

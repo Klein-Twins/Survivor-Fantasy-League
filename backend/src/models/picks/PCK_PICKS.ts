@@ -1,18 +1,13 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { sequelize } from '../../config/db';
-import { PickTypeEnum } from './PCK_PICK_TYPE';
-
-export enum SurveyType {
-  Weekly = 'Weekly',
-  Premier = 'Premier',
-}
+import { PickOptionTypeEnum, SurveyType } from '../../generated-api';
 
 export interface PicksAttributes {
   pickId: string;
   surveyType: SurveyType;
   description: string;
   isCustom: boolean;
-  type: PickTypeEnum;
+  type: PickOptionTypeEnum;
 }
 
 const PicksModel = (sequelize: Sequelize) => {
@@ -21,7 +16,7 @@ const PicksModel = (sequelize: Sequelize) => {
     public surveyType!: SurveyType;
     public description!: string;
     public isCustom!: boolean;
-    public type!: PickTypeEnum;
+    public type!: PickOptionTypeEnum;
 
     static associate(models: any) {
       // this.hasOne(models.PickOptions, { foreignKey: 'pickId', as: 'pickOptions' });
@@ -56,7 +51,7 @@ const PicksModel = (sequelize: Sequelize) => {
         defaultValue: true,
       },
       type: {
-        type: DataTypes.ENUM(...Object.values(PickTypeEnum)),
+        type: DataTypes.ENUM(...Object.values(PickOptionTypeEnum)),
         allowNull: false,
         field: 'TYPE',
       },

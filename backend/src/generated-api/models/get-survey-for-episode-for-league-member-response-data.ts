@@ -12,14 +12,18 @@
  * Do not edit the class manually.
  */
 
-/**
- * The status of the pick
+import { Survey } from './survey';
+ /**
+ * 
+ *
  * @export
- * @enum {string}
+ * @interface GetSurveyForEpisodeForLeagueMemberResponseData
  */
-export enum PickStatusEnum {
-    Pending = 'Pending',
-    Correct = 'Correct',
-    Incorrect = 'Incorrect'
-}
+export interface GetSurveyForEpisodeForLeagueMemberResponseData {
 
+    /**
+     * @type {Survey}
+     * @memberof GetSurveyForEpisodeForLeagueMemberResponseData
+     */
+    survey: Survey;
+}

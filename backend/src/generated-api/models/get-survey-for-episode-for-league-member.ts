@@ -13,18 +13,18 @@
  */
 
 import { ApiResponse } from './api-response';
-import { GetPicksForLeagueResponseData } from './get-picks-for-league-response-data';
+import { GetSurveyForEpisodeForLeagueMemberResponseData } from './get-survey-for-episode-for-league-member-response-data';
  /**
  * 
  *
  * @export
- * @interface GetPicksForLeagueResponse
+ * @interface GetSurveyForEpisodeForLeagueMember
  */
-export interface GetPicksForLeagueResponse extends ApiResponse {
+export interface GetSurveyForEpisodeForLeagueMember extends ApiResponse {
 
     /**
-     * @type {GetPicksForLeagueResponseData}
-     * @memberof GetPicksForLeagueResponse
+     * @type {GetSurveyForEpisodeForLeagueMemberResponseData}
+     * @memberof GetSurveyForEpisodeForLeagueMember
      */
-    responseData: GetPicksForLeagueResponseData;
+    responseData: GetSurveyForEpisodeForLeagueMemberResponseData;
 }

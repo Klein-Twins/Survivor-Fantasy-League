@@ -14,30 +14,25 @@ components:
       type: object
       required:
         - id
-        - leagueId
+        - pickOptionType
+        - pickOptions:
 
       properties:
         id:
           type: string
           description: The ID of the pick
           example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
-        leagueProfileId:
+        description:
           type: string
-          description: The ID of the league profile for this pick
-          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
-        leagueId:
-          type: string
-          description: The ID of the league the pick belongs to
-          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
-        surveyType:
-          type: string
-          enum: ['Weekly', 'Premier']
-          description: The type of survey the pick is for
-          example: 'Weekly'
-        pickStatus:
-          $ref: '#/components/schemas/PickStatusEnum'
+          description: The description of the pick
+          example: 'Who will be voted out this week?'
         pickOptionType:
           $ref: '#/components/schemas/PickOptionTypeEnum'
+        numPointsWorth:
+          type: integer
+          description: The number of points the pick is worth
+          example: 10
+
         pickOptions:
           oneOf:
             - $ref: './pickOptions.yaml#/components/schemas/SurvivorPickOptions'

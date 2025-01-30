@@ -13,13 +13,14 @@
  */
 
 /**
- * 
+ * The type of survey
  * @export
  * @enum {string}
  */
 export enum SurveyType {
     Weekly = 'Weekly',
     Premier = 'Premier',
+    Finale = 'Finale',
     All = 'All'
 }
 

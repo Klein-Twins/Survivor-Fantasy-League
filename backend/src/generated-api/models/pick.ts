@@ -15,7 +15,6 @@
 import { BinaryPickOptions } from './binary-pick-options';
 import { ColorPickOptions } from './color-pick-options';
 import { PickOptionTypeEnum } from './pick-option-type-enum';
-import { PickStatusEnum } from './pick-status-enum';
 import { SurvivorPickOptions } from './survivor-pick-options';
 import { TribePickOptions } from './tribe-pick-options';
  /**
@@ -36,43 +35,28 @@ export interface Pick {
     id: string;
 
     /**
-     * The ID of the league profile for this pick
+     * The description of the pick
      *
      * @type {string}
      * @memberof Pick
-     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
+     * @example Who will be voted out this week?
      */
-    leagueProfileId?: string;
-
-    /**
-     * The ID of the league the pick belongs to
-     *
-     * @type {string}
-     * @memberof Pick
-     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
-     */
-    leagueId: string;
-
-    /**
-     * The type of survey the pick is for
-     *
-     * @type {string}
-     * @memberof Pick
-     * @example Weekly
-     */
-    surveyType?: PickSurveyTypeEnum;
-
-    /**
-     * @type {PickStatusEnum}
-     * @memberof Pick
-     */
-    pickStatus?: PickStatusEnum;
+    description?: string;
 
     /**
      * @type {PickOptionTypeEnum}
      * @memberof Pick
      */
-    pickOptionType?: PickOptionTypeEnum;
+    pickOptionType: PickOptionTypeEnum;
+
+    /**
+     * The number of points the pick is worth
+     *
+     * @type {number}
+     * @memberof Pick
+     * @example 10
+     */
+    numPointsWorth?: number;
 
     /**
      * @type {SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions}
@@ -80,13 +64,3 @@ export interface Pick {
      */
     pickOptions?: SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum PickSurveyTypeEnum {
-    Weekly = 'Weekly',
-    Premier = 'Premier'
-}
-

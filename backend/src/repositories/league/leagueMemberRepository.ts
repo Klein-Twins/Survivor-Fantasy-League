@@ -25,6 +25,7 @@ const leagueMemberRepository = {
   isUserInvitedToLeague,
   getLeagueInvitesForProfileId,
   respondToLeagueInvite,
+  getLeagueProfileByProfileId,
 };
 
 async function respondToLeagueInvite(
@@ -172,6 +173,18 @@ async function createLeagueMember(
     role,
     profile: leagueMemberAccount,
   };
+}
+
+async function getLeagueProfileByProfileId(
+  leagueId: string,
+  profileId: string
+): Promise<LeagueProfileAttributes | null> {
+  return await models.LeagueProfile.findOne({
+    where: {
+      leagueId,
+      profileId,
+    },
+  });
 }
 
 export default leagueMemberRepository;
