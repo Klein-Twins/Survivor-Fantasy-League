@@ -23,13 +23,14 @@ const EpisodeModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       this.belongsTo(models.Seasons, { foreignKey: 'seasonId', as: 'season' });
-      this.hasMany(models.ProfilePick, { foreignKey: 'episodeId', as: 'profilePick' });
+      // this.hasMany(models.ProfilePick, { foreignKey: 'episodeId', as: 'profilePick' });
     }
   }
   Episode.init(
     {
       episodeId: {
         type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
         allowNull: false,
         field: 'EPISODE_ID',
@@ -69,6 +70,12 @@ const EpisodeModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'SSN_EPISODES',
       timestamps: true,
+      indexes: [
+        {
+          unique: true,
+          fields: ['SEASON_ID', 'EPISODE_NUMBER'],
+        },
+      ],
     }
   );
 

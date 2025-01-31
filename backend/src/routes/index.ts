@@ -16,7 +16,7 @@ router.use('/league/profile', leagueProfileRoutes);
 router.use('/season/survivors', survivorRoute);
 router.use('/profile', profileLeagueRoutes);
 router.use('/league/invite', leagueInviteRoutes);
-router.use('/league/survey', leagueSurveyRoutes);
+router.use('/league/:leagueId/survey', leagueSurveyRoutes);
 router.use('/image', imageRoutes);
 router.use('/notification', notificationRoutes);
 

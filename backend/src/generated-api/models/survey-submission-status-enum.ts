@@ -12,12 +12,14 @@
  * Do not edit the class manually.
  */
 
-import { LeagueSurvey } from './league-survey';
- /**
- * 
- *
+/**
+ * The status of the survey filled out by tha profile
  * @export
- * @interface GetSurveyForEpisodeForLeagueMemberResponseData
+ * @enum {string}
  */
-export interface GetSurveyForEpisodeForLeagueMemberResponseData extends Array<LeagueSurvey> {
+export enum SurveySubmissionStatusEnum {
+    NotStarted = 'Not started',
+    InProgress = 'In progress',
+    Completed = 'Completed'
 }
+

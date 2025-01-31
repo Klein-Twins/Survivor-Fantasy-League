@@ -27,7 +27,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     static associate(models: any) {
       this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
       this.belongsTo(models.Profile, { foreignKey: 'profileId', as: 'profile' });
-      this.hasMany(models.ProfilePick, { foreignKey: 'leagueProfileId', as: 'profilePicks' });
+      // this.hasMany(models.ProfilePick, { foreignKey: 'leagueProfileId', as: 'profilePicks' });
     }
   }
 

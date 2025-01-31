@@ -11,6 +11,7 @@ import {
 import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/LeagueProfile';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
 import leagueRepository from '../../repositories/leagueRepository';
+import errorFactory from '../../utils/errors/errorFactory';
 import userService from '../user/userService';
 
 const leagueMemberService = {
@@ -18,6 +19,7 @@ const leagueMemberService = {
   respondToLeagueInvite,
   isProfileInLeague,
   getLeagueProfileByProfileId,
+  validateProfileIsInLeague,
 };
 
 async function inviteProfileToLeague({
@@ -66,6 +68,17 @@ async function respondToLeagueInvite({
   } catch (error) {
     await transaction.rollback();
     throw error;
+  }
+}
+
+async function validateProfileIsInLeague(leagueId: string, profileId: string): Promise<void> {
+  const isProfileInLeagueResult = await leagueMemberRepository.isUserInLeague(leagueId, profileId);
+  if (!isProfileInLeagueResult) {
+    throw errorFactory({
+      error: 'Forbidden',
+      statusCode: 403,
+      message: `Profile ${profileId} is not a member of league ${leagueId}`,
+    });
   }
 }
 

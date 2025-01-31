@@ -17,6 +17,9 @@ import PickTypeModel from './picks/PCK_PICK_TYPE';
 import ProfilePickModel from './picks/PCK_PROFILE_PICKS';
 import TribeModel from './season/SSN_TRIBES';
 import EpisodeModel from './season/SSN_EPISODES';
+import SurveyModel from './SurveysAndPicks/Survey';
+import SurveyPicksModel from './SurveysAndPicks/SurveyPicks';
+import LeagueSurveyModel from './League/LeagueSurvey';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -40,23 +43,27 @@ const initModels = (sequelize: Sequelize) => {
   const Episode = EpisodeModel(sequelize);
   const Tribe = TribeModel(sequelize);
 
+  const Survey = SurveyModel(sequelize);
+  const SurveyPicks = SurveyPicksModel(sequelize);
+  const LeagueSurveys = LeagueSurveyModel(sequelize);
+
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
   League.associate({ Seasons, LeagueProfile });
-  Survivors.associate({ SurvivorDetailsOnSeason, ProfilePick });
+  Survivors.associate({ SurvivorDetailsOnSeason });
   Seasons.associate({ SurvivorDetailsOnSeason, League, Episode });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
   Profile.associate({ User, LeagueProfile, Notification });
   Tokens.associate({ User });
-  LeagueProfile.associate({ League, Profile, ProfilePick });
+  LeagueProfile.associate({ League, Profile });
   Notification.associate({ Profile });
 
-  Tribe.associate({ ProfilePick });
-  Episode.associate({ Seasons, ProfilePick });
+  // Tribe.associate({ });
+  Episode.associate({ Seasons });
 
-  Picks.associate({ PickOptions, ProfilePick });
-  PickOptions.associate({ Picks });
-  ProfilePick.associate({ Picks, LeagueProfile, League, Episode, Tribe, Survivors });
+  // Picks.associate({ PickOptions, ProfilePick });
+  // PickOptions.associate({ Picks });
+  // ProfilePick.associate({ Picks, LeagueProfile, League, Episode, Tribe, Survivors });
 
   return {
     sequelize,
@@ -78,6 +85,9 @@ const initModels = (sequelize: Sequelize) => {
     PickSolution,
     Tribe,
     Episode,
+    Survey,
+    LeagueSurveys,
+    SurveyPicks,
   };
 };
 

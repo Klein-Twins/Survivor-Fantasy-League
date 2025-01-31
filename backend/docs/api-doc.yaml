@@ -37,7 +37,7 @@ paths:
   /api/image/profile/{profileId}:
     $ref: './paths/image/profile.yaml#/paths/profileImage'
 
-  /api/league/survey:
+  /api/league/{leagueId}/survey:
     $ref: './paths/league/picks/survey.yaml#/paths/survey'
 
 components:

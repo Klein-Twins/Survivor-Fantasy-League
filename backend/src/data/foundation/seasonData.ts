@@ -1,3 +1,4 @@
+import { EpisodeAttributes } from '../../models/season/SSN_EPISODES';
 import { SeasonsAttributes } from '../../models/Seasons';
 
 const seasonData: SeasonsAttributes[] = [
@@ -11,4 +12,138 @@ const seasonData: SeasonsAttributes[] = [
   },
 ];
 
-export default seasonData;
+const episodeData: EpisodeAttributes[] = [
+  {
+    episodeId: '7d9c4e1a-8b2f-4c3d-9e5a-6f1b8c7d9e0f',
+    seasonId: 47,
+    episodeNumber: 1,
+    episodeTitle: 'One Glourious and Perfect Episode',
+    episodeAirDate: new Date('2024-09-18'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/1.jpg',
+  },
+  {
+    episodeId: 'a2b3c4d5-e6f7-8901-2345-678901abcdef',
+    seasonId: 47,
+    episodeNumber: 2,
+    episodeTitle: 'Epic Boss Girl Move',
+    episodeAirDate: new Date('2024-09-25'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/2.jpg',
+  },
+  {
+    episodeId: 'b3c4d5e6-f7a8-9012-3456-789012abcdef',
+    seasonId: 47,
+    episodeNumber: 3,
+    episodeTitle: 'Belly of the Beast',
+    episodeAirDate: new Date('2024-10-02'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/3.jpg',
+  },
+  {
+    episodeId: 'c4d5e6f7-89a0-1234-5678-90123abcdef4',
+    seasonId: 47,
+    episodeNumber: 4,
+    episodeTitle: 'Is That Blood in Your Hair?',
+    episodeAirDate: new Date('2024-10-09'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/4.jpg',
+  },
+  {
+    episodeId: 'd5e6f7a8-90b1-2345-6789-012345abcdef',
+    seasonId: 47,
+    episodeNumber: 5,
+    episodeTitle: 'The Scales be Tippin',
+    episodeAirDate: new Date('2024-10-16'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/5.jpg',
+  },
+  {
+    episodeId: 'e6f7a8b9-0123-4567-89cd-123456abcdef',
+    seasonId: 47,
+    episodeNumber: 6,
+    episodeTitle: 'Feel the FOMO',
+    episodeAirDate: new Date('2024-10-23'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/6.jpg',
+  },
+  {
+    episodeId: 'f7a8b9c0-1234-5678-90ef-234567abcdef',
+    seasonId: 47,
+    episodeNumber: 7,
+    episodeTitle: 'Our Pick on Blast',
+    episodeAirDate: new Date('2024-10-30'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/7.jpg',
+  },
+  {
+    episodeId: 'a8b9c0d1-2345-6789-01ab-345678abcdef',
+    seasonId: 47,
+    episodeNumber: 8,
+    episodeTitle: "He's All That",
+    episodeAirDate: new Date('2024-12-06'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/8.jpg',
+  },
+  {
+    episodeId: 'b9c0d1e2-3456-7890-12cd-456789abcdef',
+    seasonId: 47,
+    episodeNumber: 9,
+    episodeTitle: 'Nightmare Fuel',
+    episodeAirDate: new Date('2024-11-13'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/9.jpg',
+  },
+  {
+    episodeId: 'd6f57df4-4ecf-40bd-a170-ad8766bcdf07',
+    seasonId: 47,
+    episodeNumber: 10,
+    episodeTitle: 'Loyal to the Soil',
+    episodeAirDate: new Date('2024-11-20'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/10.jpg',
+  },
+  {
+    episodeId: '5a091fbd-53d8-4e03-9b9a-a855afe38105',
+    seasonId: 47,
+    episodeNumber: 11,
+    episodeTitle: 'Flipping the Win Switch',
+    episodeAirDate: new Date('2024-11-27'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/11.jpg',
+  },
+  {
+    episodeId: '64ee948b-0542-4c14-b2b0-66b39de468a9',
+    seasonId: 47,
+    episodeNumber: 12,
+    episodeTitle: 'Operation: Italy',
+    episodeAirDate: new Date('2024-12-04'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/12.jpg',
+  },
+  {
+    episodeId: '66653c70-e999-44d3-970b-1e932b798561',
+    seasonId: 47,
+    episodeNumber: 13,
+    episodeTitle: 'Bob and Weave',
+    episodeAirDate: new Date('2024-12-11'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/13.jpg',
+  },
+  {
+    episodeId: '5b4bbc08-5600-41d8-a1b9-263ffee88b8c',
+    seasonId: 47,
+    episodeNumber: 14,
+    episodeTitle: 'The Last Stand',
+    episodeAirDate: new Date('2024-12-18'),
+    episodeDescription: '',
+    episodeImageUrl: 'episodes/47/14.jpg',
+  },
+];
+
+const seasonAndEpisodeData = {
+  seasonData,
+  episodeData,
+};
+
+export default seasonAndEpisodeData;

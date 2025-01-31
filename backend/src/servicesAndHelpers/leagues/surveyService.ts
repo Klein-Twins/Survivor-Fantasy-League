@@ -1,22 +1,47 @@
-import { Episode, GetSurveyForEpisodeForLeagueMemberResponseData } from '../../generated-api';
+import { Episode, GetSurveyForEpisodeForLeagueMemberResponseData, LeagueSurvey } from '../../generated-api';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
+import leagueRepository from '../../repositories/leagueRepository';
+import surveyRepository from '../../repositories/surveyRepository';
+import episodeService from '../season/episodeService';
 import leagueMemberService from './leagueMemberService';
+import leagueService from './leagueService';
 import surveyHelper from './surveyHelper';
 
 const surveyService = {
-  getSurveyForLeagueMember,
+  getSurveys,
 };
 
-async function getSurveyForLeagueMember(
-  leagueId: string,
-  leagueProfileId: string,
-  episodeId: string
-): Promise<GetSurveyForEpisodeForLeagueMemberResponseData | null> {
-  await surveyHelper.validateGetSurveyForLeagueMemberForEpisodeRequest(leagueId, leagueProfileId, episodeId);
-  return null;
-  //   await leagueMemberService.
+async function getSurveys(leagueId: string, profileIds: string[], episodeIds: string[]): Promise<LeagueSurvey[]> {
+  // Validate inputs
+  await surveyHelper.validateGetSurveyRequest(leagueId, profileIds, episodeIds);
 
-  //If leagueProfileId is not associated with the leagueId || inviteState != 'ACCEPTED'
+  // Validate League Exists
+  await leagueService.validateLeagueExists(leagueId);
+
+  // Verify all profileIds are members of league with ACCEPTED status
+  profileIds.map(async (profileId) => {
+    await leagueMemberService.validateProfileIsInLeague(profileId, leagueId);
+  });
+
+  //Verify all episodeIds provided exist and are in the same season as the league.
+  episodeIds.map(async (episodeId) => {
+    const seasonId = (await leagueService.getLeagueByLeagueId(leagueId)).season.id;
+    await episodeService.validateEpisodeIsInSeason(episodeId, seasonId);
+  });
+
+  let surveys: LeagueSurvey[] = [];
+  // TODO: Get picks for each episode
+  for (const profileId of profileIds) {
+    for (const episodeId of episodeIds) {
+      surveys = surveys.concat(await surveyRepository.getLeagueSurvey(leagueId, profileId, episodeId));
+    }
+  }
+
+  // TODO: Get responses for each profile/episode combination
+
+  // TODO: Combine picks and responses into survey format
+
+  return [];
 }
 
 export default surveyService;

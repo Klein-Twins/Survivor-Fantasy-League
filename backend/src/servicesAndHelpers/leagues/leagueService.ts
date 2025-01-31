@@ -26,10 +26,13 @@ import {
 import { League, LeagueMember } from '../../generated-api';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
 import accountService from '../auth/accountService';
+import seasonService from '../season/seasonService';
 
 const leagueService = {
   createLeague,
   getLeaguesForProfileId,
+  validateLeagueExists,
+  getLeagueByLeagueId,
 };
 
 async function createLeague({ name, seasonId, profileId }: CreateLeagueRequest): Promise<League> {
@@ -76,6 +79,27 @@ async function getLeaguesForProfileId(profileId: string, inviteStatus: InviteSta
     return leagues;
   } catch (error) {
     throw error;
+  }
+}
+
+async function getLeagueByLeagueId(leagueId: string): Promise<League> {
+  const league = await leagueRepository.getLeagueByLeagueId(leagueId);
+  if (!league) {
+    throw errorFactory({
+      error: 'League not found',
+      statusCode: 404,
+    });
+  }
+  return league;
+}
+
+async function validateLeagueExists(leagueId: string): Promise<void> {
+  const league = await leagueRepository.getLeagueByLeagueId(leagueId);
+  if (!league) {
+    throw errorFactory({
+      error: 'League not found',
+      statusCode: 404,
+    });
   }
 }
 

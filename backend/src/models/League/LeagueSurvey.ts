@@ -58,6 +58,12 @@ const LeagueSurveyModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'LGE_LEAGUE_SURVEYS',
       timestamps: true,
+      indexes: [
+        {
+          unique: true,
+          fields: ['LEAGUE_ID', 'EPISODE_ID'],
+        },
+      ],
     }
   );
 

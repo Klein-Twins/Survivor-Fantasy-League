@@ -12,17 +12,41 @@ components:
               $ref: '#/components/schemas/GetSurveyForEpisodeForLeagueMemberResponseData'
   schemas:
     GetSurveyForEpisodeForLeagueMemberResponseData:
+      type: array
+      items:
+        $ref: '#/components/schemas/LeagueSurvey'
+
+    SurveyAvailabilityStatusEnum:
+      type: string
+      enum:
+        - 'Available'
+        - 'Not Open Yet'
+        - 'Closed'
+
+    SurveySubmissionStatusEnum:
+      type: string
+      enum:
+        - 'Not started'
+        - 'In progress'
+        - 'Completed'
+      default: 'Not Started'
+      description: The status of the survey filled out by tha profile
+      example: 'Not Started'
+
+    LeagueSurvey:
       type: object
       required:
-        - survey
+        - leagueSurveyId
+        - surveyId
+        - episode
+        - surveyType
+        - picks
       properties:
-        survey:
-          $ref: '#/components/schemas/Survey'
-
-    Survey:
-      type: object
-      properties:
-        id:
+        leagueSurveyId:
+          type: string
+          format: uuid
+          description: The ID of the league survey
+        surveyId:
           type: string
           description: The ID of the survey
           example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
@@ -34,6 +58,10 @@ components:
           type: array
           items:
             $ref: './picks.yaml#/components/schemas/Pick'
+        SurveySubmissionStatus:
+          $ref: '#/components/schemas/SurveySubmissionStatusEnum'
+        SurveyAvailabilityStatus:
+          $ref: '#/components/schemas/SurveyAvailabilityStatusEnum'
 
     SurveyType:
       type: string
@@ -44,7 +72,19 @@ components:
 
     Episode:
       type: object
+      required:
+        - id
+        - seasonId
+        - episodeNumber
+        - episodeAirDate
+        - episodeTitle
+        - episodeDescription
+        - episodeImage
       properties:
+        id:
+          type: string
+          description: The ID of the episode
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
         seasonId:
           type: number
           description: The ID of the season the episode is in

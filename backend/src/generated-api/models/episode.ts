@@ -21,13 +21,22 @@
 export interface Episode {
 
     /**
+     * The ID of the episode
+     *
+     * @type {string}
+     * @memberof Episode
+     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
+     */
+    id: string;
+
+    /**
      * The ID of the season the episode is in
      *
      * @type {number}
      * @memberof Episode
      * @example 47
      */
-    seasonId?: number;
+    seasonId: number;
 
     /**
      * The number of the episode
@@ -36,7 +45,7 @@ export interface Episode {
      * @memberof Episode
      * @example 1
      */
-    episodeNumber?: number;
+    episodeNumber: number;
 
     /**
      * The air date of the episode
@@ -45,7 +54,7 @@ export interface Episode {
      * @memberof Episode
      * @example Wed Sep 22 00:00:00 UTC 2021
      */
-    episodeAirDate?: string;
+    episodeAirDate: string;
 
     /**
      * The title of the episode
@@ -54,7 +63,7 @@ export interface Episode {
      * @memberof Episode
      * @example The Beginning
      */
-    episodeTitle?: string;
+    episodeTitle: string;
 
     /**
      * The description of the episode
@@ -63,7 +72,7 @@ export interface Episode {
      * @memberof Episode
      * @example The first episode of the season
      */
-    episodeDescription?: string;
+    episodeDescription: string;
 
     /**
      * The image of the episode
@@ -72,5 +81,5 @@ export interface Episode {
      * @memberof Episode
      * @example https://www.image.com/episode.jpg
      */
-    episodeImage?: string;
+    episodeImage: string;
 }

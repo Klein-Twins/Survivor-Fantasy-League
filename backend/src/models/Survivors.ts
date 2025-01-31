@@ -22,7 +22,7 @@ const SurvivorsModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'survivorId', as: 'SurvivorDetailsOnSeason' });
-      this.hasMany(models.ProfilePick, { foreignKey: 'pickAnswerSurvivorId', as: 'profilePick' });
+      // this.hasMany(models.ProfilePick, { foreignKey: 'pickAnswerSurvivorId', as: 'profilePick' });
     }
   }
 

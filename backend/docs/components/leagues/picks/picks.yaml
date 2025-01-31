@@ -15,7 +15,9 @@ components:
       required:
         - id
         - pickOptionType
-        - pickOptions:
+        - pickOptions
+        - numPointsWorth
+        - description
 
       properties:
         id:

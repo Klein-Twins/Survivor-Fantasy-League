@@ -38,9 +38,12 @@ const SurveyPicksModel = (sequelize: any) => {
       indexes: [
         {
           unique: true,
-          fields: [''],
+          fields: ['SURVEY_ID', 'PICK_ID'],
         },
       ],
     }
   );
+  return SurveyPicks;
 };
+
+export default SurveyPicksModel;

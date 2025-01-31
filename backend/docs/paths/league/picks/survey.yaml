@@ -1,17 +1,18 @@
 paths:
   survey:
     get:
-      summary: Get survey
-      description: Retrieves the survey for the specified profileId in leagueId for episodeId
+      summary: Get survey(s) for provided episodeId and profileId
+      description: Retrieves the survey for the specified profileId's in leagueId for episodeId's
       operationId: getSurveyForEpisodeForLeagueMember
       tags:
         - SurveyService
       parameters:
-        - in: query
+        - in: path
           name: leagueId
           required: true
           schema:
             type: string
+            format: uuid
             description: The ID of the league to retrieve picks for.
         - in: query
           name: profileId

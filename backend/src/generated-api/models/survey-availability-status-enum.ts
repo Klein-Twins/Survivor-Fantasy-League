@@ -12,12 +12,14 @@
  * Do not edit the class manually.
  */
 
-import { LeagueSurvey } from './league-survey';
- /**
+/**
  * 
- *
  * @export
- * @interface GetSurveyForEpisodeForLeagueMemberResponseData
+ * @enum {string}
  */
-export interface GetSurveyForEpisodeForLeagueMemberResponseData extends Array<LeagueSurvey> {
+export enum SurveyAvailabilityStatusEnum {
+    Available = 'Available',
+    NotOpenYet = 'Not Open Yet',
+    Closed = 'Closed'
 }
+

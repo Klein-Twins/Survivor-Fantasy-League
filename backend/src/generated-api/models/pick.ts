@@ -41,7 +41,7 @@ export interface Pick {
      * @memberof Pick
      * @example Who will be voted out this week?
      */
-    description?: string;
+    description: string;
 
     /**
      * @type {PickOptionTypeEnum}
@@ -56,11 +56,11 @@ export interface Pick {
      * @memberof Pick
      * @example 10
      */
-    numPointsWorth?: number;
+    numPointsWorth: number;
 
     /**
      * @type {SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions}
      * @memberof Pick
      */
-    pickOptions?: SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions;
+    pickOptions: SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions;
 }

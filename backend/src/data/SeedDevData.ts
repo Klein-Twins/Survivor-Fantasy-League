@@ -1,14 +1,18 @@
 import { models } from '../config/db';
 import LeagueData from './dev/leagueData';
+import leagueSurveys from './dev/leagueSurveyData';
 import picksData from './dev/picksData';
+import surveyData from './dev/surveyData';
 import userData from './dev/userData';
-import seasonData from './foundation/seasonData';
+import seasonAndEpisodeData from './foundation/seasonData';
 import season47SurvivorData from './foundation/survivorData';
 
 const seedDevData = async () => {
   // Season Data
   await models.Seasons.destroy({ where: {} });
-  await models.Seasons.bulkCreate(seasonData, { validate: true });
+  await models.Seasons.bulkCreate(seasonAndEpisodeData.seasonData, { validate: true });
+  await models.Episode.destroy({ where: {} });
+  await models.Episode.bulkCreate(seasonAndEpisodeData.episodeData, { validate: true });
 
   // Survivor Data
   await models.Survivors.destroy({ where: {} });
@@ -36,6 +40,15 @@ const seedDevData = async () => {
   await models.PickOptions.bulkCreate(picksData.pickOptions, { validate: true });
   await models.Picks.destroy({ where: {} });
   await models.Picks.bulkCreate(picksData.picks, { validate: true });
+
+  await models.Survey.destroy({ where: {} });
+  await models.Survey.bulkCreate(surveyData.surveys, { validate: true });
+
+  await models.SurveyPicks.destroy({ where: {} });
+  await models.SurveyPicks.bulkCreate(surveyData.surveyPicks, { validate: true });
+
+  await models.LeagueSurveys.destroy({ where: {} });
+  await models.LeagueSurveys.bulkCreate(leagueSurveys, { validate: true });
 };
 
 export default seedDevData;
