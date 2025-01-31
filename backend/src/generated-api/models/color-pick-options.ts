@@ -22,8 +22,8 @@ import { ColorsEnum } from './colors-enum';
 export interface ColorPickOptions {
 
     /**
-     * @type {ColorsEnum}
+     * @type {Array<ColorsEnum>}
      * @memberof ColorPickOptions
      */
-    options: ColorsEnum;
+    options: Array<ColorsEnum>;
 }

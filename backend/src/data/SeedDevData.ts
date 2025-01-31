@@ -3,6 +3,7 @@ import LeagueData from './dev/leagueData';
 import leagueSurveys from './dev/leagueSurveyData';
 import picksData from './dev/picksData';
 import surveyData from './dev/surveyData';
+import tribeData from './dev/tribeData';
 import userData from './dev/userData';
 import seasonAndEpisodeData from './foundation/seasonData';
 import season47SurvivorData from './foundation/survivorData';
@@ -13,6 +14,10 @@ const seedDevData = async () => {
   await models.Seasons.bulkCreate(seasonAndEpisodeData.seasonData, { validate: true });
   await models.Episode.destroy({ where: {} });
   await models.Episode.bulkCreate(seasonAndEpisodeData.episodeData, { validate: true });
+
+  //Tribe Data
+  await models.Tribe.destroy({ where: {} });
+  await models.Tribe.bulkCreate(tribeData.tribes, { validate: true });
 
   // Survivor Data
   await models.Survivors.destroy({ where: {} });

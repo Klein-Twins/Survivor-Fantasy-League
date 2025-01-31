@@ -7,6 +7,7 @@ import { Episode } from '../../generated-api';
 const episodeService = {
   //doesEpisodeExist,
   validateEpisodeIsInSeason,
+  getEpisode,
 };
 
 async function validateEpisodeIsInSeason(episodeId: string, seasonId: number): Promise<void> {

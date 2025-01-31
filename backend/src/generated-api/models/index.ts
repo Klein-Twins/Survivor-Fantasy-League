@@ -2,6 +2,7 @@ export * from './account';
 export * from './api-error';
 export * from './api-response';
 export * from './api-response-error';
+export * from './binary-options-enum';
 export * from './binary-pick-options';
 export * from './check-auth-response';
 export * from './check-auth-response-data';

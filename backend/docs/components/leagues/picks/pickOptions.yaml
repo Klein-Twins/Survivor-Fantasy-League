@@ -16,7 +16,9 @@ components:
         - options
       properties:
         options:
-          $ref: '#/components/schemas/ColorsEnum'
+          type: array
+          items:
+            $ref: '#/components/schemas/ColorsEnum'
 
     ColorsEnum:
       type: string
@@ -38,5 +40,10 @@ components:
         - options
       properties:
         options:
-          type: boolean
-          description: The binary pick option
+          type: array
+          items:
+            $ref: '#/components/schemas/BinaryOptionsEnum'
+
+    BinaryOptionsEnum:
+      type: string
+      enum: [yes, no]

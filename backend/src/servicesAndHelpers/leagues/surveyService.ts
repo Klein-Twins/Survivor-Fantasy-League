@@ -1,6 +1,4 @@
-import { Episode, GetSurveyForEpisodeForLeagueMemberResponseData, LeagueSurvey } from '../../generated-api';
-import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
-import leagueRepository from '../../repositories/leagueRepository';
+import { LeagueSurvey } from '../../generated-api';
 import surveyRepository from '../../repositories/surveyRepository';
 import episodeService from '../season/episodeService';
 import leagueMemberService from './leagueMemberService';
@@ -20,7 +18,7 @@ async function getSurveys(leagueId: string, profileIds: string[], episodeIds: st
 
   // Verify all profileIds are members of league with ACCEPTED status
   profileIds.map(async (profileId) => {
-    await leagueMemberService.validateProfileIsInLeague(profileId, leagueId);
+    await leagueMemberService.validateProfileIsInLeague(leagueId, profileId);
   });
 
   //Verify all episodeIds provided exist and are in the same season as the league.
@@ -37,11 +35,7 @@ async function getSurveys(leagueId: string, profileIds: string[], episodeIds: st
     }
   }
 
-  // TODO: Get responses for each profile/episode combination
-
-  // TODO: Combine picks and responses into survey format
-
-  return [];
+  return surveys;
 }
 
 export default surveyService;

@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { BinaryOptionsEnum } from './binary-options-enum';
  /**
  * 
  *
@@ -21,10 +22,8 @@
 export interface BinaryPickOptions {
 
     /**
-     * The binary pick option
-     *
-     * @type {boolean}
+     * @type {Array<BinaryOptionsEnum>}
      * @memberof BinaryPickOptions
      */
-    options: boolean;
+    options: Array<BinaryOptionsEnum>;
 }

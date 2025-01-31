@@ -12,18 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { LeagueSurvey } from './league-survey';
- /**
+/**
  * 
- *
  * @export
- * @interface GetSurveyForEpisodeForLeagueMemberResponseData
+ * @enum {string}
  */
-export interface GetSurveyForEpisodeForLeagueMemberResponseData {
-
-    /**
-     * @type {Array<LeagueSurvey>}
-     * @memberof GetSurveyForEpisodeForLeagueMemberResponseData
-     */
-    leagueSurveys: Array<LeagueSurvey>;
+export enum BinaryOptionsEnum {
+    True = 'true',
+    False = 'false'
 }
+

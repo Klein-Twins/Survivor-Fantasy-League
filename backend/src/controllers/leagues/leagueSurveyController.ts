@@ -1,7 +1,12 @@
 import { NextFunction, Request, Response } from 'express';
 import picksService from '../../servicesAndHelpers/picks/picksService';
 import surveyService from '../../servicesAndHelpers/leagues/surveyService';
-import { LeagueSurvey, SurveyType } from '../../generated-api';
+import {
+  GetSurveyForEpisodeForLeagueMember,
+  GetSurveyForEpisodeForLeagueMemberResponseData,
+  LeagueSurvey,
+  SurveyType,
+} from '../../generated-api';
 
 async function getSurveyForLeagueMember(req: Request, res: Response, next: NextFunction) {
   try {
@@ -17,9 +22,18 @@ async function getSurveyForLeagueMember(req: Request, res: Response, next: NextF
       ? [req.query.episodeId as string]
       : [];
 
-    const survey: LeagueSurvey[] = await surveyService.getSurveys(leagueId, profileIds, episodeIds);
+    const leagueSurveys: LeagueSurvey[] = await surveyService.getSurveys(leagueId, profileIds, episodeIds);
 
-    res.status(200).json({ message: 'Get League Picks' });
+    const response: GetSurveyForEpisodeForLeagueMember = {
+      success: true,
+      message: 'Successfully retrieved league surveys',
+      statusCode: 200,
+      responseData: {
+        leagueSurveys,
+      },
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }

@@ -4,7 +4,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 export interface TribeAttributes {
   id: UUID;
   name: string;
-  seasonId: UUID;
+  seasonId: number;
   tribeColor: string;
   mergeTribe: boolean;
 }
@@ -13,7 +13,7 @@ const TribeModel = (sequelize: Sequelize) => {
   class Tribe extends Model<TribeAttributes> implements TribeAttributes {
     public id!: UUID;
     public name!: string;
-    public seasonId!: UUID;
+    public seasonId!: number;
     public tribeColor!: string;
     public mergeTribe!: boolean;
 

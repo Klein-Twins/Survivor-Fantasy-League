@@ -2,13 +2,11 @@ import { Pick, SurveyType } from '../../generated-api';
 import picksRepository from '../../repositories/picks/picksRepository';
 
 const picksService = {
-  getLeaguePicks,
+  getPickById,
 };
 
-async function getLeaguePicks(leagueId: string, surveyType: SurveyType): Promise<Pick[]> {
-  const picks: Pick[] = await picksRepository.getLeaguePicks(leagueId, surveyType);
-
-  return picks;
+async function getPickById(pickId: string): Promise<Pick> {
+  return picksRepository.getPickById(pickId);
 }
 
 export default picksService;

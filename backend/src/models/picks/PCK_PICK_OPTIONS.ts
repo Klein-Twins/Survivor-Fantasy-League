@@ -1,6 +1,7 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { PickTypeEnum as PickType } from './PCK_PICK_TYPE';
+import { ColorsEnum } from '../../generated-api';
 
 export interface PickOptionsAttributes {
   type: PickType;
@@ -41,6 +42,13 @@ const PickOptionsModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'CHOICE',
+        validate: {
+          isValidChoice(value: string) {
+            if (this.type === 'color' && !Object.values(ColorsEnum).includes(value as ColorsEnum)) {
+              throw new Error('Choice must be a valid color when type is color');
+            }
+          },
+        },
       },
     },
     {

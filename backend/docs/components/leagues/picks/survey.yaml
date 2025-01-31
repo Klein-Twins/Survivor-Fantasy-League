@@ -12,9 +12,14 @@ components:
               $ref: '#/components/schemas/GetSurveyForEpisodeForLeagueMemberResponseData'
   schemas:
     GetSurveyForEpisodeForLeagueMemberResponseData:
-      type: array
-      items:
-        $ref: '#/components/schemas/LeagueSurvey'
+      type: object
+      required:
+        - leagueSurveys
+      properties:
+        leagueSurveys:
+          type: array
+          items:
+            $ref: '#/components/schemas/LeagueSurvey'
 
     SurveyAvailabilityStatusEnum:
       type: string
