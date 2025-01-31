@@ -6,6 +6,7 @@ import { getLeagueInvites } from '../store/slices/leagueInviteSlice';
 import { LeaguesPanel } from '../components/dashboard/leagues/LeaguePanel';
 import Image from '../components/ui/image/Image';
 import NotLoggedInHomePage from '../components/home/NotLoggedInHomePage';
+import LoggedInHomePage from '../components/home/LoggedInHomePage';
 
 const HomePage: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -42,9 +43,7 @@ const HomePage: React.FC = () => {
     //   </div>
     //   <div className='w-1/12 bg-gradient-to-r from-background-dp01 to-background-base'></div>
     // </div>
-    <div>
-      <NotLoggedInHomePage />
-    </div>
+    <div className='dark:bg-surface-a0-dark'>{account?.userName ? <LoggedInHomePage /> : <NotLoggedInHomePage />}</div>
 
     // <div className='bg-background-base min-h-screen w-full p-2 text-text-primary'>
     //   <LeagueInvitesSection account={account} />
