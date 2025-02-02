@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { SurvivorBasic } from './survivor-basic';
+import { Survivor } from './survivor';
  /**
  * 
  *
@@ -22,8 +22,8 @@ import { SurvivorBasic } from './survivor-basic';
 export interface SurvivorPickOptions {
 
     /**
-     * @type {Array<SurvivorBasic>}
+     * @type {Array<Survivor>}
      * @memberof SurvivorPickOptions
      */
-    options: Array<SurvivorBasic>;
+    options: Array<Survivor>;
 }

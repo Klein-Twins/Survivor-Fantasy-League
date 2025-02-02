@@ -7,6 +7,7 @@ import {
   LeagueSurvey,
   SurveyType,
 } from '../../generated-api';
+import errorFactory from '../../utils/errors/errorFactory';
 
 async function getSurveyForLeagueMember(req: Request, res: Response, next: NextFunction) {
   try {
@@ -16,13 +17,20 @@ async function getSurveyForLeagueMember(req: Request, res: Response, next: NextF
       : req.query.profileId
       ? [req.query.profileId as string]
       : [];
-    const episodeIds = Array.isArray(req.query.episodeId)
-      ? (req.query.episodeId as string[])
-      : req.query.episodeId
-      ? [req.query.episodeId as string]
+    const episodeNumbers = Array.isArray(req.query.episodeNumber)
+      ? (req.query.episodeNumber as string[]).map(Number)
+      : req.query.episodeNumber
+      ? [Number(req.query.episodeNumber)]
       : [];
 
-    const leagueSurveys: LeagueSurvey[] = await surveyService.getSurveys(leagueId, profileIds, episodeIds);
+    if (episodeNumbers.some(isNaN)) {
+      throw errorFactory({
+        error: 'Invalid episode number format. All values must be numbers.',
+        statusCode: 400,
+      });
+    }
+
+    const leagueSurveys: LeagueSurvey[] = await surveyService.getSurveys(leagueId, profileIds, episodeNumbers);
 
     const response: GetSurveyForEpisodeForLeagueMember = {
       success: true,

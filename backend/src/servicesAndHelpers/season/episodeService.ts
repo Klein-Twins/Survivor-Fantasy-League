@@ -3,11 +3,13 @@ import { EpisodeAttributes } from '../../models/season/SSN_EPISODES';
 import errorFactory from '../../utils/errors/errorFactory';
 import episodeRepository from '../../repositories/season/episodeRepository';
 import { Episode } from '../../generated-api';
+import { UUID } from 'crypto';
 
 const episodeService = {
   //doesEpisodeExist,
   validateEpisodeIsInSeason,
   getEpisode,
+  getEpisodeIdsBySeasonAndEpisodeNumber,
 };
 
 async function validateEpisodeIsInSeason(episodeId: string, seasonId: number): Promise<void> {
@@ -27,8 +29,11 @@ function getNextEpisode() {
 function getCurrentEpisode() {
   throw errorFactory({ error: 'Not implemented', statusCode: 501 });
 }
-function getEpisodeBySeasonAndEpisodeNumber() {
-  throw errorFactory({ error: 'Not implemented', statusCode: 501 });
+async function getEpisodeIdsBySeasonAndEpisodeNumber(
+  seasonId: number,
+  episodeNumber: number | number[]
+): Promise<UUID[]> {
+  return await episodeRepository.getEpisodeIdsBySeasonAndEpisodeNumber(seasonId, episodeNumber);
 }
 
 function setCurrentEpisode() {

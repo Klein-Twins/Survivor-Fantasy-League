@@ -1,10 +1,6 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../store/store';
-import { getLeagues } from '../store/slices/leagueSlice';
-import { getLeagueInvites } from '../store/slices/leagueInviteSlice';
-import { LeaguesPanel } from '../components/dashboard/leagues/LeaguePanel';
-import Image from '../components/ui/image/Image';
 import NotLoggedInHomePage from '../components/home/NotLoggedInHomePage';
 import LoggedInHomePage from '../components/home/LoggedInHomePage';
 

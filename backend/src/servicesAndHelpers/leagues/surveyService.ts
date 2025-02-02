@@ -9,9 +9,9 @@ const surveyService = {
   getSurveys,
 };
 
-async function getSurveys(leagueId: string, profileIds: string[], episodeIds: string[]): Promise<LeagueSurvey[]> {
+async function getSurveys(leagueId: string, profileIds: string[], episodeNumbers: number[]): Promise<LeagueSurvey[]> {
   // Validate inputs
-  await surveyHelper.validateGetSurveyRequest(leagueId, profileIds, episodeIds);
+  await surveyHelper.validateGetSurveyRequest(leagueId, profileIds, episodeNumbers);
 
   // Validate League Exists
   await leagueService.validateLeagueExists(leagueId);
@@ -21,11 +21,8 @@ async function getSurveys(leagueId: string, profileIds: string[], episodeIds: st
     await leagueMemberService.validateProfileIsInLeague(leagueId, profileId);
   });
 
-  //Verify all episodeIds provided exist and are in the same season as the league.
-  episodeIds.map(async (episodeId) => {
-    const seasonId = (await leagueService.getLeagueByLeagueId(leagueId)).season.id;
-    await episodeService.validateEpisodeIsInSeason(episodeId, seasonId);
-  });
+  const seasonId = (await leagueService.getLeagueByLeagueId(leagueId)).season.id;
+  const episodeIds = await episodeService.getEpisodeIdsBySeasonAndEpisodeNumber(seasonId, episodeNumbers);
 
   let surveys: LeagueSurvey[] = [];
   // TODO: Get picks for each episode

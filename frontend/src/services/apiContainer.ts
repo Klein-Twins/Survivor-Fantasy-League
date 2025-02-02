@@ -4,6 +4,7 @@ import {
   LeagueInviteServiceApi,
   LeagueServiceApi,
   ProfileServiceApi,
+  SurveyServiceApi,
   SurvivorServiceApi,
   UserSessionServiceApi,
 } from '../../generated-api';
@@ -19,5 +20,6 @@ const api = {
   survivorService: new SurvivorServiceApi(config),
   UserSessionServiceApi: new UserSessionServiceApi(config),
   ImageServiceApi: new ImageServiceApi(config),
+  LeagueSurveyService: new SurveyServiceApi(config),
 };
 export default api;

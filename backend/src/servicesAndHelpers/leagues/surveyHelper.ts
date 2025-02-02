@@ -8,7 +8,7 @@ const surveyHelper = {
   validateGetSurveyRequest,
 };
 
-async function validateGetSurveyRequest(leagueId: string, profileIds: string[], episodeIds: string[]): Promise<void> {
+async function validateGetSurveyRequest(leagueId: string, profileIds: string[], episodeIds: number[]): Promise<void> {
   // Validate leagueId
   if (!leagueId) {
     throw errorFactory({ error: 'Missing leagueId parameter', statusCode: 400 });
@@ -28,9 +28,6 @@ async function validateGetSurveyRequest(leagueId: string, profileIds: string[], 
   // Validate episodeIds array
   if (!episodeIds || episodeIds.length === 0) {
     throw errorFactory({ error: 'Missing episodeIds parameter', statusCode: 400 });
-  }
-  if (episodeIds.some((id) => !validate(id))) {
-    throw errorFactory({ error: 'Invalid episodeId format in array', statusCode: 400 });
   }
 }
 export default surveyHelper;

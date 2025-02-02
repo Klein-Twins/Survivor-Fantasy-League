@@ -15,7 +15,7 @@ const router = createBrowserRouter([
       { path: '/', element: <HomePage /> },
       { path: '/survivor-cast', element: <SurvivorCastPage /> },
       { path: '/dashboard', element: <DashboardPage /> },
-      { path: '/league', element: <LeagueDetailView /> },
+      { path: '/league/:leagueId', element: <LeagueDetailView /> },
       { path: '/about', element: <AboutPage /> },
     ],
   },

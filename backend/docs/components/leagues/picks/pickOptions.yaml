@@ -8,7 +8,7 @@ components:
         options:
           type: array
           items:
-            $ref: '../../survivor.yaml#/components/schemas/SurvivorBasic'
+            $ref: '../../survivor.yaml#/components/schemas/Survivor'
 
     ColorPickOptions:
       type: object
