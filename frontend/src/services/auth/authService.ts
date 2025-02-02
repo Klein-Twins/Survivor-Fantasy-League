@@ -1,42 +1,56 @@
 import { AxiosResponse } from 'axios';
-import { LoginUserRequestBody, LoginUserResponse, LogoutUserResponse, SignupUserRequestBody, SignupUserResponse } from '../../../generated-api';
-
+import {
+  ExtendSessionResponse,
+  LoginUserRequestBody,
+  LoginUserResponse,
+  LogoutUserResponse,
+  SignupUserRequestBody,
+  SignupUserResponse,
+} from '../../../generated-api';
 
 import api from '../apiContainer';
 import { ApiRequestParams } from '../../hooks/useApi';
 
 const authService = {
-    loginUser,
-    signupUser,
-    logoutUser,
-}
-
-async function loginUser({ body }: ApiRequestParams<LoginUserRequestBody, void>): Promise<LoginUserResponse> {
-    if (!body) {
-        throw Error("Request body is required");
-    }
-    const response = await api.UserSessionServiceApi.loginUser(body, { withCredentials: true });
-    return response.data
-    // const response = await axios.post(`${API_URL}/login`, userData, { withCredentials: true });
-
-    // const numSecondsRefreshTokenExpiresIn = response.data.numSecondsRefreshTokenExpiresIn;
-    // const account = response.data.account;
-    // const message = response.data.message;
-    // const isAuthenticated = response.data.isAuthenticated;
-    // return { numSecondsRefreshTokenExpiresIn, account, message, isAuthenticated };
+  loginUser,
+  signupUser,
+  logoutUser,
+  extendSession,
 };
 
-async function signupUser(params: ApiRequestParams<SignupUserRequestBody, void>): Promise<AxiosResponse<SignupUserResponse>> {
-    if (!params) {
-        throw Error("Request body is required");
-    }
-    const response = await api.UserSessionServiceApi.signupUser(params.body, { withCredentials: true });
-    return response;
+async function loginUser({ body }: ApiRequestParams<LoginUserRequestBody, void>): Promise<LoginUserResponse> {
+  if (!body) {
+    throw Error('Request body is required');
+  }
+  const response = await api.UserSessionServiceApi.loginUser(body, { withCredentials: true });
+  return response.data;
+  // const response = await axios.post(`${API_URL}/login`, userData, { withCredentials: true });
+
+  // const numSecondsRefreshTokenExpiresIn = response.data.numSecondsRefreshTokenExpiresIn;
+  // const account = response.data.account;
+  // const message = response.data.message;
+  // const isAuthenticated = response.data.isAuthenticated;
+  // return { numSecondsRefreshTokenExpiresIn, account, message, isAuthenticated };
+}
+
+async function signupUser(
+  params: ApiRequestParams<SignupUserRequestBody, void>
+): Promise<AxiosResponse<SignupUserResponse>> {
+  if (!params) {
+    throw Error('Request body is required');
+  }
+  const response = await api.UserSessionServiceApi.signupUser(params.body, { withCredentials: true });
+  return response;
 }
 
 async function logoutUser(): Promise<LogoutUserResponse> {
-    const response = await api.UserSessionServiceApi.logoutUser({ withCredentials: true });
-    return response.data;
+  const response = await api.UserSessionServiceApi.logoutUser({ withCredentials: true });
+  return response.data;
+}
+
+async function extendSession(): Promise<AxiosResponse<ExtendSessionResponse>> {
+  const response = await api.UserSessionServiceApi.extendSession({ withCredentials: true });
+  return response;
 }
 
 // export const signupUserService = async (userData: SignUpFormData): Promise<UserSessionResponseSuccess> => {
