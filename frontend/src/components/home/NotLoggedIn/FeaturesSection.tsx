@@ -1,4 +1,10 @@
 import { FaFire, FaUsers, FaChartBar } from 'react-icons/fa';
+import {
+  ElementBackgroundColor,
+  TextPrimaryColor,
+  TextQuaternaryColor,
+  TextSecondaryColor,
+} from '../../../styles/CommonColorClassNames';
 
 export default function FeaturesSection() {
   const features = [
@@ -22,15 +28,15 @@ export default function FeaturesSection() {
   return (
     <section className='py-10 container mx-auto'>
       <div className='max-w-6xl mx-auto px-4'>
-        <h2 className='text-3xl font-bold text-center text-primary-a0 mb-6'>Why Play Survivor Fantasy League?</h2>
+        <h2 className={`text-3xl font-bold text-center ${TextPrimaryColor} mb-6`}>Why Play Survivor Fantasy League?</h2>
         <div className='grid md:grid-cols-3 gap-6'>
           {features.map((feature, index) => (
             <div
               key={index}
-              className='shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 dark:bg-surface-a2-dark p-6'>
+              className={`shadow-lg rounded-2xl hover:shadow-xl transition-all duration-300 ${ElementBackgroundColor} p-6`}>
               <div className='flex items-center justify-center mb-4'>{feature.icon}</div>
-              <h3 className='text-xl font-semibold dark:text-primary-a1-dark'>{feature.title}</h3>
-              <p className='text-sm dark:text-primary-a3-dark mt-2'>{feature.description}</p>
+              <h3 className={`text-xl font-semibold ${TextSecondaryColor}`}>{feature.title}</h3>
+              <p className={`text-sm ${TextQuaternaryColor} mt-2`}>{feature.description}</p>
             </div>
           ))}
         </div>

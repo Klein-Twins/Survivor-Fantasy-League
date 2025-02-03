@@ -4,6 +4,7 @@ import { NavLink } from 'react-router-dom';
 import styles from './NavLinkButtons.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
+import { ButtonPrimaryColors, ButtonPrimaryTextColor, ButtonSubtleTextColor } from '../../styles/CommonColorClassNames';
 
 interface NavLinkButtonsProps {
   onClick: () => void;
@@ -17,7 +18,11 @@ const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({ onClick }) => {
       <li>
         <NavLink
           to='/'
-          className={({ isActive }) => (isActive ? styles.activeLink : styles.linkButton)}
+          className={({ isActive }) =>
+            isActive
+              ? `${styles.activeLink} ${ButtonPrimaryTextColor}`
+              : `${styles.linkButton} ${ButtonSubtleTextColor}`
+          }
           onClick={onClick}>
           Home
         </NavLink>
@@ -25,7 +30,11 @@ const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({ onClick }) => {
       <li>
         <NavLink
           to='/survivor-cast'
-          className={({ isActive }) => (isActive ? styles.activeLink : styles.linkButton)}
+          className={({ isActive }) =>
+            isActive
+              ? `${styles.activeLink} ${ButtonPrimaryTextColor}`
+              : `${styles.linkButton} ${ButtonSubtleTextColor}`
+          }
           onClick={onClick}>
           Survivor Cast
         </NavLink>
@@ -46,7 +55,11 @@ const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({ onClick }) => {
       <li>
         <NavLink
           to='/about'
-          className={({ isActive }) => (isActive ? styles.activeLink : styles.linkButton)}
+          className={({ isActive }) =>
+            isActive
+              ? `${styles.activeLink} ${ButtonPrimaryTextColor}`
+              : `${styles.linkButton} ${ButtonSubtleTextColor}`
+          }
           onClick={onClick}>
           Meet the Developer
         </NavLink>

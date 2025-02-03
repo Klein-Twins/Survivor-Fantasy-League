@@ -6,6 +6,7 @@ import Navbar from '../components/navbar/Navbar';
 import Modal from '../components/ui/Modal';
 import ExtendSessionToast from '../components/auth/ExtendSessionToast';
 import Footer from '../components/footer/Footer';
+import { MainBackgroundColor, TextPrimaryColor } from '../styles/CommonColorClassNames';
 // import { checkAuthentication } from "../store/slices/authSlice";
 
 const RootLayout: React.FC = () => {
@@ -21,7 +22,7 @@ const RootLayout: React.FC = () => {
   return (
     <>
       <Navbar />
-      <main className='min-h-screen dark:bg-surface-a0-dark dark:text-primary-a0-dark'>
+      <main className={`min-h-screen ${MainBackgroundColor} ${TextPrimaryColor}`}>
         <Outlet />
       </main>
       {isOpen && <Modal isOpen={isOpen} />}

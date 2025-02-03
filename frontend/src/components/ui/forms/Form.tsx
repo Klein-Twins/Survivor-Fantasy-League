@@ -1,6 +1,7 @@
 import React from 'react';
 import SubmitButton, { FormSubmitButtonClassName } from './SubmitButton';
 import { DefaultClassName } from './FormInput';
+import { TextErrorColor } from '../../../styles/CommonColorClassNames';
 
 interface FormProps {
   title: string;
@@ -41,16 +42,12 @@ const Form: React.FC<FormProps> = ({
   };
 
   return (
-    <form
-      onSubmit={onSubmit}
-      className={`mx-auto p-4 rounded space-y-4 w-full ${mergedClassName?.formBackgroundDarkColor} ${mergedClassName?.formTextDarkColor}`}>
+    <form onSubmit={onSubmit} className={`mx-auto p-4 rounded space-y-4 w-full `}>
       <h2 className='text-xl font-semibold text-center'>{title}</h2>
       <hr className='w-1/4 mx-auto' />
       <div className='space-y-2'>{children}</div>
       <div className='flex flex-col justify-center items-center space-y-2'>
-        {submitError && (
-          <h2 className={`text-center dark:text-${mergedClassName.formErrorTextDarkColor}`}>{submitError}</h2>
-        )}
+        {submitError && <h2 className={`text-center ${TextErrorColor}`}>{submitError}</h2>}
         <SubmitButton
           className={mergedClassName.formSubmitButtonClassName}
           loading={isLoading}

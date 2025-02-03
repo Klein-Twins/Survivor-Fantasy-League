@@ -5,6 +5,7 @@ import HamburgerButton from './HamburgerButton';
 import NavLinkButtons from './NavLinkButtons';
 import NavAuthButtons from './NavAuthButtons';
 import DarkModeToggle from '../ui/DarkModeToggle';
+import { NavBarColor } from '../../styles/CommonColorClassNames';
 
 const Navbar: React.FC = () => {
   const [isHamburgerOpen, setIsHamburgerOpen] = useState<boolean>(false);
@@ -19,13 +20,13 @@ const Navbar: React.FC = () => {
 
   return (
     //Header Container
-    <header className={'px-4 py-4 relative dark:bg-surface-a1-dark dark:text-primary-a3-dark'}>
+    <header className={`px-4 py-4 relative ${NavBarColor} dark:text-primary-a3-dark`}>
       <div className='flex items-center justify-between md:space-x-8 relative'>
         <div className='flex items-center justify-between flex-grow md:flex-none'>
           {/* Title Button */}
           <div className='flex-grow md:flex text-left '>
             <NavLink className={'text-xl font-bold dark:text-primary-a5-dark'} onClick={handleLinkClick} to='/'>
-              SFL
+              <img src='/SFLLogoDark.jpeg' className='h-12 object-contain' />
             </NavLink>
           </div>
           {/* Hamburger Button */}
