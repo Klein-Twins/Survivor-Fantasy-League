@@ -20,6 +20,9 @@ import EpisodeModel from './season/SSN_EPISODES';
 import SurveyModel from './SurveysAndPicks/Survey';
 import SurveyPicksModel from './SurveysAndPicks/SurveyPicks';
 import LeagueSurveyModel from './League/LeagueSurvey';
+import ChallengeModel from './season/SSN_CHALLENGES';
+import ChallengeWinnersModel from './season/SSN_CHALLENGE_WINNERS';
+import SeasonEliminationsModel from './season/SSN_ELIMINATIONS';
 
 const initModels = (sequelize: Sequelize) => {
   const User = UserModel(sequelize);
@@ -47,23 +50,30 @@ const initModels = (sequelize: Sequelize) => {
   const SurveyPicks = SurveyPicksModel(sequelize);
   const LeagueSurveys = LeagueSurveyModel(sequelize);
 
+  const Challenges = ChallengeModel(sequelize);
+  const ChallengeWinners = ChallengeWinnersModel(sequelize);
+  const SeasonEliminations = SeasonEliminationsModel(sequelize);
+
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
   League.associate({ Seasons, LeagueProfile });
   Survivors.associate({ SurvivorDetailsOnSeason });
-  Seasons.associate({ SurvivorDetailsOnSeason, League, Episode });
-  SurvivorDetailsOnSeason.associate({ Survivors, Seasons });
+  Seasons.associate({ SurvivorDetailsOnSeason, League, Episode, SeasonEliminations });
+  SurvivorDetailsOnSeason.associate({ Survivors, Seasons, SeasonEliminations });
   Profile.associate({ User, LeagueProfile, Notification });
   Tokens.associate({ User });
   LeagueProfile.associate({ League, Profile });
   Notification.associate({ Profile });
 
   // Tribe.associate({ });
-  Episode.associate({ Seasons });
+  Episode.associate({ Seasons, SeasonEliminations });
 
   // Picks.associate({ PickOptions, ProfilePick });
   // PickOptions.associate({ Picks });
   // ProfilePick.associate({ Picks, LeagueProfile, League, Episode, Tribe, Survivors });
+
+  //Asscocite SeasonEliminations
+  SeasonEliminations.associate({ Seasons, Episode, Survivors });
 
   return {
     sequelize,
@@ -88,6 +98,9 @@ const initModels = (sequelize: Sequelize) => {
     Survey,
     LeagueSurveys,
     SurveyPicks,
+    Challenges,
+    ChallengeWinners,
+    SeasonEliminations,
   };
 };
 

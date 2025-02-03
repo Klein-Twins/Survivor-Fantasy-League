@@ -24,6 +24,11 @@ const EpisodeModel = (sequelize: Sequelize) => {
     static associate(models: any) {
       this.belongsTo(models.Seasons, { foreignKey: 'seasonId', as: 'season' });
       // this.hasMany(models.ProfilePick, { foreignKey: 'episodeId', as: 'profilePick' });
+      this.hasMany(models.SeasonEliminations, {
+        foreignKey: 'episodeId',
+        sourceKey: 'episodeId',
+        as: 'eliminations',
+      });
     }
   }
   Episode.init(

@@ -1,9 +1,51 @@
+import { UUID } from 'crypto';
 import { SurvivorDetailsOnSeasonAttributes } from '../../models/SurvivorDetailsOnSeason';
 import { SurvivorsAttributes } from '../../models/Survivors';
 
+type Season47SurvivorNames =
+  | 'AndyRueda'
+  | 'AnikaDhar'
+  | 'AyshaWelch'
+  | 'CarolineVidmar'
+  | 'GabeOrtis'
+  | 'GenevieveMushaluk'
+  | 'RomeCooney'
+  | 'JonLovett'
+  | 'KishanPatel'
+  | 'KyleOstwald'
+  | 'RachelLaMont'
+  | 'SamPhalen'
+  | 'SierraWright'
+  | 'SolomonYi'
+  | 'SueSmey'
+  | 'TeenyChirichillo'
+  | 'TerranFoster'
+  | 'TiyanaHallums';
+
+export const season47SurvivorIds: Record<Season47SurvivorNames, string> = {
+  AndyRueda: 'c76c0a3b-8f2d-4a7e-9483-4b5c0a3e8f2d',
+  AnikaDhar: '9d8b7c6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a',
+  AyshaWelch: 'f1e2d3c4-b5a6-7890-1234-567890abcdef',
+  CarolineVidmar: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+  GabeOrtis: 'b2c3d4e5-f6a7-8901-2345-678901abcdef',
+  GenevieveMushaluk: 'c3d4e5f6-a7b8-9012-3456-789012abcdef',
+  RomeCooney: 'd4e5f6a7-b8c9-0123-4567-890123abcdef',
+  JonLovett: 'e5f6a7b8-c9d0-1234-5678-901234abcdef',
+  KishanPatel: 'f6a7b8c9-d0e1-2345-6789-012345abcdef',
+  KyleOstwald: 'a7b8c9d0-e1f2-3456-7890-123456abcdef',
+  RachelLaMont: 'b8c9d0e1-f2a3-4567-8901-234567abcdef',
+  SamPhalen: 'c9d0e1f2-a3b4-5678-9012-345678abcdef',
+  SierraWright: 'd0e1f2a3-b4c5-6789-0123-456789abcdef',
+  SolomonYi: 'e1f2a3b4-c5d6-7890-1234-567890abcdef',
+  SueSmey: 'f2a3b4c5-d6e7-8901-2345-678901abcdef',
+  TeenyChirichillo: 'a3b4c5d6-e7f8-9012-3456-789012abcdef',
+  TerranFoster: 'b4c5d6e7-f8a9-0123-4567-890123abcdef',
+  TiyanaHallums: 'c5d6e7f8-a9b0-1234-5678-901234abcdef',
+};
+
 const survivors: SurvivorsAttributes[] = [
   {
-    survivorId: 'c76c0a3b-8f2d-4a7e-9483-4b5c0a3e8f2d',
+    survivorId: season47SurvivorIds.AndyRueda,
     firstName: 'Andy',
     nickName: null,
     lastName: 'Rueda',
@@ -12,7 +54,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: '9d8b7c6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a',
+    survivorId: season47SurvivorIds.AnikaDhar,
     firstName: 'Anika',
     nickName: null,
     lastName: 'Dhar',
@@ -21,7 +63,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'f1e2d3c4-b5a6-7890-1234-567890abcdef',
+    survivorId: season47SurvivorIds.AyshaWelch,
     firstName: 'Aysha',
     nickName: null,
     lastName: 'Welch',
@@ -30,7 +72,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+    survivorId: season47SurvivorIds.CarolineVidmar,
     firstName: 'Caroline',
     nickName: null,
     lastName: 'Vidmar',
@@ -39,7 +81,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'b2c3d4e5-f6a7-8901-2345-678901abcdef',
+    survivorId: season47SurvivorIds.GabeOrtis,
     firstName: 'Gabe',
     nickName: null,
     lastName: 'Ortis',
@@ -48,7 +90,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'c3d4e5f6-a7b8-9012-3456-789012abcdef',
+    survivorId: season47SurvivorIds.GenevieveMushaluk,
     firstName: 'Genevieve',
     nickName: null,
     lastName: 'Mushaluk',
@@ -57,7 +99,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'd4e5f6a7-b8c9-0123-4567-890123abcdef',
+    survivorId: season47SurvivorIds.RomeCooney,
     firstName: 'Rome',
     nickName: null,
     lastName: 'Cooney',
@@ -66,7 +108,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'e5f6a7b8-c9d0-1234-5678-901234abcdef',
+    survivorId: season47SurvivorIds.JonLovett,
     firstName: 'Jon',
     nickName: null,
     lastName: 'Lovett',
@@ -75,7 +117,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'f6a7b8c9-d0e1-2345-6789-012345abcdef',
+    survivorId: season47SurvivorIds.KishanPatel,
     firstName: 'Kishan',
     nickName: null,
     lastName: 'Patel',
@@ -84,7 +126,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'a7b8c9d0-e1f2-3456-7890-123456abcdef',
+    survivorId: season47SurvivorIds.KyleOstwald,
     firstName: 'Kyle',
     nickName: null,
     lastName: 'Ostwald',
@@ -93,7 +135,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'b8c9d0e1-f2a3-4567-8901-234567abcdef',
+    survivorId: season47SurvivorIds.RachelLaMont,
     firstName: 'Rachel',
     nickName: null,
     lastName: 'LaMont',
@@ -102,7 +144,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'c9d0e1f2-a3b4-5678-9012-345678abcdef',
+    survivorId: season47SurvivorIds.SamPhalen,
     firstName: 'Sam',
     nickName: null,
     lastName: 'Phalen',
@@ -111,7 +153,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'd0e1f2a3-b4c5-6789-0123-456789abcdef',
+    survivorId: season47SurvivorIds.SierraWright,
     firstName: 'Sierra',
     nickName: null,
     lastName: 'Wright',
@@ -120,7 +162,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'e1f2a3b4-c5d6-7890-1234-567890abcdef',
+    survivorId: season47SurvivorIds.SolomonYi,
     firstName: 'Solomon',
     nickName: 'Sol',
     lastName: 'Yi',
@@ -129,7 +171,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'f2a3b4c5-d6e7-8901-2345-678901abcdef',
+    survivorId: season47SurvivorIds.SueSmey,
     firstName: 'Sue',
     nickName: null,
     lastName: 'Smey',
@@ -138,7 +180,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'a3b4c5d6-e7f8-9012-3456-789012abcdef',
+    survivorId: season47SurvivorIds.TeenyChirichillo,
     firstName: 'Teeny',
     nickName: null,
     lastName: 'Chirichillo',
@@ -147,7 +189,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'b4c5d6e7-f8a9-0123-4567-890123abcdef',
+    survivorId: season47SurvivorIds.TerranFoster,
     firstName: 'Terran',
     nickName: 'TK',
     lastName: 'Foster',
@@ -156,7 +198,7 @@ const survivors: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: 'c5d6e7f8-a9b0-1234-5678-901234abcdef',
+    survivorId: season47SurvivorIds.TiyanaHallums,
     firstName: 'Tiyana',
     nickName: null,
     lastName: 'Hallums',
@@ -167,7 +209,7 @@ const survivors: SurvivorsAttributes[] = [
 ];
 const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
-    survivorId: 'c76c0a3b-8f2d-4a7e-9483-4b5c0a3e8f2d',
+    survivorId: season47SurvivorIds.AndyRueda,
     seasonId: 47,
     originalTribeId: null,
     age: 31,
@@ -176,7 +218,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/AndyRueda47.jpeg',
   },
   {
-    survivorId: '9d8b7c6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a',
+    survivorId: season47SurvivorIds.AnikaDhar,
     seasonId: 47,
     originalTribeId: null,
     age: 26,
@@ -185,7 +227,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/AnikaDhar47.jpeg',
   },
   {
-    survivorId: 'f1e2d3c4-b5a6-7890-1234-567890abcdef',
+    survivorId: season47SurvivorIds.AyshaWelch,
     seasonId: 47,
     originalTribeId: null,
     age: 32,
@@ -194,7 +236,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/AyshaWelch47.jpeg',
   },
   {
-    survivorId: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+    survivorId: season47SurvivorIds.CarolineVidmar,
     seasonId: 47,
     originalTribeId: null,
     age: 27,
@@ -203,7 +245,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/CarolineVidmar47.jpeg',
   },
   {
-    survivorId: 'b2c3d4e5-f6a7-8901-2345-678901abcdef',
+    survivorId: season47SurvivorIds.GabeOrtis,
     seasonId: 47,
     originalTribeId: null,
     age: 26,
@@ -212,7 +254,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/GabeOrtis47.jpeg',
   },
   {
-    survivorId: 'c3d4e5f6-a7b8-9012-3456-789012abcdef',
+    survivorId: season47SurvivorIds.GenevieveMushaluk,
     seasonId: 47,
     originalTribeId: null,
     age: 33,
@@ -221,7 +263,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/GenevieveMushaluk47.jpeg',
   },
   {
-    survivorId: 'd4e5f6a7-b8c9-0123-4567-890123abcdef',
+    survivorId: season47SurvivorIds.RomeCooney,
     seasonId: 47,
     originalTribeId: null,
     age: 30,
@@ -230,7 +272,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/RomeCooney47.jpeg',
   },
   {
-    survivorId: 'e5f6a7b8-c9d0-1234-5678-901234abcdef',
+    survivorId: season47SurvivorIds.JonLovett,
     seasonId: 47,
     originalTribeId: null,
     age: 42,
@@ -239,7 +281,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/JonLovett47.jpeg',
   },
   {
-    survivorId: 'f6a7b8c9-d0e1-2345-6789-012345abcdef',
+    survivorId: season47SurvivorIds.KishanPatel,
     seasonId: 47,
     originalTribeId: null,
     age: 28,
@@ -248,7 +290,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/KishanPatel47.jpeg',
   },
   {
-    survivorId: 'a7b8c9d0-e1f2-3456-7890-123456abcdef',
+    survivorId: season47SurvivorIds.KyleOstwald,
     seasonId: 47,
     originalTribeId: null,
     age: 31,
@@ -257,7 +299,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/KyleOstwald47.jpeg',
   },
   {
-    survivorId: 'b8c9d0e1-f2a3-4567-8901-234567abcdef',
+    survivorId: season47SurvivorIds.RachelLaMont,
     seasonId: 47,
     originalTribeId: null,
     age: 34,
@@ -266,7 +308,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/RachelLaMont47.jpeg',
   },
   {
-    survivorId: 'c9d0e1f2-a3b4-5678-9012-345678abcdef',
+    survivorId: season47SurvivorIds.SamPhalen,
     seasonId: 47,
     originalTribeId: null,
     age: 24,
@@ -275,7 +317,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/SamPhalen47.jpeg',
   },
   {
-    survivorId: 'd0e1f2a3-b4c5-6789-0123-456789abcdef',
+    survivorId: season47SurvivorIds.SierraWright,
     seasonId: 47,
     originalTribeId: null,
     age: 27,
@@ -284,7 +326,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/SierraWright47.jpeg',
   },
   {
-    survivorId: 'e1f2a3b4-c5d6-7890-1234-567890abcdef',
+    survivorId: season47SurvivorIds.SolomonYi,
     seasonId: 47,
     originalTribeId: null,
     age: 43,
@@ -293,7 +335,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/SolomonYi47.jpeg',
   },
   {
-    survivorId: 'f2a3b4c5-d6e7-8901-2345-678901abcdef',
+    survivorId: season47SurvivorIds.SueSmey,
     seasonId: 47,
     originalTribeId: null,
     age: 59,
@@ -302,7 +344,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/SueSmey47.jpeg',
   },
   {
-    survivorId: 'a3b4c5d6-e7f8-9012-3456-789012abcdef',
+    survivorId: season47SurvivorIds.TeenyChirichillo,
     seasonId: 47,
     originalTribeId: null,
     age: 23,
@@ -311,7 +353,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/TeenyChirichillo47.jpeg',
   },
   {
-    survivorId: 'b4c5d6e7-f8a9-0123-4567-890123abcdef',
+    survivorId: season47SurvivorIds.TerranFoster,
     seasonId: 47,
     originalTribeId: null,
     age: 31,
@@ -320,7 +362,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
     imageUrl: 'images/survivors/TerranFoster47.jpeg',
   },
   {
-    survivorId: 'c5d6e7f8-a9b0-1234-5678-901234abcdef',
+    survivorId: season47SurvivorIds.TiyanaHallums,
     seasonId: 47,
     originalTribeId: null,
     age: 27,

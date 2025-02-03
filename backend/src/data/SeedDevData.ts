@@ -2,6 +2,9 @@ import { models } from '../config/db';
 import LeagueData from './dev/leagueData';
 import leagueSurveys from './dev/leagueSurveyData';
 import picksData from './dev/picksData';
+import { season47Challenges } from './dev/seasonChallengeData';
+import { season47ChallengeResults } from './dev/seasonChallengeWinnersData';
+import seasonEliminationData from './dev/seasonEliminationData';
 import surveyData from './dev/surveyData';
 import tribeData from './dev/tribeData';
 import userData from './dev/userData';
@@ -54,6 +57,15 @@ const seedDevData = async () => {
 
   await models.LeagueSurveys.destroy({ where: {} });
   await models.LeagueSurveys.bulkCreate(leagueSurveys, { validate: true });
+
+  await models.Challenges.destroy({ where: {} });
+  await models.Challenges.bulkCreate(season47Challenges, { validate: true });
+
+  await models.ChallengeWinners.destroy({ where: {} });
+  await models.ChallengeWinners.bulkCreate(season47ChallengeResults, { validate: true });
+
+  await models.SeasonEliminations.destroy({ where: {} });
+  await models.SeasonEliminations.bulkCreate(seasonEliminationData.season47EliminationData, { validate: true });
 };
 
 export default seedDevData;

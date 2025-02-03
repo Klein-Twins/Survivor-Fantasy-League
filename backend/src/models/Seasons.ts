@@ -22,6 +22,12 @@ const SeasonsModel = (sequelize: Sequelize) => {
       this.hasMany(models.League, { foreignKey: 'seasonId' });
       this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'seasonId', as: 'SurvivorDetailsOnSeason' });
       this.hasMany(models.Episode, { foreignKey: 'seasonId', as: 'episode' });
+
+      this.hasMany(models.SeasonEliminations, {
+        foreignKey: 'seasonId',
+        sourceKey: 'seasonId',
+        as: 'eliminations',
+      });
     }
   }
 

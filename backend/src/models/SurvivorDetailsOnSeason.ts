@@ -1,17 +1,20 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface SurvivorDetailsOnSeasonAttributes {
-  survivorId: string;                // Primary key for the survivor
-  seasonId: number;                  // Primary key for the season
-  originalTribeId?: string | null;  // ID for the original tribe (not optional anymore)
-  age: number;                        // Age of the cast member (not optional anymore)
-  description: string;                // Description of the cast member (not optional anymore)
-  job: string;                        // Job of the cast member (not optional anymore)
-  imageUrl: string;                  // URL for the cast member's image (not optional anymore)
+  survivorId: string; // Primary key for the survivor
+  seasonId: number; // Primary key for the season
+  originalTribeId?: string | null; // ID for the original tribe (not optional anymore)
+  age: number; // Age of the cast member (not optional anymore)
+  description: string; // Description of the cast member (not optional anymore)
+  job: string; // Job of the cast member (not optional anymore)
+  imageUrl: string; // URL for the cast member's image (not optional anymore)
 }
 
 const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
-  class SurvivorDetailsOnSeason extends Model<SurvivorDetailsOnSeasonAttributes> implements SurvivorDetailsOnSeasonAttributes {
+  class SurvivorDetailsOnSeason
+    extends Model<SurvivorDetailsOnSeasonAttributes>
+    implements SurvivorDetailsOnSeasonAttributes
+  {
     public survivorId!: string;
     public seasonId!: number;
     public originalTribeId?: string | null;
@@ -21,8 +24,13 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
     public imageUrl!: string;
 
     static associate(models: any) {
-      this.belongsTo(models.Survivors, { foreignKey: 'survivorId', as: 'Survivor'});
+      this.belongsTo(models.Survivors, { foreignKey: 'survivorId', as: 'Survivor' });
       this.belongsTo(models.Seasons, { foreignKey: 'seasonId', as: 'Season' });
+      this.hasMany(models.SeasonEliminations, {
+        foreignKey: 'survivorId',
+        sourceKey: 'survivorId',
+        as: 'eliminations',
+      });
     }
   }
 
