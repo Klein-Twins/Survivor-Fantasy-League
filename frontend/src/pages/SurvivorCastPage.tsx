@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import survivorService, { GetSurvivorsBySeasonRequestParams } from '../services/survivor/survivorService';
-import SeasonSelect from '../components/survivorPage/SeasonSelect';
+
 import { useApi } from '../hooks/useApi';
 import { GetSurvivorsResponse, Survivor } from '../../generated-api';
 import SurvivorCastHeader from '../components/survivorPage/SurvivorCastHeader';
@@ -17,12 +17,7 @@ const SurvivorCastPage: React.FC = () => {
   // const [error, setError] = useState<string | null>(null);
   const [selectedSeason, setSelectedSeason] = useState<number>(availableSeasons[0]);
 
-  const {
-    data,
-    isLoading: loading,
-    error,
-    execute,
-  } = useApi<void, GetSurvivorsBySeasonRequestParams, GetSurvivorsResponse>(
+  const { data, execute } = useApi<void, GetSurvivorsBySeasonRequestParams, GetSurvivorsResponse>(
     survivorService.getSurvivorsWithDetailsBySeasonService
   );
 

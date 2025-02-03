@@ -3,6 +3,9 @@ export const MainBackgroundColor = ' dark:bg-surface-a0-dark bg-surface-a0-light
 export const NavBarColor = 'dark:bg-surface-a3-dark bg-surface-a3-light';
 export const PanelBackgroundColor = 'dark:bg-surface-a3-dark bg-surface-a1-light';
 export const ElementBackgroundColor = 'dark:bg-surface-a2-dark bg-surface-a2-light';
+export const ElementBackgroundColorWithHover = ElementBackgroundColor.concat(
+  ' dark:hover:bg-surface-a3-dark hover:bg-surface-a3-light'
+);
 export const InputBackgroundColor = 'dark:bg-surface-a5-dark bg-surface-a0-light';
 
 export const TextPrimaryColor = 'dark:text-primary-a0-dark text-primary-a0-light';
