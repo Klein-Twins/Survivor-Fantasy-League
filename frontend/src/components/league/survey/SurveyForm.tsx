@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useApi } from '../../../hooks/useApi';
 import leagueSurveyService, { GetLeagueSurveyParams } from '../../../services/league/leagueSurveyService';
@@ -15,11 +15,9 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ episodeNumber }) => {
   const account = useSelector((state: RootState) => state.auth.account);
   const { leagueId } = useParams<{ leagueId: string }>();
 
-  const { data, isLoading, error, execute, setData } = useApi<
-    void,
-    GetLeagueSurveyParams,
-    GetSurveyForEpisodeForLeagueMember
-  >(leagueSurveyService.getLeagueSurvey);
+  const { data, isLoading, error, execute } = useApi<void, GetLeagueSurveyParams, GetSurveyForEpisodeForLeagueMember>(
+    leagueSurveyService.getLeagueSurvey
+  );
 
   useEffect(() => {
     if (!leagueId || !account?.profileId) return;

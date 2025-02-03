@@ -1,5 +1,5 @@
 import React from 'react';
-import { ButtonPrimaryBgColor, ButtonPrimaryColors } from '../../../styles/CommonColorClassNames';
+import { ButtonPrimaryColors } from '../../../styles/CommonColorClassNames';
 
 interface SubmitButtonProps {
   loading?: boolean;

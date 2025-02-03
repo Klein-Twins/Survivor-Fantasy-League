@@ -1,8 +1,7 @@
-import { createSlice, createAsyncThunk, createAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthState } from '../../types/auth.ts';
 
 import { closeModal } from './modalSlice.ts';
-import { RootState } from '../store.ts';
 import authService from '../../services/auth/authService.ts';
 import {
   Account,
@@ -10,7 +9,6 @@ import {
   ExtendSessionResponse,
   LoginUserRequestBody,
   SignupUserRequestBody,
-  SignupUserResponse,
   UserSession,
 } from '../../../generated-api/index.ts';
 import { ApiRequestParams } from '../../hooks/useApi.tsx';
@@ -157,7 +155,7 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: ApiError }
   async (_, { rejectWithValue }) => {
     sessionManager.clear();
     try {
-      const response = await authService.logoutUser();
+      await authService.logoutUser();
       return;
     } catch (error: any) {
       return rejectWithValue(handleError(error));

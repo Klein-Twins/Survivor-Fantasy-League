@@ -4,7 +4,6 @@ import {
   ColorPickOptions,
   PickOptionTypeEnum,
   Survivor,
-  SurvivorBasic,
   SurvivorPickOptions,
   TribePickOptions,
 } from '../../../../generated-api';
@@ -94,7 +93,7 @@ const PickOptions: React.FC<PickOptionsProps> = ({ pickOptions, pickOptionType, 
     </div>
   );
 
-  const renderBinaryOptions = (options: BinaryPickOptions) => (
+  const renderBinaryOptions = () => (
     <div className='flex gap-4'>
       {['Yes', 'No'].map((option) => (
         <button
@@ -122,7 +121,7 @@ const PickOptions: React.FC<PickOptionsProps> = ({ pickOptions, pickOptionType, 
     case PickOptionTypeEnum.Tribe:
       return renderTribeOptions(pickOptions as TribePickOptions);
     case PickOptionTypeEnum.Binary:
-      return renderBinaryOptions(pickOptions as BinaryPickOptions);
+      return renderBinaryOptions();
     default:
       return null;
   }
