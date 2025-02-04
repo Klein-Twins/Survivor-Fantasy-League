@@ -1,9 +1,7 @@
-import { season47ChallengeIds } from './seasonChallengeData';
-import { season47TribeIds } from './tribeData';
-import { season47SurvivorIds } from '../foundation/survivorData';
-import { ChallengeWinnersAttributes, ChallengeWinnerType } from '../../models/season/challenges/ChallengeWinners';
+import { ChallengeWinnersAttributes, ChallengeWinnerType } from '../../../../models/season/challenges/ChallengeWinners';
+import { season47ChallengeIds, season47SurvivorIds, season47TribeIds } from '../../foundationIds';
 
-export const season47ChallengeResults: ChallengeWinnersAttributes[] = [
+export const season47ChallengeWinnersData: ChallengeWinnersAttributes[] = [
   //Episode 1 Reward Challenge
   {
     challengeId: season47ChallengeIds.episode1.reward1,
@@ -602,3 +600,5 @@ export const season47ChallengeResults: ChallengeWinnersAttributes[] = [
     winnerNotes: null,
   },
 ];
+
+export default season47ChallengeWinnersData;

@@ -1,6 +1,5 @@
-import { SeasonEliminationAttributes } from '../../models/season/SeasonEliminations';
-import { season47EpisodeIds } from '../foundation/seasonData';
-import { season47SurvivorIds } from '../foundation/survivorData';
+import { SeasonEliminationAttributes } from '../../../../models/season/SeasonEliminations';
+import { season47EpisodeIds, season47SurvivorIds } from '../../foundationIds';
 
 const season47EliminationData: SeasonEliminationAttributes[] = [
   {
@@ -9,6 +8,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode1,
     survivorId: season47SurvivorIds.JonLovett,
     notes: '',
+    seq: 1,
   },
   {
     //TK
@@ -16,6 +16,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode2,
     survivorId: season47SurvivorIds.TerranFoster,
     notes: '',
+    seq: 1,
   },
   {
     //Aysha
@@ -23,6 +24,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode3,
     survivorId: season47SurvivorIds.AyshaWelch,
     notes: '',
+    seq: 1,
   },
   {
     //Kishan
@@ -30,6 +32,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode4,
     survivorId: season47SurvivorIds.KishanPatel,
     notes: '',
+    seq: 1,
   },
   {
     //Anika
@@ -37,6 +40,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode5,
     survivorId: season47SurvivorIds.AnikaDhar,
     notes: '',
+    seq: 1,
   },
   {
     //Rome
@@ -44,6 +48,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode6,
     survivorId: season47SurvivorIds.RomeCooney,
     notes: '',
+    seq: 1,
   },
   {
     //Tiyana
@@ -51,6 +56,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode7,
     survivorId: season47SurvivorIds.TiyanaHallums,
     notes: '',
+    seq: 1,
   },
   {
     //Sierra
@@ -58,6 +64,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode8,
     survivorId: season47SurvivorIds.SierraWright,
     notes: '',
+    seq: 1,
   },
   {
     //Sol
@@ -65,6 +72,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode9,
     survivorId: season47SurvivorIds.SolomonYi,
     notes: '',
+    seq: 1,
   },
   {
     //Gabe
@@ -72,6 +80,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode10,
     survivorId: season47SurvivorIds.GabeOrtis,
     notes: '',
+    seq: 1,
   },
   {
     //Kyle
@@ -79,6 +88,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode11,
     survivorId: season47SurvivorIds.KyleOstwald,
     notes: '',
+    seq: 1,
   },
   {
     //Caroline
@@ -86,6 +96,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode12,
     survivorId: season47SurvivorIds.CarolineVidmar,
     notes: '',
+    seq: 1,
   },
   {
     //Andy
@@ -108,11 +119,8 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     episodeId: season47EpisodeIds.episode14,
     survivorId: season47SurvivorIds.TeenyChirichillo,
     notes: '',
+    seq: 1,
   },
 ];
 
-const seasonEliminationData = {
-  season47EliminationData,
-};
-
-export default seasonEliminationData;
+export default season47EliminationData;

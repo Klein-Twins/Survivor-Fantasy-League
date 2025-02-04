@@ -23,8 +23,11 @@ import PickPointsModel from './surveysAndPicks/picks/PickPoints';
 import PickSolutionModel from './surveysAndPicks/picks/PickCorrectAnswers';
 import ProfilePickModel from './league/LeagueProfilePicks';
 import PickTypeModel from './surveysAndPicks/picks/PickType';
+import logger from '../config/logger';
 
 const initModels = (sequelize: Sequelize) => {
+  logger.debug('Initializing models');
+
   const User = UserModel(sequelize);
   const Password = PasswordModel(sequelize);
   const Survivors = SurvivorsModel(sequelize);
@@ -50,6 +53,8 @@ const initModels = (sequelize: Sequelize) => {
   const ChallengeWinners = ChallengeWinnersModel(sequelize);
   const SeasonEliminations = SeasonEliminationsModel(sequelize);
 
+  logger.debug('Models initialized');
+
   User.associate({ Password, Profile, Tokens });
   Password.associate({ User });
   League.associate({ Seasons, LeagueProfile });
@@ -64,6 +69,8 @@ const initModels = (sequelize: Sequelize) => {
   Episode.associate({ Seasons, SeasonEliminations, Challenges });
   SeasonEliminations.associate({ Seasons, Episode, Survivors });
   ChallengeWinners.associate({ Survivors, Tribe, Episode });
+
+  logger.debug('Models associated');
 
   return {
     sequelize,

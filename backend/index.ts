@@ -1,18 +1,19 @@
 import server from './app.ts';
-import { APP_PORT, NODE_ENV } from './src/config/config.ts';
+import { APP_PORT } from './src/config/config.ts';
 import { sequelize } from './src/config/db.ts';
-import seedDevData from './src/data/SeedDevData.ts';
-const PORT: number = Number(APP_PORT) || 3000;
+import logger from './src/config/logger.ts';
+import seedData from './src/data/seedData.ts';
 
-// Sync the database and then start the server
+const PORT: number = Number(APP_PORT);
+
 const startServer = async (): Promise<void> => {
   try {
-    await sequelize.sync({ force: true }); // Sync database
-    console.log('Database & tables created!');
+    await sequelize.sync({ force: true });
+    logger.info('Database synced successfully');
 
-    if (process.env.NODE_ENV === 'development') {
-      await seedDevData();
-    }
+    logger.info('Seeding data...');
+    await seedData();
+    logger.info('Data seeded successfully');
 
     server.listen(PORT, () => {
       console.log(`Server running on port ${PORT}`);
@@ -22,9 +23,6 @@ const startServer = async (): Promise<void> => {
   }
 };
 
-// Only start the server if we are not in the test environment
-if (NODE_ENV !== 'test') {
-  startServer();
-}
+startServer();
 
 export default server;

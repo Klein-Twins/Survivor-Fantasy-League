@@ -8,7 +8,7 @@ export interface SeasonEliminationAttributes {
   episodeId: EpisodeAttributes['episodeId'];
   survivorId: SurvivorsAttributes['survivorId'];
   notes: string | null;
-  seq?: number;
+  seq: number;
 }
 
 const SeasonEliminationsModel = (sequelize: Sequelize) => {
@@ -44,19 +44,28 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
       seasonId: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        primaryKey: true,
+        references: {
+          model: 'SSN_SEASONS',
+          key: 'SEASON_ID',
+        },
         field: 'SEASON_ID',
       },
       episodeId: {
         type: DataTypes.UUID,
         allowNull: false,
-        primaryKey: true,
+        references: {
+          model: 'SSN_EPISODES',
+          key: 'EPISODE_ID',
+        },
         field: 'EPISODE_ID',
       },
       survivorId: {
         type: DataTypes.UUID,
         allowNull: false,
-        primaryKey: true,
+        references: {
+          model: 'CST_SURVIVORS',
+          key: 'SURVIVOR_ID',
+        },
         field: 'SURVIVOR_ID',
       },
       notes: {
@@ -67,8 +76,6 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
       seq: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
         field: 'SEQ',
       },
     },
@@ -78,12 +85,9 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
       timestamps: false,
       indexes: [
         {
+          fields: ['SEASON_ID', 'EPISODE_ID', 'SURVIVOR_ID'],
           unique: true,
-          fields: ['EPISODE_ID', 'SURVIVOR_ID'],
-        },
-        {
-          unique: true,
-          fields: ['SEASON_ID', 'SURVIVOR_ID'],
+          name: 'ssn_eliminations_pk',
         },
       ],
     }

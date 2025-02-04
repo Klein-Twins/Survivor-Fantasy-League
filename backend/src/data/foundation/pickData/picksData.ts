@@ -1,9 +1,7 @@
-import { PickOptionTypeEnum, SurveyType } from '../../generated-api';
-import { PickOptionsAttributes } from '../../models/surveysAndPicks/picks/PickOptions';
-import { PicksAttributes } from '../../models/surveysAndPicks/picks/Picks';
-import { PickTypeEnum } from '../../models/surveysAndPicks/picks/PickType';
+import { PickOptionTypeEnum, SurveyType } from '../../../generated-api';
+import { PicksAttributes } from '../../../models/surveysAndPicks/picks/Picks';
 
-const picks: PicksAttributes[] = [
+const picksData: PicksAttributes[] = [
   {
     pickId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
     surveyType: SurveyType.Weekly,
@@ -54,41 +52,5 @@ const picks: PicksAttributes[] = [
     type: PickOptionTypeEnum.Survivor,
   },
 ];
-
-const pickOptions: PickOptionsAttributes[] = [
-  {
-    type: PickOptionTypeEnum.Color,
-    choice: 'red',
-  },
-  {
-    type: PickOptionTypeEnum.Color,
-    choice: 'orange',
-  },
-  {
-    type: PickOptionTypeEnum.Color,
-    choice: 'yellow',
-  },
-  {
-    type: PickOptionTypeEnum.Color,
-    choice: 'green',
-  },
-  {
-    type: PickOptionTypeEnum.Color,
-    choice: 'blue',
-  },
-  {
-    type: PickOptionTypeEnum.Color,
-    choice: 'purple',
-  },
-  {
-    type: PickOptionTypeEnum.Color,
-    choice: 'pink',
-  },
-];
-
-const picksData = {
-  picks,
-  pickOptions,
-};
 
 export default picksData;
