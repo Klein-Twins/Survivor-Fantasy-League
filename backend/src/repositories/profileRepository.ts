@@ -1,20 +1,13 @@
-import { Model, Op, QueryTypes, Sequelize, Transaction } from 'sequelize';
-import { Order } from 'sequelize';
+import { QueryTypes } from 'sequelize';
 import { models, sequelize } from '../config/db';
 import logger from '../config/logger';
 import { ProfileAttributes } from '../models/account/Profile';
-import { UserAttributes } from '../models/account/User';
-import errorFactory from '../utils/errors/errorFactory';
-import { INTERNAL_SERVER_ERROR } from '../constants/auth/responseErrorConstants';
-import { ProfileSearchSortBy } from '../types/profile/profileTypes';
 
-import { col } from 'sequelize';
-
-import { v4 as uuidv4 } from 'uuid';
 import { Profile, ProfileAndLeagueInviteStatus, SortByEnum } from '../generated-api';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../models/league/LeagueProfile';
+import { InviteStatusEnum } from '../models/league/LeagueProfile';
 import { ProfileSearchParams } from '../controllers/profile/profileController';
 import userRepository from './userRepository';
+import { BadRequestError } from '../utils/errors/errors';
 
 export interface ProfileSearchResultWithTotalCount extends ProfileSearchResult {
   totalCount: number;
@@ -58,10 +51,7 @@ async function profileSearchQuery(
   if (userName) whereConditions.push('"User"."USER_NAME" ILIKE :userName');
 
   if (whereConditions.length === 0) {
-    throw errorFactory({
-      statusCode: 500,
-      error: 'At least one of firstName, lastName, or userName must be provided.',
-    });
+    throw new BadRequestError('At least one of firstName, lastName, or userName must be provided.');
   }
 
   const whereClause = whereConditions.join(' AND ');

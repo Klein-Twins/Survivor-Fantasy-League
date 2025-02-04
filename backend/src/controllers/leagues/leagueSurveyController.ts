@@ -1,13 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import picksService from '../../servicesAndHelpers/picks/picksService';
 import surveyService from '../../servicesAndHelpers/leagues/surveyService';
-import {
-  GetSurveyForEpisodeForLeagueMember,
-  GetSurveyForEpisodeForLeagueMemberResponseData,
-  LeagueSurvey,
-  SurveyType,
-} from '../../generated-api';
-import errorFactory from '../../utils/errors/errorFactory';
+import { GetSurveyForEpisodeForLeagueMember, LeagueSurvey } from '../../generated-api';
+import { BadRequestError } from '../../utils/errors/errors';
 
 async function getSurveyForLeagueMember(req: Request, res: Response, next: NextFunction) {
   try {
@@ -24,10 +18,7 @@ async function getSurveyForLeagueMember(req: Request, res: Response, next: NextF
       : [];
 
     if (episodeNumbers.some(isNaN)) {
-      throw errorFactory({
-        error: 'Invalid episode number format. All values must be numbers.',
-        statusCode: 400,
-      });
+      throw new BadRequestError('Invalid episode number format. All values must be numbers.');
     }
 
     const leagueSurveys: LeagueSurvey[] = await surveyService.getSurveys(leagueId, profileIds, episodeNumbers);

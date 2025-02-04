@@ -1,32 +1,11 @@
-import { UUID } from 'crypto';
 import { sequelize } from '../../config/db';
 import logger from '../../config/logger';
-import { LeagueAttributes } from '../../models/league/League';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/league/LeagueProfile';
-import { ProfileAttributes } from '../../models/account/Profile';
-import { UserAttributes } from '../../models/account/User';
+import { InviteStatusEnum } from '../../models/league/LeagueProfile';
 import leagueRepository from '../../repositories/leagueRepository';
-import profileRepository from '../../repositories/profileRepository';
-import userRepository from '../../repositories/userRepository';
-import { APIResponse } from '../../types/api/apiResponseTypes';
-import errorFactory from '../../utils/errors/errorFactory';
-import {
-  checkInviteeConflict,
-  validateInviteeProfile,
-  validateInviterInLeague,
-  validateInviterProfile,
-  validateLeague,
-} from './leagueHelper';
-import leagueProfileRepository from '../../repositories/league/leagueProfileRepository';
-import {
-  CreateLeagueRequest,
-  RespondToLeagueInviteRequest,
-  RespondToLeagueInviteResponse,
-} from '../../types/league/leagueDto';
-import { League, LeagueMember } from '../../generated-api';
-import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
+import { CreateLeagueRequest } from '../../types/league/leagueDto';
+import { League } from '../../generated-api';
 import accountService from '../auth/accountService';
-import seasonService from '../season/seasonService';
+import { InternalServerError, NotFoundError } from '../../utils/errors/errors';
 
 const leagueService = {
   createLeague,
@@ -41,10 +20,7 @@ async function createLeague({ name, seasonId, profileId }: CreateLeagueRequest):
   try {
     const league: League | null = await leagueRepository.createLeague(seasonId, name, profileId, { transaction });
     if (!league) {
-      throw errorFactory({
-        error: 'Failed to create league. Please try again.',
-        statusCode: 500,
-      });
+      throw new InternalServerError('Failed to create league. Please try again.');
     }
     await transaction.commit();
     return league;
@@ -58,11 +34,7 @@ async function createLeague({ name, seasonId, profileId }: CreateLeagueRequest):
 async function getLeaguesForProfileId(profileId: string, inviteStatus: InviteStatusEnum): Promise<League[]> {
   try {
     if (!(await accountService.getAccountByProfileId(profileId))) {
-      throw errorFactory({
-        success: false,
-        statusCode: 404,
-        error: `Profile with profile id ${profileId} not found`,
-      });
+      throw new NotFoundError(`Profile with profile id ${profileId} not found`);
     }
 
     const leagueIds: string[] = await leagueRepository.getLeagueIdsForProfileId(profileId, inviteStatus);
@@ -85,10 +57,7 @@ async function getLeaguesForProfileId(profileId: string, inviteStatus: InviteSta
 async function getLeagueByLeagueId(leagueId: string): Promise<League> {
   const league = await leagueRepository.getLeagueByLeagueId(leagueId);
   if (!league) {
-    throw errorFactory({
-      error: 'League not found',
-      statusCode: 404,
-    });
+    throw new NotFoundError(`League with league id ${leagueId} not found`);
   }
   return league;
 }
@@ -96,10 +65,7 @@ async function getLeagueByLeagueId(leagueId: string): Promise<League> {
 async function validateLeagueExists(leagueId: string): Promise<void> {
   const league = await leagueRepository.getLeagueByLeagueId(leagueId);
   if (!league) {
-    throw errorFactory({
-      error: 'League not found',
-      statusCode: 404,
-    });
+    throw new NotFoundError(`League with league id ${leagueId} not found`);
   }
 }
 

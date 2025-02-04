@@ -2,14 +2,9 @@ import { Transaction } from 'sequelize';
 import { models } from '../config/db';
 import logger from '../config/logger';
 import { UserAttributes } from '../models/account/User';
-import errorFactory from '../utils/errors/errorFactory';
-import {
-  EMAIL_NOT_FOUND_ERROR,
-  INTERNAL_SERVER_ERROR,
-  NOT_FOUND_ERROR,
-} from '../constants/auth/responseErrorConstants';
-import { UnauthorizedError } from '../utils/errors/errors';
+import { INTERNAL_SERVER_ERROR } from '../constants/auth/responseErrorConstants';
 import { ProfileAttributes } from '../models/account/Profile';
+import { InternalServerError } from '../utils/errors/errors';
 
 const userRepository = {
   /**
@@ -54,7 +49,7 @@ const userRepository = {
     try {
       const userRecord = await models.User.findOne({ where: { userName } });
       if (!userRecord) {
-        throw errorFactory(INTERNAL_SERVER_ERROR);
+        throw new InternalServerError();
       }
       logger.debug(`User found by username: ${userName}`);
       return userRecord;
@@ -101,7 +96,7 @@ const userRepository = {
     try {
       const userRecord = await models.User.create(input, { transaction });
       if (!userRecord) {
-        throw errorFactory(INTERNAL_SERVER_ERROR);
+        throw new InternalServerError();
       }
       return userRecord;
     } catch (error) {

@@ -4,16 +4,16 @@ import { BAD_REQUEST_ERROR, NOT_FOUND_ERROR } from '../../constants/auth/respons
 import notificationResponseBuilder from '../../servicesAndHelpers/notification/notificationResponseBuilder';
 import notificationService from '../../servicesAndHelpers/notification/notificationService';
 import { GetNotificationsForProfileResponse } from '../../types/notification/notificationDto';
-import errorFactory from '../../utils/errors/errorFactory';
 import { NotificationContext } from '../../servicesAndHelpers/notification/notificationBuilder';
 import { NotificationAttributes, NotificationType } from '../../models/account/Notification';
+import { BadRequestError, NotFoundError } from '../../utils/errors/errors';
 
 const notificationController = {
   getNotificationsForProfile: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     try {
       const { profileId } = req.params;
       if (!profileId) {
-        throw errorFactory(BAD_REQUEST_ERROR);
+        throw new BadRequestError();
       }
       const notifications: NotificationAttributes[] = await notificationService.getNotificationsForProfile(profileId);
       const responseBody: GetNotificationsForProfileResponse =
@@ -29,11 +29,11 @@ const notificationController = {
     try {
       const { notificationId } = req.params;
       if (!notificationId) {
-        throw errorFactory(BAD_REQUEST_ERROR);
+        throw new BadRequestError();
       }
       const doesNotificationExist: boolean = await notificationService.doesNotificationExist(notificationId!);
       if (!doesNotificationExist) {
-        throw errorFactory(NOT_FOUND_ERROR);
+        throw new NotFoundError();
       }
       notificationService.markNotificationAsRead(notificationId);
       res.status(204);

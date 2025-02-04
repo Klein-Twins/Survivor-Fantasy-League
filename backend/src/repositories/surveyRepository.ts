@@ -9,11 +9,10 @@ import {
 } from '../generated-api';
 import { LeagueSurveyAttributes } from '../models/league/LeagueSurveys';
 import { SurveyPicksAttributes } from '../models/surveysAndPicks/SurveyPicks';
-import leagueMemberService from '../servicesAndHelpers/leagues/leagueMemberService';
 import picksService from '../servicesAndHelpers/picks/picksService';
 import episodeService from '../servicesAndHelpers/season/episodeService';
-import errorFactory from '../utils/errors/errorFactory';
 import { SurveyAttributes } from '../models/surveysAndPicks/Survey';
+import { NotFoundError } from '../utils/errors/errors';
 
 const surveyRepository = {
   getLeagueSurvey,
@@ -28,7 +27,7 @@ async function getLeagueSurvey(leagueId: string, profileId: string, episodeId: s
   });
 
   if (!leagueSurveyAttributes) {
-    throw errorFactory({ message: 'League Survey not found', statusCode: 404 });
+    throw new NotFoundError('League Survey not found');
   }
 
   const leagueSurveyId = leagueSurveyAttributes.leagueSurveyId;
@@ -41,7 +40,7 @@ async function getLeagueSurvey(leagueId: string, profileId: string, episodeId: s
   });
 
   if (!surveyAttributes) {
-    throw errorFactory({ message: 'Survey not found', statusCode: 404 });
+    throw new NotFoundError('Survey not found');
   }
 
   const episode = await episodeService.getEpisode(episodeId);

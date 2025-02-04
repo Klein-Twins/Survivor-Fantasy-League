@@ -1,7 +1,4 @@
 import { models } from '../config/db';
-import logger from '../config/logger';
-import errorFactory from '../utils/errors/errorFactory';
-import { NOT_FOUND_ERROR } from '../constants/auth/responseErrorConstants';
 import { SeasonsAttributes } from '../models/season/Seasons';
 import { Season } from '../generated-api';
 

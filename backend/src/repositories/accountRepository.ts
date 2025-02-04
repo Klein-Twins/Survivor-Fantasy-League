@@ -1,15 +1,10 @@
 import { models, sequelize } from '../config/db';
 import logger from '../config/logger';
-import { ACCOUNT_NOT_FOUND_ERROR } from '../constants/auth/responseErrorConstants';
-import { Account, SignupUserRequestBody } from '../generated-api';
+import { Account } from '../generated-api';
 import { PasswordAttributes } from '../models/account/Password';
 import { ProfileAttributes } from '../models/account/Profile';
 import { UserAttributes } from '../models/account/User';
 import passwordService from '../servicesAndHelpers/password/passwordService';
-import profileService from '../servicesAndHelpers/profile/profileService';
-import userService from '../servicesAndHelpers/user/userService';
-import { AccountAndPassword, UserIncludeProfile } from '../types/auth/authTypes';
-import errorFactory from '../utils/errors/errorFactory';
 import { InternalServerError } from '../utils/errors/errors';
 
 /**
@@ -125,7 +120,7 @@ async function createAccount(accountData: Account, password: string): Promise<Ac
       transaction
     );
     if (!passwordRecord) {
-      throw errorFactory(new InternalServerError());
+      throw new InternalServerError();
     }
 
     await transaction.commit();

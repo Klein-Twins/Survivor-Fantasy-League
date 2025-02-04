@@ -1,9 +1,9 @@
 import { models } from '../config/db';
-import errorFactory from '../utils/errors/errorFactory';
 import logger from '../config/logger';
 import { SurvivorDetailsOnSeasonAttributes } from '../models/survivors/SurvivorDetailsOnSeason';
 import { Survivor, SurvivorBasic } from '../generated-api';
 import { SurvivorsAttributes } from '../models/survivors/Survivors';
+import { NotFoundError } from '../utils/errors/errors';
 
 const survivorRepository = {
   getSurvivorsBySeasonId,
@@ -119,7 +119,7 @@ async function getBasicSurvivorsBySeason(seasonId: number): Promise<SurvivorBasi
 
   if (!survivorsDetailAttributes) {
     logger.error(`No survivors found for seasonId ${seasonId}`);
-    throw errorFactory({ error: `No Survivors found for Season ${seasonId}`, statusCode: 404 });
+    throw new NotFoundError(`No survivors found for seasonId ${seasonId}`);
   }
 
   let survivors: SurvivorBasic[] = [];

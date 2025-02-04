@@ -1,7 +1,7 @@
 import { NOT_FOUND_ERROR } from '../../constants/auth/responseErrorConstants';
 import { NotificationAttributes, NotificationType } from '../../models/account/Notification';
 import notificationRepository from '../../repositories/notificationRepository';
-import errorFactory from '../../utils/errors/errorFactory';
+import { NotFoundError } from '../../utils/errors/errors';
 import socketService from '../socket/socketService';
 import notificationBuilder, { NotificationContext } from './notificationBuilder';
 
@@ -26,7 +26,7 @@ const notificationService = {
   markNotificationAsRead: async (notificationId: string) => {
     const notification = await notificationRepository.findNotificationById(notificationId);
     if (!notification) {
-      throw errorFactory(NOT_FOUND_ERROR);
+      throw new NotFoundError(`Notification with id ${notificationId} not found`);
     }
     notification.read = true;
     notificationRepository.updateNotification(notification);

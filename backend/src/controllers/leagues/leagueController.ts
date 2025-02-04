@@ -1,12 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import leagueControllerHelper from './leagueControllerHelper';
-import { LeagueAttributes } from '../../models/league/League';
-import errorFactory from '../../utils/errors/errorFactory';
-import { SEASON_NOT_FOUND_ERROR } from '../../constants/auth/responseErrorConstants';
-import seasonService from '../../servicesAndHelpers/season/seasonService';
 import leagueService from '../../servicesAndHelpers/leagues/leagueService';
 import { ApiError, CreateLeagueResponse, GetLeaguesForProfileResponse, League } from '../../generated-api';
-import leagueResponseBuilder from '../../servicesAndHelpers/leagues/leagueResponseBuilder';
 import logger from '../../config/logger';
 import { CreateLeagueRequest } from '../../types/league/leagueDto';
 import accountService from '../../servicesAndHelpers/auth/accountService';

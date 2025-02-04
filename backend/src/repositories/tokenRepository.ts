@@ -3,8 +3,6 @@ import logger from '../config/logger';
 import { TokenAttributes } from '../models/account/Tokens';
 import userService from '../servicesAndHelpers/user/userService';
 import { TokenType } from '../types/auth/tokenTypes';
-import errorFactory from '../utils/errors/errorFactory';
-import userRepository from './userRepository';
 
 const tokenRepository = {
   getTokenRecordTiedToUserId: async (userId: string): Promise<TokenAttributes | null> => {

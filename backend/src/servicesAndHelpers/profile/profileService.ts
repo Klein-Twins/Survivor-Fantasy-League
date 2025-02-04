@@ -1,15 +1,6 @@
-import { Model, Transaction } from 'sequelize';
-import { ProfileAttributes } from '../../models/account/Profile';
 import profileRepository from '../../repositories/profileRepository';
-import { AccountAndPassword } from '../../types/auth/authTypes';
-import errorFactory from '../../utils/errors/errorFactory';
-import logger from '../../config/logger';
 import { ProfileSearchParams } from '../../controllers/profile/profileController';
-import {
-  Pagination,
-  ProfileAndLeagueInviteStatus,
-  SearchProfilesForLeagueInviteResponseData,
-} from '../../generated-api';
+import { Pagination, ProfileAndLeagueInviteStatus } from '../../generated-api';
 
 const profileService = {
   searchForProfilesToInviteToLeague: async (

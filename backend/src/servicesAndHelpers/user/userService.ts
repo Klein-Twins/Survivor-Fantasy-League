@@ -1,12 +1,6 @@
 import userRepository from '../../repositories/userRepository';
-import passwordRepository from '../../repositories/passwordRepository';
-import errorFactory from '../../utils/errors/errorFactory';
-import passwordService from '../password/passwordService';
-
 import { UserAttributes } from '../../models/account/User';
 import { Transaction } from 'sequelize';
-import { PLEASE_RESET_PASSWORD_ERROR } from '../../constants/auth/responseErrorConstants';
-import logger from '../../config/logger';
 import { AccountAndPassword } from '../../types/auth/authTypes';
 
 const userService = {

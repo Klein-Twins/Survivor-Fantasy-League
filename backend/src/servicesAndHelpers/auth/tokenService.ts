@@ -7,17 +7,13 @@ import {
   NODE_ENV,
 } from '../../config/config';
 import tokenRepository from '../../repositories/tokenRepository';
-import { TokenAttributes } from '../../models/account/Tokens';
 import logger from '../../config/logger';
 import { Response } from 'express';
 import { TokenType, UserJwtPayload } from '../../types/auth/tokenTypes';
-import { ProfileAttributes } from '../../models/account/Profile';
-import { UserAttributes } from '../../models/account/User';
-import userService from '../user/userService';
 import accountService from './accountService';
-import errorFactory from '../../utils/errors/errorFactory';
-import { INTERNAL_SERVER_ERROR, UNAUTHORIZED_ERROR } from '../../constants/auth/responseErrorConstants';
+import { INTERNAL_SERVER_ERROR } from '../../constants/auth/responseErrorConstants';
 import { Account } from '../../generated-api/models';
+import { InternalServerError } from '../../utils/errors/errors';
 
 export const blacklistedTokens = new Set<string>();
 
@@ -155,7 +151,7 @@ function getNumSecondsTokenIsValid(token: string): number {
   const decodedToken = jwt.decode(token) as UserJwtPayload | null;
   if (!decodedToken || !decodedToken.exp) {
     logger.error('Cannot decode token for calculating number of seconds the token is valid for.');
-    throw errorFactory(INTERNAL_SERVER_ERROR);
+    throw new InternalServerError();
   }
   return decodedToken.exp - Math.floor(Date.now() / 1000);
 }

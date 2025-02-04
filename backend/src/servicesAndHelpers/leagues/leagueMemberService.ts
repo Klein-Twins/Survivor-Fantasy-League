@@ -1,18 +1,14 @@
 import { sequelize } from '../../config/db';
 import {
-  ApiError,
   CreateAndSendLeagueInviteRequestBody,
   League,
   LeagueMember,
   LeagueMemberRoleEnum,
   RespondToLeagueInviteRequestBody,
-  RespondToLeagueInviteRequestBodyInviteResponseEnum,
 } from '../../generated-api';
 import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
-import leagueRepository from '../../repositories/leagueRepository';
-import errorFactory from '../../utils/errors/errorFactory';
-import userService from '../user/userService';
+import { ForbiddenError, InternalServerError } from '../../utils/errors/errors';
 
 const leagueMemberService = {
   inviteProfileToLeague,
@@ -38,13 +34,9 @@ async function inviteProfileToLeague({
       { transaction }
     );
     if (!leagueMember) {
-      const error: ApiError = {
-        error: 'Internal Server Error',
-        statusCode: 500,
-        message: `Failed to create league member for profile ${invitedProfileId} in league ${leagueId}`,
-        success: false,
-      };
-      throw error;
+      throw new InternalServerError(
+        `Failed to create league member for profile ${invitedProfileId} in league ${leagueId}`
+      );
     }
     await transaction.commit();
   } catch (error) {
@@ -74,11 +66,7 @@ async function respondToLeagueInvite({
 async function validateProfileIsInLeague(leagueId: string, profileId: string): Promise<void> {
   const isProfileInLeagueResult = await leagueMemberRepository.isUserInLeague(leagueId, profileId);
   if (!isProfileInLeagueResult) {
-    throw errorFactory({
-      error: 'Forbidden',
-      statusCode: 403,
-      message: `Profile ${profileId} is not a member of league ${leagueId}`,
-    });
+    throw new ForbiddenError(`Profile ${profileId} is not a member of league ${leagueId}`);
   }
 }
 

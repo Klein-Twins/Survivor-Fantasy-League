@@ -1,19 +1,12 @@
-import { UserAttributes } from '../../models/account/User';
-import userRepository from '../../repositories/userRepository';
 import jwt from 'jsonwebtoken';
-import { LoginRequestFields } from '../../types/auth/authTypes';
-import errorFactory from '../../utils/errors/errorFactory';
-import accountService from './accountService';
 import passwordService from '../password/passwordService';
 import logger from '../../config/logger';
-import { UnauthorizedError } from '../../utils/errors/errors';
-import { UNAUTHORIZED_ERROR } from '../../constants/auth/responseErrorConstants';
 import { Request, Response, NextFunction } from 'express';
 import { TokenType, UserJwtPayload } from '../../types/auth/tokenTypes';
 import tokenService from './tokenService';
 import tokenRepository from '../../repositories/tokenRepository';
-import userService from '../user/userService';
-import { Account, LoginUserRequestBody } from '../../generated-api';
+import { Account } from '../../generated-api';
+import { UnauthorizedError } from '../../utils/errors/errors';
 
 async function authenticateAccount(account: Account, password: string): Promise<boolean> {
   return await passwordService.doesAccountPasswordMatch(account, password);
@@ -115,7 +108,7 @@ const validateProfileAndUserWithTokens = async (
     (decodedRefreshToken && userId !== decodedRefreshToken.userId)
   ) {
     logger.error('Mismatch between profileId, userId and token payload');
-    throw errorFactory(UNAUTHORIZED_ERROR);
+    throw new UnauthorizedError();
   }
 };
 
@@ -123,7 +116,7 @@ const validateTokensInDatabase = async (userId: string, accessToken: string, ref
   const areTokensValid = await tokenService.verifyTokensInDatabase(accessToken, refreshToken, userId);
   if (!areTokensValid) {
     logger.error('Tokens do not belong to user ID in database');
-    throw errorFactory(UNAUTHORIZED_ERROR);
+    throw new UnauthorizedError();
   }
 };
 

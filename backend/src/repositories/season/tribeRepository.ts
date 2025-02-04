@@ -2,7 +2,7 @@ import { UUID } from 'crypto';
 import { models } from '../../config/db';
 import { Tribe } from '../../generated-api';
 import { TribeAttributes } from '../../models/season/Tribes';
-import errorFactory from '../../utils/errors/errorFactory';
+import { NotFoundError } from '../../utils/errors/errors';
 
 const tribeRepository = {
   getTribesBySeasonId,
@@ -26,7 +26,7 @@ async function getTribesBySeasonId(seasonId: number): Promise<Tribe[]> {
   });
 
   if (tribesAttributes.length === 0) {
-    throw errorFactory({ message: 'Tribes not found', statusCode: 404 });
+    throw new NotFoundError('Tribes not found');
   }
 
   return tribesAttributes.map((tribeAttributes) => {
@@ -42,7 +42,7 @@ async function getTribeByTribeId(tribeId: UUID): Promise<Tribe> {
   });
 
   if (!tribeAttributes) {
-    throw errorFactory({ message: 'Tribe not found', statusCode: 404 });
+    throw new NotFoundError('Tribe not found');
   }
 
   return buildTribe(tribeAttributes);

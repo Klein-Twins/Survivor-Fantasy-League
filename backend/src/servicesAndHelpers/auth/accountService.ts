@@ -1,20 +1,18 @@
 import { v4 as uuidv4 } from 'uuid';
 import accountRepository from '../../repositories/accountRepository';
-import errorFactory from '../../utils/errors/errorFactory';
-import { EMAIL_UNAVAILABLE_ERROR, USERNAME_UNAVAILABLE_ERROR } from '../../constants/auth/responseErrorConstants';
-
 import { Account, SignupUserRequestBody } from '../../generated-api';
 import accountHelper from './accountHelper';
+import { ConflictError, NotFoundError } from '../../utils/errors/errors';
 
 async function createAccount(signupData: SignupUserRequestBody): Promise<Account | null> {
   const isUserNameAvailable = await accountHelper.checkIsUserNameAvailable(signupData.username);
   const isEmailAvailable = await accountHelper.checkIsEmailAvailable(signupData.email);
 
   if (!isUserNameAvailable) {
-    throw errorFactory(USERNAME_UNAVAILABLE_ERROR);
+    throw new ConflictError('Username is already taken');
   }
   if (!isEmailAvailable) {
-    throw errorFactory(EMAIL_UNAVAILABLE_ERROR);
+    throw new ConflictError('Email is already tied to an account');
   }
 
   const userProfileId = uuidv4();
@@ -36,12 +34,7 @@ async function createAccount(signupData: SignupUserRequestBody): Promise<Account
 async function getAccountByEmail(email: string): Promise<Account> {
   const account = await accountRepository.getAccountByEmail(email);
   if (!account) {
-    throw errorFactory({
-      error: 'Account not found',
-      message: 'Account not found',
-      statusCode: 404,
-      success: false,
-    });
+    throw new NotFoundError('Account not found');
   }
   return account;
 }
@@ -49,12 +42,7 @@ async function getAccountByEmail(email: string): Promise<Account> {
 async function getAccountByUserId(userId: string): Promise<Account> {
   const account = await accountRepository.getAccountByUserId(userId);
   if (!account) {
-    throw errorFactory({
-      error: 'Account not found',
-      message: 'Account not found',
-      statusCode: 404,
-      success: false,
-    });
+    throw new NotFoundError('Account not found');
   }
   return account;
 }
@@ -62,12 +50,7 @@ async function getAccountByUserId(userId: string): Promise<Account> {
 async function getAccountByProfileId(profileId: string): Promise<Account> {
   const account: Account | null = await accountRepository.getAccountByProfileId(profileId);
   if (!account) {
-    throw errorFactory({
-      error: 'Account not found',
-      message: 'Account not found',
-      statusCode: 404,
-      success: false,
-    });
+    throw new NotFoundError('Account not found');
   }
   return account;
 }

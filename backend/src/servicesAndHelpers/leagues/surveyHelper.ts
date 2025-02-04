@@ -1,8 +1,5 @@
 import { validate } from 'uuid';
-import errorFactory from '../../utils/errors/errorFactory';
-import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
-import leagueMemberService from './leagueMemberService';
-import episodeService from '../season/episodeService';
+import { BadRequestError } from '../../utils/errors/errors';
 
 const surveyHelper = {
   validateGetSurveyRequest,
@@ -11,23 +8,23 @@ const surveyHelper = {
 async function validateGetSurveyRequest(leagueId: string, profileIds: string[], episodeIds: number[]): Promise<void> {
   // Validate leagueId
   if (!leagueId) {
-    throw errorFactory({ error: 'Missing leagueId parameter', statusCode: 400 });
+    throw new BadRequestError('Missing leagueId parameter');
   }
   if (!validate(leagueId)) {
-    throw errorFactory({ error: 'Invalid leagueId parameter', statusCode: 400 });
+    throw new BadRequestError('Invalid leagueId parameter');
   }
 
   // Validate profileIds array
   if (!profileIds || profileIds.length === 0) {
-    throw errorFactory({ error: 'Missing profileIds parameter', statusCode: 400 });
+    throw new BadRequestError('Missing profileIds parameter');
   }
   if (profileIds.some((id) => !validate(id))) {
-    throw errorFactory({ error: 'Invalid profileId format in array', statusCode: 400 });
+    throw new BadRequestError('Invalid profileId format in array');
   }
 
   // Validate episodeIds array
   if (!episodeIds || episodeIds.length === 0) {
-    throw errorFactory({ error: 'Missing episodeIds parameter', statusCode: 400 });
+    throw new BadRequestError('Missing episodeIds parameter');
   }
 }
 export default surveyHelper;

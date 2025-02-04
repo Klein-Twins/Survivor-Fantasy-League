@@ -1,20 +1,11 @@
 import { Transaction } from 'sequelize';
 import { PasswordAttributes } from '../../models/account/Password';
-import { UserAttributes } from '../../models/account/User';
 import passwordRepository from '../../repositories/passwordRepository';
-import errorFactory from '../../utils/errors/errorFactory';
 import passwordHelper from './passwordHelper';
 import logger from '../../config/logger';
-import {
-  INTERNAL_SERVER_ERROR,
-  PLEASE_RESET_PASSWORD_ERROR,
-  WEAK_PASSWORD_ERROR,
-} from '../../constants/auth/responseErrorConstants';
-import { AccountAndPassword } from '../../types/auth/authTypes';
 import { Account } from '../../generated-api';
-import { models } from '../../config/db';
-import userService from '../user/userService';
 import userRepository from '../../repositories/userRepository';
+import { BadRequestError, InternalServerError } from '../../utils/errors/errors';
 
 /**
  * Service functions related to password management, including creating passwords,
@@ -27,7 +18,7 @@ async function doesAccountPasswordMatch(account: Account, password: string): Pro
 
   if (!activePassword) {
     logger.error(`No active password for user ${account.userId} found...`);
-    throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
+    throw new InternalServerError('Please reset your password');
   }
 
   // Compare the provided password with the stored password
@@ -43,15 +34,16 @@ async function createPasswordForAccount(
   try {
     // Verify password strength
     if (!passwordHelper.isPasswordStrong(password)) {
-      logger.error('Password is not strong enough');
-      throw errorFactory(WEAK_PASSWORD_ERROR);
+      throw new BadRequestError(
+        'Weak Password: Must include 1 Uppercase character, 1 Lowercase character, 1 Number, and 1 Special character'
+      );
     }
 
     // Verify user exists
     const userExists = await userRepository.getUserByProfileId(account.profileId, transaction);
     if (!userExists) {
       logger.error(`User ${account.userId} not found when creating password`);
-      throw errorFactory(INTERNAL_SERVER_ERROR);
+      throw new InternalServerError();
     }
 
     // Hash password

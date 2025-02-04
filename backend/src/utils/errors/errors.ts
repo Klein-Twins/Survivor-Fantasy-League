@@ -1,69 +1,50 @@
-const getErrorMessage = (defaultError: string, error?: string | boolean | object | null): string => {
-    if (typeof error === "boolean") {
-        return error.toString(); // Convert boolean to string ("true" or "false")
-    }
-
-    if (typeof error === "object") {
-        try {
-            return JSON.stringify(error); // Convert object to a string (JSON format)
-        } catch (e) {
-            return "[Object object]"; // Fallback in case JSON.stringify fails
-        }
-    }
-
-    return error && error !== null && error.toString().trim() !== "" ? error : defaultError;
+export class CustomError extends Error {
+  constructor(public statusCode: number, public message: string) {
+    super(message);
+    Object.setPrototypeOf(this, CustomError.prototype);
+  }
 }
 
-
-class CustomError extends Error {
-    statusCode: number;
-
-    constructor(statusCode: number, error: any | null | undefined = undefined) {
-        super(getErrorMessage("An unknown error occurred", error));
-        this.statusCode = statusCode;
-    }
-}
-
-export class NotFoundError extends CustomError {
-    constructor(error: any | null | undefined = undefined) {
-        super(404, getErrorMessage("The requested resource was not found", error));
-        this.name = "Not Found";
-    }
-}
-
-export class ValidationError extends CustomError {
-    constructor(error: any | null | undefined = undefined) {
-        super(400, getErrorMessage("Bad Request", error));
-        this.name = "Bad Request";
-    }
-}
-
-export class ConflictError extends CustomError {
-    constructor(error: any | null | undefined = undefined) {
-        super(409, getErrorMessage("Conflict", error));
-        this.name = "Conflict";
-    }
-}
-
-export class InternalServerError extends CustomError {
-    constructor(error: any | null | undefined = undefined) {
-        super(500, getErrorMessage("An internal server error occurred", error));
-        this.name = "Internal Server sError"
-    }
+// 400 Client Errors
+export class BadRequestError extends CustomError {
+  constructor(message: string = 'Bad Request') {
+    super(400, message);
+  }
 }
 
 export class UnauthorizedError extends CustomError {
-    constructor(error: any | null | undefined = undefined) {
-        super(401, getErrorMessage("Unauthorized", error));
-        this.name = "Unauthorized"
-    }
+  constructor(message: string = 'Unauthorized') {
+    super(401, message);
+  }
 }
 
 export class ForbiddenError extends CustomError {
-    constructor(error: string | null | undefined = undefined) {
-        super(403, getErrorMessage("Access forbidden", error));
-        this.name = "Forbidden"
-    }
+  constructor(message: string = 'Forbidden') {
+    super(403, message);
+  }
 }
 
-export default CustomError;
+export class NotFoundError extends CustomError {
+  constructor(message: string = 'Resource not found') {
+    super(404, message);
+  }
+}
+
+export class ConflictError extends CustomError {
+  constructor(message: string = 'Resource already exists') {
+    super(409, message);
+  }
+}
+
+// 500 Server Errors
+export class InternalServerError extends CustomError {
+  constructor(message: string = 'Internal Server Error') {
+    super(500, message);
+  }
+}
+
+export class NotImplementedError extends CustomError {
+  constructor(message: string = 'Not Implemented') {
+    super(501, message);
+  }
+}

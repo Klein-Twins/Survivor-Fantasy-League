@@ -2,9 +2,8 @@ import { Transaction } from 'sequelize';
 import { models, sequelize } from '../config/db';
 import { PasswordAttributes } from '../models/account/Password';
 import { UserAttributes } from '../models/account/User';
-import errorFactory from '../utils/errors/errorFactory';
 import logger from '../config/logger';
-import { INTERNAL_SERVER_ERROR, PLEASE_RESET_PASSWORD_ERROR } from '../constants/auth/responseErrorConstants';
+import { InternalServerError } from '../utils/errors/errors';
 
 const passwordRepository = {
   /**
@@ -44,7 +43,7 @@ const passwordRepository = {
       logger.debug(`Created new password record in database.`);
 
       if (!newPasswordRecord) {
-        throw errorFactory(INTERNAL_SERVER_ERROR);
+        throw new InternalServerError();
       }
 
       return newPasswordRecord;
@@ -127,7 +126,7 @@ const passwordRepository = {
 
     if (userPasswords.length === 0) {
       logger.error(`No active passwords for user id: ${userId}`);
-      throw errorFactory(PLEASE_RESET_PASSWORD_ERROR);
+      throw new InternalServerError('Please reset your password');
     }
 
     // Deactivate any extraneous active passwords

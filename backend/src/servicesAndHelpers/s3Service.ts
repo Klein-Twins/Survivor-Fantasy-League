@@ -1,7 +1,7 @@
 import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { AWS_BUCKET_NAME } from '../config/config';
 import { s3Client } from '../config/aws.config';
-import errorFactory from '../utils/errors/errorFactory';
+import { NotFoundError } from '../utils/errors/errors';
 
 const s3Service = {
   getProfileImage,
@@ -18,7 +18,7 @@ async function getProfileImage(profileId: string): Promise<{ buffer: any; conten
     // 2. Get stream of data
     const response = await s3Client.send(command);
     if (!response.Body) {
-      throw errorFactory({ message: 'Image not found', statusCode: 404 });
+      throw new NotFoundError('Image not found');
     }
 
     // 3. Collect chunks of binary data

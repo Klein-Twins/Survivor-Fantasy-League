@@ -1,8 +1,6 @@
-import { NOT_FOUND_ERROR } from '../../constants/auth/responseErrorConstants';
 import { Season } from '../../generated-api';
-import { SeasonsAttributes } from '../../models/season/Seasons';
 import seasonRepository from '../../repositories/seasonRepository';
-import errorFactory from '../../utils/errors/errorFactory';
+import { NotFoundError } from '../../utils/errors/errors';
 
 const seasonService = {
   getSeasonBySeasonId,
@@ -11,7 +9,7 @@ const seasonService = {
 async function getSeasonBySeasonId(seasonId: number): Promise<Season> {
   const season: Season | null = await seasonRepository.getSeasonBySeasonId(seasonId);
   if (!season) {
-    throw errorFactory(NOT_FOUND_ERROR);
+    throw new NotFoundError();
   }
   return season;
 }

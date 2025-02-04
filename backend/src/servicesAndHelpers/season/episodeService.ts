@@ -1,9 +1,8 @@
 import { validate } from 'uuid';
-import { EpisodeAttributes } from '../../models/season/Episodes';
-import errorFactory from '../../utils/errors/errorFactory';
 import episodeRepository from '../../repositories/season/episodeRepository';
 import { Episode } from '../../generated-api';
 import { UUID } from 'crypto';
+import { BadRequestError, NotFoundError, NotImplementedError } from '../../utils/errors/errors';
 
 const episodeService = {
   //doesEpisodeExist,
@@ -15,19 +14,19 @@ const episodeService = {
 async function validateEpisodeIsInSeason(episodeId: string, seasonId: number): Promise<void> {
   const episode = await episodeRepository.getEpisodeByEpisodeId(episodeId);
   if (!episode) {
-    throw errorFactory({ error: 'Episode does not exist', statusCode: 404 });
+    throw new NotFoundError('Episode not found');
   }
   const seasonIdTiedToEpisode = episode.seasonId;
   if (seasonIdTiedToEpisode !== seasonId) {
-    throw errorFactory({ error: 'Episode is not in season', statusCode: 400 });
+    throw new NotFoundError('Episode not found');
   }
 }
 
 function getNextEpisode() {
-  throw errorFactory({ error: 'Not implemented', statusCode: 501 });
+  throw new NotImplementedError();
 }
 function getCurrentEpisode() {
-  throw errorFactory({ error: 'Not implemented', statusCode: 501 });
+  throw new NotImplementedError();
 }
 async function getEpisodeIdsBySeasonAndEpisodeNumber(
   seasonId: number,
@@ -37,20 +36,20 @@ async function getEpisodeIdsBySeasonAndEpisodeNumber(
 }
 
 function setCurrentEpisode() {
-  throw errorFactory({ error: 'Not implemented', statusCode: 501 });
+  throw new NotImplementedError();
 }
 
 function hasEpisodeAired() {
-  throw errorFactory({ error: 'Not implemented', statusCode: 501 });
+  throw new NotImplementedError();
 }
 
 async function getEpisode(episodeId: string): Promise<Episode> {
   if (validate(episodeId) === false) {
-    throw errorFactory({ error: 'Invalid episodeId', statusCode: 400 });
+    throw new BadRequestError('Invalid episodeId');
   }
   const episode = await episodeRepository.getEpisodeByEpisodeId(episodeId);
   if (!episode) {
-    throw errorFactory({ error: 'Episode does not exist', statusCode: 404 });
+    throw new BadRequestError('Episode does not exist');
   }
 
   return {
