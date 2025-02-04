@@ -1,8 +1,3 @@
-import {
-  INVALID_NAME_ERROR,
-  INVALID_PROFILE_ID_ERROR,
-  INVALID_SEASON_ID_ERROR,
-} from '../../constants/auth/responseErrorConstants';
 import { CreateLeagueRequest } from '../../types/league/leagueDto';
 import { BadRequestError } from '../../utils/errors/errors';
 

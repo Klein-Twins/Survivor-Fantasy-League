@@ -2,7 +2,6 @@ import { Transaction } from 'sequelize';
 import { models } from '../config/db';
 import logger from '../config/logger';
 import { UserAttributes } from '../models/account/User';
-import { INTERNAL_SERVER_ERROR } from '../constants/auth/responseErrorConstants';
 import { ProfileAttributes } from '../models/account/Profile';
 import { InternalServerError } from '../utils/errors/errors';
 

@@ -1,10 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from '../config/logger';
-import tokenService from '../servicesAndHelpers/auth/tokenService';
-import { UNAUTHORIZED_ERROR } from '../constants/auth/responseErrorConstants';
 import { UserJwtPayload } from '../types/auth/tokenTypes';
 import authService from '../servicesAndHelpers/auth/authService';
 import { UnauthorizedError } from '../utils/errors/errors';
+import tokenService from '../servicesAndHelpers/auth/tokenService';
 
 const tokenMiddleware = {
   authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<void> => {

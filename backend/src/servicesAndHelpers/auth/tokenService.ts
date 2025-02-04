@@ -11,7 +11,6 @@ import logger from '../../config/logger';
 import { Response } from 'express';
 import { TokenType, UserJwtPayload } from '../../types/auth/tokenTypes';
 import accountService from './accountService';
-import { INTERNAL_SERVER_ERROR } from '../../constants/auth/responseErrorConstants';
 import { Account } from '../../generated-api/models';
 import { InternalServerError } from '../../utils/errors/errors';
 

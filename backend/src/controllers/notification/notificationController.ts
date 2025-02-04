@@ -1,6 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
 import logger from '../../config/logger';
-import { BAD_REQUEST_ERROR, NOT_FOUND_ERROR } from '../../constants/auth/responseErrorConstants';
 import notificationResponseBuilder from '../../servicesAndHelpers/notification/notificationResponseBuilder';
 import notificationService from '../../servicesAndHelpers/notification/notificationService';
 import { GetNotificationsForProfileResponse } from '../../types/notification/notificationDto';

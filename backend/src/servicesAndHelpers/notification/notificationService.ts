@@ -1,4 +1,3 @@
-import { NOT_FOUND_ERROR } from '../../constants/auth/responseErrorConstants';
 import { NotificationAttributes, NotificationType } from '../../models/account/Notification';
 import notificationRepository from '../../repositories/notificationRepository';
 import { NotFoundError } from '../../utils/errors/errors';
