@@ -1,7 +1,8 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { LeagueMemberRoleEnum } from '../../generated-api';
-import { LeagueAttributes } from './League';
+
 import { ProfileAttributes } from '../account/Profile';
+import { LeagueAttributes } from './League';
 
 export enum InviteStatusEnum {
   Pending = 'pending',
