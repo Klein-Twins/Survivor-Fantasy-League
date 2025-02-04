@@ -1,6 +1,6 @@
 import { UUID } from 'crypto';
 import { models } from '../../config/db';
-import { EpisodeAttributes } from '../../models/season/SSN_EPISODES';
+import { EpisodeAttributes } from '../../models/season/Episodes';
 import logger from '../../config/logger';
 
 const episodeRepository = {

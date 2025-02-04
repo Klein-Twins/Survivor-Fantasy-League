@@ -1,28 +1,39 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { SeasonsAttributes } from './Seasons';
 
 export interface TribeAttributes {
   id: UUID;
   name: string;
-  seasonId: number;
+  seasonId: SeasonsAttributes['seasonId'];
   tribeColor: string;
   mergeTribe: boolean;
 }
 
 const TribeModel = (sequelize: Sequelize) => {
   class Tribe extends Model<TribeAttributes> implements TribeAttributes {
-    public id!: UUID;
-    public name!: string;
-    public seasonId!: number;
-    public tribeColor!: string;
-    public mergeTribe!: boolean;
+    public id!: TribeAttributes['id'];
+    public name!: TribeAttributes['name'];
+    public seasonId!: TribeAttributes['seasonId'];
+    public tribeColor!: TribeAttributes['tribeColor'];
+    public mergeTribe!: TribeAttributes['mergeTribe'];
 
     static associate(models: any) {
-      //    this.belongsTo(models.Season, { foreignKey: 'seasonId', as: 'season' });
-      this.hasMany(models.ProfilePick, {
-        foreignKey: 'pickAnswerTribeId',
+      this.belongsTo(models.Seasons, {
+        foreignKey: 'seasonId',
+        targetKey: 'seasonId',
+        as: 'season',
+      });
+      // this.hasMany(models.ProfilePick, {
+      //   foreignKey: 'pickAnswerTribeId',
+      //   sourceKey: 'id',
+      //   as: 'profilePicks',
+      // });
+
+      this.hasMany(models.ChallengeWinners, {
+        foreignKey: 'winnerTribeId',
         sourceKey: 'id',
-        as: 'profilePicks',
+        as: 'challengeWinners',
       });
     }
   }

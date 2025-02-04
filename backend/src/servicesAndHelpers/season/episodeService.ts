@@ -1,5 +1,5 @@
 import { validate } from 'uuid';
-import { EpisodeAttributes } from '../../models/season/SSN_EPISODES';
+import { EpisodeAttributes } from '../../models/season/Episodes';
 import errorFactory from '../../utils/errors/errorFactory';
 import episodeRepository from '../../repositories/season/episodeRepository';
 import { Episode } from '../../generated-api';

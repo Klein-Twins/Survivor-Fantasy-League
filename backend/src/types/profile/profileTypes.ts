@@ -1,19 +1,16 @@
-import { LeagueAttributes } from "../../models/League";
-import { LeagueProfileAttributes } from "../../models/LeagueProfile";
-import { ProfileAttributes } from "../../models/Profile";
-import { UserAttributes } from "../../models/User";
-
-
-
+import { LeagueAttributes } from '../../models/league/League';
+import { LeagueProfileAttributes } from '../../models/league/LeagueProfile';
+import { ProfileAttributes } from '../../models/account/Profile';
+import { UserAttributes } from '../../models/account/User';
 
 export enum ProfileSearchSortBy {
-    FirstName = 'firstName',
-    LastName = 'lastName',
-    UserName = '$User.userName$',
-    UpdatedAt = 'UPDATED_AT',
+  FirstName = 'firstName',
+  LastName = 'lastName',
+  UserName = '$User.userName$',
+  UpdatedAt = 'UPDATED_AT',
 }
 
 export enum ProfileSearchSortDirection {
-    Ascending = 'ASC',
-    Descending = 'DESC'
+  Ascending = 'ASC',
+  Descending = 'DESC',
 }

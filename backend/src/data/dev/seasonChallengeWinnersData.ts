@@ -1,7 +1,7 @@
-import { ChallengeWinnersAttributes, ChallengeWinnerType } from '../../models/season/SSN_CHALLENGE_WINNERS';
 import { season47ChallengeIds } from './seasonChallengeData';
 import { season47TribeIds } from './tribeData';
 import { season47SurvivorIds } from '../foundation/survivorData';
+import { ChallengeWinnersAttributes, ChallengeWinnerType } from '../../models/season/challenges/ChallengeWinners';
 
 export const season47ChallengeResults: ChallengeWinnersAttributes[] = [
   //Episode 1 Reward Challenge

@@ -1,4 +1,4 @@
-import { SeasonEliminationAttributes } from '../../models/season/SSN_ELIMINATIONS';
+import { SeasonEliminationAttributes } from '../../models/season/SeasonEliminations';
 import { season47EpisodeIds } from '../foundation/seasonData';
 import { season47SurvivorIds } from '../foundation/survivorData';
 

@@ -1,6 +1,6 @@
-import { PasswordAttributes } from '../../models/Password';
-import { ProfileAttributes } from '../../models/Profile';
-import { UserAttributes } from '../../models/User';
+import { PasswordAttributes } from '../../models/account/Password';
+import { ProfileAttributes } from '../../models/account/Profile';
+import { UserAttributes } from '../../models/account/User';
 
 const profiles: ProfileAttributes[] = [
   {

@@ -10,7 +10,7 @@ import {
   Profile,
   RespondToLeagueInviteRequestBodyInviteResponseEnum,
 } from '../../generated-api';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/LeagueProfile';
+import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 import accountRepository from '../accountRepository';
 import logger from '../../config/logger';
 import leagueRepository from '../leagueRepository';

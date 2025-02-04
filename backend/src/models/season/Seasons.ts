@@ -11,17 +11,36 @@ export interface SeasonsAttributes {
 
 const SeasonsModel = (sequelize: Sequelize) => {
   class Seasons extends Model<SeasonsAttributes> implements SeasonsAttributes {
-    public seasonId!: number;
-    public theme!: string;
-    public location!: string;
-    public name!: string;
-    public startDate!: Date;
-    public endDate!: Date;
+    public seasonId!: SeasonsAttributes['seasonId'];
+    public theme!: SeasonsAttributes['theme'];
+    public location!: SeasonsAttributes['location'];
+    public name!: SeasonsAttributes['name'];
+    public startDate!: SeasonsAttributes['startDate'];
+    public endDate!: SeasonsAttributes['endDate'];
 
     static associate(models: any) {
-      this.hasMany(models.League, { foreignKey: 'seasonId' });
-      this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'seasonId', as: 'SurvivorDetailsOnSeason' });
-      this.hasMany(models.Episode, { foreignKey: 'seasonId', as: 'episode' });
+      this.hasMany(models.League, {
+        foreignKey: 'seasonId',
+        sourceKey: 'seasonId',
+        as: 'leagues',
+      });
+      this.hasMany(models.SurvivorDetailsOnSeason, {
+        foreignKey: 'seasonId',
+        sourceKey: 'seasonId',
+        as: 'seasonDetails',
+      });
+
+      this.hasMany(models.Episode, {
+        foreignKey: 'seasonId',
+        sourceKey: 'seasonId',
+        as: 'episode',
+      });
+
+      this.hasMany(models.Tribe, {
+        foreignKey: 'seasonId',
+        sourceKey: 'seasonId',
+        as: 'tribes',
+      });
 
       this.hasMany(models.SeasonEliminations, {
         foreignKey: 'seasonId',

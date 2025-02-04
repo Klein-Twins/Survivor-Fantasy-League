@@ -1,5 +1,8 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { SurveyAttributes } from '../surveysAndPicks/Survey';
+import { EpisodeAttributes } from '../season/Episodes';
+import { LeagueAttributes } from './League';
 
 /**
  * The purpose of this model is to tie surveyId's to leagues.
@@ -7,17 +10,17 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface LeagueSurveyAttributes {
   leagueSurveyId: UUID;
-  surveyId: UUID;
-  leagueId: UUID;
-  episodeId: UUID;
+  surveyId: SurveyAttributes['surveyId'];
+  leagueId: LeagueAttributes['leagueId'];
+  episodeId: EpisodeAttributes['episodeId'];
 }
 
 const LeagueSurveyModel = (sequelize: Sequelize) => {
   class LeagueSurvey extends Model<LeagueSurveyAttributes> implements LeagueSurveyAttributes {
-    public leagueSurveyId!: UUID;
-    public surveyId!: UUID;
-    public leagueId!: UUID;
-    public episodeId!: UUID;
+    public leagueSurveyId!: LeagueSurveyAttributes['leagueSurveyId'];
+    public surveyId!: LeagueSurveyAttributes['surveyId'];
+    public leagueId!: LeagueSurveyAttributes['leagueId'];
+    public episodeId!: LeagueSurveyAttributes['episodeId'];
 
     static associate(models: any) {
       //TODO: Add associations
@@ -39,19 +42,16 @@ const LeagueSurveyModel = (sequelize: Sequelize) => {
         type: DataTypes.UUID,
         allowNull: false,
         field: 'SURVEY_ID',
-        //TODO: Add foreign key constraint
       },
       leagueId: {
         type: DataTypes.UUID,
         allowNull: false,
         field: 'LEAGUE_ID',
-        //TODO: Add foreign key constraint
       },
       episodeId: {
         type: DataTypes.UUID,
         allowNull: false,
         field: 'EPISODE_ID',
-        //TODO: Add foreign key constraint
       },
     },
     {

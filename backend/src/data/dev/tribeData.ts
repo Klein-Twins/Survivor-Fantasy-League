@@ -1,5 +1,5 @@
 import { UUID } from 'crypto';
-import { TribeAttributes } from '../../models/season/SSN_TRIBES';
+import { TribeAttributes } from '../../models/season/Tribes';
 
 type TribeName = 'Gata' | 'Tuku' | 'Lavo' | 'Beka';
 

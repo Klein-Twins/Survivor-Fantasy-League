@@ -1,6 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { PickTypeEnum } from './PCK_PICK_TYPE';
+import { PickTypeEnum } from '../surveysAndPicks/picks/PickType';
 
 export enum ProfilePickAnswerStatus {
   correct = 'correct',

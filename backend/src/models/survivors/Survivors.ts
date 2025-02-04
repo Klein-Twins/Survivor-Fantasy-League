@@ -12,17 +12,25 @@ export interface SurvivorsAttributes {
 
 const SurvivorsModel = (sequelize: Sequelize) => {
   class Survivors extends Model<SurvivorsAttributes> implements SurvivorsAttributes {
-    public survivorId!: string;
-    public firstName!: string;
-    public lastName!: string;
-    public fromState!: string;
-    public fromCountry!: string;
-    public nickName?: string | null;
-    public fromCity?: string | null;
+    public survivorId!: SurvivorsAttributes['survivorId'];
+    public firstName!: SurvivorsAttributes['firstName'];
+    public lastName!: SurvivorsAttributes['lastName'];
+    public fromState!: SurvivorsAttributes['fromState'];
+    public fromCountry!: SurvivorsAttributes['fromCountry'];
+    public nickName?: SurvivorsAttributes['nickName'];
+    public fromCity?: SurvivorsAttributes['fromCity'];
 
     static associate(models: any) {
-      this.hasMany(models.SurvivorDetailsOnSeason, { foreignKey: 'survivorId', as: 'SurvivorDetailsOnSeason' });
-      // this.hasMany(models.ProfilePick, { foreignKey: 'pickAnswerSurvivorId', as: 'profilePick' });
+      this.hasMany(models.SurvivorDetailsOnSeason, {
+        foreignKey: 'survivorId',
+        sourceKey: 'survivorId',
+        as: 'SurvivorDetailsOnSeason',
+      });
+      this.hasMany(models.ChallengeWinners, {
+        foreignKey: 'winnerSurvivorId',
+        sourceKey: 'survivorId',
+        as: 'challengeWins',
+      });
     }
   }
 

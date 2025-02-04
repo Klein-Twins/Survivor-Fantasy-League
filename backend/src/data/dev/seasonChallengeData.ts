@@ -1,5 +1,5 @@
 import { UUID } from 'crypto';
-import { ChallengeAttributes, ChallengeType } from '../../models/season/SSN_CHALLENGES';
+import { ChallengeAttributes, ChallengeType } from '../../models/season/challenges/Challenges';
 import { season47EpisodeIds } from '../foundation/seasonData';
 
 interface EpisodeChallengeMap {

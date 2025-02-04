@@ -1,9 +1,10 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { SeasonsAttributes } from './Seasons';
 
 export interface EpisodeAttributes {
   episodeId: UUID;
-  seasonId: number;
+  seasonId: SeasonsAttributes['seasonId'];
   episodeNumber: number;
   episodeTitle: string;
   episodeAirDate: Date;
@@ -13,21 +14,26 @@ export interface EpisodeAttributes {
 
 const EpisodeModel = (sequelize: Sequelize) => {
   class Episode extends Model<EpisodeAttributes> implements EpisodeAttributes {
-    public episodeId!: UUID;
-    public seasonId!: number;
-    public episodeNumber!: number;
-    public episodeTitle!: string;
-    public episodeAirDate!: Date;
-    public episodeDescription!: string;
-    public episodeImageUrl!: string;
+    public episodeId!: EpisodeAttributes['episodeId'];
+    public seasonId!: EpisodeAttributes['seasonId'];
+    public episodeNumber!: EpisodeAttributes['episodeNumber'];
+    public episodeTitle!: EpisodeAttributes['episodeTitle'];
+    public episodeAirDate!: EpisodeAttributes['episodeAirDate'];
+    public episodeDescription!: EpisodeAttributes['episodeDescription'];
+    public episodeImageUrl!: EpisodeAttributes['episodeImageUrl'];
 
     static associate(models: any) {
-      this.belongsTo(models.Seasons, { foreignKey: 'seasonId', as: 'season' });
-      // this.hasMany(models.ProfilePick, { foreignKey: 'episodeId', as: 'profilePick' });
+      this.belongsTo(models.Seasons, { foreignKey: 'seasonId', targetKey: 'seasonId', as: 'season' });
       this.hasMany(models.SeasonEliminations, {
         foreignKey: 'episodeId',
         sourceKey: 'episodeId',
         as: 'eliminations',
+      });
+
+      this.hasMany(models.Challenges, {
+        foreignKey: 'episodeId',
+        sourceKey: 'episodeId',
+        as: 'challenges',
       });
     }
   }

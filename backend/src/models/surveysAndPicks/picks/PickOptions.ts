@@ -1,16 +1,16 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { PickTypeEnum as PickType } from './PCK_PICK_TYPE';
-import { ColorsEnum } from '../../generated-api';
+import { ColorsEnum, PickOptionTypeEnum } from '../../../generated-api';
+import { PickTypeEnum } from './PickType';
 
 export interface PickOptionsAttributes {
-  type: PickType;
+  type: PickOptionTypeEnum;
   choice: string;
 }
 
 const PickOptionsModel = (sequelize: Sequelize) => {
   class PickOptions extends Model<PickOptionsAttributes> implements PickOptionsAttributes {
-    public type!: PickType;
+    public type!: PickOptionTypeEnum;
     public choice!: string;
 
     static associate(models: any) {
@@ -34,7 +34,7 @@ const PickOptionsModel = (sequelize: Sequelize) => {
     {
       type: {
         type: DataTypes.ENUM,
-        values: Object.values(PickType),
+        values: Object.values(PickTypeEnum),
         field: 'PICK_OPTION_TYPE',
         allowNull: false,
       },

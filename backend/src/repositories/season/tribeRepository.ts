@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
 import { models } from '../../config/db';
 import { Tribe } from '../../generated-api';
-import { TribeAttributes } from '../../models/season/SSN_TRIBES';
+import { TribeAttributes } from '../../models/season/Tribes';
 import errorFactory from '../../utils/errors/errorFactory';
 
 const tribeRepository = {

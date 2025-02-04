@@ -7,13 +7,13 @@ import {
   SurveySubmissionStatusEnum,
   SurveyType,
 } from '../generated-api';
-import { LeagueSurveyAttributes } from '../models/League/LeagueSurvey';
-import { SurveyPicksAttributes } from '../models/SurveysAndPicks/SurveyPicks';
+import { LeagueSurveyAttributes } from '../models/league/LeagueSurveys';
+import { SurveyPicksAttributes } from '../models/surveysAndPicks/SurveyPicks';
 import leagueMemberService from '../servicesAndHelpers/leagues/leagueMemberService';
 import picksService from '../servicesAndHelpers/picks/picksService';
 import episodeService from '../servicesAndHelpers/season/episodeService';
 import errorFactory from '../utils/errors/errorFactory';
-import { SurveyAttributes } from '../models/SurveysAndPicks/Survey';
+import { SurveyAttributes } from '../models/surveysAndPicks/Survey';
 
 const surveyRepository = {
   getLeagueSurvey,

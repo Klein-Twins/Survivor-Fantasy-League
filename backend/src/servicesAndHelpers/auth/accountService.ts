@@ -1,11 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
-import { AccountAndPassword } from '../../types/auth/authTypes';
 import accountRepository from '../../repositories/accountRepository';
-import userRepository from '../../repositories/userRepository';
 import errorFactory from '../../utils/errors/errorFactory';
-import { UserAttributes } from '../../models/User';
 import { EMAIL_UNAVAILABLE_ERROR, USERNAME_UNAVAILABLE_ERROR } from '../../constants/auth/responseErrorConstants';
-import logger from '../../config/logger';
+
 import { Account, SignupUserRequestBody } from '../../generated-api';
 import accountHelper from './accountHelper';
 

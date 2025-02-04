@@ -1,6 +1,6 @@
 import { UUID } from 'crypto';
-import { EpisodeAttributes } from '../../models/season/SSN_EPISODES';
-import { SeasonsAttributes } from '../../models/Seasons';
+import { EpisodeAttributes } from '../../models/season/Episodes';
+import { SeasonsAttributes } from '../../models/season/Seasons';
 
 const seasonData: SeasonsAttributes[] = [
   {

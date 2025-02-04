@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import styles from './Navbar.module.css';
 import HamburgerButton from './HamburgerButton';
 import NavLinkButtons from './NavLinkButtons';
 import NavAuthButtons from './NavAuthButtons';

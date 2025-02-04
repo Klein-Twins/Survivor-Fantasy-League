@@ -1,6 +1,6 @@
 import { LeagueMemberRoleEnum } from '../../generated-api';
-import { LeagueAttributes } from '../../models/League';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/LeagueProfile';
+import { LeagueAttributes } from '../../models/league/League';
+import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 
 const leagues: LeagueAttributes[] = [
   {

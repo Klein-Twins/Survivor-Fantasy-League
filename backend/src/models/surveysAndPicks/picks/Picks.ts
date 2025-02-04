@@ -1,6 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { sequelize } from '../../config/db';
-import { PickOptionTypeEnum, SurveyType } from '../../generated-api';
+import { PickOptionTypeEnum, SurveyType } from '../../../generated-api';
 
 export interface PicksAttributes {
   pickId: string;

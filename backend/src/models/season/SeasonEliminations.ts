@@ -1,21 +1,23 @@
-import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { SeasonsAttributes } from './Seasons';
+import { EpisodeAttributes } from './Episodes';
+import { SurvivorsAttributes } from '../survivors/Survivors';
 
 export interface SeasonEliminationAttributes {
-  seasonId: number;
-  episodeId: UUID;
-  survivorId: string | UUID;
+  seasonId: SeasonsAttributes['seasonId'];
+  episodeId: EpisodeAttributes['episodeId'];
+  survivorId: SurvivorsAttributes['survivorId'];
   notes: string | null;
   seq?: number;
 }
 
 const SeasonEliminationsModel = (sequelize: Sequelize) => {
   class SeasonEliminations extends Model<SeasonEliminationAttributes> implements SeasonEliminationAttributes {
-    public seasonId!: number;
-    public episodeId!: UUID;
-    public survivorId!: string | UUID;
-    public notes!: string | null;
-    public seq!: number;
+    public seasonId!: SeasonEliminationAttributes['seasonId'];
+    public episodeId!: SeasonEliminationAttributes['episodeId'];
+    public survivorId!: SeasonEliminationAttributes['survivorId'];
+    public notes!: SeasonEliminationAttributes['notes'];
+    public seq!: SeasonEliminationAttributes['seq'];
 
     static associate(models: any) {
       //TODO - Add associations

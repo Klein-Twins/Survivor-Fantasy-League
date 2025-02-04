@@ -2,8 +2,8 @@ import { Model, Op, QueryTypes, Sequelize, Transaction } from 'sequelize';
 import { Order } from 'sequelize';
 import { models, sequelize } from '../config/db';
 import logger from '../config/logger';
-import { ProfileAttributes } from '../models/Profile';
-import { UserAttributes } from '../models/User';
+import { ProfileAttributes } from '../models/account/Profile';
+import { UserAttributes } from '../models/account/User';
 import errorFactory from '../utils/errors/errorFactory';
 import { INTERNAL_SERVER_ERROR } from '../constants/auth/responseErrorConstants';
 import { ProfileSearchSortBy } from '../types/profile/profileTypes';
@@ -12,7 +12,7 @@ import { col } from 'sequelize';
 
 import { v4 as uuidv4 } from 'uuid';
 import { Profile, ProfileAndLeagueInviteStatus, SortByEnum } from '../generated-api';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../models/LeagueProfile';
+import { InviteStatusEnum, LeagueProfileAttributes } from '../models/league/LeagueProfile';
 import { ProfileSearchParams } from '../controllers/profile/profileController';
 import userRepository from './userRepository';
 

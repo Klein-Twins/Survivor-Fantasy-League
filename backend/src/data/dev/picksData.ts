@@ -1,7 +1,7 @@
 import { PickOptionTypeEnum, SurveyType } from '../../generated-api';
-import { PickOptionsAttributes } from '../../models/picks/PCK_PICK_OPTIONS';
-import { PickTypeEnum } from '../../models/picks/PCK_PICK_TYPE';
-import { PicksAttributes } from '../../models/picks/PCK_PICKS';
+import { PickOptionsAttributes } from '../../models/surveysAndPicks/picks/PickOptions';
+import { PicksAttributes } from '../../models/surveysAndPicks/picks/Picks';
+import { PickTypeEnum } from '../../models/surveysAndPicks/picks/PickType';
 
 const picks: PicksAttributes[] = [
   {
@@ -57,31 +57,31 @@ const picks: PicksAttributes[] = [
 
 const pickOptions: PickOptionsAttributes[] = [
   {
-    type: PickTypeEnum.color,
+    type: PickOptionTypeEnum.Color,
     choice: 'red',
   },
   {
-    type: PickTypeEnum.color,
+    type: PickOptionTypeEnum.Color,
     choice: 'orange',
   },
   {
-    type: PickTypeEnum.color,
+    type: PickOptionTypeEnum.Color,
     choice: 'yellow',
   },
   {
-    type: PickTypeEnum.color,
+    type: PickOptionTypeEnum.Color,
     choice: 'green',
   },
   {
-    type: PickTypeEnum.color,
+    type: PickOptionTypeEnum.Color,
     choice: 'blue',
   },
   {
-    type: PickTypeEnum.color,
+    type: PickOptionTypeEnum.Color,
     choice: 'purple',
   },
   {
-    type: PickTypeEnum.color,
+    type: PickOptionTypeEnum.Color,
     choice: 'pink',
   },
 ];

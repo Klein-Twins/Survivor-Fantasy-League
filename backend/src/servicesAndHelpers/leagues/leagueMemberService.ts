@@ -8,7 +8,7 @@ import {
   RespondToLeagueInviteRequestBody,
   RespondToLeagueInviteRequestBodyInviteResponseEnum,
 } from '../../generated-api';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/LeagueProfile';
+import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
 import leagueRepository from '../../repositories/leagueRepository';
 import errorFactory from '../../utils/errors/errorFactory';

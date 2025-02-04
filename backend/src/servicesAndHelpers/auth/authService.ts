@@ -1,4 +1,4 @@
-import { UserAttributes } from '../../models/User';
+import { UserAttributes } from '../../models/account/User';
 import userRepository from '../../repositories/userRepository';
 import jwt from 'jsonwebtoken';
 import { LoginRequestFields } from '../../types/auth/authTypes';
@@ -19,7 +19,12 @@ async function authenticateAccount(account: Account, password: string): Promise<
   return await passwordService.doesAccountPasswordMatch(account, password);
 }
 
-async function logoutAccount(req: Request, res: Response, next: NextFunction, isAuthenticated: boolean): Promise<number> {
+async function logoutAccount(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+  isAuthenticated: boolean
+): Promise<number> {
   const accessToken: string | undefined = req.cookies.accessToken;
   const refreshToken: string | undefined = req.cookies.refreshToken;
   res.clearCookie('accessToken');
@@ -28,41 +33,43 @@ async function logoutAccount(req: Request, res: Response, next: NextFunction, is
   const accessTokenDecoded: UserJwtPayload | null = res.locals.accessTokenDecoded;
   const refreshTokenDecoded: UserJwtPayload | null = res.locals.refreshTokenDecoded;
 
-
   if (isAuthenticated) {
-    return await normalLogout(profileIdReqParam)
+    return await normalLogout(profileIdReqParam);
   } else {
-    return await extensiveLogout({ accessToken, refreshToken, profileIdReqParam, accessTokenDecoded, refreshTokenDecoded });
+    return await extensiveLogout({
+      accessToken,
+      refreshToken,
+      profileIdReqParam,
+      accessTokenDecoded,
+      refreshTokenDecoded,
+    });
   }
-
 }
 
 async function extensiveLogout(data: {
-  accessToken: string | undefined,
-  refreshToken: string | undefined,
-  profileIdReqParam: string | undefined,
-  accessTokenDecoded: UserJwtPayload | null,
-  refreshTokenDecoded: UserJwtPayload | null
-}
-): Promise<number> {
+  accessToken: string | undefined;
+  refreshToken: string | undefined;
+  profileIdReqParam: string | undefined;
+  accessTokenDecoded: UserJwtPayload | null;
+  refreshTokenDecoded: UserJwtPayload | null;
+}): Promise<number> {
   return await tokenService.clearAllTokenData({
     accessTokenDecoded: data.accessTokenDecoded,
     refreshTokenDecoded: data.refreshTokenDecoded,
     refreshToken: data.refreshToken,
-    accessToken: data.accessToken
-  })
+    accessToken: data.accessToken,
+  });
 }
 
 async function normalLogout(profileId: string): Promise<number> {
-  const numSessionsDeleted = await tokenRepository.deleteTokenRecordsByProfileId(profileId)
+  const numSessionsDeleted = await tokenRepository.deleteTokenRecordsByProfileId(profileId);
   if (numSessionsDeleted !== 1) {
-    logger.warn(`Normal Logout led to deleting ${profileId} sessions`)
+    logger.warn(`Normal Logout led to deleting ${profileId} sessions`);
   }
   return numSessionsDeleted;
 }
 
 async function authenticateToken(token: string, tokenType: TokenType): Promise<boolean> {
-
   const tokenDecoded: UserJwtPayload | null = jwt.decode(token) as UserJwtPayload | null;
 
   if (!tokenDecoded) {
@@ -87,13 +94,10 @@ async function authenticateToken(token: string, tokenType: TokenType): Promise<b
   return true;
 }
 
-
 const authService = {
   authenticateAccount,
-  authenticateToken
-}
-
-
+  authenticateToken,
+};
 
 const validateProfileAndUserWithTokens = async (
   profileId: string,
@@ -101,7 +105,6 @@ const validateProfileAndUserWithTokens = async (
   decodedAccessToken: UserJwtPayload,
   decodedRefreshToken: UserJwtPayload
 ): Promise<void> => {
-
   logger.debug(`${profileId} = ${decodedAccessToken.profileId} = ${decodedRefreshToken.profileId}`);
   logger.debug(`${userId} = ${decodedAccessToken.userId} = ${decodedRefreshToken.userId}`);
 
@@ -116,11 +119,7 @@ const validateProfileAndUserWithTokens = async (
   }
 };
 
-const validateTokensInDatabase = async (
-  userId: string,
-  accessToken: string,
-  refreshToken: string
-): Promise<void> => {
+const validateTokensInDatabase = async (userId: string, accessToken: string, refreshToken: string): Promise<void> => {
   const areTokensValid = await tokenService.verifyTokensInDatabase(accessToken, refreshToken, userId);
   if (!areTokensValid) {
     logger.error('Tokens do not belong to user ID in database');

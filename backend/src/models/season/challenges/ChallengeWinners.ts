@@ -1,7 +1,9 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Op, Sequelize } from 'sequelize';
-import { TribeAttributes } from './SSN_TRIBES';
-import { SurvivorsAttributes } from '../Survivors';
+
+import { SurvivorsAttributes } from '../../survivors/Survivors';
+import { TribeAttributes } from '../Tribes';
+import { ChallengeAttributes } from './Challenges';
 
 export enum ChallengeWinnerType {
   Survivor = 'Survivor',
@@ -10,7 +12,7 @@ export enum ChallengeWinnerType {
 }
 
 export interface ChallengeWinnersAttributes {
-  challengeId: UUID;
+  challengeId: ChallengeAttributes['challengeId'];
   winnerSurvivorId: SurvivorsAttributes['survivorId'] | null;
   winnerTribeId: TribeAttributes['id'] | null;
   rank: number;
@@ -21,15 +23,27 @@ export interface ChallengeWinnersAttributes {
 
 const ChallengeWinnersModel = (sequelize: Sequelize) => {
   class ChallengeWinners extends Model<ChallengeWinnersAttributes> implements ChallengeWinnersAttributes {
-    public challengeId!: UUID;
-    public winnerSurvivorId!: SurvivorsAttributes['survivorId'] | null;
-    public winnerTribeId!: TribeAttributes['id'] | null;
-    public rank!: number;
-    public reward!: string | null;
-    public winnerType!: ChallengeWinnerType;
-    public winnerNotes!: string | null;
+    public challengeId!: ChallengeWinnersAttributes['challengeId'];
+    public winnerSurvivorId!: ChallengeWinnersAttributes['winnerSurvivorId'];
+    public winnerTribeId!: ChallengeWinnersAttributes['winnerTribeId'];
+    public rank!: ChallengeWinnersAttributes['rank'];
+    public reward!: ChallengeWinnersAttributes['reward'];
+    public winnerType!: ChallengeWinnersAttributes['winnerType'];
+    public winnerNotes!: ChallengeWinnersAttributes['winnerNotes'];
 
-    static associate(modes: any) {}
+    static associate(models: any) {
+      this.belongsTo(models.Survivors, {
+        foreignKey: 'winnerSurvivorId',
+        targetKey: 'survivorId',
+        as: 'survivorWinner',
+      });
+
+      this.belongsTo(models.Tribe, {
+        foreignKey: 'winnerTribeId',
+        targetKey: 'id',
+        as: 'tribeWinner',
+      });
+    }
   }
 
   ChallengeWinners.init(

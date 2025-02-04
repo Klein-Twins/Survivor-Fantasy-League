@@ -1,5 +1,5 @@
-import { SurveyAttributes } from '../../models/SurveysAndPicks/Survey';
-import { SurveyPicksAttributes } from '../../models/SurveysAndPicks/SurveyPicks';
+import { SurveyAttributes } from '../../models/surveysAndPicks/Survey';
+import { SurveyPicksAttributes } from '../../models/surveysAndPicks/SurveyPicks';
 
 const surveys: SurveyAttributes[] = [
   {

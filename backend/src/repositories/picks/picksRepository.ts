@@ -12,13 +12,13 @@ import {
   Tribe,
   TribePickOptions,
 } from '../../generated-api';
-import { PicksAttributes } from '../../models/picks/PCK_PICKS';
 import errorFactory from '../../utils/errors/errorFactory';
 import survivorService from '../../servicesAndHelpers/survivor/survivorService';
 import survivorRepository from '../survivorRepository';
-import { PickOptionsAttributes } from '../../models/picks/PCK_PICK_OPTIONS';
 import tribeRepository from '../season/tribeRepository';
-import { TribeAttributes } from '../../models/season/SSN_TRIBES';
+import { TribeAttributes } from '../../models/season/Tribes';
+import { PicksAttributes } from '../../models/surveysAndPicks/picks/Picks';
+import { PickOptionsAttributes } from '../../models/surveysAndPicks/picks/PickOptions';
 
 const picksRepository = {
   getPickById,

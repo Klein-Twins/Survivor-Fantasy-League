@@ -1,4 +1,4 @@
-import { LeagueSurveyAttributes } from '../../models/League/LeagueSurvey';
+import { LeagueSurveyAttributes } from '../../models/league/LeagueSurveys';
 
 const leagueSurveys: LeagueSurveyAttributes[] = [
   {

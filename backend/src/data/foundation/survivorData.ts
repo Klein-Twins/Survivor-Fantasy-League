@@ -1,6 +1,7 @@
 import { UUID } from 'crypto';
-import { SurvivorDetailsOnSeasonAttributes } from '../../models/SurvivorDetailsOnSeason';
-import { SurvivorsAttributes } from '../../models/Survivors';
+import { SurvivorDetailsOnSeasonAttributes } from '../../models/survivors/SurvivorDetailsOnSeason';
+import { SurvivorsAttributes } from '../../models/survivors/Survivors';
+import { season47TribeIds } from '../dev/tribeData';
 
 type Season47SurvivorNames =
   | 'AndyRueda'
@@ -211,7 +212,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.AndyRueda,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Gata,
     age: 31,
     description: '',
     job: 'AI Research Assistant',
@@ -220,7 +221,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.AnikaDhar,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Gata,
     age: 26,
     description: '',
     job: 'Marketing Manager',
@@ -229,16 +230,16 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.AyshaWelch,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Lavo,
     age: 32,
     description: '',
-    job: 'Lavo',
+    job: 'Dont know',
     imageUrl: 'images/survivors/AyshaWelch47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.CarolineVidmar,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Tuku,
     age: 27,
     description: '',
     job: 'Strategy Consultant',
@@ -247,7 +248,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.GabeOrtis,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Tuku,
     age: 26,
     description: '',
     job: 'Radio Host',
@@ -256,7 +257,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.GenevieveMushaluk,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Lavo,
     age: 33,
     description: '',
     job: 'Corporate Lawyer',
@@ -265,7 +266,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.RomeCooney,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Lavo,
     age: 30,
     description: '',
     job: 'E-Sports Commentator',
@@ -274,7 +275,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.JonLovett,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Gata,
     age: 42,
     description: '',
     job: 'Podcast Host',
@@ -283,7 +284,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.KishanPatel,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Lavo,
     age: 28,
     description: '',
     job: 'Emergency Room Doctor',
@@ -292,7 +293,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.KyleOstwald,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Tuku,
     age: 31,
     description: '',
     job: 'Construction Worker',
@@ -301,7 +302,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.RachelLaMont,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Gata,
     age: 34,
     description: '',
     job: 'Graphic Designer',
@@ -310,7 +311,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.SamPhalen,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Gata,
     age: 24,
     description: '',
     job: 'Sports Recruiter',
@@ -319,7 +320,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.SierraWright,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Gata,
     age: 27,
     description: '',
     job: 'Nurse',
@@ -328,7 +329,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.SolomonYi,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Lavo,
     age: 43,
     description: '',
     job: 'Medical Device Sales',
@@ -337,7 +338,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.SueSmey,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Tuku,
     age: 59,
     description: '',
     job: 'Flight School Owner',
@@ -346,7 +347,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.TeenyChirichillo,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Lavo,
     age: 23,
     description: '',
     job: 'Freelance Writer',
@@ -355,7 +356,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.TerranFoster,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Tuku,
     age: 31,
     description: '',
     job: 'Athlete Marketing Manager',
@@ -364,7 +365,7 @@ const survivorSeasons: SurvivorDetailsOnSeasonAttributes[] = [
   {
     survivorId: season47SurvivorIds.TiyanaHallums,
     seasonId: 47,
-    originalTribeId: null,
+    originalTribeId: season47TribeIds.Tuku,
     age: 27,
     description: '',
     job: 'Flight Attendant',

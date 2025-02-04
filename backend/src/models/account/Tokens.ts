@@ -8,12 +8,16 @@ export interface TokenAttributes {
 
 const TokensModel = (sequelize: Sequelize) => {
   class Tokens extends Model<TokenAttributes> implements TokenAttributes {
-    public accessToken?: string | null;
-    public refreshToken?: string | null;
-    public userId!: string;
+    public accessToken?: TokenAttributes['accessToken'];
+    public refreshToken?: TokenAttributes['refreshToken'];
+    public userId!: TokenAttributes['userId'];
 
     static associate(models: any) {
-      this.belongsTo(models.User, { foreignKey: 'userId', as: 'user' })
+      this.belongsTo(models.User, {
+        foreignKey: 'userId',
+        targetKey: 'userId',
+        as: 'user',
+      });
     }
   }
 
@@ -34,7 +38,7 @@ const TokensModel = (sequelize: Sequelize) => {
         primaryKey: true,
         allowNull: false,
         field: 'USER_ID',
-      }
+      },
     },
     {
       sequelize,

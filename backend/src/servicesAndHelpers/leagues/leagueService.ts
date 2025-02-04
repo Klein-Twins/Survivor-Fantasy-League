@@ -1,10 +1,10 @@
 import { UUID } from 'crypto';
 import { sequelize } from '../../config/db';
 import logger from '../../config/logger';
-import { LeagueAttributes } from '../../models/League';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/LeagueProfile';
-import { ProfileAttributes } from '../../models/Profile';
-import { UserAttributes } from '../../models/User';
+import { LeagueAttributes } from '../../models/league/League';
+import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/league/LeagueProfile';
+import { ProfileAttributes } from '../../models/account/Profile';
+import { UserAttributes } from '../../models/account/User';
 import leagueRepository from '../../repositories/leagueRepository';
 import profileRepository from '../../repositories/profileRepository';
 import userRepository from '../../repositories/userRepository';

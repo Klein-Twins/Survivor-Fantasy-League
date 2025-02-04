@@ -1,9 +1,9 @@
 import { models } from '../config/db';
 import errorFactory from '../utils/errors/errorFactory';
 import logger from '../config/logger';
-import { SurvivorDetailsOnSeasonAttributes } from '../models/SurvivorDetailsOnSeason';
+import { SurvivorDetailsOnSeasonAttributes } from '../models/survivors/SurvivorDetailsOnSeason';
 import { Survivor, SurvivorBasic } from '../generated-api';
-import { SurvivorsAttributes } from '../models/Survivors';
+import { SurvivorsAttributes } from '../models/survivors/Survivors';
 
 const survivorRepository = {
   getSurvivorsBySeasonId,

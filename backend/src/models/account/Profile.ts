@@ -9,15 +9,27 @@ export interface ProfileAttributes {
 
 const ProfileModel = (sequelize: Sequelize) => {
   class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
-    public profileId!: string;
-    public firstName?: string | null;
-    public lastName?: string | null;
-    public imageUrl?: string | null;
+    public profileId!: ProfileAttributes['profileId'];
+    public firstName?: ProfileAttributes['firstName'];
+    public lastName?: ProfileAttributes['lastName'];
+    public imageUrl?: ProfileAttributes['imageUrl'];
 
     static associate(models: any) {
-      this.hasOne(models.User, { foreignKey: 'profileId', as: 'User' });
-      this.hasMany(models.LeagueProfile, { foreignKey: 'profileId', as: 'leagueProfiles' });
-      this.hasMany(models.Notification, { foreignKey: 'profileId', as: 'profile' });
+      this.hasOne(models.User, {
+        foreignKey: 'profileId',
+        sourceKey: 'profileId',
+        as: 'User',
+      });
+      this.hasMany(models.LeagueProfile, {
+        foreignKey: 'profileId',
+        sourceKey: 'profileId',
+        as: 'leagueProfiles',
+      });
+      this.hasMany(models.Notification, {
+        foreignKey: 'profileId',
+        sourceKey: 'profileId',
+        as: 'profile',
+      });
     }
   }
 

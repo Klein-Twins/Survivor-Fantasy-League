@@ -1,5 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { LeagueMemberRoleEnum } from '../generated-api';
+import { LeagueMemberRoleEnum } from '../../generated-api';
+import { LeagueAttributes } from './League';
+import { ProfileAttributes } from '../account/Profile';
 
 export enum InviteStatusEnum {
   Pending = 'pending',
@@ -8,25 +10,33 @@ export enum InviteStatusEnum {
 
 export interface LeagueProfileAttributes {
   id: string;
-  profileId: string;
-  leagueId: string;
+  profileId: ProfileAttributes['profileId'];
+  leagueId: LeagueAttributes['leagueId'];
   role: LeagueMemberRoleEnum;
   inviteStatus: InviteStatusEnum;
-  inviterProfileId: string | null;
+  inviterProfileId: ProfileAttributes['profileId'] | null;
 }
 
 const LeagueProfileModel = (sequelize: Sequelize) => {
   class LeagueProfile extends Model<LeagueProfileAttributes> implements LeagueProfileAttributes {
-    public id!: string;
-    public leagueId!: string;
-    public profileId!: string;
-    public inviterProfileId!: string | null;
-    public role!: LeagueMemberRoleEnum;
-    public inviteStatus!: InviteStatusEnum;
+    public id!: LeagueProfileAttributes['id'];
+    public leagueId!: LeagueProfileAttributes['leagueId'];
+    public profileId!: LeagueProfileAttributes['profileId'];
+    public inviterProfileId!: LeagueProfileAttributes['profileId'];
+    public role!: LeagueProfileAttributes['role'];
+    public inviteStatus!: LeagueProfileAttributes['inviteStatus'];
 
     static associate(models: any) {
-      this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
-      this.belongsTo(models.Profile, { foreignKey: 'profileId', as: 'profile' });
+      this.belongsTo(models.League, {
+        foreignKey: 'leagueId',
+        targetKey: 'leagueId',
+        as: 'league',
+      });
+      this.belongsTo(models.Profile, {
+        foreignKey: 'profileId',
+        targetKey: 'profileId',
+        as: 'profile',
+      });
       // this.hasMany(models.ProfilePick, { foreignKey: 'leagueProfileId', as: 'profilePicks' });
     }
   }

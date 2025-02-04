@@ -1,5 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { EpisodeAttributes } from '../Episodes';
 
 /**
  * Notes about the Challenge model:
@@ -18,7 +19,7 @@ export enum ChallengeType {
 }
 export interface ChallengeAttributes {
   challengeId: UUID;
-  episodeId: UUID;
+  episodeId: EpisodeAttributes['episodeId'];
   description: string | null;
   notes: string | null;
   type: ChallengeType;
@@ -26,13 +27,19 @@ export interface ChallengeAttributes {
 
 const ChallengeModel = (sequelize: Sequelize) => {
   class Challenge extends Model<ChallengeAttributes> implements ChallengeAttributes {
-    public challengeId!: UUID;
-    public episodeId!: UUID;
-    public description!: string | null;
-    public notes!: string | null;
-    public type!: ChallengeType;
+    public challengeId!: ChallengeAttributes['challengeId'];
+    public episodeId!: ChallengeAttributes['episodeId'];
+    public description!: ChallengeAttributes['description'];
+    public notes!: ChallengeAttributes['notes'];
+    public type!: ChallengeAttributes['type'];
 
-    static associate(models: any) {}
+    static associate(models: any) {
+      this.belongsTo(models.Episode, {
+        foreignKey: 'episodeId',
+        targetKey: 'episodeId',
+        as: 'episode',
+      });
+    }
   }
 
   Challenge.init(
