@@ -1,11 +1,12 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
 import { NextFunction, Request, Response } from 'express';
-import { AWS_BUCKET_NAME } from '../../config/config';
-import { s3Client } from '../../config/aws.config';
-import s3Service from '../../servicesAndHelpers/s3Service';
 import logger from '../../config/logger';
+import s3Service from '../../services/image/s3Service';
 
-async function getProfileImage(req: Request, res: Response, next: NextFunction): Promise<void> {
+async function getProfileImage(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
   try {
     logger.debug('Fetching image for profileId:', req.params.profileId);
     const profileId = req.params.profileId;

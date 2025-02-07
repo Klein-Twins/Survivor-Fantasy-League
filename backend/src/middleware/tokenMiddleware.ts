@@ -1,12 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import logger from '../config/logger';
 import { UserJwtPayload } from '../types/auth/tokenTypes';
-import authService from '../servicesAndHelpers/auth/authService';
 import { UnauthorizedError } from '../utils/errors/errors';
-import tokenService from '../servicesAndHelpers/auth/tokenService';
+import tokenService from '../services/auth/tokenService';
 
 const tokenMiddleware = {
-  authenticateToken: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+  authenticateToken: async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> => {
     // Check if the environment variable to skip authentication is set
     if (process.env.SKIP_AUTH === 'true') {
       logger.debug('Skipping authentication due to environment variable');
@@ -18,15 +21,23 @@ const tokenMiddleware = {
     const refreshToken: string = req.cookies.refreshToken;
 
     try {
-      const isAccessTokenAuthenticated = await authService.authenticateToken(accessToken, 'access');
-      const isRefreshTokenAuthenticated = await authService.authenticateToken(refreshToken, 'refresh');
+      const isAccessTokenAuthenticated = await tokenService.authenticateToken(
+        accessToken,
+        'access'
+      );
+      const isRefreshTokenAuthenticated = await tokenService.authenticateToken(
+        refreshToken,
+        'refresh'
+      );
       if (isAccessTokenAuthenticated && isRefreshTokenAuthenticated) {
         logger.debug('Tokens are valid. Proceeding with the request.');
         next();
         return;
       }
       if (!isAccessTokenAuthenticated && isRefreshTokenAuthenticated) {
-        logger.debug('Access token is invalid. Refresh token is valid. Generating new access token for user');
+        logger.debug(
+          'Access token is invalid. Refresh token is valid. Generating new access token for user'
+        );
         tokenService.createNewAccessTokenFromRefreshToken(refreshToken);
       }
     } catch (error) {
@@ -43,8 +54,12 @@ const validateProfileAndUserWithTokens = async (
   decodedAccessToken: UserJwtPayload,
   decodedRefreshToken: UserJwtPayload
 ): Promise<void> => {
-  logger.debug(`${profileId} = ${decodedAccessToken.profileId} = ${decodedRefreshToken.profileId}`);
-  logger.debug(`${userId} = ${decodedAccessToken.userId} = ${decodedRefreshToken.userId}`);
+  logger.debug(
+    `${profileId} = ${decodedAccessToken.profileId} = ${decodedRefreshToken.profileId}`
+  );
+  logger.debug(
+    `${userId} = ${decodedAccessToken.userId} = ${decodedRefreshToken.userId}`
+  );
 
   if (
     (decodedAccessToken && profileId !== decodedAccessToken.profileId) ||
@@ -53,14 +68,6 @@ const validateProfileAndUserWithTokens = async (
     (decodedRefreshToken && userId !== decodedRefreshToken.userId)
   ) {
     logger.error('Mismatch between profileId, userId and token payload');
-    throw new UnauthorizedError();
-  }
-};
-
-const validateTokensInDatabase = async (userId: string, accessToken: string, refreshToken: string): Promise<void> => {
-  const areTokensValid = await tokenService.verifyTokensInDatabase(accessToken, refreshToken, userId);
-  if (!areTokensValid) {
-    logger.error('Tokens do not belong to user ID in database');
     throw new UnauthorizedError();
   }
 };

@@ -1,10 +1,11 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { defaultProfileImagePath } from '../../constants/defaultImagePaths';
 
 export interface ProfileAttributes {
   profileId: string;
   firstName?: string | null;
   lastName?: string | null;
-  imageUrl?: string | null;
+  imageUrl: string;
 }
 
 const ProfileModel = (sequelize: Sequelize) => {
@@ -12,7 +13,7 @@ const ProfileModel = (sequelize: Sequelize) => {
     public profileId!: ProfileAttributes['profileId'];
     public firstName?: ProfileAttributes['firstName'];
     public lastName?: ProfileAttributes['lastName'];
-    public imageUrl?: ProfileAttributes['imageUrl'];
+    public imageUrl!: ProfileAttributes['imageUrl'];
 
     static associate(models: any) {
       this.hasOne(models.User, {
@@ -53,7 +54,7 @@ const ProfileModel = (sequelize: Sequelize) => {
       },
       imageUrl: {
         type: DataTypes.STRING(200),
-        allowNull: true,
+        defaultValue: defaultProfileImagePath,
         field: 'IMAGE_URL',
       },
     },

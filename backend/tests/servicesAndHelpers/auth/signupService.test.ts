@@ -1,8 +1,8 @@
 import { UserAttributes } from '../../../src/models/account/User';
-import userRepository from '../../../src/repositories/userRepository';
-import authService from '../../../src/servicesAndHelpers/auth/authService';
-import signupService from '../../../src/servicesAndHelpers/auth/signupService';
-import userService from '../../../src/servicesAndHelpers/user/userService';
+import userRepository from '../../../src/repositoriesBackup/userRepository';
+import authService from '../../../src/servicesAndHelpersBackup/auth/authService';
+import signupService from '../../../src/servicesAndHelpersBackup/auth/signupService';
+import userService from '../../../src/servicesAndHelpersBackup/user/userService';
 import { SignupFields } from '../../../src/types/auth/authTypes';
 import authResponseFormatter from '../../../src/utils/apiFormatters/authResponseFormatter';
 

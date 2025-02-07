@@ -1,16 +1,22 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { TokenType } from '../../types/auth/tokenTypes';
+import { UserAttributes } from './User';
 
 export interface TokenAttributes {
-  accessToken?: string | null;
-  refreshToken?: string | null;
-  userId: string;
+  token: string;
+  userId: UserAttributes['userId'];
+  tokenType: TokenType;
+  tokenExpiresTime: Date;
+  isActive: boolean;
 }
 
 const TokensModel = (sequelize: Sequelize) => {
   class Tokens extends Model<TokenAttributes> implements TokenAttributes {
-    public accessToken?: TokenAttributes['accessToken'];
-    public refreshToken?: TokenAttributes['refreshToken'];
+    public token!: TokenAttributes['token'];
     public userId!: TokenAttributes['userId'];
+    public tokenType!: TokenAttributes['tokenType'];
+    public tokenExpiresTime!: TokenAttributes['tokenExpiresTime'];
+    public isActive!: TokenAttributes['isActive'];
 
     static associate(models: any) {
       this.belongsTo(models.User, {
@@ -23,21 +29,30 @@ const TokensModel = (sequelize: Sequelize) => {
 
   Tokens.init(
     {
-      accessToken: {
+      token: {
         type: DataTypes.STRING(500),
         allowNull: true,
-        field: 'ACCESS_TOKEN',
-      },
-      refreshToken: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
-        field: 'REFRESH_TOKEN',
+        field: 'TOKEN',
       },
       userId: {
         type: DataTypes.UUID,
-        primaryKey: true,
         allowNull: false,
         field: 'USER_ID',
+      },
+      tokenType: {
+        type: DataTypes.ENUM('access', 'refresh'),
+        allowNull: false,
+        field: 'TOKEN_TYPE',
+      },
+      tokenExpiresTime: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'TOKEN_EXPIRES_TIME',
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        field: 'IS_ACTIVE',
       },
     },
     {

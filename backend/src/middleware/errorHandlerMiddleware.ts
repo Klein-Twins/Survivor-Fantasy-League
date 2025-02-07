@@ -1,6 +1,7 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { ApiResponseError } from '../generated-api';
 import { CustomError } from '../utils/errors/errors';
+import logger from '../config/logger';
 
 /**
  * Global error handling middleware for Express applications.
@@ -11,7 +12,15 @@ import { CustomError } from '../utils/errors/errors';
  * @param res - The Express response object.
  * @param next - The next middleware function in the stack.
  */
-const errorHandler = (err: any, req: Request, res: Response, next: NextFunction): void => {
+const errorHandler: ErrorRequestHandler = (
+  err: any,
+  req: Request,
+  res: Response,
+  next: NextFunction
+): void => {
+  logger.error(err);
+  logger.error(err.message);
+  logger.error(err.stack);
   if (err instanceof CustomError) {
     const response: ApiResponseError = {
       success: false,
@@ -20,17 +29,15 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
       error: err.message,
     };
     res.status(err.statusCode).json(response);
-    return;
+  } else {
+    const response: ApiResponseError = {
+      success: false,
+      message: 'Something went wrong',
+      statusCode: 500,
+      error: 'Internal server error',
+    };
+    res.status(500).json(response);
   }
-
-  const response: ApiResponseError = {
-    success: false,
-    message: 'Something went wrong',
-    statusCode: 500,
-    error: 'Internal server error',
-  };
-  res.status(500).json(response);
-  return;
 };
 
 export default errorHandler;

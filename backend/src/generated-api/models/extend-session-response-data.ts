@@ -32,5 +32,5 @@ export interface ExtendSessionResponseData {
      * @type {UserSession}
      * @memberof ExtendSessionResponseData
      */
-    userSession?: UserSession;
+    userSession: UserSession;
 }

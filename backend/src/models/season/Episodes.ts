@@ -3,7 +3,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SeasonsAttributes } from './Seasons';
 
 export interface EpisodeAttributes {
-  episodeId: UUID;
+  episodeId: UUID | string;
   seasonId: SeasonsAttributes['seasonId'];
   episodeNumber: number;
   episodeTitle: string;
@@ -23,7 +23,11 @@ const EpisodeModel = (sequelize: Sequelize) => {
     public episodeImageUrl!: EpisodeAttributes['episodeImageUrl'];
 
     static associate(models: any) {
-      this.belongsTo(models.Seasons, { foreignKey: 'seasonId', targetKey: 'seasonId', as: 'season' });
+      this.belongsTo(models.Seasons, {
+        foreignKey: 'seasonId',
+        targetKey: 'seasonId',
+        as: 'season',
+      });
       this.hasMany(models.SeasonEliminations, {
         foreignKey: 'episodeId',
         sourceKey: 'episodeId',

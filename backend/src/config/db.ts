@@ -1,6 +1,13 @@
 import { Sequelize } from 'sequelize';
 import initModels from '../models/InitModels';
-import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USERNAME, NODE_ENV } from './config';
+import {
+  DB_HOST,
+  DB_NAME,
+  DB_PASSWORD,
+  DB_PORT,
+  DB_USERNAME,
+  NODE_ENV,
+} from './config';
 
 interface DbConfig {
   username: string;
@@ -40,22 +47,30 @@ const dbConfig: Record<Environment, DbConfig> = {
   },
 };
 
-const currentConfig: DbConfig = dbConfig[(NODE_ENV as Environment) || 'development'];
+const currentConfig: DbConfig =
+  dbConfig[(NODE_ENV as Environment) || 'development'];
 
 // Create a new Sequelize instance
-const sequelize = new Sequelize(currentConfig.database!, currentConfig.username!, currentConfig.password!, {
-  host: currentConfig.host,
-  port: currentConfig.port,
-  dialect: currentConfig.dialect,
-  logging: true, // Set to true for visibility of SQL queries
-});
+const sequelize = new Sequelize(
+  currentConfig.database!,
+  currentConfig.username!,
+  currentConfig.password!,
+  {
+    host: currentConfig.host,
+    port: currentConfig.port,
+    dialect: currentConfig.dialect,
+    logging: false, // Set to true for visibility of SQL queries
+  }
+);
 
 // Testing the connection
 const testConnection = async (): Promise<void> => {
   try {
     await sequelize.authenticate();
     if (NODE_ENV !== 'test')
-      console.log(`Connection to the database ${currentConfig.database} has been established successfully.`);
+      console.log(
+        `Connection to the database ${currentConfig.database} has been established successfully.`
+      );
   } catch (error) {
     console.error('Unable to connect to the database:', error);
   }

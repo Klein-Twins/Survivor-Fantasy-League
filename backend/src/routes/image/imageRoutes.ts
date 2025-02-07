@@ -4,6 +4,10 @@ import ProfileImageController from '../../controllers/image/ProfileImageControll
 
 const router = express.Router();
 
-router.get('/profile/:profileId', tokenMiddleware.authenticateToken, ProfileImageController.getProfileImage);
+router.get(
+  '/profile/:profileId',
+  tokenMiddleware.authenticateToken,
+  ProfileImageController.getProfileImage
+);
 
 export default router;

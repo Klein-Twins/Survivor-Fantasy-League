@@ -3,7 +3,6 @@ components:
     UserSession:
       type: object
       required:
-        - numSecondsRefreshTokenExpiresIn
         - isAuthenticated
       properties:
         numSecondsRefreshTokenExpiresIn:
@@ -16,11 +15,14 @@ components:
 
     LoginUserResponseData:
       type: object
+      required:
+        - account
+        - userSession
       properties:
         account:
-          $ref: "../profile.yaml#/components/schemas/Account"
+          $ref: '../profile.yaml#/components/schemas/Account'
         userSession:
-          $ref: "#/components/schemas/UserSession"
+          $ref: '#/components/schemas/UserSession'
 
     LogoutUserResponseData:
       type: object
@@ -32,27 +34,34 @@ components:
 
     SignupUserResponseData:
       type: object
+      requires:
+        - userSession
+        - account
       properties:
         account:
-          $ref: "../profile.yaml#/components/schemas/Account"
+          $ref: '../profile.yaml#/components/schemas/Account'
         userSession:
-          $ref: "#/components/schemas/UserSession"
+          $ref: '#/components/schemas/UserSession'
 
     ExtendSessionResponseData:
       type: object
+      required:
+        - userSession
       properties:
         account:
-          $ref: "../profile.yaml#/components/schemas/Account"
+          $ref: '../profile.yaml#/components/schemas/Account'
         userSession:
-          $ref: "#/components/schemas/UserSession"
+          $ref: '#/components/schemas/UserSession'
 
     CheckAuthResponseData:
       type: object
+      required:
+        - userSession
       properties:
         account:
-          $ref: "../profile.yaml#/components/schemas/Account"
+          $ref: '../profile.yaml#/components/schemas/Account'
         userSession:
-          $ref: "#/components/schemas/UserSession"
+          $ref: '#/components/schemas/UserSession'
 
   requestBodies:
     LoginUserRequestBody:
@@ -106,45 +115,45 @@ components:
     LoginUserResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           properties:
             responseData:
-              $ref: "#/components/schemas/LoginUserResponseData"
+              $ref: '#/components/schemas/LoginUserResponseData'
     LogoutUserResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           properties:
             responseData:
-              $ref: "#/components/schemas/LogoutUserResponseData"
+              $ref: '#/components/schemas/LogoutUserResponseData'
 
     SignupUserResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           required:
             - responseData
           properties:
             responseData:
-              $ref: "#/components/schemas/SignupUserResponseData"
+              $ref: '#/components/schemas/SignupUserResponseData'
 
     ExtendSessionResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           properties:
             responseData:
-              $ref: "#/components/schemas/ExtendSessionResponseData"
+              $ref: '#/components/schemas/ExtendSessionResponseData'
 
     CheckAuthResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           properties:
             responseData:
-              $ref: "#/components/schemas/CheckAuthResponseData"
+              $ref: '#/components/schemas/CheckAuthResponseData'

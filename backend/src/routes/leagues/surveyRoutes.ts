@@ -1,8 +1,8 @@
 import express from 'express';
-import leagueSurveyController from '../../controllers/leagues/leagueSurveyController';
+import surveyController from '../../controllers/league/survey/surveyController';
 
 const router = express.Router({ mergeParams: true }); // Add mergeParams to access leagueId
 
-router.get('/', leagueSurveyController.getSurveyForLeagueMember);
+router.get('/', surveyController.getSurveyForLeagueMember);
 
 export default router;

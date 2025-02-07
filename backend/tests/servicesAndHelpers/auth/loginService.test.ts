@@ -1,12 +1,12 @@
-import loginService from '../../../src/servicesAndHelpers/auth/loginService';
-import userRepository from '../../../src/repositories/userRepository';
-import userService from '../../../src/servicesAndHelpers/user/userService';
+import loginService from '../../../src/servicesAndHelpersBackup/auth/loginService';
+import userRepository from '../../../src/repositoriesBackup/userRepository';
+import userService from '../../../src/servicesAndHelpersBackup/user/userService';
 import errorFactory from '../../../src/utils/errors/errorFactory';
 import authResponseFormatter from '../../../src/utils/apiFormatters/authResponseFormatter';
-import authService from '../../../src/servicesAndHelpers/auth/authService';
+import authService from '../../../src/servicesAndHelpersBackup/auth/authService';
 import CustomError, { NotFoundError, UnauthorizedError, ValidationError } from '../../../src/utils/errors/errors';
 import { UserAttributes } from '../../../src/models/account/User';
-import tokenService from '../../../src/servicesAndHelpers/auth/tokenService';
+import tokenService from '../../../src/servicesAndHelpersBackup/auth/tokenService';
 
 jest.mock('../../../src/repositories/userRepository');
 jest.mock('../../../src/servicesAndHelpers/user/userService');
