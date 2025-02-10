@@ -35,7 +35,7 @@ async function getLeague(
       statusCode: 200,
     };
 
-    res.status(200).json(responseData);
+    res.status(200).json(response);
   } catch (error) {
     logger.debug('Caught error in leagueController.getLeague()');
     next(error);

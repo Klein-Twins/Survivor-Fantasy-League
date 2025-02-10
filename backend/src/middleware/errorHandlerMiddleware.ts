@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
-import { ApiResponseError } from '../generated-api';
 import { CustomError } from '../utils/errors/errors';
 import logger from '../config/logger';
+import { ApiResponseError } from '../generated-api';
 
 /**
  * Global error handling middleware for Express applications.
