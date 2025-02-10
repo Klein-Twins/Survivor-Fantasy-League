@@ -1548,6 +1548,97 @@ paths:
                         type: string
                         description: Error message describing what went wrong
                         example: Invalid Credentials provided
+  '/api/image/league/{leagueId}':
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve league image
+      description: This endpoint allows you to retrieve a profile image by league ID.
+      operationId: getLeagueImage
+      parameters:
+        - name: leagueId
+          in: path
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+                contentEncoding: base64
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
   '/api/league/{leagueId}/survey':
     get:
       summary: Get survey(s) for provided episodeId and profileId

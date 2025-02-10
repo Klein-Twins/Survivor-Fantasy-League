@@ -5,16 +5,31 @@ import { s3Client } from '../../config/aws.config';
 
 const s3Service = {
   getProfileImage,
+  getLeagueImage,
 };
+
+async function getLeagueImage(
+  leagueId: string
+): Promise<{ buffer: any; contentType?: string }> {
+  const leagueImageUrl = `images/league/${leagueId}.jpg`;
+  return await getImage(leagueImageUrl);
+}
 
 async function getProfileImage(
   profileId: string
+): Promise<{ buffer: any; contentType?: string }> {
+  const profileImageUrl = `images/profile/${profileId}.jpg`;
+  return await getImage(profileImageUrl);
+}
+
+async function getImage(
+  key: string
 ): Promise<{ buffer: any; contentType?: string }> {
   try {
     // 1. Request image from S3
     const command = new GetObjectCommand({
       Bucket: AWS_BUCKET_NAME,
-      Key: `images/profileImages/${profileId}.jpg`,
+      Key: key,
     });
 
     // 2. Get stream of data

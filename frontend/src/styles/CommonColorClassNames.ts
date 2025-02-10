@@ -1,19 +1,34 @@
-export const MainBackgroundColor = ' dark:bg-surface-a0-dark bg-surface-a0-light';
+export const MainBackgroundColor =
+  ' dark:bg-surface-a0-dark bg-surface-a0-light';
 
 export const NavBarColor = 'dark:bg-surface-a3-dark bg-surface-a3-light';
-export const PanelBackgroundColor = 'dark:bg-surface-a3-dark bg-surface-a1-light';
-export const ElementBackgroundColor = 'dark:bg-surface-a2-dark bg-surface-a2-light';
+export const PanelBackgroundColor =
+  'dark:bg-surface-a3-dark bg-surface-a1-light';
+export const ElementBackgroundColor =
+  'dark:bg-surface-a2-dark bg-surface-a2-light';
 export const ElementBackgroundColorWithHover = ElementBackgroundColor.concat(
   ' dark:hover:bg-surface-a3-dark hover:bg-surface-a3-light'
 );
-export const InputBackgroundColor = 'dark:bg-surface-a5-dark bg-surface-a0-light';
+export const InputBackgroundColor =
+  'dark:bg-surface-a5-dark bg-surface-a0-light';
 
-export const TextPrimaryColor = 'dark:text-primary-a0-dark text-primary-a0-light';
-export const MainBackgroundColors = MainBackgroundColor.concat(' ').concat(TextPrimaryColor);
-export const TextSecondaryColor = 'dark:text-primary-a1-dark text-primary-a1-light';
-export const TextTertiaryColor = 'dark:text-primary-a2-dark text-primary-a2-light';
-export const TextQuaternaryColor = 'dark:text-primary-a3-dark text-primary-a3-light';
-export const TextPenteraryColor = 'dark:text-primary-a4-dark text-primary-a4-light';
+export const TextPrimaryColor =
+  'dark:text-primary-a0-dark text-primary-a0-light';
+export const TextPrimarySelectedColor =
+  'dark:text-primary-a1-dark text-primary-a1-light';
+export const HoverTextPrimarySelectedColor =
+  TextPrimarySelectedColor +
+  'hover:dark:text-primary-a2-dark hover:text-primary-a2-light';
+export const MainBackgroundColors =
+  MainBackgroundColor.concat(' ').concat(TextPrimaryColor);
+export const TextSecondaryColor =
+  'dark:text-primary-a1-dark text-primary-a1-light';
+export const TextTertiaryColor =
+  'dark:text-primary-a2-dark text-primary-a2-light';
+export const TextQuaternaryColor =
+  'dark:text-primary-a3-dark text-primary-a3-light';
+export const TextPenteraryColor =
+  'dark:text-primary-a4-dark text-primary-a4-light';
 
 export const ButtonPrimaryBgColor = `
   dark:bg-primary-a3-dark 
@@ -39,4 +54,5 @@ export const ModalColors =
   'dark:bg-surface-a1-dark dark:text-primary-a3-dark bg-surface-a1-light text-primary-a3-light';
 
 export const TextErrorColor = 'dark:text-red-500 text-red-500';
-export const InputErrorColors = 'dark:border-red-300 border-red-300 text-red-300 dark:text-red-300';
+export const InputErrorColors =
+  'dark:border-red-300 border-red-300 text-red-300 dark:text-red-300';

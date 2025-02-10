@@ -1,8 +1,6 @@
 import React, { useEffect } from 'react';
-import LeaguesPanel from '../components/dashboard/leaguesPanel/LeaguesPanel';
 import { RootState } from '../store/store';
 import { useSelector } from 'react-redux';
-import DashBoardLeaguePanel from '../components/dashboard/DashBoardLeaguePanel';
 import profileService from '../services/profile/profileService';
 import leagueService from '../services/league/leagueService';
 import { useApi } from '../hooks/useApi';
@@ -17,7 +15,9 @@ const DashboardPage: React.FC = () => {
 
   return (
     <div className='max-w-8xl py-6 mx-auto px-8 bg-black'>
-      <h3 className='text-3xl text-center font-semibold  mb-6'>Hello {account.userName}, welcome to your dashboard!</h3>
+      <h3 className='text-3xl text-center font-semibold  mb-6'>
+        Hello {account.userName}, welcome to your dashboard!
+      </h3>
       <div></div>
     </div>
   );

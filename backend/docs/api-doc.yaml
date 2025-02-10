@@ -36,6 +36,8 @@ paths:
 
   /api/image/profile/{profileId}:
     $ref: './paths/image/profile.yaml#/paths/profileImage'
+  /api/image/league/{leagueId}:
+    $ref: './paths/image/profile.yaml#/paths/leagueImage'
 
   /api/league/{leagueId}/survey:
     $ref: './paths/league/picks/survey.yaml#/paths/survey'
