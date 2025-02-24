@@ -39,6 +39,22 @@ export const ButtonPrimaryBgColor = `
   disabled:bg-primary-a3-light
   disabled:opacity-50
 `;
+
+export const ButtonCheckColors = `
+  dark:text-primary-a3-dark 
+  dark:hover:enabled:text-primary-a2-dark 
+  hover:enabled:text-primary-a2-light 
+  disabled:dark:text-primary-a3-dark 
+  disabled:text-primary-a3-light
+  disabled:opacity-50
+`;
+export const ButtonXColors = `
+  dark:border-primary-a3-dark 
+  dark:hover:text-primary-a3-dark 
+  border-primary-a3-light 
+  hover:text-primary-a3-light
+`;
+
 export const ButtonPrimaryTextColor = 'dark:text-white text-primary-a0-light';
 export const ButtonPrimaryColors = `${ButtonPrimaryBgColor} ${ButtonPrimaryTextColor}`;
 
@@ -49,6 +65,11 @@ export const ButtonSubtleTextColor =
 export const ButtonSubtleColors = `${ButtonSubtleBgColor} ${ButtonSubtleTextColor}`;
 
 export const LinkButtonColors = TextPrimaryColor;
+
+export const HorizontalLinePrimaryColors =
+  'border dark:border-primary-a0-dark border-primary-a0-light';
+export const HorizontalLineMutedColors =
+  'border dark:border-primary-a5-dark border-primary-a4-light';
 
 export const ModalColors =
   'dark:bg-surface-a1-dark dark:text-primary-a3-dark bg-surface-a1-light text-primary-a3-light';

@@ -5,12 +5,14 @@ import {
   GetLeagueInvitesForPlayerResponse,
   RespondToLeagueInviteResponse,
   RespondToLeagueInviteRequestBody,
+  RespondToLeagueInviteRequestBodyInviteResponseEnum,
 } from '../../../generated-api';
 import leagueInviteService, {
   GetLeagueInvitesForProfileRequestParams,
 } from '../../services/league/leagueInviteService';
 import { ApiRequestParams } from '../../hooks/useApi';
 import { RootState } from '../store';
+import { addLeague } from './leagueSlice';
 
 interface LeagueInviteState {
   leagueInvites: LeagueInvite[];
@@ -30,7 +32,9 @@ export const getLeagueInvites = createAsyncThunk<
   { rejectValue: ApiError }
 >('leagueInvite/getLeagueInvites', async (params, { rejectWithValue }) => {
   try {
-    const response = await leagueInviteService.getLeagueInvitesForProfile(params);
+    const response = await leagueInviteService.getLeagueInvitesForProfile(
+      params
+    );
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);
@@ -41,14 +45,20 @@ export const respondToLeagueInvite = createAsyncThunk<
   RespondToLeagueInviteResponse,
   ApiRequestParams<RespondToLeagueInviteRequestBody, void>,
   { rejectValue: ApiError }
->('leagueInvite/respondToLeagueInvite', async (params, { rejectWithValue }) => {
-  try {
-    const response = await leagueInviteService.respondToLeagueInvite(params);
-    return response.data;
-  } catch (error: any) {
-    return rejectWithValue(error.response?.data);
+>(
+  'leagueInvite/respondToLeagueInvite',
+  async (params, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await leagueInviteService.respondToLeagueInvite(params);
+      const inviteId = response.data.responseData.inviteId;
+      dispatch(removeLeagueInvite({ inviteId }));
+
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data);
+    }
   }
-});
+);
 
 const leagueInviteSlice = createSlice({
   name: 'leagueInvite',
@@ -57,8 +67,13 @@ const leagueInviteSlice = createSlice({
     clearLeagueInviteError: (state) => {
       state.error = null;
     },
-    removeLeagueInvite: (state, action: PayloadAction<LeagueInvite>) => {
-      state.leagueInvites = state.leagueInvites.filter((invite) => invite.inviteId !== action.payload.inviteId);
+    removeLeagueInvite: (
+      state,
+      action: PayloadAction<{ inviteId: string }>
+    ) => {
+      state.leagueInvites = state.leagueInvites.filter(
+        (invite) => invite.inviteId !== action.payload.inviteId
+      );
     },
   },
   extraReducers: (builder) => {
@@ -89,6 +104,7 @@ const leagueInviteSlice = createSlice({
   },
 });
 
-export const { clearLeagueInviteError, removeLeagueInvite } = leagueInviteSlice.actions;
+export const { clearLeagueInviteError, removeLeagueInvite } =
+  leagueInviteSlice.actions;
 
 export default leagueInviteSlice.reducer;

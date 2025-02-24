@@ -1,16 +1,14 @@
 import React, { useState } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
 import PanelWithTabs from '../../ui/panels/panelWithBar/PanelWithTabs';
 import { PanelBackgroundColor } from '../../../styles/CommonColorClassNames';
 import LeaguesList from './LeaguesList';
 import LeagueInvitesList from './LeagueInvitesList';
+import CreateLeagueForm from './CreateLeagueForm';
 
 export const LeaguesPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'leagues' | 'invites' | 'create'>(
     'leagues'
   );
-  const className = 'dark:bg-surface-a2-dark';
 
   const tabs = [
     {
@@ -23,10 +21,15 @@ export const LeaguesPanel: React.FC = () => {
       label: 'League Invites',
       content: <LeagueInvitesList />,
     },
+    {
+      id: 'createLeague',
+      label: 'Create League',
+      content: <CreateLeagueForm />,
+    },
   ];
   return (
     <div className={`${PanelBackgroundColor}`}>
-      <PanelWithTabs tabs={tabs} className={className} />
+      <PanelWithTabs tabs={tabs} />
     </div>
   );
 };

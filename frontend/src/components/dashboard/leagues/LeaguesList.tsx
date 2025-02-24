@@ -2,7 +2,7 @@ import React from 'react';
 import { RootState } from '../../../store/store';
 import { useSelector } from 'react-redux';
 import { LeagueCard } from './LeagueCard';
-import { TextPrimaryColor } from '../../../styles/CommonColorClassNames';
+import NoLeaguesMessage from './NoLeaguesMessage';
 
 const LeaguesList: React.FC = () => {
   const leagues = useSelector((state: RootState) => state.league.leagues);
@@ -14,7 +14,7 @@ const LeaguesList: React.FC = () => {
           <LeagueCard key={league.leagueId} league={league} />
         ))
       ) : (
-        <p className={`text-center p-8 ${TextPrimaryColor}`}>No Leagues</p>
+        <NoLeaguesMessage />
       )}
     </>
   );

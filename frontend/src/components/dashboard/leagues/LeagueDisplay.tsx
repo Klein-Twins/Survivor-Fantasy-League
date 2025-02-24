@@ -15,8 +15,9 @@ export const LeagueDisplay: React.FC<LeagueDisplayProps> = ({
 }) => {
   const navigate = useNavigate();
   return (
-    <div className='flex-1 bg-background-dp03 rounded-xl p-4'>
+    <div className='flex-1 rounded-xl p-4'>
       <div className='flex justify-start space-x-4 h-full'>
+        {/* League Image Container */}
         <div className='w-48 h-48 rounded-lg overflow-hidden flex-shrink-0'>
           <LeagueImage leagueId={league.leagueId} className='w-full h-full' />
         </div>

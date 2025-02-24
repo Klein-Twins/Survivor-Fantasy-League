@@ -22,7 +22,7 @@ const leagueInviteService = {
 
 async function respondToLeagueInvite(
   requestData: RespondToLeagueInviteRequestBody
-): Promise<RespondToLeagueInviteResponseData | null> {
+): Promise<RespondToLeagueInviteResponseData> {
   const { leagueId, profileId, inviteResponse } = requestData;
 
   await leagueInviteHelper.validateRespondToLeagueInviteRequest(
@@ -45,13 +45,16 @@ async function respondToLeagueInvite(
     inviteResponse === RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT
   ) {
     await leagueInviteRepository.acceptLeagueInvite(leagueInvite);
-    return { league: await leagueService.getLeague(leagueId) };
+    return {
+      league: await leagueService.getLeague(leagueId),
+      inviteId: leagueInvite.inviteId,
+    };
   } else if (
     inviteResponse ===
     RespondToLeagueInviteRequestBodyInviteResponseEnum.DECLINE
   ) {
     await leagueInviteRepository.declineLeagueInvite(leagueInvite);
-    return null;
+    return { league: undefined, inviteId: leagueInvite.inviteId };
   } else {
     throw new BadRequestError('Invalid invite response');
   }

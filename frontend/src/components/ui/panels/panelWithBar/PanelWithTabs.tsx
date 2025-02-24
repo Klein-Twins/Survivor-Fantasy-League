@@ -4,6 +4,8 @@ import {
   PanelBackgroundColor,
   TextPrimaryColor,
   HoverTextPrimarySelectedColor,
+  HorizontalLineMutedColors,
+  HorizontalLinePrimaryColors,
 } from '../../../../styles/CommonColorClassNames';
 
 interface TabConfig {
@@ -45,6 +47,7 @@ const PanelWithTabs: React.FC<PanelProps> = ({
           </button>
         ))}
       </div>
+      <hr className={`${HorizontalLinePrimaryColors}`} />
       {tabs.find((tab) => tab.id === activeTab)?.content}
     </div>
   );

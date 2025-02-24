@@ -3,6 +3,8 @@ import {
   GetLeagueInvitesForPlayerResponse,
   GetLeagueInvitesForPlayerResponseData,
   RespondToLeagueInviteRequestBody,
+  RespondToLeagueInviteResponse,
+  RespondToLeagueInviteResponseData,
 } from '../../generated-api';
 import leagueInviteService from '../../services/league/leagueInviteService';
 
@@ -59,8 +61,17 @@ async function respondToLeagueInvite(
   next: NextFunction
 ): Promise<void> {
   try {
-    await leagueInviteService.respondToLeagueInvite(req.body);
-    res.status(200).json('League invite response updated successfully');
+    const respondToLeagueInviteResponseData: RespondToLeagueInviteResponseData | null =
+      await leagueInviteService.respondToLeagueInvite(req.body);
+
+    const response: RespondToLeagueInviteResponse = {
+      success: true,
+      message: 'League invite response updated successfully',
+      responseData: respondToLeagueInviteResponseData,
+      statusCode: 200,
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
