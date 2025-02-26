@@ -5,6 +5,7 @@ import SurvivorCastPage from './pages/SurvivorCastPage.tsx';
 import LeagueDetailView from './pages/LeagueDetailView.tsx';
 import AboutPage from './pages/AboutPage.tsx';
 import HomePage from './pages/HomePage.tsx';
+import AdminPage from './pages/AdminPage.tsx';
 
 const router = createBrowserRouter([
   {
@@ -17,6 +18,7 @@ const router = createBrowserRouter([
       { path: '/dashboard', element: <DashboardPage /> },
       { path: '/league/:leagueId', element: <LeagueDetailView /> },
       { path: '/about', element: <AboutPage /> },
+      { path: '/admin', element: <AdminPage /> },
     ],
   },
 ]);

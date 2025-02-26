@@ -1,5 +1,9 @@
 import { UUID } from 'crypto';
-import { Account, SignupUserRequestBody } from '../../generated-api';
+import {
+  Account,
+  AccountUserRoleEnum,
+  SignupUserRequestBody,
+} from '../../generated-api';
 import {
   BadRequestError,
   InternalServerError,
@@ -40,6 +44,7 @@ async function createAccount(
     firstName: signupData.firstName || null,
     lastName: signupData.lastName || null,
     profileImageUrl: defaultProfileImagePath,
+    userRole: AccountUserRoleEnum.USER,
   };
 
   const account: Account = await accountRepository.createAccount(

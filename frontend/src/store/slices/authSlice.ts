@@ -37,7 +37,8 @@ const sessionManager = {
     return JSON.parse(storedAccount);
   },
   getSessionEndTime: (): number | null => {
-    const storedSessionEndTime: string | null = sessionStorage.getItem('sessionEndTime');
+    const storedSessionEndTime: string | null =
+      sessionStorage.getItem('sessionEndTime');
     if (!storedSessionEndTime) {
       return null;
     }
@@ -86,7 +87,11 @@ export const signupUser = createAsyncThunk<
 >(AuthActionTypes.Signup, async (userData, { rejectWithValue }) => {
   try {
     const response = await authService.signupUser(userData);
-    if (!response.data.responseData || !response.data.responseData.account || !response.data.responseData.userSession) {
+    if (
+      !response.data.responseData ||
+      !response.data.responseData.account ||
+      !response.data.responseData.userSession
+    ) {
       throw new Error('Invalid response data: Failed to signup User');
     }
     const payload: AccountActionPayload = {
@@ -113,7 +118,11 @@ export const loginUser = createAsyncThunk<
 >(AuthActionTypes.Login, async (userData, { rejectWithValue }) => {
   try {
     const response = await authService.loginUser(userData);
-    if (!response || !response.responseData?.account || !response.responseData.userSession) {
+    if (
+      !response ||
+      !response.responseData?.account ||
+      !response.responseData.userSession
+    ) {
       throw new Error('Invalid response data: Failed to login User');
     }
     const payload: AccountActionPayload = {
@@ -126,42 +135,45 @@ export const loginUser = createAsyncThunk<
   }
 });
 
-export const extendSession = createAsyncThunk<AccountActionPayload, void, { rejectValue: ApiError }>(
-  AuthActionTypes.ExtendSession,
-  async (_, { rejectWithValue }) => {
-    try {
-      const response: AxiosResponse<ExtendSessionResponse> = await authService.extendSession();
-      if (
-        !response ||
-        !response.data ||
-        !response.data.responseData?.account ||
-        !response.data.responseData.userSession
-      ) {
-        throw new Error('Invalid response data: Failed to login User');
-      }
-      const payload: AccountActionPayload = {
-        account: response.data.responseData.account,
-        userSession: response.data.responseData.userSession,
-      };
-      return payload;
-    } catch (error: any) {
-      return rejectWithValue(handleError(error));
+export const extendSession = createAsyncThunk<
+  AccountActionPayload,
+  void,
+  { rejectValue: ApiError }
+>(AuthActionTypes.ExtendSession, async (_, { rejectWithValue }) => {
+  try {
+    const response: AxiosResponse<ExtendSessionResponse> =
+      await authService.extendSession();
+    if (
+      !response ||
+      !response.data ||
+      !response.data.responseData?.account ||
+      !response.data.responseData.userSession
+    ) {
+      throw new Error('Invalid response data: Failed to login User');
     }
+    const payload: AccountActionPayload = {
+      account: response.data.responseData.account,
+      userSession: response.data.responseData.userSession,
+    };
+    return payload;
+  } catch (error: any) {
+    return rejectWithValue(handleError(error));
   }
-);
+});
 
-export const logoutUser = createAsyncThunk<void, void, { rejectValue: ApiError }>(
-  AuthActionTypes.Logout,
-  async (_, { rejectWithValue }) => {
-    sessionManager.clear();
-    try {
-      await authService.logoutUser();
-      return;
-    } catch (error: any) {
-      return rejectWithValue(handleError(error));
-    }
+export const logoutUser = createAsyncThunk<
+  void,
+  void,
+  { rejectValue: ApiError }
+>(AuthActionTypes.Logout, async (_, { rejectWithValue }) => {
+  sessionManager.clear();
+  try {
+    await authService.logoutUser();
+    return;
+  } catch (error: any) {
+    return rejectWithValue(handleError(error));
   }
-);
+});
 
 // export const checkAuthentication = createAsyncThunk<AccountActionPayload, void, { state: RootState, rejectValue: ApiError }>(
 //     AuthActionTypes.CheckAuth,
@@ -176,7 +188,10 @@ export const logoutUser = createAsyncThunk<void, void, { rejectValue: ApiError }
 //     }
 // )
 
-const setUserState = (state: AuthState, action: { payload: AccountActionPayload }) => {
+const setUserState = (
+  state: AuthState,
+  action: { payload: AccountActionPayload }
+) => {
   state.loading = false;
   state.account = action.payload?.account || null;
   state.isAuthenticated = !!action.payload;
@@ -188,7 +203,9 @@ const setUserState = (state: AuthState, action: { payload: AccountActionPayload 
         statusCode: 500,
         error: 'Error',
       };
-  const sessionEndTime = calculateSessionEndTime(action.payload.userSession.numSecondsRefreshTokenExpiresIn);
+  const sessionEndTime = calculateSessionEndTime(
+    action.payload.userSession.numSecondsRefreshTokenExpiresIn
+  );
   console.log('In redux - calculated Session End Time: ', sessionEndTime);
   state.sessionEndTime = sessionEndTime;
   sessionManager.setAccount(action.payload.account);
@@ -204,7 +221,9 @@ const clearUserState = (state: AuthState) => {
   sessionManager.clear();
 };
 
-const calculateSessionEndTime = (numSecondsRefreshTokenExpiresIn: number): number => {
+const calculateSessionEndTime = (
+  numSecondsRefreshTokenExpiresIn: number
+): number => {
   const currentTime = Math.floor(Date.now() / 1000); // Current time in seconds
   return currentTime + numSecondsRefreshTokenExpiresIn;
 };
@@ -213,7 +232,11 @@ const setLoadingState = (state: AuthState) => {
   state.loading = true;
   state.error = null;
 };
-const setRejectedState = (state: AuthState, action: { payload?: ApiError }, actionType: string) => {
+const setRejectedState = (
+  state: AuthState,
+  action: { payload?: ApiError },
+  actionType: string
+) => {
   state.loading = false;
   state.error = action.payload || {
     success: false,
@@ -239,11 +262,15 @@ const authSlice = createSlice({
       //Sign up action
       .addCase(signupUser.pending, setLoadingState)
       .addCase(signupUser.fulfilled, setUserState)
-      .addCase(signupUser.rejected, (state, action) => setRejectedState(state, action, 'Signup'))
+      .addCase(signupUser.rejected, (state, action) =>
+        setRejectedState(state, action, 'Signup')
+      )
       //Log in action
       .addCase(loginUser.pending, setLoadingState)
       .addCase(loginUser.fulfilled, setUserState)
-      .addCase(loginUser.rejected, (state, action) => setRejectedState(state, action, 'Login'))
+      .addCase(loginUser.rejected, (state, action) =>
+        setRejectedState(state, action, 'Login')
+      )
       //Log out action
       .addCase(logoutUser.pending, setLoadingState)
       .addCase(logoutUser.fulfilled, clearUserState)
@@ -266,7 +293,9 @@ const authSlice = createSlice({
       // .addCase(checkAuthentication.rejected, clearUserState)
       .addCase(extendSession.pending, setLoadingState)
       .addCase(extendSession.fulfilled, setUserState)
-      .addCase(extendSession.rejected, (state, action) => setRejectedState(state, action, 'Extend Session'));
+      .addCase(extendSession.rejected, (state, action) =>
+        setRejectedState(state, action, 'Extend Session')
+      );
   },
 });
 

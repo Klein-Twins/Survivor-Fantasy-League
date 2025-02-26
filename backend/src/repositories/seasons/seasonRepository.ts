@@ -6,6 +6,7 @@ import { NotFoundError } from '../../utils/errors/errors';
 
 const seasonRepository = {
   getSeason,
+  getAllSeasons,
 };
 
 async function getSeason(
@@ -19,6 +20,16 @@ async function getSeason(
   }
 
   return seasonHelper.buildSeason(seasonAttributes);
+}
+
+async function getAllSeasons(): Promise<Season[]> {
+  const seasonsAttributes: SeasonsAttributes[] = await models.Seasons.findAll();
+  if (seasonsAttributes.length === 0) {
+    throw new NotFoundError('No seasons found');
+  }
+  return seasonsAttributes.map((seasonAttributes: SeasonsAttributes) => {
+    return seasonHelper.buildSeason(seasonAttributes);
+  });
 }
 
 export default seasonRepository;

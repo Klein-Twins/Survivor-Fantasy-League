@@ -20,6 +20,8 @@ export * from './get-league-invites-for-player-response';
 export * from './get-league-invites-for-player-response-data';
 export * from './get-leagues-for-profile-response';
 export * from './get-leagues-for-profile-response-data';
+export * from './get-seasons-response';
+export * from './get-seasons-response-data';
 export * from './get-survey-for-episode-for-league-member';
 export * from './get-survey-for-episode-for-league-member-response-data';
 export * from './get-survivors-response';

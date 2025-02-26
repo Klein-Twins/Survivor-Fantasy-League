@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize';
-import { Account } from '../../generated-api';
+import { Account, AccountUserRoleEnum } from '../../generated-api';
 import { AccountIdentifierType } from '../../services/auth/accountService';
 import { models, sequelize } from '../../config/db';
 import { ProfileAttributes } from '../../models/account/Profile';
@@ -108,6 +108,7 @@ async function createAccount(
         userName: accountData.userName,
         email: accountData.email,
         profileId: accountData.profileId,
+        userRole: AccountUserRoleEnum.USER,
       },
       { transaction }
     );

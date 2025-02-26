@@ -1,5 +1,9 @@
 import { validate } from 'uuid';
-import { Account, SignupUserRequestBody } from '../../generated-api';
+import {
+  Account,
+  AccountUserRoleEnum,
+  SignupUserRequestBody,
+} from '../../generated-api';
 import accountRepository from '../../repositories/auth/accountRepository';
 import {
   BadRequestError,
@@ -100,6 +104,7 @@ function buildAccount(
     firstName: ProfileAttributes.firstName || null,
     lastName: ProfileAttributes.lastName || null,
     profileImageUrl: ProfileAttributes.imageUrl,
+    userRole: userAttributes.userRole || AccountUserRoleEnum.USER,
   };
 
   return account;

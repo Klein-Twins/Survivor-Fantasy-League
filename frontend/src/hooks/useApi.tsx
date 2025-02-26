@@ -7,13 +7,14 @@ import { ApiResponse } from '../../generated-api';
 //     queryParams: TQueryParams extends void ? never : TQueryParams;
 // }
 
-export type ApiRequestParams<TRequestBody, TQueryParams> = TRequestBody extends void
-  ? TQueryParams extends void
-    ? never
-    : { body?: never; queryParams: TQueryParams }
-  : TQueryParams extends void
-  ? { body: TRequestBody; queryParams?: never }
-  : { body: TRequestBody; queryParams: TQueryParams };
+export type ApiRequestParams<TRequestBody, TQueryParams> =
+  TRequestBody extends void
+    ? TQueryParams extends void
+      ? never
+      : { body?: never; queryParams: TQueryParams }
+    : TQueryParams extends void
+    ? { body: TRequestBody; queryParams?: never }
+    : { body: TRequestBody; queryParams: TQueryParams };
 
 interface UseApiState<TResponse extends ApiResponse> {
   data: TResponse | null;
@@ -21,16 +22,28 @@ interface UseApiState<TResponse extends ApiResponse> {
   error: string | null;
 }
 
-interface UseApiResult<TRequestBody, TQueryParams, TResponse extends ApiResponse> {
+interface UseApiResult<
+  TRequestBody,
+  TQueryParams,
+  TResponse extends ApiResponse
+> {
   data: TResponse | null;
   isLoading: boolean;
   error: string | null;
-  execute: (params: ApiRequestParams<TRequestBody, TQueryParams>) => Promise<TResponse>;
+  execute: (
+    params?: ApiRequestParams<TRequestBody, TQueryParams>
+  ) => Promise<TResponse>;
   setData: (data: TResponse | null) => void;
 }
 
-export function useApi<TRequestBody = void, TQueryParams = void, TResponse extends ApiResponse = ApiResponse>(
-  serviceFunction: (params: ApiRequestParams<TRequestBody, TQueryParams>) => Promise<AxiosResponse<TResponse>>
+export function useApi<
+  TRequestBody = void,
+  TQueryParams = void,
+  TResponse extends ApiResponse = ApiResponse
+>(
+  serviceFunction: (
+    params?: ApiRequestParams<TRequestBody, TQueryParams>
+  ) => Promise<AxiosResponse<TResponse>>
 ): UseApiResult<TRequestBody, TQueryParams, TResponse> {
   const [state, setState] = useState<UseApiState<TResponse>>({
     data: null,
@@ -46,7 +59,9 @@ export function useApi<TRequestBody = void, TQueryParams = void, TResponse exten
   }, []);
 
   const execute = useCallback(
-    async (params: ApiRequestParams<TRequestBody, TQueryParams>): Promise<TResponse> => {
+    async (
+      params?: ApiRequestParams<TRequestBody, TQueryParams>
+    ): Promise<TResponse> => {
       setState({
         data: null,
         isLoading: true,
@@ -54,7 +69,12 @@ export function useApi<TRequestBody = void, TQueryParams = void, TResponse exten
       });
 
       try {
-        const response = await serviceFunction(params);
+        let response;
+        if (params) {
+          response = await serviceFunction(params);
+        } else {
+          response = await serviceFunction();
+        }
 
         setState({
           data: response.data,
@@ -63,7 +83,10 @@ export function useApi<TRequestBody = void, TQueryParams = void, TResponse exten
         });
         return response.data;
       } catch (error: any) {
-        const errorMessage = error?.response?.data?.message || error?.message || 'An error occurred';
+        const errorMessage =
+          error?.response?.data?.message ||
+          error?.message ||
+          'An error occurred';
         setState({
           data: null,
           isLoading: false,

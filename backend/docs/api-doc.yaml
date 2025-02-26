@@ -42,6 +42,11 @@ paths:
   /api/league/{leagueId}/survey:
     $ref: './paths/league/picks/survey.yaml#/paths/survey'
 
+  /api/admin/season:
+    $ref: './paths/season/season.yaml#/paths/season'
+  /api/admin/season/{seasonId}:
+    $ref: './paths/season/season.yaml#/paths/seasonWithId'
+
 components:
   securitySchemes:
     accessTokenCookie:

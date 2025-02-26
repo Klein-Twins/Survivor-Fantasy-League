@@ -1,3 +1,4 @@
+import { GetSeasonsResponseData } from '../../generated-api';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import seasonRepository from '../../repositories/seasons/seasonRepository';
 import { NotFoundError } from '../../utils/errors/errors';
@@ -5,6 +6,7 @@ import { NotFoundError } from '../../utils/errors/errors';
 const seasonService = {
   doesSeasonExist,
   getSeasonBySeasonId,
+  getAllSeasons,
 };
 
 async function doesSeasonExist(
@@ -23,6 +25,10 @@ async function doesSeasonExist(
 
 async function getSeasonBySeasonId(seasonId: number) {
   return await seasonRepository.getSeason(seasonId);
+}
+
+async function getAllSeasons(): Promise<GetSeasonsResponseData> {
+  return { seasons: await seasonRepository.getAllSeasons() };
 }
 
 export default seasonService;
