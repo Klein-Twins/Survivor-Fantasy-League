@@ -26,4 +26,13 @@ export interface RespondToLeagueInviteResponseData {
      * @memberof RespondToLeagueInviteResponseData
      */
     league?: League;
+
+    /**
+     * The unique ID of the league invite.
+     *
+     * @type {string}
+     * @memberof RespondToLeagueInviteResponseData
+     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
+     */
+    inviteId: string;
 }

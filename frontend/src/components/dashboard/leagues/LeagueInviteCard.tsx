@@ -1,24 +1,44 @@
 import React, { useState } from 'react';
-import { LeagueInvite, RespondToLeagueInviteRequestBodyInviteResponseEnum } from '../../../../generated-api';
+import {
+  LeagueInvite,
+  RespondToLeagueInviteRequestBodyInviteResponseEnum,
+} from '../../../../generated-api';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
-import { removeLeagueInvite, respondToLeagueInvite } from '../../../store/slices/leagueInviteSlice';
+import {
+  removeLeagueInvite,
+  respondToLeagueInvite,
+} from '../../../store/slices/leagueInviteSlice';
 import { addLeague } from '../../../store/slices/leagueSlice';
 import { LeagueDisplay } from './LeagueDisplay';
+import {
+  ButtonCheckColors,
+  ButtonPrimaryBgColor,
+  ButtonPrimaryColors,
+  ButtonSubtleColors,
+  ButtonXColors,
+  ElementBackgroundColor,
+} from '../../../styles/CommonColorClassNames';
+import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 
 interface LeagueInviteCardProps {
   leagueInvite: LeagueInvite;
   className?: string;
 }
 
-export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({ leagueInvite, className }) => {
+export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({
+  leagueInvite,
+  className,
+}) => {
   const dispatch = useDispatch<AppDispatch>();
   const account = useSelector((state: RootState) => state.auth.account);
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState(leagueInvite.message || '');
   const [canDelete, setCanDelete] = useState(false);
 
-  const handleResponse = async (response: RespondToLeagueInviteRequestBodyInviteResponseEnum) => {
+  const handleResponse = async (
+    response: RespondToLeagueInviteRequestBodyInviteResponseEnum
+  ) => {
     if (!account?.profileId) return;
 
     setIsLoading(true);
@@ -33,9 +53,13 @@ export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({ leagueInvite
     );
 
     if (result.meta.requestStatus === 'fulfilled') {
-      if (response === RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT) {
+      if (
+        response === RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT
+      ) {
         dispatch(addLeague(leagueInvite.league));
-        setMessage('Welcome to the league! See you at the next tribal council.');
+        setMessage(
+          'Welcome to the league! See you at the next tribal council.'
+        );
       } else {
         setMessage('You have rejected your torch.');
       }
@@ -47,7 +71,7 @@ export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({ leagueInvite
   const handleRemove = () => dispatch(removeLeagueInvite(leagueInvite));
 
   return (
-    <div className={`w-full flex relative ${className}`}>
+    <div className={`w-full flex relative ${ElementBackgroundColor}`}>
       {canDelete && (
         <button
           onClick={handleRemove}
@@ -59,22 +83,26 @@ export const LeagueInviteCard: React.FC<LeagueInviteCardProps> = ({ leagueInvite
       )}
       <LeagueDisplay league={leagueInvite.league} message={message} />
       {!canDelete && (
-        <div className='flex flex-col space-y-2 p-2 w-1/6 mx-auto'>
+        <div className='absolute bottom-2 right-2 flex items-center space-x-2'>
           <button
-            onClick={() => handleResponse(RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT)}
+            onClick={() =>
+              handleResponse(
+                RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT
+              )
+            }
             disabled={isLoading}
-            className={`w-full h-1/2 bg-button-primary-base hover:bg-button-primary-hover rounded-xl ${
-              isLoading ? 'disabled opacity-50' : ''
-            }`}>
-            {isLoading ? 'Please wait...' : 'Accept'}
+            className={`${ButtonCheckColors}`}>
+            <FaCheckCircle size={36} />
           </button>
           <button
-            onClick={() => handleResponse(RespondToLeagueInviteRequestBodyInviteResponseEnum.DECLINE)}
+            onClick={() =>
+              handleResponse(
+                RespondToLeagueInviteRequestBodyInviteResponseEnum.DECLINE
+              )
+            }
             disabled={isLoading}
-            className={`w-full h-1/2 bg-button-secondary-base hover:bg-button-secondary-hover rounded-xl ${
-              isLoading ? 'disabled opacity-50' : ''
-            }`}>
-            {isLoading ? 'Please wait...' : 'Decline'}
+            className={`${ButtonXColors}`}>
+            <FaTimesCircle size={36} />
           </button>
         </div>
       )}

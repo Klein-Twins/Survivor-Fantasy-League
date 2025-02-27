@@ -1,0 +1,41 @@
+paths:
+  survey:
+    get:
+      summary: Get survey(s) for provided episodeId and profileId
+      description: Retrieves the survey for the specified profileId's in leagueId for episodeId's
+      operationId: getSurveyForEpisodeForLeagueMember
+      tags:
+        - SurveyService
+      parameters:
+        - in: path
+          name: leagueId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the league to retrieve picks for.
+        - in: query
+          name: profileId
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+            description: Array of profile IDs to retrieve picks for.
+            example: ['123e4567-e89b-12d3-a456-426614174000', '987fcdeb-51a2-43c7-9123-426614174111']
+        - in: query
+          name: episodeNumber
+          required: true
+          schema:
+            type: array
+            items:
+              type: integer
+            description: Array of episode Number to retrieve picks for.
+      responses:
+        '200':
+          description: Retrieves a survey for the specified profileId in leagueId for episodeId
+          content:
+            application/json:
+              schema:
+                $ref: '../../../components/leagues/picks/survey.yaml#/components/responses/GetSurveyForEpisodeForLeagueMember'

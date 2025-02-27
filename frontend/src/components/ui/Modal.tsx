@@ -8,6 +8,7 @@ import Form from './forms/Form.tsx';
 import LogoutConfirmation from '../auth/LogoutConfirmation.tsx';
 import SurvivorDetailCard from '../survivorPage/SurvivorDetailCard.tsx';
 import Notification from './Notifcation.tsx';
+import { ButtonPrimaryTextColor, MainBackgroundColors, ModalColors } from '../../styles/CommonColorClassNames.ts';
 
 interface ModalProps {
   isOpen: boolean;
@@ -25,10 +26,9 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
 
   return (
     <div
-      className='fixed inset-0 bg-opacity-50 flex items-center justify-center dark:bg-surface-a0-dark
-      dark:text-primary-a0-dark'>
-      <div className='dark:bg-surface-a1-dark dark:text-primary-a3-dark p-6 rounded shadow-lg relative w-11/12 sm:w-5/6 md:w-1/2'>
-        <button onClick={handleClose} className='absolute top-2 right-3 hover:text-primary-a5-dark'>
+      className={`fixed inset-0 bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center ${MainBackgroundColors}`}>
+      <div className={`${ModalColors} p-6 rounded shadow-lg relative w-11/12 sm:w-5/6 md:w-1/2`}>
+        <button onClick={handleClose} className={`absolute top-2 right-3 ${ButtonPrimaryTextColor}`}>
           ✕
         </button>
 

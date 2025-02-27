@@ -8,28 +8,33 @@ import { signupUser } from '../../../store/slices/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../store/store';
 import { closeModal } from '../../../store/slices/modalSlice';
-import SubmitButton from '../../ui/forms/SubmitButton';
-import { SignUpFormData, validateSignUp } from '../../../utils/auth/formValidation';
+import {
+  SignUpFormData,
+  validateSignUp,
+} from '../../../utils/auth/formValidation';
 import Form from '../../ui/forms/Form';
 import { SignupUserRequestBody } from '../../../../generated-api';
 import { ApiRequestParams } from '../../../hooks/useApi';
 
 const SignupForm: React.FC = () => {
-  const responseError = useSelector((state: RootState) => state.auth.error)?.message;
+  const responseError = useSelector(
+    (state: RootState) => state.auth.error
+  )?.message;
   const loading = useSelector((state: RootState) => state.auth.loading);
   const navigate = useNavigate();
   const dispatch = useDispatch<AppDispatch>();
 
   const onSubmit = async (values: SignUpFormData) => {
-    const signupUserRequestData: ApiRequestParams<SignupUserRequestBody, void> = {
-      body: {
-        username: values.username,
-        email: values.email,
-        password: values.password,
-        firstName: values.firstName,
-        lastName: values.lastName,
-      },
-    };
+    const signupUserRequestData: ApiRequestParams<SignupUserRequestBody, void> =
+      {
+        body: {
+          username: values.username,
+          email: values.email,
+          password: values.password,
+          firstName: values.firstName,
+          lastName: values.lastName,
+        },
+      };
     const resultAction = await dispatch(signupUser(signupUserRequestData));
     if (signupUser.fulfilled.match(resultAction)) {
       dispatch(closeModal());
@@ -37,25 +42,31 @@ const SignupForm: React.FC = () => {
     }
   };
 
-  const { values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitDisabled } = useForm<SignUpFormData>(
-    {
-      initialValues: {
-        username: '',
-        email: '',
-        password: '',
-        confirmPassword: '',
-        firstName: '',
-        lastName: '',
-      },
-      validate: validateSignUp,
-      onSubmit,
-      requiredFields: ['username', 'email', 'password', 'confirmPassword'],
-    }
-  );
+  const {
+    values,
+    errors,
+    touched,
+    handleChange,
+    handleBlur,
+    handleSubmit,
+    isSubmitDisabled,
+  } = useForm<SignUpFormData>({
+    initialValues: {
+      username: '',
+      email: '',
+      password: '',
+      confirmPassword: '',
+      firstName: '',
+      lastName: '',
+    },
+    validate: validateSignUp,
+    onSubmit,
+    requiredFields: ['username', 'email', 'password', 'confirmPassword'],
+  });
 
   return (
     <Form
-      title='Log In'
+      title='Signup'
       onSubmit={handleSubmit}
       isSubmitDisabled={isSubmitDisabled}
       isLoading={loading}

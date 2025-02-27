@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import { ElementBackgroundColor, ElementBackgroundColorWithHover } from '../../styles/CommonColorClassNames';
 
 interface SeasonSelectProps {
   seasons: number[];
@@ -21,7 +22,7 @@ const SeasonSelect: React.FC<SeasonSelectProps> = ({ seasons, onSeasonChange }) 
       <button
         ref={buttonRef}
         type='button'
-        className='inline-flex justify-between items-center w-full rounded-md dark:border dark:border-surface-a1-dark dark:bg-surface-a2-dark py-2 px-4 text-sm font-medium hover:outline-none focus:outline-none'
+        className={`inline-flex justify-between items-center w-full rounded-md  py-2 px-4 ${ElementBackgroundColor} text-sm font-medium hover:outline-none focus:outline-none`}
         onClick={() => setIsOpen(!isOpen)}>
         <span className='text-left flex-1'>{selectedSeason ? `Season ${selectedSeason}` : 'Select Season'}</span>
         <svg
@@ -41,7 +42,7 @@ const SeasonSelect: React.FC<SeasonSelectProps> = ({ seasons, onSeasonChange }) 
       {isOpen && (
         <div
           style={{ width: buttonRef.current?.offsetWidth }}
-          className='absolute right-0 mt-2 rounded-md shadow-lg dark:bg-surface-a2-dark z-10'
+          className={`absolute right-0 mt-2 rounded-md shadow-lg ${ElementBackgroundColor} z-10`}
           onMouseLeave={() => setIsOpen(false)}>
           <div className='max-h-60 overflow-y-auto w-full'>
             <div className='py-1'>
@@ -49,7 +50,7 @@ const SeasonSelect: React.FC<SeasonSelectProps> = ({ seasons, onSeasonChange }) 
                 <button
                   key={season}
                   onClick={() => handleSelectSeason(season)}
-                  className='block w-full text-left px-4 py-2 text-sm dark:text-primary-a0-dark hover:bg-surface-a3-dark focus:outline-none'>
+                  className={`block w-full text-left px-4 py-2 text-sm ${ElementBackgroundColorWithHover} focus:outline-none`}>
                   Season {season}
                 </button>
               ))}

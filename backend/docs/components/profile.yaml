@@ -26,6 +26,7 @@ components:
       required:
         - email
         - userId
+        - userRole
       allOf:
         - $ref: '#/components/schemas/Profile'
         - type: object
@@ -36,3 +37,9 @@ components:
             userId:
               type: string
               description: User Id of user
+            userRole:
+              type: string
+              description: User role ADMIN or USER
+              enum:
+                - ADMIN
+                - USER

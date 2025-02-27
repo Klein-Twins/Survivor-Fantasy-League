@@ -3,24 +3,24 @@ components:
     userNameParam:
       name: userName
       in: query
-      required: false
       description: The username of the profile
+      required: false
       schema:
         type: string
 
     firstNameParam:
       name: firstName
       in: query
-      required: false
       description: The first name of the profile
+      required: false
       schema:
         type: string
 
     lastNameParam:
       name: lastName
       in: query
-      required: false
       description: The last name of the profile
+      required: false
       schema:
         type: string
 
@@ -35,8 +35,8 @@ components:
     pageParam:
       name: page
       in: query
-      required: false
       description: The page number
+      required: false
       schema:
         type: integer
         default: 1
@@ -44,8 +44,8 @@ components:
     limitParam:
       name: limit
       in: query
-      required: false
       description: Items per page
+      required: false
       schema:
         type: integer
         default: 10
@@ -53,16 +53,16 @@ components:
     sortByParam:
       name: sortBy
       in: query
-      required: false
       description: Field to sort by
+      required: false
       schema:
-        $ref: "#/components/schemas/SortByEnum"
+        $ref: '#/components/schemas/SortByEnum'
 
     isAscParam:
       name: isAsc
       in: query
-      required: false
       description: Sort direction
+      required: false
       schema:
         type: boolean
         default: true
@@ -71,11 +71,11 @@ components:
     SearchProfilesForLeagueInviteResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           properties:
             responseData:
-              $ref: "#/components/schemas/SearchProfilesForLeagueInviteResponseData"
+              $ref: '#/components/schemas/SearchProfilesForLeagueInviteResponseData'
 
     SearchProfilesForLeagueInviteResponseData:
       type: object
@@ -83,10 +83,10 @@ components:
         profilesFound:
           type: array
           items:
-            $ref: "#/components/schemas/ProfileAndLeagueInviteStatus"
+            $ref: '#/components/schemas/ProfileAndLeagueInviteStatus'
 
         pagination:
-          $ref: "../common.yaml#/components/schemas/Pagination"
+          $ref: '../common.yaml#/components/schemas/Pagination'
 
     SortByEnum:
       type: string
@@ -97,7 +97,7 @@ components:
       type: object
       properties:
         profile:
-          $ref: "../profile.yaml#/components/schemas/Profile"
+          $ref: '../profile.yaml#/components/schemas/Profile'
         isInvited:
           type: boolean
           description: Indicates if the profile has been invited to the league.

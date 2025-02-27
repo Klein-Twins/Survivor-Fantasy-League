@@ -1,0 +1,38 @@
+paths:
+  season:
+    get:
+      summary: Get seasons
+      operationId: getSeasons
+      description: Retrieves a list of seasons. Optionally, filter by season ID.
+      tags:
+        - SeasonService
+      parameters: []
+      responses:
+        '200':
+          description: Retrieves a list of seasons
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/season/season.yaml#/components/schemas/GetSeasonsResponse'
+  seasonWithId:
+    get:
+      summary: Get seasons by ID
+      operationId: getSeasonById
+      description: Retrieves a specific season by ID.
+      tags:
+        - SeasonService
+      parameters:
+        - in: path
+          name: seasonId
+          required: true
+          schema:
+            type: integer
+            description: The ID of the season to retrieve.
+            example: 47
+      responses:
+        '200':
+          description: Retrieves a specific season by ID
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/season/season.yaml#/components/schemas/GetSeasonsResponse'

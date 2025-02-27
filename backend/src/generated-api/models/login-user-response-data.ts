@@ -26,11 +26,11 @@ export interface LoginUserResponseData {
      * @type {Account}
      * @memberof LoginUserResponseData
      */
-    account?: Account;
+    account: Account;
 
     /**
      * @type {UserSession}
      * @memberof LoginUserResponseData
      */
-    userSession?: UserSession;
+    userSession: UserSession;
 }

@@ -6,7 +6,9 @@ import {
   GetLeaguesForProfileResponse,
   League,
 } from '../../../generated-api';
-import leagueService, { GetLeaguesForProfileRequestParams } from '../../services/league/leagueService';
+import leagueService, {
+  GetLeaguesForProfileRequestParams,
+} from '../../services/league/leagueService';
 import { ApiRequestParams } from '../../hooks/useApi';
 
 enum AuthActionTypes {

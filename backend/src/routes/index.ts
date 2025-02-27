@@ -9,13 +9,17 @@ import profileLeagueRoutes from './profile/profileLeagueRoutes';
 import notificationRoutes from './notification/notificationRoutes';
 import leagueInviteRoutes from './leagues/leagueInviteRoutes';
 import imageRoutes from './image/imageRoutes';
+import leagueSurveyRoutes from './leagues/surveyRoutes';
+import adminRoutes from './admin/index.ts';
 
 router.use('/auth', authRoutes);
 router.use('/league/profile', leagueProfileRoutes);
 router.use('/season/survivors', survivorRoute);
 router.use('/profile', profileLeagueRoutes);
 router.use('/league/invite', leagueInviteRoutes);
+router.use('/league/:leagueId/survey', leagueSurveyRoutes);
 router.use('/image', imageRoutes);
 router.use('/notification', notificationRoutes);
+router.use('/admin', adminRoutes);
 
 export default router;

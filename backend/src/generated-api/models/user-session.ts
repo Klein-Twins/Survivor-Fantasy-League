@@ -27,7 +27,7 @@ export interface UserSession {
      * @memberof UserSession
      * @example 1800
      */
-    numSecondsRefreshTokenExpiresIn: number;
+    numSecondsRefreshTokenExpiresIn?: number;
 
     /**
      * @type {boolean}

@@ -2,7 +2,8 @@ paths:
   leagueInvite:
     get:
       summary: Retrieve league invites for a player
-      description: This endpoint will retrieve all pending league invitations for a player.
+      description:
+        This endpoint will retrieve all pending league invitations for a player.
       operationId: getLeagueInvitesForPlayer
       tags:
         - LeagueInviteService
@@ -14,19 +15,21 @@ paths:
           schema:
             type: string
       responses:
-        "200":
+        '200':
           description: A list of league invites for the profile
           content:
             application/json:
               schema:
-                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/GetLeagueInvitesForPlayerResponse"
+                $ref: '../../components/profile/leagueInvite.yaml#/components/schemas/GetLeagueInvitesForPlayerResponse'
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
 
     post:
       summary: Create and send league invite for a profile
-      description: This endpoint allows the user to create a new league invite for a profile and then send the invite to them.
+      description:
+        This endpoint allows the user to create a new league invite for a
+        profile and then send the invite to them.
       operationId: createAndSendLeagueInvite
       tags:
         - LeagueInviteService
@@ -35,21 +38,22 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/CreateAndSendLeagueInviteRequestBody"
+              $ref: '../../components/profile/leagueInvite.yaml#/components/schemas/CreateAndSendLeagueInviteRequestBody'
       responses:
-        "200":
+        '200':
           description: Created a new league invite and sent invite.
           content:
             application/json:
               schema:
-                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/CreateAndSendLeagueInviteResponse"
+                $ref: '../../components/profile/leagueInvite.yaml#/components/schemas/CreateAndSendLeagueInviteResponse'
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
 
     put:
       summary: Respond to a league invite
-      description: This endpoint allows the user to accept or decline a league invitation.
+      description:
+        This endpoint allows the user to accept or decline a league invitation.
       operationId: respondToLeagueInvite
       tags:
         - LeagueInviteService
@@ -58,14 +62,15 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/RespondToLeagueInviteRequestBody"
+              $ref: '../../components/profile/leagueInvite.yaml#/components/schemas/RespondToLeagueInviteRequestBody'
       responses:
-        "200":
-          description: Responded to league invite (accept or decline) successfully
+        '200':
+          description:
+            Responded to league invite (accept or decline) successfully
           content:
             application/json:
               schema:
-                $ref: "../../components/profile/leagueInvite.yaml#/components/schemas/RespondToLeagueInviteResponse"
+                $ref: '../../components/profile/leagueInvite.yaml#/components/schemas/RespondToLeagueInviteResponse'
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []

@@ -1,3 +1,3 @@
-import { SeasonsAttributes } from "../../models/Seasons";
+import { SeasonsAttributes } from '../../models/season/Seasons';
 
 export type SeasonWithDetails = SeasonsAttributes;

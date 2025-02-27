@@ -14,12 +14,12 @@ paths:
             type: string
           description: Profile Id for the getLeaguesQuery
       responses:
-        "200":
+        '200':
           description: A list of leagues for the profile
           content:
             application/json:
               schema:
-                $ref: "../components/league.yaml#/components/schemas/GetLeaguesForProfileResponse"
+                $ref: '../components/league.yaml#/components/schemas/GetLeaguesForProfileResponse'
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -35,14 +35,14 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "../components/league.yaml#/components/schemas/CreateLeagueRequestBody"
+              $ref: '../components/league.yaml#/components/schemas/CreateLeagueRequestBody'
       responses:
-        "201":
+        '201':
           description: League created successfully
           content:
             application/json:
               schema:
-                $ref: "../components/league.yaml#/components/schemas/CreateLeagueResponse"
+                $ref: '../components/league.yaml#/components/schemas/CreateLeagueResponse'
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []

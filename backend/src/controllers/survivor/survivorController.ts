@@ -1,43 +1,41 @@
-import survivorService from "../../servicesAndHelpers/survivor/survivorService";
-import { Request, Response, NextFunction } from "express";
-import { validateQuery } from "../../utils/survivor/survivorUtils";
-import { ApiError, GetSurvivorsResponse, Season } from "../../generated-api";
-import seasonService from "../../servicesAndHelpers/season/seasonService";
+import { NextFunction, Request, Response } from 'express';
+import {
+  GetSurvivorsResponse,
+  GetSurvivorsResponseData,
+} from '../../generated-api';
+import survivorService from '../../services/survivor/survivorService';
+import survivorHelper from '../../helpers/survivor/survivorHelper';
+import { SeasonsAttributes } from '../../models/season/Seasons';
 
 const survivorController = {
-    getSurvivors: async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-        const seasonId: any = req.query.seasonId;
-        const withDetails: any = req.query.withDetails;
+  getSurvivors,
+};
 
-        try {
-            validateQuery(seasonId);
+async function getSurvivors(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  let response: GetSurvivorsResponse;
+  try {
+    const seasonId = req.query.seasonId;
+    const seasonIds: SeasonsAttributes['seasonId'][] =
+      survivorHelper.validateAndFormatGetSurvivorsRequest(seasonId);
 
-            const seasonExists: boolean = await seasonService.doesSeasonExist(seasonId);
-            if (!seasonExists) {
-                const error: ApiError = {
-                    success: false,
-                    message: `Season ${seasonId} does not exist`,
-                    error: `Season ${seasonId} does not exist`,
-                    statusCode: 404
-                }
-                throw error;
-            }
-
-            const survivors = await survivorService.getSurvivorsBySeason(seasonId);
-            const response: GetSurvivorsResponse = {
-                success: true,
-                message: `Survivors received for season ${seasonId}`,
-                statusCode: 200,
-                responseData: {
-                    survivors
-                }
-
-            }
-            res.status(200).json(response);
-        } catch (error) {
-            next(error);
-        }
-    }
+    const responseData: GetSurvivorsResponseData = {
+      survivors: await survivorService.getSurvivorsBySeason(seasonIds),
+    };
+    response = {
+      statusCode: 200,
+      message: 'Successfully retrieved survivors',
+      responseData: responseData,
+      success: true,
+    };
+    res.status(200).json(response);
+    return;
+  } catch (error) {
+    next(error);
+  }
 }
 
 export default survivorController;

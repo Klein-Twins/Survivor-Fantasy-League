@@ -9,13 +9,13 @@ components:
         - inviteId
       properties:
         league:
-          $ref: "../league.yaml#/components/schemas/League"
+          $ref: '../league.yaml#/components/schemas/League'
         message:
           type: string
           description: A message indicating the success of the operation.
           example: Tony Stark has invited you to join a league
         inviterProfile:
-          $ref: "../profile.yaml#/components/schemas/Profile"
+          $ref: '../profile.yaml#/components/schemas/Profile'
         inviteId:
           type: string
           description: The unique ID of the league invite.
@@ -30,7 +30,7 @@ components:
         leagueInvites:
           type: array
           items:
-            $ref: "#/components/schemas/LeagueInvite"
+            $ref: '#/components/schemas/LeagueInvite'
         numLeagueInvites:
           type: integer
           description: The number of league invites returned
@@ -39,35 +39,41 @@ components:
     GetLeagueInvitesForPlayerResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           required:
             - responseData
           properties:
             responseData:
-              $ref: "#/components/schemas/GetLeagueInvitesForPlayerResponseData"
+              $ref: '#/components/schemas/GetLeagueInvitesForPlayerResponseData'
 
     CreateAndSendLeagueInviteResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
 
     RespondToLeagueInviteResponse:
       type: object
       allOf:
-        - $ref: "../common.yaml#/components/schemas/ApiResponse"
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
         - type: object
           required:
             - responseData
           properties:
             responseData:
-              $ref: "#/components/schemas/RespondToLeagueInviteResponseData"
+              $ref: '#/components/schemas/RespondToLeagueInviteResponseData'
 
     RespondToLeagueInviteResponseData:
       type: object
+      required:
+        - inviteId
       properties:
         league:
-          $ref: "../league.yaml#/components/schemas/League"
+          $ref: '../league.yaml#/components/schemas/League'
+        inviteId:
+          type: string
+          description: The unique ID of the league invite.
+          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
 
     CreateAndSendLeagueInviteRequestBody:
       type: object
@@ -95,7 +101,8 @@ components:
           description: The unique ID of the league the user is being invited to.
         profileId:
           type: string
-          description: THe unique ID of the profile that is responding to the invite
+          description:
+            THe unique ID of the profile that is responding to the invite
         inviteResponse:
           type: string
           description: The response status to the league invite.

@@ -36,4 +36,22 @@ export interface Account extends Profile {
      * @memberof Account
      */
     userId: string;
+
+    /**
+     * User role ADMIN or USER
+     *
+     * @type {string}
+     * @memberof Account
+     */
+    userRole: AccountUserRoleEnum;
 }
+
+/**
+ * @export
+ * @enum {string}
+ */
+export enum AccountUserRoleEnum {
+    ADMIN = 'ADMIN',
+    USER = 'USER'
+}
+

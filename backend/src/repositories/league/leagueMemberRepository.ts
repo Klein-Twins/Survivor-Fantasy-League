@@ -1,177 +1,105 @@
-import { CreateOptions, InstanceUpdateOptions, UpdateOptions } from 'sequelize';
-import { v4 as uuidv4 } from 'uuid';
-import { models } from '../../config/db';
+import { Transaction } from 'sequelize';
+import { LeagueMember } from '../../generated-api';
 import {
-  Account,
-  League,
-  LeagueInvite,
-  LeagueMember,
-  LeagueMemberRoleEnum,
-  Profile,
-  RespondToLeagueInviteRequestBodyInviteResponseEnum,
-} from '../../generated-api';
-import { InviteStatusEnum, LeagueProfileAttributes } from '../../models/LeagueProfile';
-import accountRepository from '../accountRepository';
-import logger from '../../config/logger';
-import leagueRepository from '../leagueRepository';
-import profileService from '../../servicesAndHelpers/profile/profileService';
-import userService from '../../servicesAndHelpers/user/userService';
-import profileRepository from '../profileRepository';
+  InviteStatusEnum,
+  LeagueProfileAttributes,
+} from '../../models/league/LeagueProfile';
+import { models, sequelize } from '../../config/db';
+import { v4 as uuidv4 } from 'uuid';
+import { NotFoundError } from '../../utils/errors/errors';
+import leagueMemberHelper from '../../helpers/league/leagueMemberHelper';
 
 const leagueMemberRepository = {
-  getLeagueMembersInLeague,
   createLeagueMember,
-  isUserInLeague,
-  isUserInvitedToLeague,
-  getLeagueInvitesForProfileId,
-  respondToLeagueInvite,
+  getLeagueMembers,
+  getLeagueProfile,
 };
 
-async function respondToLeagueInvite(
-  leagueId: string,
-  profileId: string,
-  inviteResponse: RespondToLeagueInviteRequestBodyInviteResponseEnum,
-  options?: InstanceUpdateOptions<LeagueProfileAttributes>
-): Promise<League | null> {
-  const leagueProfile = await models.LeagueProfile.findOne({
-    where: {
-      leagueId,
-      profileId,
-      inviteStatus: InviteStatusEnum.Pending,
-    },
-  });
-
-  if (!leagueProfile) {
-    logger.error(`No pending league invite found for profile ${profileId} in league ${leagueId}`);
-    return null;
-  }
-
-  if (inviteResponse === RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT) {
-    await leagueProfile.set('inviteStatus', InviteStatusEnum.Accepted);
-    await leagueProfile.save(options);
-  } else {
-    await leagueProfile.destroy(options);
-    return null;
-  }
-
-  return await leagueRepository.getLeagueByLeagueId(leagueId);
-}
-
-async function getLeagueInvitesForProfileId(profileId: string): Promise<LeagueInvite[]> {
-  const leagueInviteProfiles = await models.LeagueProfile.findAll({
-    where: {
-      profileId,
-      inviteStatus: InviteStatusEnum.Pending,
-    },
-  });
-
-  if (!leagueInviteProfiles || leagueInviteProfiles.length === 0) {
-    return [];
-  }
-
-  const leagueInvites: LeagueInvite[] = [];
-
-  for (const leagueInviteProfile of leagueInviteProfiles) {
-    const league: League | null = await leagueRepository.getLeagueByLeagueId(leagueInviteProfile.leagueId);
-    if (!league || !leagueInviteProfile.inviterProfileId) {
-      continue;
-    }
-    const inviterProfile: Profile | null = await profileRepository.getProfileByProfileId(
-      leagueInviteProfile.inviterProfileId
-    );
-    if (!inviterProfile) {
-      continue;
-    }
-    const message = `${inviterProfile.userName} has invited you to join a league`;
-    leagueInvites.push({
-      inviteId: leagueInviteProfile.id,
-      league,
-      message,
-      inviterProfile,
+async function getLeagueProfile(
+  leagueId: LeagueProfileAttributes['leagueId'],
+  profileId: LeagueProfileAttributes['profileId'],
+  transaction?: Transaction
+): Promise<LeagueMember> {
+  const leagueProfile: LeagueProfileAttributes | null =
+    await models.LeagueProfile.findOne({
+      where: {
+        leagueId: leagueId,
+        profileId: profileId,
+      },
+      transaction,
     });
+  if (!leagueProfile) {
+    throw new Error('Profile is not in league');
   }
-  return leagueInvites;
+  return await leagueMemberHelper.buildLeagueMember(leagueProfile);
 }
 
-async function isUserInLeague(leagueId: string, profileId: string): Promise<boolean> {
-  const leagueProfile = await models.LeagueProfile.findOne({
-    where: {
-      leagueId,
-      profileId,
-      inviteStatus: InviteStatusEnum.Accepted,
-    },
-  });
-  return !!leagueProfile;
-}
-async function isUserInvitedToLeague(leagueId: string, profileId: string): Promise<boolean> {
-  const leagueProfile = await models.LeagueProfile.findOne({
-    where: {
-      leagueId,
-      profileId,
-      inviteStatus: InviteStatusEnum.Pending,
-    },
-  });
-  return !!leagueProfile;
-}
+async function getLeagueMembers(
+  leagueId: LeagueProfileAttributes['leagueId'],
+  transaction?: Transaction
+): Promise<LeagueMember[]> {
+  const leagueProfilesAttributes: LeagueProfileAttributes[] =
+    await models.LeagueProfile.findAll({
+      where: {
+        leagueId: leagueId,
+        inviteStatus: InviteStatusEnum.Accepted,
+      },
+      transaction,
+    });
 
-async function getLeagueMembersInLeague(leagueId: string): Promise<LeagueMember[]> {
-  const leagueProfiles: LeagueProfileAttributes[] = await models.LeagueProfile.findAll({
-    where: {
-      leagueId,
-    },
-  });
-  if (!leagueProfiles || leagueProfiles.length === 0) {
-    return [];
-  }
-
-  const accountPromises = leagueProfiles.map((profile) => accountRepository.getAccountByProfileId(profile.profileId));
-
-  const accounts = await Promise.all(accountPromises);
-  const leagueMembers: LeagueMember[] = leagueProfiles
-    .filter((_, index) => accounts[index] !== null)
-    .map(
-      (profile, index): LeagueMember => ({
-        role: profile.role as LeagueMemberRoleEnum,
-        profile: accounts[index] as Account,
-      })
+  if (leagueProfilesAttributes.length === 0) {
+    throw new NotFoundError(
+      `League members not found for leagueId: ${leagueId}`
     );
-  return leagueMembers;
+  }
+
+  const leagueMembers: Promise<LeagueMember>[] = leagueProfilesAttributes.map(
+    async (leagueProfileAttributes: LeagueProfileAttributes) => {
+      return await leagueMemberHelper.buildLeagueMember(
+        leagueProfileAttributes
+      );
+    }
+  );
+
+  return Promise.all(leagueMembers);
 }
 
 async function createLeagueMember(
-  leagueId: string,
-  profileId: string,
-  inviterProfileId: string | null = null,
-  role: LeagueMemberRoleEnum,
-  inviteStatus: InviteStatusEnum,
-  options?: CreateOptions
-): Promise<LeagueMember | null> {
-  const leagueProfileAttributes = await models.LeagueProfile.create(
-    {
-      id: uuidv4(),
-      leagueId,
-      profileId,
-      role,
-      inviteStatus,
-      inviterProfileId,
-    },
-    options
-  );
-
-  if (!leagueProfileAttributes) {
-    logger.error(`Failed to create league profile for profile ${profileId} in league ${leagueId}`);
-    return null;
+  leagueId: LeagueProfileAttributes['leagueId'],
+  profileId: LeagueProfileAttributes['profileId'],
+  inviterProfileId: LeagueProfileAttributes['inviterProfileId'],
+  role: LeagueProfileAttributes['role'],
+  inviteStatus: LeagueProfileAttributes['inviteStatus'],
+  transaction?: Transaction
+): Promise<LeagueMember> {
+  let t = transaction;
+  if (!transaction) {
+    t = await sequelize.transaction();
   }
+  try {
+    const leagueMember: LeagueProfileAttributes =
+      await models.LeagueProfile.create(
+        {
+          id: uuidv4(),
+          leagueId: leagueId,
+          profileId: profileId,
+          inviterProfileId: inviterProfileId,
+          role: role,
+          inviteStatus: inviteStatus,
+        },
+        { transaction: t }
+      );
 
-  const leagueMemberAccount = await accountRepository.getAccountByProfileId(profileId);
-  if (!leagueMemberAccount) {
-    logger.error(`Failed to find account for profile ${profileId}`);
-    return null;
+    if (!transaction && t) {
+      await t.commit();
+    }
+    return await leagueMemberHelper.buildLeagueMember(leagueMember);
+  } catch (error) {
+    if (!transaction && t) {
+      await t.rollback();
+    }
+    throw error;
   }
-  return {
-    role,
-    profile: leagueMemberAccount,
-  };
 }
 
 export default leagueMemberRepository;

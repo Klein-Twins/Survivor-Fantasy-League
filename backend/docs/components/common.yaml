@@ -57,6 +57,10 @@ components:
           type: integer
           description: The total number of profiles that match the search criteria.
           example: 8
+    SurveyType:
+      type: string
+      enum: ['Weekly', 'Premier', 'All']
+      default: 'All'
 
   securitySchemes:
     accessTokenCookie:

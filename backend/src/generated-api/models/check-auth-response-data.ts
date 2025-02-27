@@ -32,5 +32,5 @@ export interface CheckAuthResponseData {
      * @type {UserSession}
      * @memberof CheckAuthResponseData
      */
-    userSession?: UserSession;
+    userSession: UserSession;
 }

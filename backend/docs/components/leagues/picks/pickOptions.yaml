@@ -1,0 +1,49 @@
+components:
+  schemas:
+    SurvivorPickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '../../survivor.yaml#/components/schemas/Survivor'
+
+    ColorPickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/ColorsEnum'
+
+    ColorsEnum:
+      type: string
+      enum: [red, orange, yellow, green, blue, purple, pink]
+
+    TribePickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '../../tribe.yaml#/components/schemas/Tribe'
+
+    BinaryPickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/BinaryOptionsEnum'
+
+    BinaryOptionsEnum:
+      type: string
+      enum: [yes, no]

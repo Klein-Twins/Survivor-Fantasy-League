@@ -1,4 +1,10 @@
 import React from 'react';
+import {
+  InputBackgroundColor,
+  InputErrorColors,
+  TextErrorColor,
+  TextSecondaryColor,
+} from '../../../styles/CommonColorClassNames';
 
 interface FormInputProps {
   label: string;
@@ -51,11 +57,7 @@ const FormInput: React.FC<FormInputProps> = ({
 
   return (
     <div className={`${mergedClassName.other}`}>
-      <label
-        htmlFor={name}
-        className={`block mb-1 ${mergedClassName.formInputTextDarkColor} ${
-          error ? mergedClassName.formInputErrorTextDarkColor : ''
-        }`}>
+      <label htmlFor={name} className={`block mb-1 ${TextSecondaryColor} ${error ? TextErrorColor : ''}`}>
         {required ? label + '*' : label}
       </label>
       <input
@@ -65,12 +67,16 @@ const FormInput: React.FC<FormInputProps> = ({
         value={value}
         onChange={onChange}
         onBlur={onBlur}
-        className={`w-full p-2  focus:outline-none ${mergedClassName.formInputBackgroundDarkColor} ${
-          error ? mergedClassName.formInputErrorBorderDarkColor : mergedClassName.formInputBorderDarkColor
-        } rounded h-10`}
+        className={`
+          w-full p-2 
+          focus:outline-none 
+          ${InputBackgroundColor} 
+          ${error ? InputErrorColors : InputBackgroundColor} 
+          rounded h-10
+        `}
         required={required}
       />
-      {error && <p className={`${mergedClassName.formInputErrorTextDarkColor} text-sm mt-1`}>{error}</p>}
+      {error && <p className={`${TextErrorColor} text-sm mt-1`}>{error}</p>}
     </div>
   );
 };
