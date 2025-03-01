@@ -16,4 +16,10 @@ router.get(
   ImageController.getLeagueImage
 );
 
+router.get(
+  '/season/:seasonId',
+  tokenMiddleware.authenticateToken,
+  ImageController.getSeasonLogoImage
+);
+
 export default router;

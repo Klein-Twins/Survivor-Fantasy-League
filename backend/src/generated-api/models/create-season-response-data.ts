@@ -17,13 +17,13 @@ import { Season } from './season';
  * 
  *
  * @export
- * @interface GetSeasonsResponseData
+ * @interface CreateSeasonResponseData
  */
-export interface GetSeasonsResponseData {
+export interface CreateSeasonResponseData {
 
     /**
-     * @type {Array<Season>}
-     * @memberof GetSeasonsResponseData
+     * @type {Season}
+     * @memberof CreateSeasonResponseData
      */
-    seasons: Array<Season>;
+    season: Season;
 }

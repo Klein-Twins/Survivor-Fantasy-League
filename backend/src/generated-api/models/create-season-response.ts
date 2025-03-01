@@ -12,18 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { Season } from './season';
+import { ApiResponse } from './api-response';
+import { CreateSeasonResponseData } from './create-season-response-data';
  /**
  * 
  *
  * @export
- * @interface GetSeasonsResponseData
+ * @interface CreateSeasonResponse
  */
-export interface GetSeasonsResponseData {
+export interface CreateSeasonResponse extends ApiResponse {
 
     /**
-     * @type {Array<Season>}
-     * @memberof GetSeasonsResponseData
+     * @type {CreateSeasonResponseData}
+     * @memberof CreateSeasonResponse
      */
-    seasons: Array<Season>;
+    responseData: CreateSeasonResponseData;
 }

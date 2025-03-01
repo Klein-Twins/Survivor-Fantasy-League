@@ -10,7 +10,7 @@ interface FormInputProps {
   label: string;
   name: string;
   type: string;
-  value: string;
+  value?: string | File | null;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onBlur: (e: React.FocusEvent<HTMLInputElement>) => void;
   error?: string;
@@ -25,7 +25,6 @@ interface FormInputClassName extends DefaultClassName {
   formInputErrorBorderDarkColor?: string;
   formInputBackgroundDarkColor?: string;
 }
-//ark:border-surface-a2-dark dark:bg-surface-a3-dark dark:text-primary-a0-dark
 
 export interface DefaultClassName {
   other?: string;
@@ -57,14 +56,18 @@ const FormInput: React.FC<FormInputProps> = ({
 
   return (
     <div className={`${mergedClassName.other}`}>
-      <label htmlFor={name} className={`block mb-1 ${TextSecondaryColor} ${error ? TextErrorColor : ''}`}>
+      <label
+        htmlFor={name}
+        className={`block mb-1 ${TextSecondaryColor} ${
+          error ? TextErrorColor : ''
+        }`}>
         {required ? label + '*' : label}
       </label>
       <input
         type={type}
         name={name}
         id={name}
-        value={value}
+        value={type !== 'file' ? (value as string) : undefined}
         onChange={onChange}
         onBlur={onBlur}
         className={`

@@ -26,5 +26,5 @@ export interface GetSeasonsResponse extends ApiResponse {
      * @type {GetSeasonsResponseData}
      * @memberof GetSeasonsResponse
      */
-    responseData?: GetSeasonsResponseData;
+    responseData: GetSeasonsResponseData;
 }

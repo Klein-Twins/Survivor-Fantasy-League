@@ -42,9 +42,29 @@ function setResHeaders(res: Response, contentType?: string): void {
   res.setHeader('Accept-Ranges', 'bytes');
 }
 
+async function getSeasonLogoImage(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const seasonId = req.params.seasonId;
+    const { buffer, contentType } = await s3Service.getSeasonLogoImage(
+      seasonId
+    );
+    setResHeaders(res, contentType);
+    res.send(buffer);
+    return;
+  } catch (error) {
+    console.error('Error fetching season logo image:', error);
+    res.status(500).json({ error: 'Failed to fetch image' });
+  }
+}
+
 const ProfileImageController = {
   getProfileImage,
   getLeagueImage,
+  getSeasonLogoImage,
 };
 
 export default ProfileImageController;

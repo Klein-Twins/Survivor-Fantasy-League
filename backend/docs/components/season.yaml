@@ -24,6 +24,14 @@ components:
         theme:
           type: string
           description: The theme of the season.
+        isActive:
+          type: boolean
+          description: Whether the season is currently active.
+        survivors:
+          type: array
+          items:
+            $ref: './survivor.yaml#/components/schemas/Survivor'
+          description: The survivors in the season.
       required:
         - id
         - name
@@ -31,3 +39,4 @@ components:
         - end_date
         - location
         - theme
+        - isActive

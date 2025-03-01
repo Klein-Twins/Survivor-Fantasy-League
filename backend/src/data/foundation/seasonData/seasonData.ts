@@ -8,6 +8,7 @@ const seasonData: SeasonsAttributes[] = [
     name: 'The first season of the new era',
     startDate: new Date('2024-09-13'),
     endDate: new Date('2024-12-20'),
+    isActive: true,
   },
 ];
 

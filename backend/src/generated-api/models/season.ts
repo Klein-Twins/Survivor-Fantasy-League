@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { Survivor } from './survivor';
  /**
  * 
  *
@@ -67,4 +68,20 @@ export interface Season {
      * @memberof Season
      */
     theme: string;
+
+    /**
+     * Whether the season is currently active.
+     *
+     * @type {boolean}
+     * @memberof Season
+     */
+    isActive: boolean;
+
+    /**
+     * The survivors in the season.
+     *
+     * @type {Array<Survivor>}
+     * @memberof Season
+     */
+    survivors?: Array<Survivor>;
 }

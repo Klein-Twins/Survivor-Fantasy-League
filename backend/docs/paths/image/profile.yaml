@@ -67,3 +67,38 @@ paths:
             application/json:
               schema:
                 $ref: '../../components/common.yaml#/components/schemas/ApiError'
+
+  seasonLogoImage:
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve season logo image
+      description:
+        This endpoint allows you to retrieve a season logo image by season id.
+      operationId: getSeasonLogoImage
+      parameters:
+        - name: seasonId
+          in: path
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/Image'
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'

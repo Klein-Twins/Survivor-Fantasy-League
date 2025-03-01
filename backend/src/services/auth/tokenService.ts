@@ -145,9 +145,9 @@ function createToken(
   const tokenExpiresIn = tokenHelper.getTokenTotalLifeSpan(tokenType);
   const token: string = jwt.sign(payload, tokenSecret, {
     expiresIn: tokenExpiresIn,
-  });
+  } as jwt.SignOptions);
   return {
-    tokenExpiresIn,
+    tokenExpiresIn: '2h',
     token,
   };
 }

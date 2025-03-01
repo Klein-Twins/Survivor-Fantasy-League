@@ -132,3 +132,4 @@ dist
 .vscode/*
 .aws/credentials
 .aws/config
+backend/deployed.env

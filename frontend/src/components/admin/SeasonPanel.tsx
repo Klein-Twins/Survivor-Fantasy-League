@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import SeasonList from './SeasonList';
-import CreateSeasonForm from './createSeasonForm';
 import PanelWithTabs from '../ui/panels/panelWithBar/PanelWithTabs';
 import { PanelBackgroundColor } from '../../styles/CommonColorClassNames';
+import CreateSeasonForm from './CreateSeasonForm';
 
 const SeasonPanel: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'active' | 'all' | 'create'>(

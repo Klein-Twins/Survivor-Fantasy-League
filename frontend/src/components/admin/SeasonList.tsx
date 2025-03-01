@@ -1,35 +1,28 @@
-import React, { useEffect } from 'react';
-import { useApi } from '../../hooks/useApi';
-import seasonService from '../../services/season/seasonService';
-import { GetSeasonsResponse } from '../../../generated-api';
+import React from 'react';
 import Season from './Season';
 import {
   ElementBackgroundColor,
   PanelBackgroundColor,
 } from '../../styles/CommonColorClassNames';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 const SeasonList: React.FC = () => {
-  const { data, execute, error } = useApi<void, void, GetSeasonsResponse>(
-    seasonService.getSeasons
-  );
-
-  useEffect(() => {
-    const fetchSeasons = async () => {
-      await execute();
-    };
-    fetchSeasons();
-  }, []);
+  useSelector((state: RootState) => state.season);
+  const seasonState = useSelector((state: RootState) => state.season);
 
   return (
     <div className={PanelBackgroundColor}>
       <h1>Season List</h1>
-      {data && data.responseData && data.responseData.seasons && (
-        <ul className='flex flex-col space-y-2'>
-          {data?.responseData?.seasons.map((season) => (
-            <li key={season.id} className={ElementBackgroundColor}>
-              <Season season={season} />
-            </li>
-          ))}
+      {seasonState.seasons && seasonState.seasons.length > 0 && (
+        <ul>
+          {seasonState.seasons.map((season) => {
+            return (
+              <li key={season.id} className={ElementBackgroundColor}>
+                <Season season={season} />
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

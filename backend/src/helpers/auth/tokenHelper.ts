@@ -23,7 +23,7 @@ function getTokenSecret(tokenType: TokenType) {
   }
 }
 
-function getTokenTotalLifeSpan(tokenType: TokenType) {
+function getTokenTotalLifeSpan(tokenType: TokenType): string | number {
   if (tokenType == 'access') {
     return JWT_ACCESS_EXPIRATION;
   } else {

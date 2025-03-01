@@ -1,11 +1,12 @@
 import { models } from '../../config/db';
-import { Season } from '../../generated-api';
+import { CreateSeasonRequestBody, Season } from '../../generated-api';
 import seasonHelper from '../../helpers/season/seasonHelper';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import { NotFoundError } from '../../utils/errors/errors';
 
 const seasonRepository = {
   getSeason,
+  createSeason,
   getAllSeasons,
 };
 
@@ -30,6 +31,23 @@ async function getAllSeasons(): Promise<Season[]> {
   return seasonsAttributes.map((seasonAttributes: SeasonsAttributes) => {
     return seasonHelper.buildSeason(seasonAttributes);
   });
+}
+
+async function createSeason(
+  seasonInfo: CreateSeasonRequestBody
+): Promise<Season> {
+  const seasonAttributes: SeasonsAttributes = {
+    seasonId: Number(seasonInfo.seasonNumber),
+    name: seasonInfo.name,
+    startDate: new Date(seasonInfo.startDate),
+    endDate: new Date(seasonInfo.endDate),
+    location: seasonInfo.location,
+    theme: seasonInfo.theme,
+    isActive: seasonInfo.isActive,
+  };
+
+  const newSeasonAttributes = await models.Seasons.create(seasonAttributes);
+  return seasonHelper.buildSeason(newSeasonAttributes);
 }
 
 export default seasonRepository;

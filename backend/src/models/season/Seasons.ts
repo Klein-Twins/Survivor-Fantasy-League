@@ -7,6 +7,7 @@ export interface SeasonsAttributes {
   name: string; // Name of the season (optional)
   startDate: Date; // Start date of the season
   endDate: Date; // End date of the season
+  isActive: boolean;
 }
 
 const SeasonsModel = (sequelize: Sequelize) => {
@@ -17,6 +18,7 @@ const SeasonsModel = (sequelize: Sequelize) => {
     public name!: SeasonsAttributes['name'];
     public startDate!: SeasonsAttributes['startDate'];
     public endDate!: SeasonsAttributes['endDate'];
+    public isActive!: boolean;
 
     static associate(models: any) {
       this.hasMany(models.League, {
@@ -82,6 +84,12 @@ const SeasonsModel = (sequelize: Sequelize) => {
         type: DataTypes.DATE,
         allowNull: false,
         field: 'END_DATE',
+      },
+      isActive: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+        allowNull: false,
+        field: 'IS_ACTIVE',
       },
     },
     {

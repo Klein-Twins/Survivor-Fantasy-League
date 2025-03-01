@@ -1,11 +1,19 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from '../ui/forms/Form';
 import useForm from '../../hooks/useForm';
 import { CreateSeasonFormData } from '../../utils/admin/CreateSeasonFormData';
 import validateCreateSeasonForm from '../../utils/league/validateCreateSeasonForm';
 import FormInput from '../ui/forms/FormInput';
+import seasonService from '../../services/season/seasonService';
 
 const CreateSeasonForm: React.FC = () => {
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files && event.target.files[0]) {
+      setImageFile(event.target.files[0]);
+    }
+  };
+
   const {
     values,
     errors: formValidationError,
@@ -22,24 +30,28 @@ const CreateSeasonForm: React.FC = () => {
       numberCastaways: 18,
       startDate: new Date(),
       endDate: new Date(),
+      isActive: false,
+      seasonLogo: null,
     },
     validate: validateCreateSeasonForm,
     onSubmit: (values) => {
       try {
-        // const requestData: ApiRequestParams<
-        //   CreateLeagueRequestBody,
-        //   undefined
-        // > = {
-        //   body: {
-        //     name: values.name,
-        //     seasonId: values.seasonId,
-        //     profileId: account!.profileId || '',
-        //   },
-        //   queryParams: undefined,
-        // };
-        // dispatch(createLeague(requestData));
-        console.log('TODO: Implement a create season API call here');
-        console.log(values);
+        if (!imageFile) {
+          throw new Error('Season logo image is required');
+        }
+        seasonService.createSeason({
+          body: {
+            seasonNumber: values.seasonNumber,
+            theme: values.theme,
+            name: values.seasonName,
+            location: values.location,
+            numberOfContestants: values.numberCastaways,
+            startDate: values.startDate.toString(),
+            endDate: values.endDate.toString(),
+            isActive: values.isActive,
+            seasonLogo: imageFile,
+          },
+        });
       } catch (error) {
         console.error('Error creating league', error);
       }
@@ -76,13 +88,14 @@ const CreateSeasonForm: React.FC = () => {
         onChange={handleChange}
         onBlur={() => handleBlur('seasonName')}
         error={formValidationError.seasonName}
+        required
       />
 
       <FormInput
         label='Premier Date'
         name='startDate'
         type='date'
-        value={values.startDate.toISOString()}
+        value={values.startDate.toString()}
         onChange={handleChange}
         onBlur={() => handleBlur('startDate')}
         error={formValidationError.startDate}
@@ -93,7 +106,7 @@ const CreateSeasonForm: React.FC = () => {
         label='Finale Date'
         name='endDate'
         type='date'
-        value={values.startDate.toISOString()}
+        value={values.endDate.toString()}
         onChange={handleChange}
         onBlur={() => handleBlur('endDate')}
         error={formValidationError.endDate}
@@ -130,6 +143,27 @@ const CreateSeasonForm: React.FC = () => {
         onChange={handleChange}
         onBlur={() => handleBlur('theme')}
         error={formValidationError.theme}
+        required
+      />
+
+      <FormInput
+        label='Active'
+        name='isActive'
+        type='checkbox'
+        value={values.isActive.toString()}
+        onChange={handleChange}
+        onBlur={() => handleBlur('isActive')}
+        error={formValidationError.isActive}
+        required
+      />
+      <FormInput
+        label='Season Logo'
+        name='seasonLogo'
+        type='file'
+        onChange={handleImageChange}
+        onBlur={() => handleBlur('seasonLogo')}
+        error={imageFile ? '' : 'Season logo image is required'}
+        required
       />
     </Form>
   );

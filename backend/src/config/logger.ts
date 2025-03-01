@@ -45,7 +45,9 @@ const getCallerDetails = (): string => {
   const callerLine = stackLines[srcLines[2]]; // Adjust based on actual location in your stack trace
 
   // Adjusted regex to handle both cases
-  const matches = callerLine.match(/at (.+?) \((.+):(\d+):(\d+)\)|at (.+):(\d+):(\d+)/);
+  const matches = callerLine.match(
+    /at (.+?) \((.+):(\d+):(\d+)\)|at (.+):(\d+):(\d+)/
+  );
 
   if (matches) {
     // Case 1: When function name is present
@@ -55,7 +57,8 @@ const getCallerDetails = (): string => {
       const lineNumber = matches[3]; // The line number
 
       // Extract the path after `src/`, and remove the `.ts` extension
-      const relativeFilePath = file.split('src/')[1]?.replace('.ts', '') || file;
+      const relativeFilePath =
+        file.split('src/')[1]?.replace('.ts', '') || file;
 
       return `${relativeFilePath}.${functionName}:${lineNumber}`;
     }
@@ -65,7 +68,8 @@ const getCallerDetails = (): string => {
       const lineNumber = matches[6]; // The line number
 
       // Extract the path after `src/`, and remove the `.ts` extension
-      const relativeFilePath = file.split('src/')[1]?.replace('.ts', '') || file;
+      const relativeFilePath =
+        file.split('src/')[1]?.replace('.ts', '') || file;
 
       return `${relativeFilePath}:${lineNumber}`;
     }
@@ -76,14 +80,16 @@ const getCallerDetails = (): string => {
 
 const customTimestamp = winston.format.printf(({ timestamp }) => {
   // Use a simple date format: YYYY-MM-DD HH:mm:ss
-  const date = new Date(timestamp);
-  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
-    .getDate()
+  const date = new Date(Date.now());
+  const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
     .toString()
-    .padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date
-    .getMinutes()
+    .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')} ${date
+    .getHours()
     .toString()
-    .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+    .padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}:${date
+    .getSeconds()
+    .toString()
+    .padStart(2, '0')}`;
   return formattedDate;
 });
 
@@ -97,14 +103,22 @@ const logger = winston.createLogger({
         winston.format.colorize({ all: true }),
         winston.format.printf(({ timestamp, level, message }) => {
           // Format timestamp as YYYY-MM-DD HH:mm:ss
-          const date = new Date(timestamp);
-          const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date
+          const date = new Date(Date.now());
+          const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+            .toString()
+            .padStart(2, '0')}-${date
             .getDate()
             .toString()
-            .padStart(2, '0')} ${date.getHours().toString().padStart(2, '0')}:${date
+            .padStart(2, '0')} ${date
+            .getHours()
+            .toString()
+            .padStart(2, '0')}:${date
             .getMinutes()
             .toString()
-            .padStart(2, '0')}:${date.getSeconds().toString().padStart(2, '0')}`;
+            .padStart(2, '0')}:${date
+            .getSeconds()
+            .toString()
+            .padStart(2, '0')}`;
 
           //const callerDetails = getCallerDetails();
 

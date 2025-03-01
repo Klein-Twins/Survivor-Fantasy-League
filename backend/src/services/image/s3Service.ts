@@ -1,4 +1,4 @@
-import { GetObjectCommand } from '@aws-sdk/client-s3';
+import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { AWS_BUCKET_NAME } from '../../config/config';
 import { NotFoundError } from '../../utils/errors/errors';
 import { s3Client } from '../../config/aws.config';
@@ -6,7 +6,25 @@ import { s3Client } from '../../config/aws.config';
 const s3Service = {
   getProfileImage,
   getLeagueImage,
+  getSeasonLogoImage,
+  uploadSeasonLogo,
 };
+
+async function getSeasonLogoImage(seasonId: string) {
+  const seasonLogoImageUrl = `images/season/season${seasonId}logo.jpeg`;
+  return await getImage(seasonLogoImageUrl);
+}
+
+async function uploadSeasonLogo(seasonId: string, file: Express.Multer.File) {
+  const command = new PutObjectCommand({
+    Bucket: AWS_BUCKET_NAME,
+    Key: `images/season/season${seasonId}logo.jpeg`,
+    Body: file.buffer,
+    ContentType: file.mimetype,
+  });
+
+  await s3Client.send(command);
+}
 
 async function getLeagueImage(
   leagueId: string

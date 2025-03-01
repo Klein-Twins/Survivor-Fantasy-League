@@ -3,12 +3,14 @@ import authReducer from './slices/authSlice.ts';
 import modalReducer from './slices/modalSlice.ts';
 import leagueInviteReducer from './slices/leagueInviteSlice.ts';
 import leagueReducer from './slices/leagueSlice.ts';
+import seasonReducer from './slices/seasonSlice.ts';
 const store = configureStore({
   reducer: {
     auth: authReducer,
     modal: modalReducer,
     leagueInvite: leagueInviteReducer,
     league: leagueReducer,
+    season: seasonReducer,
   },
 });
 
