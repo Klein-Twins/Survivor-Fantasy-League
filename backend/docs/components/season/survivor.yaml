@@ -1,0 +1,74 @@
+components:
+  schemas:
+    CreateSurvivorRequestBody:
+      type: object
+      required:
+        - seasonId
+        - firstName
+        - lastName
+        - nickname
+        - job
+        - description
+        - fromState
+        - fromCountry
+        - age
+      properties:
+        seasonId:
+          type: integer
+          description: The season tied with this survivor's details
+          example: 47
+        firstName:
+          type: string
+          description: The survivor's first name
+          example: 'Andy'
+        lastName:
+          type: string
+          description: The survivor's last name
+          example: 'Rueda'
+        nickname:
+          type: string
+          description: The survivor's nickname
+          example: 'The Brain'
+        job:
+          type: string
+          description: The survivor's job
+          example: 'Software Engineer'
+        description:
+          type: string
+          description: The survivor's description
+          example: 'A software engineer who loves to code'
+        fromCity:
+          type: string
+          description: The survivor's city of origin
+          example: 'San Francisco'
+        fromState:
+          type: string
+          description: The survivor's state of origin
+          example: 'California'
+        fromCountry:
+          type: string
+          description: The survivor's country of origin
+          example: 'United States'
+        age:
+          type: integer
+          description: The survivor's age
+          example: 25
+
+    CreateSurvivorResponse:
+      type: object
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/CreateSurvivorResponseData'
+
+    CreateSurvivorResponseData:
+      type: object
+      required:
+        - survivor
+      properties:
+        survivor:
+          $ref: '../survivor.yaml#/components/schemas/Survivor'

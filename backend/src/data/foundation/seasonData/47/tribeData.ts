@@ -1,5 +1,5 @@
 import { TribeAttributes } from '../../../../models/season/Tribes';
-import { season47TribeIds } from '../../foundationIds';
+import { season47EpisodeIds, season47TribeIds } from '../../foundationIds';
 
 const season47TribeData: TribeAttributes[] = [
   {
@@ -8,6 +8,7 @@ const season47TribeData: TribeAttributes[] = [
     seasonId: 47,
     tribeColor: 'Yellow',
     mergeTribe: false,
+    episodeStarted: season47EpisodeIds.episode1,
   },
   {
     id: season47TribeIds.Tuku,
@@ -15,6 +16,7 @@ const season47TribeData: TribeAttributes[] = [
     seasonId: 47,
     tribeColor: 'Blue',
     mergeTribe: false,
+    episodeStarted: season47EpisodeIds.episode1,
   },
   {
     id: season47TribeIds.Lavo,
@@ -22,6 +24,7 @@ const season47TribeData: TribeAttributes[] = [
     seasonId: 47,
     tribeColor: 'Red',
     mergeTribe: false,
+    episodeStarted: season47EpisodeIds.episode1,
   },
   {
     id: season47TribeIds.Beka,
@@ -29,6 +32,7 @@ const season47TribeData: TribeAttributes[] = [
     seasonId: 47,
     tribeColor: 'Purple',
     mergeTribe: true,
+    episodeStarted: season47EpisodeIds.episode7,
   },
 ];
 

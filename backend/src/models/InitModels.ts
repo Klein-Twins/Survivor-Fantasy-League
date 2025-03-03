@@ -59,14 +59,20 @@ const initModels = (sequelize: Sequelize) => {
   Password.associate({ User });
   League.associate({ Seasons, LeagueProfile });
   Survivors.associate({ SurvivorDetailsOnSeason, ChallengeWinners });
-  Seasons.associate({ SurvivorDetailsOnSeason, League, Episode, SeasonEliminations, Tribe });
+  Seasons.associate({
+    SurvivorDetailsOnSeason,
+    League,
+    Episode,
+    SeasonEliminations,
+    Tribe,
+  });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons, SeasonEliminations });
   Profile.associate({ User, LeagueProfile, Notification });
   Tokens.associate({ User });
   LeagueProfile.associate({ League, Profile });
   Notification.associate({ Profile });
-  Tribe.associate({ ChallengeWinners, Seasons });
-  Episode.associate({ Seasons, SeasonEliminations, Challenges });
+  Tribe.associate({ ChallengeWinners, Seasons, Episode });
+  Episode.associate({ Seasons, SeasonEliminations, Challenges, Tribe });
   SeasonEliminations.associate({ Seasons, Episode, Survivors });
   ChallengeWinners.associate({ Survivors, Tribe, Episode });
 

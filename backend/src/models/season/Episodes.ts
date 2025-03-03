@@ -39,6 +39,12 @@ const EpisodeModel = (sequelize: Sequelize) => {
         sourceKey: 'episodeId',
         as: 'challenges',
       });
+
+      this.hasMany(models.Tribe, {
+        foreignKey: 'episodeStarted',
+        sourceKey: 'episodeNumber',
+        as: 'tribes',
+      });
     }
   }
   Episode.init(

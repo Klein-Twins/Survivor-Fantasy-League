@@ -31,35 +31,35 @@ const Season: React.FC<SeasonProps> = ({ season }) => {
 
         <div className='flex flex-col space-y-2 w-3/4 text-left'>
           {/* Season Name */}
-          <p>
-            <p className='font-bold inline'>Name: </p>
+          <div>
+            <span className='font-bold'>Name: </span>
             {season.name}
-          </p>
+          </div>
 
           {/* Season Theme */}
-          <p>
-            <p className='font-bold inline'>Theme: </p>
+          <div>
+            <span className='font-bold'>Theme: </span>
             {season.theme}
-          </p>
+          </div>
 
           {/* Air Dates */}
-          <p>
-            <p className='font-bold inline'>Air Dates: </p>
+          <div>
+            <span className='font-bold'>Air Dates: </span>
             {new Date(season.startDate).toLocaleDateString()}-
             {new Date(season.endDate).toLocaleDateString()}
-          </p>
+          </div>
 
           {/* Season Location */}
-          <p>
-            <p className='font-bold inline'>Location: </p>
+          <div>
+            <span className='font-bold'>Location: </span>
             {season.location}
-          </p>
+          </div>
 
           {/* Season IsActive */}
-          <p>
-            <p className='font-bold inline'>Active: </p>
+          <div>
+            <span className='font-bold'>Active: </span>
             {season.isActive ? 'Yes' : 'No'}
-          </p>
+          </div>
         </div>
       </div>
       <div id='buttons'>
@@ -74,25 +74,3 @@ const Season: React.FC<SeasonProps> = ({ season }) => {
 };
 
 export default Season;
-
-/*
-
-        <div className='flex justify-between'>
-          <h2 className='text-lg'>
-            Start Date: {new Date(season.startDate).toLocaleDateString()}
-          </h2>
-          <h2 className='text-lg'>
-            End Date: {new Date(season.endDate).toLocaleDateString()}
-          </h2>
-        </div>
-        <div className='flex justify-between'>
-          <h2 className='text-lg'>Location: {season.location}</h2>
-          <h2 className='text-lg'>
-            Theme: {season.theme ? season.theme : 'No theme available.'}
-          </h2>
-        </div>
-        <h2 className='text-lg'>
-          Season Name: {season.name ? season.name : 'No name available.'}
-        </h2>
-
-        */

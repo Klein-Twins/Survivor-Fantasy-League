@@ -1,13 +1,15 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SeasonsAttributes } from './Seasons';
+import { EpisodeAttributes } from './Episodes';
 
 export interface TribeAttributes {
-  id: UUID;
+  id: UUID | string;
   name: string;
   seasonId: SeasonsAttributes['seasonId'];
   tribeColor: string;
   mergeTribe: boolean;
+  episodeStarted: EpisodeAttributes['episodeId'];
 }
 
 const TribeModel = (sequelize: Sequelize) => {
@@ -17,6 +19,7 @@ const TribeModel = (sequelize: Sequelize) => {
     public seasonId!: TribeAttributes['seasonId'];
     public tribeColor!: TribeAttributes['tribeColor'];
     public mergeTribe!: TribeAttributes['mergeTribe'];
+    public episodeStarted!: EpisodeAttributes['episodeId'];
 
     static associate(models: any) {
       this.belongsTo(models.Seasons, {
@@ -34,6 +37,11 @@ const TribeModel = (sequelize: Sequelize) => {
         foreignKey: 'winnerTribeId',
         sourceKey: 'id',
         as: 'challengeWinners',
+      });
+      this.belongsTo(models.Episode, {
+        foreignKey: 'episodeStarted',
+        targetKey: 'episodeId',
+        as: 'episode',
       });
     }
   }
@@ -65,6 +73,11 @@ const TribeModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING(20),
         allowNull: false,
         field: 'TRIBE_COLOR',
+      },
+      episodeStarted: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        field: 'EPISODE_STARTED',
       },
     },
     {

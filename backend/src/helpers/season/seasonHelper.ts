@@ -1,5 +1,10 @@
 import logger from '../../config/logger';
-import { CreateSeasonRequestBody, Season } from '../../generated-api';
+import {
+  CreateSeasonRequestBody,
+  Season,
+  Survivor,
+  Tribe,
+} from '../../generated-api';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import seasonService from '../../services/season/seasonService';
 import { BadRequestError, NotFoundError } from '../../utils/errors/errors';
@@ -11,7 +16,11 @@ const seasonHelper = {
   validateCreateSeasonRequest,
 };
 
-function buildSeason(seasonAttributes: SeasonsAttributes): Season {
+function buildSeason(
+  seasonAttributes: SeasonsAttributes,
+  survivors: Survivor[],
+  tribes: Tribe[]
+): Season {
   return {
     id: seasonAttributes.seasonId,
     name: seasonAttributes.name,
@@ -20,6 +29,8 @@ function buildSeason(seasonAttributes: SeasonsAttributes): Season {
     location: seasonAttributes.location,
     theme: seasonAttributes.theme,
     isActive: seasonAttributes.isActive,
+    survivors: survivors,
+    tribes: tribes,
   };
 }
 

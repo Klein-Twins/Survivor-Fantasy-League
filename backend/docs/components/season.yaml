@@ -32,6 +32,11 @@ components:
           items:
             $ref: './survivor.yaml#/components/schemas/Survivor'
           description: The survivors in the season.
+        tribes:
+          type: array
+          items:
+            $ref: './tribe.yaml#/components/schemas/Tribe'
+          description: The tribes in the season.
       required:
         - id
         - name
@@ -40,3 +45,5 @@ components:
         - location
         - theme
         - isActive
+        - survivors
+        - tribes

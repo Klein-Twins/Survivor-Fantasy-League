@@ -3,7 +3,15 @@ import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import episodeRepository from '../../repositories/seasons/episodeRepository';
 
-const episodeService = { getEpisodes };
+const episodeService = { getEpisodes, getEpisodeBySeasonAndEpisodeNumber };
+
+async function getEpisodeBySeasonAndEpisodeNumber(
+  seasonId: SeasonsAttributes['seasonId'],
+  episodeNumber: EpisodeAttributes['episodeNumber']
+): Promise<Episode> {
+  return await episodeRepository.getEpisode(seasonId, episodeNumber);
+}
+
 async function getEpisodes(
   episodeIds: EpisodeAttributes['episodeId'][]
 ): Promise<Episode[]>;

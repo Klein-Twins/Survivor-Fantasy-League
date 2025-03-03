@@ -1,0 +1,48 @@
+components:
+  schemas:
+    CreateTribeRequestBody:
+      type: object
+      required:
+        - name
+        - seasonId
+        - isMergeTribe
+        - episodeStarted
+        - color
+      properties:
+        name:
+          type: string
+          description: The tribe's name
+          example: 'Luzon'
+        seasonId:
+          type: number
+          description: The season's unique identifier
+          example: 1
+        isMergeTribe:
+          type: boolean
+          description: Whether the tribe is a merge tribe
+          example: false
+        episodeStarted:
+          type: integer
+          description: The episode the tribe started in
+          example: 1
+        color:
+          type: string
+          description: The tribe's color
+          example: '#FF0000'
+    CreateTribeResponse:
+      type: object
+      allOf:
+        - $ref: '../common.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/CreateTribeResponseData'
+    CreateTribeResponseData:
+      type: object
+      required:
+        - tribe
+      properties:
+        tribe:
+          $ref: '../tribe.yaml#/components/schemas/Tribe'

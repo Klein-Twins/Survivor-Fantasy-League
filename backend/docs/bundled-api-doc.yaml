@@ -635,6 +635,105 @@ paths:
                                         isActive:
                                           type: boolean
                                           description: Whether the season is currently active.
+                                        survivors:
+                                          type: array
+                                          items:
+                                            type: object
+                                            allOf:
+                                              - type: object
+                                                required:
+                                                  - survivorId
+                                                  - firstName
+                                                  - lastName
+                                                properties:
+                                                  survivorId:
+                                                    type: string
+                                                    description: The survivor's unique identifier
+                                                    example: 1
+                                                  firstName:
+                                                    type: string
+                                                    description: The survivor's first name
+                                                    example: Andy
+                                                  lastName:
+                                                    type: string
+                                                    description: The survivor's last name
+                                                    example: Rueda
+                                              - type: object
+                                                required:
+                                                  - seasonId
+                                                  - fromState
+                                                  - fromCountry
+                                                  - age
+                                                  - description
+                                                  - job
+                                                  - imageUrl
+                                                properties:
+                                                  seasonId:
+                                                    type: integer
+                                                    description: The season tied with this survivor's details
+                                                    example: 47I
+                                                  nickName:
+                                                    type: string
+                                                    description: The survivor's nickname
+                                                    example: The Brain
+                                                    nullable: true
+                                                  fromCity:
+                                                    type: string
+                                                    description: The city the survivor is from
+                                                    example: Brooklyn
+                                                    nullable: true
+                                                  fromState:
+                                                    type: string
+                                                    description: The state the survivor is from
+                                                    example: New York
+                                                  fromCountry:
+                                                    type: string
+                                                    description: The country the survivor is from
+                                                    example: US
+                                                  age:
+                                                    type: integer
+                                                    description: The survivor's age at the time of the season
+                                                    example: 31
+                                                  description:
+                                                    type: string
+                                                    description: A short description about the survivor
+                                                    example: An outgoing and energetic person.
+                                                  job:
+                                                    type: string
+                                                    description: The survivor's job/occupation
+                                                    example: AI Research Assistant
+                                                  imageUrl:
+                                                    type: string
+                                                    description: The path of the survivor image
+                                                    example: /assets/images/survivors/AndyRueda47.jpeg
+                                          description: The survivors in the season.
+                                        tribes:
+                                          type: array
+                                          items:
+                                            type: object
+                                            required:
+                                              - id
+                                              - name
+                                              - color
+                                              - imageUrl
+                                            properties:
+                                              id:
+                                                type: string
+                                                description: The tribe's unique identifier
+                                                example: 1
+                                              name:
+                                                type: string
+                                                description: The tribe's name
+                                                example: Luzon
+                                              color:
+                                                type: string
+                                                description: The tribe's color
+                                                example: '#FF0000'
+                                              imageUrl:
+                                                type: string
+                                                description: The tribe's image URL
+                                                example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                          description: The tribes in the season.
                                       required:
                                         - id
                                         - name
@@ -643,6 +742,8 @@ paths:
                                         - location
                                         - theme
                                         - isActive
+                                        - survivors
+                                        - tribes
                                     leagueMembers:
                                       type: array
                                       items:
@@ -877,6 +978,105 @@ paths:
                                   isActive:
                                     type: boolean
                                     description: Whether the season is currently active.
+                                  survivors:
+                                    type: array
+                                    items:
+                                      type: object
+                                      allOf:
+                                        - type: object
+                                          required:
+                                            - survivorId
+                                            - firstName
+                                            - lastName
+                                          properties:
+                                            survivorId:
+                                              type: string
+                                              description: The survivor's unique identifier
+                                              example: 1
+                                            firstName:
+                                              type: string
+                                              description: The survivor's first name
+                                              example: Andy
+                                            lastName:
+                                              type: string
+                                              description: The survivor's last name
+                                              example: Rueda
+                                        - type: object
+                                          required:
+                                            - seasonId
+                                            - fromState
+                                            - fromCountry
+                                            - age
+                                            - description
+                                            - job
+                                            - imageUrl
+                                          properties:
+                                            seasonId:
+                                              type: integer
+                                              description: The season tied with this survivor's details
+                                              example: 47I
+                                            nickName:
+                                              type: string
+                                              description: The survivor's nickname
+                                              example: The Brain
+                                              nullable: true
+                                            fromCity:
+                                              type: string
+                                              description: The city the survivor is from
+                                              example: Brooklyn
+                                              nullable: true
+                                            fromState:
+                                              type: string
+                                              description: The state the survivor is from
+                                              example: New York
+                                            fromCountry:
+                                              type: string
+                                              description: The country the survivor is from
+                                              example: US
+                                            age:
+                                              type: integer
+                                              description: The survivor's age at the time of the season
+                                              example: 31
+                                            description:
+                                              type: string
+                                              description: A short description about the survivor
+                                              example: An outgoing and energetic person.
+                                            job:
+                                              type: string
+                                              description: The survivor's job/occupation
+                                              example: AI Research Assistant
+                                            imageUrl:
+                                              type: string
+                                              description: The path of the survivor image
+                                              example: /assets/images/survivors/AndyRueda47.jpeg
+                                    description: The survivors in the season.
+                                  tribes:
+                                    type: array
+                                    items:
+                                      type: object
+                                      required:
+                                        - id
+                                        - name
+                                        - color
+                                        - imageUrl
+                                      properties:
+                                        id:
+                                          type: string
+                                          description: The tribe's unique identifier
+                                          example: 1
+                                        name:
+                                          type: string
+                                          description: The tribe's name
+                                          example: Luzon
+                                        color:
+                                          type: string
+                                          description: The tribe's color
+                                          example: '#FF0000'
+                                        imageUrl:
+                                          type: string
+                                          description: The tribe's image URL
+                                          example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                    description: The tribes in the season.
                                 required:
                                   - id
                                   - name
@@ -885,6 +1085,8 @@ paths:
                                   - location
                                   - theme
                                   - isActive
+                                  - survivors
+                                  - tribes
                               leagueMembers:
                                 type: array
                                 items:
@@ -1175,6 +1377,105 @@ paths:
                                     isActive:
                                       type: boolean
                                       description: Whether the season is currently active.
+                                    survivors:
+                                      type: array
+                                      items:
+                                        type: object
+                                        allOf:
+                                          - type: object
+                                            required:
+                                              - survivorId
+                                              - firstName
+                                              - lastName
+                                            properties:
+                                              survivorId:
+                                                type: string
+                                                description: The survivor's unique identifier
+                                                example: 1
+                                              firstName:
+                                                type: string
+                                                description: The survivor's first name
+                                                example: Andy
+                                              lastName:
+                                                type: string
+                                                description: The survivor's last name
+                                                example: Rueda
+                                          - type: object
+                                            required:
+                                              - seasonId
+                                              - fromState
+                                              - fromCountry
+                                              - age
+                                              - description
+                                              - job
+                                              - imageUrl
+                                            properties:
+                                              seasonId:
+                                                type: integer
+                                                description: The season tied with this survivor's details
+                                                example: 47I
+                                              nickName:
+                                                type: string
+                                                description: The survivor's nickname
+                                                example: The Brain
+                                                nullable: true
+                                              fromCity:
+                                                type: string
+                                                description: The city the survivor is from
+                                                example: Brooklyn
+                                                nullable: true
+                                              fromState:
+                                                type: string
+                                                description: The state the survivor is from
+                                                example: New York
+                                              fromCountry:
+                                                type: string
+                                                description: The country the survivor is from
+                                                example: US
+                                              age:
+                                                type: integer
+                                                description: The survivor's age at the time of the season
+                                                example: 31
+                                              description:
+                                                type: string
+                                                description: A short description about the survivor
+                                                example: An outgoing and energetic person.
+                                              job:
+                                                type: string
+                                                description: The survivor's job/occupation
+                                                example: AI Research Assistant
+                                              imageUrl:
+                                                type: string
+                                                description: The path of the survivor image
+                                                example: /assets/images/survivors/AndyRueda47.jpeg
+                                      description: The survivors in the season.
+                                    tribes:
+                                      type: array
+                                      items:
+                                        type: object
+                                        required:
+                                          - id
+                                          - name
+                                          - color
+                                          - imageUrl
+                                        properties:
+                                          id:
+                                            type: string
+                                            description: The tribe's unique identifier
+                                            example: 1
+                                          name:
+                                            type: string
+                                            description: The tribe's name
+                                            example: Luzon
+                                          color:
+                                            type: string
+                                            description: The tribe's color
+                                            example: '#FF0000'
+                                          imageUrl:
+                                            type: string
+                                            description: The tribe's image URL
+                                            example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                      description: The tribes in the season.
                                   required:
                                     - id
                                     - name
@@ -1183,6 +1484,8 @@ paths:
                                     - location
                                     - theme
                                     - isActive
+                                    - survivors
+                                    - tribes
                                 leagueMembers:
                                   type: array
                                   items:
@@ -1331,6 +1634,105 @@ paths:
                                   isActive:
                                     type: boolean
                                     description: Whether the season is currently active.
+                                  survivors:
+                                    type: array
+                                    items:
+                                      type: object
+                                      allOf:
+                                        - type: object
+                                          required:
+                                            - survivorId
+                                            - firstName
+                                            - lastName
+                                          properties:
+                                            survivorId:
+                                              type: string
+                                              description: The survivor's unique identifier
+                                              example: 1
+                                            firstName:
+                                              type: string
+                                              description: The survivor's first name
+                                              example: Andy
+                                            lastName:
+                                              type: string
+                                              description: The survivor's last name
+                                              example: Rueda
+                                        - type: object
+                                          required:
+                                            - seasonId
+                                            - fromState
+                                            - fromCountry
+                                            - age
+                                            - description
+                                            - job
+                                            - imageUrl
+                                          properties:
+                                            seasonId:
+                                              type: integer
+                                              description: The season tied with this survivor's details
+                                              example: 47I
+                                            nickName:
+                                              type: string
+                                              description: The survivor's nickname
+                                              example: The Brain
+                                              nullable: true
+                                            fromCity:
+                                              type: string
+                                              description: The city the survivor is from
+                                              example: Brooklyn
+                                              nullable: true
+                                            fromState:
+                                              type: string
+                                              description: The state the survivor is from
+                                              example: New York
+                                            fromCountry:
+                                              type: string
+                                              description: The country the survivor is from
+                                              example: US
+                                            age:
+                                              type: integer
+                                              description: The survivor's age at the time of the season
+                                              example: 31
+                                            description:
+                                              type: string
+                                              description: A short description about the survivor
+                                              example: An outgoing and energetic person.
+                                            job:
+                                              type: string
+                                              description: The survivor's job/occupation
+                                              example: AI Research Assistant
+                                            imageUrl:
+                                              type: string
+                                              description: The path of the survivor image
+                                              example: /assets/images/survivors/AndyRueda47.jpeg
+                                    description: The survivors in the season.
+                                  tribes:
+                                    type: array
+                                    items:
+                                      type: object
+                                      required:
+                                        - id
+                                        - name
+                                        - color
+                                        - imageUrl
+                                      properties:
+                                        id:
+                                          type: string
+                                          description: The tribe's unique identifier
+                                          example: 1
+                                        name:
+                                          type: string
+                                          description: The tribe's name
+                                          example: Luzon
+                                        color:
+                                          type: string
+                                          description: The tribe's color
+                                          example: '#FF0000'
+                                        imageUrl:
+                                          type: string
+                                          description: The tribe's image URL
+                                          example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                    description: The tribes in the season.
                                 required:
                                   - id
                                   - name
@@ -1339,6 +1741,8 @@ paths:
                                   - location
                                   - theme
                                   - isActive
+                                  - survivors
+                                  - tribes
                               leagueMembers:
                                 type: array
                                 items:
@@ -2181,6 +2585,105 @@ paths:
                                 isActive:
                                   type: boolean
                                   description: Whether the season is currently active.
+                                survivors:
+                                  type: array
+                                  items:
+                                    type: object
+                                    allOf:
+                                      - type: object
+                                        required:
+                                          - survivorId
+                                          - firstName
+                                          - lastName
+                                        properties:
+                                          survivorId:
+                                            type: string
+                                            description: The survivor's unique identifier
+                                            example: 1
+                                          firstName:
+                                            type: string
+                                            description: The survivor's first name
+                                            example: Andy
+                                          lastName:
+                                            type: string
+                                            description: The survivor's last name
+                                            example: Rueda
+                                      - type: object
+                                        required:
+                                          - seasonId
+                                          - fromState
+                                          - fromCountry
+                                          - age
+                                          - description
+                                          - job
+                                          - imageUrl
+                                        properties:
+                                          seasonId:
+                                            type: integer
+                                            description: The season tied with this survivor's details
+                                            example: 47I
+                                          nickName:
+                                            type: string
+                                            description: The survivor's nickname
+                                            example: The Brain
+                                            nullable: true
+                                          fromCity:
+                                            type: string
+                                            description: The city the survivor is from
+                                            example: Brooklyn
+                                            nullable: true
+                                          fromState:
+                                            type: string
+                                            description: The state the survivor is from
+                                            example: New York
+                                          fromCountry:
+                                            type: string
+                                            description: The country the survivor is from
+                                            example: US
+                                          age:
+                                            type: integer
+                                            description: The survivor's age at the time of the season
+                                            example: 31
+                                          description:
+                                            type: string
+                                            description: A short description about the survivor
+                                            example: An outgoing and energetic person.
+                                          job:
+                                            type: string
+                                            description: The survivor's job/occupation
+                                            example: AI Research Assistant
+                                          imageUrl:
+                                            type: string
+                                            description: The path of the survivor image
+                                            example: /assets/images/survivors/AndyRueda47.jpeg
+                                  description: The survivors in the season.
+                                tribes:
+                                  type: array
+                                  items:
+                                    type: object
+                                    required:
+                                      - id
+                                      - name
+                                      - color
+                                      - imageUrl
+                                    properties:
+                                      id:
+                                        type: string
+                                        description: The tribe's unique identifier
+                                        example: 1
+                                      name:
+                                        type: string
+                                        description: The tribe's name
+                                        example: Luzon
+                                      color:
+                                        type: string
+                                        description: The tribe's color
+                                        example: '#FF0000'
+                                      imageUrl:
+                                        type: string
+                                        description: The tribe's image URL
+                                        example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                  description: The tribes in the season.
                               required:
                                 - id
                                 - name
@@ -2189,6 +2692,8 @@ paths:
                                 - location
                                 - theme
                                 - isActive
+                                - survivors
+                                - tribes
     post:
       summary: Create a season
       operationId: createSeason
@@ -2313,6 +2818,105 @@ paths:
                               isActive:
                                 type: boolean
                                 description: Whether the season is currently active.
+                              survivors:
+                                type: array
+                                items:
+                                  type: object
+                                  allOf:
+                                    - type: object
+                                      required:
+                                        - survivorId
+                                        - firstName
+                                        - lastName
+                                      properties:
+                                        survivorId:
+                                          type: string
+                                          description: The survivor's unique identifier
+                                          example: 1
+                                        firstName:
+                                          type: string
+                                          description: The survivor's first name
+                                          example: Andy
+                                        lastName:
+                                          type: string
+                                          description: The survivor's last name
+                                          example: Rueda
+                                    - type: object
+                                      required:
+                                        - seasonId
+                                        - fromState
+                                        - fromCountry
+                                        - age
+                                        - description
+                                        - job
+                                        - imageUrl
+                                      properties:
+                                        seasonId:
+                                          type: integer
+                                          description: The season tied with this survivor's details
+                                          example: 47I
+                                        nickName:
+                                          type: string
+                                          description: The survivor's nickname
+                                          example: The Brain
+                                          nullable: true
+                                        fromCity:
+                                          type: string
+                                          description: The city the survivor is from
+                                          example: Brooklyn
+                                          nullable: true
+                                        fromState:
+                                          type: string
+                                          description: The state the survivor is from
+                                          example: New York
+                                        fromCountry:
+                                          type: string
+                                          description: The country the survivor is from
+                                          example: US
+                                        age:
+                                          type: integer
+                                          description: The survivor's age at the time of the season
+                                          example: 31
+                                        description:
+                                          type: string
+                                          description: A short description about the survivor
+                                          example: An outgoing and energetic person.
+                                        job:
+                                          type: string
+                                          description: The survivor's job/occupation
+                                          example: AI Research Assistant
+                                        imageUrl:
+                                          type: string
+                                          description: The path of the survivor image
+                                          example: /assets/images/survivors/AndyRueda47.jpeg
+                                description: The survivors in the season.
+                              tribes:
+                                type: array
+                                items:
+                                  type: object
+                                  required:
+                                    - id
+                                    - name
+                                    - color
+                                    - imageUrl
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: The tribe's unique identifier
+                                      example: 1
+                                    name:
+                                      type: string
+                                      description: The tribe's name
+                                      example: Luzon
+                                    color:
+                                      type: string
+                                      description: The tribe's color
+                                      example: '#FF0000'
+                                    imageUrl:
+                                      type: string
+                                      description: The tribe's image URL
+                                      example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                description: The tribes in the season.
                             required:
                               - id
                               - name
@@ -2321,6 +2925,180 @@ paths:
                               - location
                               - theme
                               - isActive
+                              - survivors
+                              - tribes
+  /api/admin/season/survivor:
+    post:
+      summary: Create a new survivor
+      description: Creates a new survivor for a given season.
+      tags:
+        - SurvivorService
+      operationId: createSurvivor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - seasonId
+                - firstName
+                - lastName
+                - nickname
+                - job
+                - description
+                - fromState
+                - fromCountry
+                - age
+              properties:
+                seasonId:
+                  type: integer
+                  description: The season tied with this survivor's details
+                  example: 47
+                firstName:
+                  type: string
+                  description: The survivor's first name
+                  example: Andy
+                lastName:
+                  type: string
+                  description: The survivor's last name
+                  example: Rueda
+                nickname:
+                  type: string
+                  description: The survivor's nickname
+                  example: The Brain
+                job:
+                  type: string
+                  description: The survivor's job
+                  example: Software Engineer
+                description:
+                  type: string
+                  description: The survivor's description
+                  example: A software engineer who loves to code
+                fromCity:
+                  type: string
+                  description: The survivor's city of origin
+                  example: San Francisco
+                fromState:
+                  type: string
+                  description: The survivor's state of origin
+                  example: California
+                fromCountry:
+                  type: string
+                  description: The survivor's country of origin
+                  example: United States
+                age:
+                  type: integer
+                  description: The survivor's age
+                  example: 25
+      responses:
+        '201':
+          description: Survivor created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - responseData
+                    properties:
+                      responseData:
+                        type: object
+                        required:
+                          - survivor
+                        properties:
+                          survivor:
+                            type: object
+                            allOf:
+                              - type: object
+                                required:
+                                  - survivorId
+                                  - firstName
+                                  - lastName
+                                properties:
+                                  survivorId:
+                                    type: string
+                                    description: The survivor's unique identifier
+                                    example: 1
+                                  firstName:
+                                    type: string
+                                    description: The survivor's first name
+                                    example: Andy
+                                  lastName:
+                                    type: string
+                                    description: The survivor's last name
+                                    example: Rueda
+                              - type: object
+                                required:
+                                  - seasonId
+                                  - fromState
+                                  - fromCountry
+                                  - age
+                                  - description
+                                  - job
+                                  - imageUrl
+                                properties:
+                                  seasonId:
+                                    type: integer
+                                    description: The season tied with this survivor's details
+                                    example: 47I
+                                  nickName:
+                                    type: string
+                                    description: The survivor's nickname
+                                    example: The Brain
+                                    nullable: true
+                                  fromCity:
+                                    type: string
+                                    description: The city the survivor is from
+                                    example: Brooklyn
+                                    nullable: true
+                                  fromState:
+                                    type: string
+                                    description: The state the survivor is from
+                                    example: New York
+                                  fromCountry:
+                                    type: string
+                                    description: The country the survivor is from
+                                    example: US
+                                  age:
+                                    type: integer
+                                    description: The survivor's age at the time of the season
+                                    example: 31
+                                  description:
+                                    type: string
+                                    description: A short description about the survivor
+                                    example: An outgoing and energetic person.
+                                  job:
+                                    type: string
+                                    description: The survivor's job/occupation
+                                    example: AI Research Assistant
+                                  imageUrl:
+                                    type: string
+                                    description: The path of the survivor image
+                                    example: /assets/images/survivors/AndyRueda47.jpeg
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
   '/api/admin/season/{seasonId}':
     get:
       summary: Get seasons by ID
@@ -2401,6 +3179,105 @@ paths:
                                 isActive:
                                   type: boolean
                                   description: Whether the season is currently active.
+                                survivors:
+                                  type: array
+                                  items:
+                                    type: object
+                                    allOf:
+                                      - type: object
+                                        required:
+                                          - survivorId
+                                          - firstName
+                                          - lastName
+                                        properties:
+                                          survivorId:
+                                            type: string
+                                            description: The survivor's unique identifier
+                                            example: 1
+                                          firstName:
+                                            type: string
+                                            description: The survivor's first name
+                                            example: Andy
+                                          lastName:
+                                            type: string
+                                            description: The survivor's last name
+                                            example: Rueda
+                                      - type: object
+                                        required:
+                                          - seasonId
+                                          - fromState
+                                          - fromCountry
+                                          - age
+                                          - description
+                                          - job
+                                          - imageUrl
+                                        properties:
+                                          seasonId:
+                                            type: integer
+                                            description: The season tied with this survivor's details
+                                            example: 47I
+                                          nickName:
+                                            type: string
+                                            description: The survivor's nickname
+                                            example: The Brain
+                                            nullable: true
+                                          fromCity:
+                                            type: string
+                                            description: The city the survivor is from
+                                            example: Brooklyn
+                                            nullable: true
+                                          fromState:
+                                            type: string
+                                            description: The state the survivor is from
+                                            example: New York
+                                          fromCountry:
+                                            type: string
+                                            description: The country the survivor is from
+                                            example: US
+                                          age:
+                                            type: integer
+                                            description: The survivor's age at the time of the season
+                                            example: 31
+                                          description:
+                                            type: string
+                                            description: A short description about the survivor
+                                            example: An outgoing and energetic person.
+                                          job:
+                                            type: string
+                                            description: The survivor's job/occupation
+                                            example: AI Research Assistant
+                                          imageUrl:
+                                            type: string
+                                            description: The path of the survivor image
+                                            example: /assets/images/survivors/AndyRueda47.jpeg
+                                  description: The survivors in the season.
+                                tribes:
+                                  type: array
+                                  items:
+                                    type: object
+                                    required:
+                                      - id
+                                      - name
+                                      - color
+                                      - imageUrl
+                                    properties:
+                                      id:
+                                        type: string
+                                        description: The tribe's unique identifier
+                                        example: 1
+                                      name:
+                                        type: string
+                                        description: The tribe's name
+                                        example: Luzon
+                                      color:
+                                        type: string
+                                        description: The tribe's color
+                                        example: '#FF0000'
+                                      imageUrl:
+                                        type: string
+                                        description: The tribe's image URL
+                                        example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                  description: The tribes in the season.
                               required:
                                 - id
                                 - name
@@ -2409,6 +3286,111 @@ paths:
                                 - location
                                 - theme
                                 - isActive
+                                - survivors
+                                - tribes
+  /api/admin/season/tribe:
+    post:
+      summary: Create a new tribe
+      description: Creates a new tribe for a given season.
+      tags:
+        - TribeService
+      operationId: createTribe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - seasonId
+                - isMergeTribe
+                - episodeStarted
+                - color
+              properties:
+                name:
+                  type: string
+                  description: The tribe's name
+                  example: Luzon
+                seasonId:
+                  type: number
+                  description: The season's unique identifier
+                  example: 1
+                isMergeTribe:
+                  type: boolean
+                  description: Whether the tribe is a merge tribe
+                  example: false
+                episodeStarted:
+                  type: integer
+                  description: The episode the tribe started in
+                  example: 1
+                color:
+                  type: string
+                  description: The tribe's color
+                  example: '#FF0000'
+      responses:
+        '201':
+          description: Tribe created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - responseData
+                    properties:
+                      responseData:
+                        type: object
+                        required:
+                          - tribe
+                        properties:
+                          tribe:
+                            type: object
+                            required:
+                              - id
+                              - name
+                              - color
+                              - imageUrl
+                            properties:
+                              id:
+                                type: string
+                                description: The tribe's unique identifier
+                                example: 1
+                              name:
+                                type: string
+                                description: The tribe's name
+                                example: Luzon
+                              color:
+                                type: string
+                                description: The tribe's color
+                                example: '#FF0000'
+                              imageUrl:
+                                type: string
+                                description: The tribe's image URL
+                                example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
 components:
   securitySchemes:
     accessTokenCookie:

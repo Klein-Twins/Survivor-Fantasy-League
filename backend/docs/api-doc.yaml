@@ -46,8 +46,12 @@ paths:
 
   /api/admin/season:
     $ref: './paths/season/season.yaml#/paths/season'
+  /api/admin/season/survivor:
+    $ref: './paths/season/survivor.yaml#/paths/survivor'
   /api/admin/season/{seasonId}:
     $ref: './paths/season/season.yaml#/paths/seasonWithId'
+  /api/admin/season/tribe:
+    $ref: './paths/season/tribe.yaml#/paths/tribe'
 
 components:
   securitySchemes:

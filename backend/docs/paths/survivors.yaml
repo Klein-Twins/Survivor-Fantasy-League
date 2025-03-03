@@ -3,7 +3,9 @@ paths:
     get:
       summary: Get survivors
       operationId: getSurvivors
-      description: Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.
+      description:
+        Retrieves a list of survivors. Optionally, filter by season ID and
+        request detailed information.
       tags:
         - SurvivorService
       parameters:
@@ -12,7 +14,9 @@ paths:
           required: false
           schema:
             type: integer
-            description: The ID of the season to retrieve survivors from. If omitted, returns all survivors.
+            description:
+              The ID of the season to retrieve survivors from. If omitted,
+              returns all survivors.
             example: 47
         - in: query
           name: withDetails
@@ -20,12 +24,14 @@ paths:
           schema:
             type: boolean
             default: false
-            description: Whether to include detailed information about the survivors. Defaults to false.
+            description:
+              Whether to include detailed information about the survivors.
+              Defaults to false.
             example: true
       responses:
-        "200":
+        '200':
           description: Retrieves a list of survivors per season
           content:
             application/json:
               schema:
-                $ref: "../components/survivor.yaml#/components/schemas/GetSurvivorsResponse"
+                $ref: '../components/survivor.yaml#/components/schemas/GetSurvivorsResponse'

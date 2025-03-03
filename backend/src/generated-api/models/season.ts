@@ -13,6 +13,7 @@
  */
 
 import { Survivor } from './survivor';
+import { Tribe } from './tribe';
  /**
  * 
  *
@@ -83,5 +84,13 @@ export interface Season {
      * @type {Array<Survivor>}
      * @memberof Season
      */
-    survivors?: Array<Survivor>;
+    survivors: Array<Survivor>;
+
+    /**
+     * The tribes in the season.
+     *
+     * @type {Array<Tribe>}
+     * @memberof Season
+     */
+    tribes: Array<Tribe>;
 }
