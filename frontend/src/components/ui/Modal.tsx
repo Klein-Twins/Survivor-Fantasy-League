@@ -8,7 +8,12 @@ import Form from './forms/Form.tsx';
 import LogoutConfirmation from '../auth/LogoutConfirmation.tsx';
 import SurvivorDetailCard from '../survivorPage/SurvivorDetailCard.tsx';
 import Notification from './Notifcation.tsx';
-import { ButtonPrimaryTextColor, MainBackgroundColors, ModalColors } from '../../styles/CommonColorClassNames.ts';
+import {
+  ButtonPrimaryTextColor,
+  MainBackgroundColors,
+  ModalColors,
+} from '../../styles/CommonColorClassNames.ts';
+import { CreateTribeForm } from '../admin/seasonDetails/AdminTribes.tsx';
 
 interface ModalProps {
   isOpen: boolean;
@@ -24,19 +29,34 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
     dispatch(closeModal());
   };
 
+  console.log('Modal Props: ', modalProps);
+
   return (
     <div
       className={`fixed inset-0 bg-opacity-90 dark:bg-opacity-90 flex items-center justify-center ${MainBackgroundColors}`}>
-      <div className={`${ModalColors} p-6 rounded shadow-lg relative w-11/12 sm:w-5/6 md:w-1/2`}>
-        <button onClick={handleClose} className={`absolute top-2 right-3 ${ButtonPrimaryTextColor}`}>
+      <div
+        className={`${ModalColors} p-6 rounded shadow-lg relative w-11/12 sm:w-5/6 md:w-1/2`}>
+        <button
+          onClick={handleClose}
+          className={`absolute top-2 right-3 ${ButtonPrimaryTextColor}`}>
           ✕
         </button>
 
         {modalType === 'signup' && <SignupForm />}
         {modalType === 'login' && <LoginForm />}
-        {modalType === 'survivorDetail' && <SurvivorDetailCard survivor={modalProps.survivor} />}
-        {modalType === 'notify' && <Notification title={modalProps.title} description={modalProps.description} />}
+        {modalType === 'survivorDetail' && (
+          <SurvivorDetailCard survivor={modalProps.survivor} />
+        )}
+        {modalType === 'notify' && (
+          <Notification
+            title={modalProps.title}
+            description={modalProps.description}
+          />
+        )}
         {modalType === 'logout' && <LogoutConfirmation />}
+        {modalType === 'createTribe' && (
+          <CreateTribeForm isMergeTribe={modalProps.isMergeTribe} />
+        )}
       </div>
     </div>
   );

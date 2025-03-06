@@ -7,7 +7,11 @@ interface DrawerProps {
   defaultOpen?: boolean;
 }
 
-const Drawer: React.FC<DrawerProps> = ({ title, children, defaultOpen = false }) => {
+const Drawer: React.FC<DrawerProps> = ({
+  title,
+  children,
+  defaultOpen = false,
+}) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
 
   return (
@@ -28,7 +32,11 @@ const Drawer: React.FC<DrawerProps> = ({ title, children, defaultOpen = false })
           className={`overflow-hidden transition-all duration-300 ease-in-out 
     dark:bg-surface-a1-dark
     border-x-2 border-b-2 dark:border-surface-a3-dark
-    ${isOpen ? 'rounded-b p-6 max-h-[1000px] opacity-100 space-y-4' : 'max-h-0 opacity-0 p-0'}`}>
+    ${
+      isOpen
+        ? 'rounded-b p-6 max-h-96 overflow-scroll opacity-100 space-y-4'
+        : 'max-h-0 opacity-0 p-0'
+    }`}>
           <div className='space-y-4'>{children}</div>
         </div>
       </div>

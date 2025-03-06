@@ -32,7 +32,7 @@ async function createTribe(tribeData: CreateTribeRequestBody): Promise<Tribe> {
     id: tribeId,
   });
 
-  return tribeHelper.buildTribe(tribeAttributes);
+  return await tribeHelper.buildTribe(tribeAttributes);
 }
 
 async function getTribesBySeasonId(
@@ -48,8 +48,10 @@ async function getTribesBySeasonId(
     throw new NotFoundError('Tribes not found');
   }
 
-  return tribesAttributes.map((tribeAttributes) => {
-    return tribeHelper.buildTribe(tribeAttributes);
-  });
+  return Promise.all(
+    tribesAttributes.map(async (tribeAttributes) => {
+      return await tribeHelper.buildTribe(tribeAttributes);
+    })
+  );
 }
 export default tribeRepository;

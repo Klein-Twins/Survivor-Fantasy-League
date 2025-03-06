@@ -1,7 +1,10 @@
-import { useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
-import SurvivorListForSeason from '../components/admin/survivor/SurvivorListForSeason';
+import { TextPrimaryColor } from '../styles/CommonColorClassNames';
+import Drawer from '../components/about/Drawer';
+import AdminSurvivors from '../components/admin/seasonDetails/AdminSurvivors';
+import AdminTribes from '../components/admin/seasonDetails/AdminTribes';
 
 const SeasonDetailsPage: React.FC = () => {
   const { seasonId } = useParams<{ seasonId: string }>();
@@ -14,10 +17,18 @@ const SeasonDetailsPage: React.FC = () => {
   }
 
   return (
-    <>
-      <h1> Season Details for season {seasonId}! </h1>
-      <SurvivorListForSeason season={season} />
-    </>
+    <div className='container mx-auto p-4'>
+      <h1 className={`text-2xl font-bold text-center ${TextPrimaryColor}`}>
+        Season {season.id}: {season.name}
+      </h1>
+
+      <Drawer title='Tribes' defaultOpen={false}>
+        <AdminTribes tribes={season.tribes} />
+      </Drawer>
+      <Drawer title='Survivors' defaultOpen={false}>
+        <AdminSurvivors survivors={season.survivors} />
+      </Drawer>
+    </div>
   );
 };
 

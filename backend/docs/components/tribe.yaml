@@ -24,3 +24,9 @@ components:
           type: string
           description: The tribe's image URL
           example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+        isMergeTribe:
+          type: boolean
+          description: Whether the tribe is a merge tribe
+          example: false
+        episodeStarted:
+          $ref: './leagues/picks/survey.yaml#/components/schemas/Episode'

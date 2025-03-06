@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from 'express';
 import {
   CreateTribeRequestBody,
   CreateTribeResponse,
+  CreateTribeResponseData,
   Tribe,
 } from '../../generated-api';
 import tribeHelper from '../../helpers/season/tribeHelper';
@@ -22,6 +23,16 @@ async function createTribe(
     const tribeData: CreateTribeRequestBody =
       await tribeHelper.validateAndFormatCreateTribeRequest(reqBody);
     const tribe: Tribe = await tribeService.createTribe(tribeData);
+    const responseData: CreateTribeResponseData = {
+      tribe,
+    };
+    response = {
+      success: true,
+      message: 'Tribe created successfully',
+      statusCode: 201,
+      responseData,
+    };
+    res.status(response.statusCode).json(response);
   } catch (error) {
     next(error);
   }

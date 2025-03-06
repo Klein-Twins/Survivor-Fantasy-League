@@ -1,5 +1,7 @@
-import { CreateTribeRequestBody, Tribe } from '../../generated-api';
+import { CreateTribeRequestBody, Episode, Tribe } from '../../generated-api';
 import { TribeAttributes } from '../../models/season/Tribes';
+import episodeRepository from '../../repositories/seasons/episodeRepository';
+import episodeService from '../../services/season/episodeService';
 import { BadRequestError } from '../../utils/errors/errors';
 import episodeHelper from './episodeHelper';
 import seasonHelper from './seasonHelper';
@@ -9,13 +11,18 @@ const tribeHelper = {
   validateAndFormatCreateTribeRequest,
 };
 
-function buildTribe(tribeAttributes: TribeAttributes): Tribe {
+async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
+  const episode: Episode = await episodeRepository.getEpisodeByEpisodeId(
+    tribeAttributes.episodeStarted
+  );
+
   return {
     id: tribeAttributes.id,
     name: tribeAttributes.name,
     color: tribeAttributes.tribeColor,
-    //TODO: Add tribe image
-    imageUrl: /* tribeAttributes?.imageUrl || */ '',
+    isMergeTribe: tribeAttributes.mergeTribe,
+    episodeStarted: episode,
+    imageUrl: '',
   };
 }
 
@@ -45,9 +52,18 @@ function validateTribeName(name: string) {
   }
 }
 
-function validateIsMergeTribe(isMergeTribe: boolean) {
+function validateIsMergeTribe(isMergeTribe: boolean | string) {
   if (isMergeTribe === undefined) {
     throw new BadRequestError('isMergeTribe is required');
+  }
+  if (typeof isMergeTribe === 'string') {
+    if (isMergeTribe.toLowerCase() === 'true') {
+      isMergeTribe = true;
+    } else if (isMergeTribe.toLowerCase() === 'false') {
+      isMergeTribe = false;
+    } else {
+      throw new BadRequestError('isMergeTribe must be a boolean');
+    }
   }
   if (typeof isMergeTribe !== 'boolean') {
     throw new BadRequestError('isMergeTribe must be a boolean');
@@ -58,8 +74,9 @@ function validateTribeColor(color: string) {
   if (!color || color.trim().length === 0) {
     throw new BadRequestError('Tribe color is required');
   }
-  if (!/^[a-zA-Z]+$/.test(color)) {
-    throw new BadRequestError('Tribe color must be alpha only');
+  //Color must be hex
+  if (!/^#[0-9A-F]{6}$/i.test(color)) {
+    throw new BadRequestError('Tribe color must be a hex color');
   }
 }
 

@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { Episode } from './episode';
  /**
  * 
  *
@@ -55,4 +56,19 @@ export interface Tribe {
      * @example https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg
      */
     imageUrl: string;
+
+    /**
+     * Whether the tribe is a merge tribe
+     *
+     * @type {boolean}
+     * @memberof Tribe
+     * @example false
+     */
+    isMergeTribe?: boolean;
+
+    /**
+     * @type {Episode}
+     * @memberof Tribe
+     */
+    episodeStarted?: Episode;
 }

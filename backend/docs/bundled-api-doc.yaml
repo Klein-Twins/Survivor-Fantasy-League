@@ -733,6 +733,50 @@ paths:
                                                 type: string
                                                 description: The tribe's image URL
                                                 example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                              isMergeTribe:
+                                                type: boolean
+                                                description: Whether the tribe is a merge tribe
+                                                example: false
+                                              episodeStarted:
+                                                type: object
+                                                required:
+                                                  - id
+                                                  - seasonId
+                                                  - episodeNumber
+                                                  - episodeAirDate
+                                                  - episodeTitle
+                                                  - episodeDescription
+                                                  - episodeImage
+                                                properties:
+                                                  id:
+                                                    type: string
+                                                    description: The ID of the episode
+                                                    example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                                  seasonId:
+                                                    type: number
+                                                    description: The ID of the season the episode is in
+                                                    example: '47'
+                                                  episodeNumber:
+                                                    type: number
+                                                    description: The number of the episode
+                                                    example: '1'
+                                                  episodeAirDate:
+                                                    type: string
+                                                    format: date
+                                                    description: The air date of the episode
+                                                    example: '2021-09-22'
+                                                  episodeTitle:
+                                                    type: string
+                                                    description: The title of the episode
+                                                    example: The Beginning
+                                                  episodeDescription:
+                                                    type: string
+                                                    description: The description of the episode
+                                                    example: The first episode of the season
+                                                  episodeImage:
+                                                    type: string
+                                                    description: The image of the episode
+                                                    example: 'https://www.image.com/episode.jpg'
                                           description: The tribes in the season.
                                       required:
                                         - id
@@ -1076,6 +1120,50 @@ paths:
                                           type: string
                                           description: The tribe's image URL
                                           example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                        isMergeTribe:
+                                          type: boolean
+                                          description: Whether the tribe is a merge tribe
+                                          example: false
+                                        episodeStarted:
+                                          type: object
+                                          required:
+                                            - id
+                                            - seasonId
+                                            - episodeNumber
+                                            - episodeAirDate
+                                            - episodeTitle
+                                            - episodeDescription
+                                            - episodeImage
+                                          properties:
+                                            id:
+                                              type: string
+                                              description: The ID of the episode
+                                              example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                            seasonId:
+                                              type: number
+                                              description: The ID of the season the episode is in
+                                              example: '47'
+                                            episodeNumber:
+                                              type: number
+                                              description: The number of the episode
+                                              example: '1'
+                                            episodeAirDate:
+                                              type: string
+                                              format: date
+                                              description: The air date of the episode
+                                              example: '2021-09-22'
+                                            episodeTitle:
+                                              type: string
+                                              description: The title of the episode
+                                              example: The Beginning
+                                            episodeDescription:
+                                              type: string
+                                              description: The description of the episode
+                                              example: The first episode of the season
+                                            episodeImage:
+                                              type: string
+                                              description: The image of the episode
+                                              example: 'https://www.image.com/episode.jpg'
                                     description: The tribes in the season.
                                 required:
                                   - id
@@ -1475,6 +1563,50 @@ paths:
                                             type: string
                                             description: The tribe's image URL
                                             example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                          isMergeTribe:
+                                            type: boolean
+                                            description: Whether the tribe is a merge tribe
+                                            example: false
+                                          episodeStarted:
+                                            type: object
+                                            required:
+                                              - id
+                                              - seasonId
+                                              - episodeNumber
+                                              - episodeAirDate
+                                              - episodeTitle
+                                              - episodeDescription
+                                              - episodeImage
+                                            properties:
+                                              id:
+                                                type: string
+                                                description: The ID of the episode
+                                                example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                              seasonId:
+                                                type: number
+                                                description: The ID of the season the episode is in
+                                                example: '47'
+                                              episodeNumber:
+                                                type: number
+                                                description: The number of the episode
+                                                example: '1'
+                                              episodeAirDate:
+                                                type: string
+                                                format: date
+                                                description: The air date of the episode
+                                                example: '2021-09-22'
+                                              episodeTitle:
+                                                type: string
+                                                description: The title of the episode
+                                                example: The Beginning
+                                              episodeDescription:
+                                                type: string
+                                                description: The description of the episode
+                                                example: The first episode of the season
+                                              episodeImage:
+                                                type: string
+                                                description: The image of the episode
+                                                example: 'https://www.image.com/episode.jpg'
                                       description: The tribes in the season.
                                   required:
                                     - id
@@ -1732,6 +1864,50 @@ paths:
                                           type: string
                                           description: The tribe's image URL
                                           example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                        isMergeTribe:
+                                          type: boolean
+                                          description: Whether the tribe is a merge tribe
+                                          example: false
+                                        episodeStarted:
+                                          type: object
+                                          required:
+                                            - id
+                                            - seasonId
+                                            - episodeNumber
+                                            - episodeAirDate
+                                            - episodeTitle
+                                            - episodeDescription
+                                            - episodeImage
+                                          properties:
+                                            id:
+                                              type: string
+                                              description: The ID of the episode
+                                              example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                            seasonId:
+                                              type: number
+                                              description: The ID of the season the episode is in
+                                              example: '47'
+                                            episodeNumber:
+                                              type: number
+                                              description: The number of the episode
+                                              example: '1'
+                                            episodeAirDate:
+                                              type: string
+                                              format: date
+                                              description: The air date of the episode
+                                              example: '2021-09-22'
+                                            episodeTitle:
+                                              type: string
+                                              description: The title of the episode
+                                              example: The Beginning
+                                            episodeDescription:
+                                              type: string
+                                              description: The description of the episode
+                                              example: The first episode of the season
+                                            episodeImage:
+                                              type: string
+                                              description: The image of the episode
+                                              example: 'https://www.image.com/episode.jpg'
                                     description: The tribes in the season.
                                 required:
                                   - id
@@ -2479,6 +2655,50 @@ paths:
                                                       type: string
                                                       description: The tribe's image URL
                                                       example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                                    isMergeTribe:
+                                                      type: boolean
+                                                      description: Whether the tribe is a merge tribe
+                                                      example: false
+                                                    episodeStarted:
+                                                      type: object
+                                                      required:
+                                                        - id
+                                                        - seasonId
+                                                        - episodeNumber
+                                                        - episodeAirDate
+                                                        - episodeTitle
+                                                        - episodeDescription
+                                                        - episodeImage
+                                                      properties:
+                                                        id:
+                                                          type: string
+                                                          description: The ID of the episode
+                                                          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                                        seasonId:
+                                                          type: number
+                                                          description: The ID of the season the episode is in
+                                                          example: '47'
+                                                        episodeNumber:
+                                                          type: number
+                                                          description: The number of the episode
+                                                          example: '1'
+                                                        episodeAirDate:
+                                                          type: string
+                                                          format: date
+                                                          description: The air date of the episode
+                                                          example: '2021-09-22'
+                                                        episodeTitle:
+                                                          type: string
+                                                          description: The title of the episode
+                                                          example: The Beginning
+                                                        episodeDescription:
+                                                          type: string
+                                                          description: The description of the episode
+                                                          example: The first episode of the season
+                                                        episodeImage:
+                                                          type: string
+                                                          description: The image of the episode
+                                                          example: 'https://www.image.com/episode.jpg'
                                           - type: object
                                             required:
                                               - options
@@ -2683,6 +2903,50 @@ paths:
                                         type: string
                                         description: The tribe's image URL
                                         example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                      isMergeTribe:
+                                        type: boolean
+                                        description: Whether the tribe is a merge tribe
+                                        example: false
+                                      episodeStarted:
+                                        type: object
+                                        required:
+                                          - id
+                                          - seasonId
+                                          - episodeNumber
+                                          - episodeAirDate
+                                          - episodeTitle
+                                          - episodeDescription
+                                          - episodeImage
+                                        properties:
+                                          id:
+                                            type: string
+                                            description: The ID of the episode
+                                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                          seasonId:
+                                            type: number
+                                            description: The ID of the season the episode is in
+                                            example: '47'
+                                          episodeNumber:
+                                            type: number
+                                            description: The number of the episode
+                                            example: '1'
+                                          episodeAirDate:
+                                            type: string
+                                            format: date
+                                            description: The air date of the episode
+                                            example: '2021-09-22'
+                                          episodeTitle:
+                                            type: string
+                                            description: The title of the episode
+                                            example: The Beginning
+                                          episodeDescription:
+                                            type: string
+                                            description: The description of the episode
+                                            example: The first episode of the season
+                                          episodeImage:
+                                            type: string
+                                            description: The image of the episode
+                                            example: 'https://www.image.com/episode.jpg'
                                   description: The tribes in the season.
                               required:
                                 - id
@@ -2916,6 +3180,50 @@ paths:
                                       type: string
                                       description: The tribe's image URL
                                       example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                    isMergeTribe:
+                                      type: boolean
+                                      description: Whether the tribe is a merge tribe
+                                      example: false
+                                    episodeStarted:
+                                      type: object
+                                      required:
+                                        - id
+                                        - seasonId
+                                        - episodeNumber
+                                        - episodeAirDate
+                                        - episodeTitle
+                                        - episodeDescription
+                                        - episodeImage
+                                      properties:
+                                        id:
+                                          type: string
+                                          description: The ID of the episode
+                                          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                        seasonId:
+                                          type: number
+                                          description: The ID of the season the episode is in
+                                          example: '47'
+                                        episodeNumber:
+                                          type: number
+                                          description: The number of the episode
+                                          example: '1'
+                                        episodeAirDate:
+                                          type: string
+                                          format: date
+                                          description: The air date of the episode
+                                          example: '2021-09-22'
+                                        episodeTitle:
+                                          type: string
+                                          description: The title of the episode
+                                          example: The Beginning
+                                        episodeDescription:
+                                          type: string
+                                          description: The description of the episode
+                                          example: The first episode of the season
+                                        episodeImage:
+                                          type: string
+                                          description: The image of the episode
+                                          example: 'https://www.image.com/episode.jpg'
                                 description: The tribes in the season.
                             required:
                               - id
@@ -3277,6 +3585,50 @@ paths:
                                         type: string
                                         description: The tribe's image URL
                                         example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                      isMergeTribe:
+                                        type: boolean
+                                        description: Whether the tribe is a merge tribe
+                                        example: false
+                                      episodeStarted:
+                                        type: object
+                                        required:
+                                          - id
+                                          - seasonId
+                                          - episodeNumber
+                                          - episodeAirDate
+                                          - episodeTitle
+                                          - episodeDescription
+                                          - episodeImage
+                                        properties:
+                                          id:
+                                            type: string
+                                            description: The ID of the episode
+                                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                          seasonId:
+                                            type: number
+                                            description: The ID of the season the episode is in
+                                            example: '47'
+                                          episodeNumber:
+                                            type: number
+                                            description: The number of the episode
+                                            example: '1'
+                                          episodeAirDate:
+                                            type: string
+                                            format: date
+                                            description: The air date of the episode
+                                            example: '2021-09-22'
+                                          episodeTitle:
+                                            type: string
+                                            description: The title of the episode
+                                            example: The Beginning
+                                          episodeDescription:
+                                            type: string
+                                            description: The description of the episode
+                                            example: The first episode of the season
+                                          episodeImage:
+                                            type: string
+                                            description: The image of the episode
+                                            example: 'https://www.image.com/episode.jpg'
                                   description: The tribes in the season.
                               required:
                                 - id
@@ -3388,6 +3740,50 @@ paths:
                                 type: string
                                 description: The tribe's image URL
                                 example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                              isMergeTribe:
+                                type: boolean
+                                description: Whether the tribe is a merge tribe
+                                example: false
+                              episodeStarted:
+                                type: object
+                                required:
+                                  - id
+                                  - seasonId
+                                  - episodeNumber
+                                  - episodeAirDate
+                                  - episodeTitle
+                                  - episodeDescription
+                                  - episodeImage
+                                properties:
+                                  id:
+                                    type: string
+                                    description: The ID of the episode
+                                    example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                  seasonId:
+                                    type: number
+                                    description: The ID of the season the episode is in
+                                    example: '47'
+                                  episodeNumber:
+                                    type: number
+                                    description: The number of the episode
+                                    example: '1'
+                                  episodeAirDate:
+                                    type: string
+                                    format: date
+                                    description: The air date of the episode
+                                    example: '2021-09-22'
+                                  episodeTitle:
+                                    type: string
+                                    description: The title of the episode
+                                    example: The Beginning
+                                  episodeDescription:
+                                    type: string
+                                    description: The description of the episode
+                                    example: The first episode of the season
+                                  episodeImage:
+                                    type: string
+                                    description: The image of the episode
+                                    example: 'https://www.image.com/episode.jpg'
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []

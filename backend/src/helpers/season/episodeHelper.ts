@@ -44,10 +44,11 @@ async function doesEpisodeExist(
   seasonId: EpisodeAttributes['seasonId'],
   episodeNumber: EpisodeAttributes['episodeNumber']
 ): Promise<boolean> {
-  const episode: Episode | null = await episodeRepository.getEpisode(
-    seasonId,
-    episodeNumber
-  );
+  const episode: Episode | null =
+    await episodeRepository.getEpisodeBySeasonAndEpisodeNumber(
+      seasonId,
+      episodeNumber
+    );
   return episode !== null;
 }
 

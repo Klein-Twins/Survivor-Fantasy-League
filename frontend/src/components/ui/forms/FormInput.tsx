@@ -5,8 +5,9 @@ import {
   TextErrorColor,
   TextSecondaryColor,
 } from '../../../styles/CommonColorClassNames';
+import { SketchPicker } from 'react-color';
 
-interface FormInputProps {
+interface FormInputProps<T> {
   label: string;
   name: string;
   type: string;
@@ -16,6 +17,8 @@ interface FormInputProps {
   error?: string;
   required?: boolean;
   className?: FormInputClassName;
+  ClassName?: string;
+  setFieldValue?: (field: keyof T, value: any) => void;
 }
 
 interface FormInputClassName extends DefaultClassName {
@@ -38,7 +41,7 @@ const defaultFormInputClassName: FormInputClassName = {
   formInputBackgroundDarkColor: 'dark:bg-surface-a3-dark',
 };
 
-const FormInput: React.FC<FormInputProps> = ({
+const FormInput = <T,>({
   label,
   name,
   type,
@@ -48,7 +51,9 @@ const FormInput: React.FC<FormInputProps> = ({
   error,
   required = false,
   className = {},
-}) => {
+  ClassName = '',
+  setFieldValue,
+}: FormInputProps<T>) => {
   const mergedClassName = {
     ...defaultFormInputClassName,
     ...className,
@@ -63,22 +68,52 @@ const FormInput: React.FC<FormInputProps> = ({
         }`}>
         {required ? label + '*' : label}
       </label>
-      <input
-        type={type}
-        name={name}
-        id={name}
-        value={type !== 'file' ? (value as string) : undefined}
-        onChange={onChange}
-        onBlur={onBlur}
-        className={`
-          w-full p-2 
-          focus:outline-none 
-          ${InputBackgroundColor} 
-          ${error ? InputErrorColors : InputBackgroundColor} 
-          rounded h-10
-        `}
-        required={required}
-      />
+      {type === 'color' && setFieldValue ? (
+        <>
+          <div className='flex justify-center'>
+            <SketchPicker
+              color={value as string}
+              onChangeComplete={(color) =>
+                setFieldValue(name as keyof T, color.hex)
+              }
+            />
+          </div>
+          <input
+            type={type}
+            name={name}
+            id={name}
+            value={value as string}
+            onChange={onChange}
+            onBlur={onBlur}
+            className={`
+                  w-full p-2 
+                  
+                  focus:outline-none 
+                  ${InputBackgroundColor} 
+                  ${error ? InputErrorColors : InputBackgroundColor} 
+                  rounded h-10 ${ClassName}
+                `}
+            required={required}
+          />
+        </>
+      ) : (
+        <input
+          type={type}
+          name={name}
+          id={name}
+          value={type !== 'file' ? (value as string) : undefined}
+          onChange={onChange}
+          onBlur={onBlur}
+          className={`
+            w-full p-2 
+            focus:outline-none 
+            ${InputBackgroundColor} 
+            ${error ? InputErrorColors : InputBackgroundColor} 
+            rounded h-10 ${ClassName}
+          `}
+          required={required}
+        />
+      )}
       {error && <p className={`${TextErrorColor} text-sm mt-1`}>{error}</p>}
     </div>
   );

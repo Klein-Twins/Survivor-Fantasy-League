@@ -9,7 +9,10 @@ async function getEpisodeBySeasonAndEpisodeNumber(
   seasonId: SeasonsAttributes['seasonId'],
   episodeNumber: EpisodeAttributes['episodeNumber']
 ): Promise<Episode> {
-  return await episodeRepository.getEpisode(seasonId, episodeNumber);
+  return await episodeRepository.getEpisodeBySeasonAndEpisodeNumber(
+    seasonId,
+    episodeNumber
+  );
 }
 
 async function getEpisodes(
@@ -31,7 +34,7 @@ async function getEpisodes(
   if (Array.isArray(episodeIdsOrSeasonId) && episodeNumbers === undefined) {
     return Promise.all(
       episodeIdsOrSeasonId.map(async (episodeId) => {
-        return episodeRepository.getEpisode(episodeId);
+        return episodeRepository.getEpisodeByEpisodeId(episodeId);
       })
     );
     //Case: function called with a single episodeId
@@ -39,14 +42,16 @@ async function getEpisodes(
     typeof episodeIdsOrSeasonId === 'string' &&
     episodeNumbers === undefined
   ) {
-    return [await episodeRepository.getEpisode(episodeIdsOrSeasonId)];
+    return [
+      await episodeRepository.getEpisodeByEpisodeId(episodeIdsOrSeasonId),
+    ];
   } else if (
     typeof episodeIdsOrSeasonId === 'number' &&
     Array.isArray(episodeNumbers)
   ) {
     return Promise.all(
       episodeNumbers.map(async (episodeNumber) => {
-        return episodeRepository.getEpisode(
+        return episodeRepository.getEpisodeBySeasonAndEpisodeNumber(
           episodeIdsOrSeasonId,
           episodeNumber
         );
