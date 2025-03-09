@@ -107,11 +107,14 @@ components:
           type: string
           description: The title of the episode
           example: 'The Beginning'
+          nullable: true
         episodeDescription:
           type: string
           description: The description of the episode
           example: 'The first episode of the season'
+          nullable: true
         episodeImage:
           type: string
           description: The image of the episode
           example: 'https://www.image.com/episode.jpg'
+          nullable: true

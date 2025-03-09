@@ -11,6 +11,8 @@ export const ElementBackgroundColorWithHover = ElementBackgroundColor.concat(
 );
 export const InputBackgroundColor =
   'dark:bg-surface-a5-dark bg-surface-a0-light';
+export const InputErrorColors =
+  'dark:border-red-300 border-red-300 text-red-300 dark:text-red-300';
 
 export const TextPrimaryColor =
   'dark:text-primary-a0-dark text-primary-a0-light';
@@ -75,5 +77,5 @@ export const ModalColors =
   'dark:bg-surface-a1-dark dark:text-primary-a3-dark bg-surface-a1-light text-primary-a3-light';
 
 export const TextErrorColor = 'dark:text-red-500 text-red-500';
-export const InputErrorColors =
-  'dark:border-red-300 border-red-300 text-red-300 dark:text-red-300';
+
+export const InputColors = `${InputBackgroundColor} text-white`;

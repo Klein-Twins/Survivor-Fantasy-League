@@ -63,7 +63,7 @@ export interface Episode {
      * @memberof Episode
      * @example The Beginning
      */
-    episodeTitle: string;
+    episodeTitle: string | null;
 
     /**
      * The description of the episode
@@ -72,7 +72,7 @@ export interface Episode {
      * @memberof Episode
      * @example The first episode of the season
      */
-    episodeDescription: string;
+    episodeDescription: string | null;
 
     /**
      * The image of the episode
@@ -81,5 +81,5 @@ export interface Episode {
      * @memberof Episode
      * @example https://www.image.com/episode.jpg
      */
-    episodeImage: string;
+    episodeImage: string | null;
 }

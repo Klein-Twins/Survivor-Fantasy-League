@@ -37,6 +37,11 @@ components:
           items:
             $ref: './tribe.yaml#/components/schemas/Tribe'
           description: The tribes in the season.
+        episodes:
+          type: array
+          items:
+            $ref: './leagues/picks/survey.yaml#/components/schemas/Episode'
+          description: The episodes in the season.
       required:
         - id
         - name
@@ -47,3 +52,4 @@ components:
         - isActive
         - survivors
         - tribes
+        - episodes

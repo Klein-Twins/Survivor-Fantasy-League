@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
+  ButtonPrimaryColors,
   InputBackgroundColor,
   InputErrorColors,
   TextErrorColor,
   TextSecondaryColor,
 } from '../../../styles/CommonColorClassNames';
 import { SketchPicker } from 'react-color';
+import FormInputLabel from './FormInputLabel';
 
 interface FormInputProps<T> {
   label: string;
+  showLabel?: boolean;
   name: string;
   type: string;
   value?: string | File | null;
@@ -44,6 +47,7 @@ const defaultFormInputClassName: FormInputClassName = {
 const FormInput = <T,>({
   label,
   name,
+  showLabel = true,
   type,
   value,
   onChange,
@@ -54,48 +58,48 @@ const FormInput = <T,>({
   ClassName = '',
   setFieldValue,
 }: FormInputProps<T>) => {
+  const [fileUploaded, setFileUploaded] = useState(false);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    onChange(e);
+    setFileUploaded(true);
+  };
+
   const mergedClassName = {
     ...defaultFormInputClassName,
     ...className,
   };
 
   return (
-    <div className={`${mergedClassName.other}`}>
-      <label
-        htmlFor={name}
-        className={`block mb-1 ${TextSecondaryColor} ${
-          error ? TextErrorColor : ''
-        }`}>
-        {required ? label + '*' : label}
-      </label>
+    <div className={`${mergedClassName.other} ${ClassName}`}>
+      {showLabel && <FormInputLabel name={name} labelText='Title' />}
+      {error && <p className={`${TextErrorColor} text-sm mt-1`}>{error}</p>}
       {type === 'color' && setFieldValue ? (
-        <>
-          <div className='flex justify-center'>
-            <SketchPicker
-              color={value as string}
-              onChangeComplete={(color) =>
-                setFieldValue(name as keyof T, color.hex)
-              }
-            />
-          </div>
+        <div className='flex justify-center'>
+          <SketchPicker
+            color={value as string}
+            onChangeComplete={(color) =>
+              setFieldValue(name as keyof T, color.hex)
+            }
+          />
+        </div>
+      ) : type === 'file' ? (
+        <div className='flex items-center'>
           <input
             type={type}
             name={name}
             id={name}
-            value={value as string}
-            onChange={onChange}
+            onChange={handleFileChange}
             onBlur={onBlur}
-            className={`
-                  w-full p-2 
-                  
-                  focus:outline-none 
-                  ${InputBackgroundColor} 
-                  ${error ? InputErrorColors : InputBackgroundColor} 
-                  rounded h-10 ${ClassName}
-                `}
+            className='hidden'
             required={required}
           />
-        </>
+          <label
+            htmlFor={name}
+            className={`${ButtonPrimaryColors} text-sm w-full text-center cursor-pointer text-white py-2 px-4 rounded-md`}>
+            {fileUploaded ? 'Uploaded' : 'Choose File'}
+          </label>
+        </div>
       ) : (
         <input
           type={type}
@@ -114,7 +118,6 @@ const FormInput = <T,>({
           required={required}
         />
       )}
-      {error && <p className={`${TextErrorColor} text-sm mt-1`}>{error}</p>}
     </div>
   );
 };

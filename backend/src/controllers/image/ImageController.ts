@@ -61,10 +61,28 @@ async function getSeasonLogoImage(
   }
 }
 
+async function getEpisodeImage(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const episodeId = req.params.episodeId;
+    const { buffer, contentType } = await s3Service.getEpisodeImage(episodeId);
+    setResHeaders(res, contentType);
+    res.send(buffer);
+    return;
+  } catch (error) {
+    console.error('Error fetching episode image:', error);
+    res.status(500).json({ error: 'Failed to fetch image' });
+  }
+}
+
 const ProfileImageController = {
   getProfileImage,
   getLeagueImage,
   getSeasonLogoImage,
+  getEpisodeImage,
 };
 
 export default ProfileImageController;

@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { Episode } from './episode';
 import { Survivor } from './survivor';
 import { Tribe } from './tribe';
  /**
@@ -93,4 +94,12 @@ export interface Season {
      * @memberof Season
      */
     tribes: Array<Tribe>;
+
+    /**
+     * The episodes in the season.
+     *
+     * @type {Array<Episode>}
+     * @memberof Season
+     */
+    episodes: Array<Episode>;
 }

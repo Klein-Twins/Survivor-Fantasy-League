@@ -5,6 +5,7 @@ import { TextPrimaryColor } from '../styles/CommonColorClassNames';
 import Drawer from '../components/about/Drawer';
 import AdminSurvivors from '../components/admin/seasonDetails/AdminSurvivors';
 import AdminTribes from '../components/admin/seasonDetails/AdminTribes';
+import AdminEpisodes from '../components/admin/seasonDetails/AdminEpisodes';
 
 const SeasonDetailsPage: React.FC = () => {
   const { seasonId } = useParams<{ seasonId: string }>();
@@ -27,6 +28,9 @@ const SeasonDetailsPage: React.FC = () => {
       </Drawer>
       <Drawer title='Survivors' defaultOpen={false}>
         <AdminSurvivors survivors={season.survivors} />
+      </Drawer>
+      <Drawer title='Episodes' defaultOpen={false}>
+        <AdminEpisodes episodes={season.episodes} />
       </Drawer>
     </div>
   );

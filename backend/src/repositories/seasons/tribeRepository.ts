@@ -44,10 +44,6 @@ async function getTribesBySeasonId(
     },
   });
 
-  if (tribesAttributes.length === 0) {
-    throw new NotFoundError('Tribes not found');
-  }
-
   return Promise.all(
     tribesAttributes.map(async (tribeAttributes) => {
       return await tribeHelper.buildTribe(tribeAttributes);

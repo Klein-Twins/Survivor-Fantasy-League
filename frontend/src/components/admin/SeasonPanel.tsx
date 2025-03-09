@@ -3,32 +3,31 @@ import SeasonList from './SeasonList';
 import PanelWithTabs from '../ui/panels/panelWithBar/PanelWithTabs';
 import { PanelBackgroundColor } from '../../styles/CommonColorClassNames';
 import CreateSeasonForm from './CreateSeasonForm';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '../../store/store';
+import { openModal } from '../../store/slices/modalSlice';
 
 const SeasonPanel: React.FC = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [activeTab, setActiveTab] = useState<'active' | 'all' | 'create'>(
     'active'
   );
 
+  const handlePlusClick = () => {
+    dispatch(openModal({ type: 'createSeason' }));
+  };
+
   const tabs = [
-    {
-      id: 'active',
-      label: 'Active Season',
-      content: <h1>Placeholder for Active Season</h1>,
-    },
     {
       id: 'all',
       label: 'All Seasons',
       content: <SeasonList />,
     },
-    {
-      id: 'create',
-      label: 'Create Season',
-      content: <CreateSeasonForm />,
-    },
   ];
   return (
     <div className={`${PanelBackgroundColor}`}>
-      <PanelWithTabs tabs={tabs} />
+      <PanelWithTabs tabs={tabs} addButton handlePlusClick={handlePlusClick} />
     </div>
   );
 };

@@ -1,9 +1,18 @@
+import { Transaction } from 'sequelize';
 import { Episode } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import episodeRepository from '../../repositories/seasons/episodeRepository';
+import { BadRequestError } from '../../utils/errors/errors';
+import { sequelize } from '../../config/db';
+import episodeHelper from '../../helpers/season/episodeHelper';
 
-const episodeService = { getEpisodes, getEpisodeBySeasonAndEpisodeNumber };
+const episodeService = {
+  getEpisodes,
+  getEpisodeBySeasonAndEpisodeNumber,
+  createEpisodesForNewSeason,
+  getEpisodesBySeasonId,
+};
 
 async function getEpisodeBySeasonAndEpisodeNumber(
   seasonId: SeasonsAttributes['seasonId'],
@@ -59,6 +68,63 @@ async function getEpisodes(
     );
   } else {
     throw new Error('Invalid arguments for episodeService.getEpisodes');
+  }
+}
+
+async function getEpisodesBySeasonId(
+  seasonId: SeasonsAttributes['seasonId']
+): Promise<Episode[]> {
+  const episodesAttributes: EpisodeAttributes[] =
+    await episodeRepository.getEpisodesBySeasonId(seasonId);
+  const episode: Episode[] = [];
+  for (let episodeAttributes of episodesAttributes) {
+    episode.push(episodeHelper.buildEpisode(episodeAttributes));
+  }
+  return episode;
+}
+
+async function createEpisodesForNewSeason(
+  seasonid: SeasonsAttributes['seasonId'],
+  seasonPremierDate: EpisodeAttributes['episodeAirDate'],
+  seasonFinaleDate: EpisodeAttributes['episodeAirDate'],
+  transaction?: Transaction
+): Promise<Episode[]> {
+  if (seasonPremierDate > seasonFinaleDate) {
+    throw new BadRequestError('Premier date must be before finale date');
+  }
+  if (seasonPremierDate.getDay() !== seasonFinaleDate.getDay()) {
+    throw new BadRequestError(
+      'Premier and finale date must be on the same day of the week.'
+    );
+  }
+
+  const dates = [];
+  let currentDate = new Date(seasonPremierDate);
+  while (currentDate <= seasonFinaleDate) {
+    dates.push(new Date(currentDate));
+    currentDate.setDate(currentDate.getDate() + 7);
+  }
+
+  let t = transaction;
+  if (!transaction) {
+    t = await sequelize.transaction();
+  }
+  try {
+    let episodes: Episode[] = [];
+    for (let i = 1; i <= dates.length; i++) {
+      const episodeAttributes: EpisodeAttributes =
+        await episodeRepository.createEpisode(seasonid, i, dates[i - 1], t);
+      episodes = [...episodes, episodeHelper.buildEpisode(episodeAttributes)];
+    }
+    if (!transaction && t) {
+      await t.commit();
+    }
+    return episodes;
+  } catch (error) {
+    if (!transaction && t) {
+      await t.rollback();
+    }
+    throw error;
   }
 }
 

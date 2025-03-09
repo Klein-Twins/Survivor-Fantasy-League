@@ -7,6 +7,7 @@ type ModalType =
   | 'notify'
   | 'survivorDetail'
   | 'createTribe'
+  | 'createSeason'
   | null;
 
 interface ModalState {

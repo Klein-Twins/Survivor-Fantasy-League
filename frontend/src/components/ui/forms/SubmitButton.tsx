@@ -1,46 +1,24 @@
 import React from 'react';
 import { ButtonPrimaryColors } from '../../../styles/CommonColorClassNames';
 
+interface SubmitButtonText {
+  toSubmitText?: string;
+  loadingText?: string;
+  errorText?: string;
+}
+
 interface SubmitButtonProps {
   loading?: boolean;
   disabled?: boolean;
   label: string;
-  className?: FormSubmitButtonClassName;
+  className?: '';
 }
-
-export interface FormSubmitButtonClassName {
-  backgroundDarkColor?: string;
-  hoverBackgroundDarkColor?: string;
-  textDarkColor?: string;
-}
-
-// const defaultFormSubmitButtonClassName: FormSubmitButtonClassName = {
-//   backgroundDarkColor: 'primary-a0-dark',
-//   hoverBackgroundDarkColor: 'primary-a1-dark',
-//   textDarkColor: 'surface-a1-dark',
-// };
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({
   loading,
   disabled,
   label,
-  // className = {
-  //   backgroundDarkColor: 'dark:bg-primary-a0-dark',
-  //   hoverBackgroundDarkColor: 'dark:hover:bg-primary-a2-dark',
-  //   textDarkColor: 'dark:text-white',
-  // },
 }) => {
-  // const defaultFormSubmitButtonClassName: FormSubmitButtonClassName = {
-  //   backgroundDarkColor: 'dark:bg-primary-a0-dark',
-  //   hoverBackgroundDarkColor: 'dark:hover:bg-primary-a2-dark',
-  //   textDarkColor: 'dark:text-primary-a5-dark',
-  // };
-
-  // const mergedClassName: FormSubmitButtonClassName = {
-  //   ...defaultFormSubmitButtonClassName,
-  //   ...className,
-  // };
-
   return (
     <button
       type='submit'

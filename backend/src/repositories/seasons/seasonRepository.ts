@@ -1,7 +1,14 @@
-import { models } from '../../config/db';
-import { CreateSeasonRequestBody, Season, Tribe } from '../../generated-api';
+import { Transaction } from 'sequelize';
+import { models, sequelize } from '../../config/db';
+import {
+  CreateSeasonRequestBody,
+  Episode,
+  Season,
+  Tribe,
+} from '../../generated-api';
 import seasonHelper from '../../helpers/season/seasonHelper';
 import { SeasonsAttributes } from '../../models/season/Seasons';
+import episodeService from '../../services/season/episodeService';
 import tribeService from '../../services/season/tribeService';
 import survivorService from '../../services/survivor/survivorService';
 import { NotFoundError } from '../../utils/errors/errors';
@@ -29,7 +36,16 @@ async function getSeason(
     seasonAttributes.seasonId
   );
 
-  return seasonHelper.buildSeason(seasonAttributes, survivors, tribes);
+  const episodes: Episode[] = await episodeService.getEpisodesBySeasonId(
+    seasonAttributes.seasonId
+  );
+
+  return seasonHelper.buildSeason(
+    seasonAttributes,
+    survivors,
+    tribes,
+    episodes
+  );
 }
 
 async function getAllSeasons(): Promise<Season[]> {
@@ -45,26 +61,48 @@ async function getAllSeasons(): Promise<Season[]> {
       const tribes: Tribe[] = await tribeService.getTribes(
         seasonAttributes.seasonId
       );
-      return seasonHelper.buildSeason(seasonAttributes, survivors, tribes);
+      const episodes: Episode[] = await episodeService.getEpisodesBySeasonId(
+        seasonAttributes.seasonId
+      );
+      return seasonHelper.buildSeason(
+        seasonAttributes,
+        survivors,
+        tribes,
+        episodes
+      );
     })
   );
 }
 
 async function createSeason(
-  seasonInfo: CreateSeasonRequestBody
-): Promise<Season> {
-  const seasonAttributes: SeasonsAttributes = {
-    seasonId: Number(seasonInfo.seasonNumber),
-    name: seasonInfo.name,
-    startDate: new Date(seasonInfo.startDate),
-    endDate: new Date(seasonInfo.endDate),
-    location: seasonInfo.location,
-    theme: seasonInfo.theme,
-    isActive: seasonInfo.isActive,
-  };
-
-  const newSeasonAttributes = await models.Seasons.create(seasonAttributes);
-  return seasonHelper.buildSeason(newSeasonAttributes, [], []);
+  seasonInfo: CreateSeasonRequestBody,
+  transaction?: Transaction
+): Promise<SeasonsAttributes> {
+  let t = transaction;
+  if (!transaction) {
+    t = await sequelize.transaction();
+  }
+  try {
+    const seasonAttributes: SeasonsAttributes = {
+      seasonId: Number(seasonInfo.seasonNumber),
+      name: seasonInfo.name,
+      startDate: new Date(seasonInfo.startDate),
+      endDate: new Date(seasonInfo.endDate),
+      location: seasonInfo.location,
+      theme: seasonInfo.theme,
+      isActive: seasonInfo.isActive,
+    };
+    const newSeasonAttributes = await models.Seasons.create(seasonAttributes);
+    if (!transaction && t) {
+      await t.commit();
+    }
+    return newSeasonAttributes;
+  } catch (error) {
+    if (!transaction && t) {
+      await t.rollback();
+    }
+    throw error;
+  }
 }
 
 export default seasonRepository;

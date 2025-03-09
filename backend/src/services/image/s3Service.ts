@@ -8,6 +8,7 @@ const s3Service = {
   getLeagueImage,
   getSeasonLogoImage,
   uploadSeasonLogo,
+  getEpisodeImage,
 };
 
 async function getSeasonLogoImage(seasonId: string) {
@@ -67,6 +68,18 @@ async function getImage(
     return { buffer, contentType: response.ContentType };
   } catch (error) {
     console.error('Error fetching profile image from S3:', error);
+    throw error;
+  }
+}
+
+async function getEpisodeImage(
+  episodeId: string
+): Promise<{ buffer: any; contentType?: string }> {
+  const episodeImageUrl = `images/episode/${episodeId}.jpg`;
+  try {
+    return await getImage(episodeImageUrl);
+  } catch (error) {
+    console.error('Error fetching episode image from S3:', error);
     throw error;
   }
 }

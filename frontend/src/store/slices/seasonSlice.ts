@@ -1,5 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { ApiError, GetSeasonsResponse, Season } from '../../../generated-api';
+import {
+  ApiError,
+  CreateSeasonRequestBody,
+  CreateSeasonResponse,
+  GetSeasonsResponse,
+  Season,
+} from '../../../generated-api';
 import { ApiRequestParams } from '../../hooks/useApi';
 import seasonService from '../../services/season/seasonService';
 
@@ -49,6 +55,19 @@ export const getSeasons = createAsyncThunk<
   }
 });
 
+export const createSeason = createAsyncThunk<
+  CreateSeasonResponse,
+  ApiRequestParams<CreateSeasonRequestBody, void>,
+  { rejectValue: ApiError }
+>('season/createSeason', async (params, { rejectWithValue }) => {
+  try {
+    const response = await seasonService.createSeason(params);
+    return response.data;
+  } catch (error: any) {
+    return rejectWithValue(error.response.data);
+  }
+});
+
 //TBD - implement Create Season thunk
 
 const seasonSlice = createSlice({
@@ -73,6 +92,18 @@ const seasonSlice = createSlice({
         state.seasons = action.payload.responseData.seasons || [];
       })
       .addCase(getSeasons.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || null;
+      })
+      .addCase(createSeason.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(createSeason.fulfilled, (state, action) => {
+        state.loading = false;
+        state.seasons = [...state.seasons, action.payload.responseData.season];
+      })
+      .addCase(createSeason.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || null;
       });

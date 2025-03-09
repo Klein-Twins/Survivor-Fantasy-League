@@ -102,3 +102,38 @@ paths:
             application/json:
               schema:
                 $ref: '../../components/common.yaml#/components/schemas/ApiError'
+
+  episodeImage:
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve episode image
+      description:
+        This endpoint allows you to retrieve an episode image by episode ID.
+      operationId: getEpisodeImage
+      parameters:
+        - name: episodeId
+          in: path
+          required: true
+          description: The ID of the episode.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/Image'
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'

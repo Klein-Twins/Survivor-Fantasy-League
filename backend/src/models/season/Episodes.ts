@@ -6,10 +6,10 @@ export interface EpisodeAttributes {
   episodeId: UUID | string;
   seasonId: SeasonsAttributes['seasonId'];
   episodeNumber: number;
-  episodeTitle: string;
+  episodeTitle: string | null;
   episodeAirDate: Date;
-  episodeDescription: string;
-  episodeImageUrl: string;
+  episodeDescription: string | null;
+  episodeImageUrl: string | null;
 }
 
 const EpisodeModel = (sequelize: Sequelize) => {
@@ -17,10 +17,10 @@ const EpisodeModel = (sequelize: Sequelize) => {
     public episodeId!: EpisodeAttributes['episodeId'];
     public seasonId!: EpisodeAttributes['seasonId'];
     public episodeNumber!: EpisodeAttributes['episodeNumber'];
-    public episodeTitle!: EpisodeAttributes['episodeTitle'];
+    public episodeTitle!: EpisodeAttributes['episodeTitle'] | null;
     public episodeAirDate!: EpisodeAttributes['episodeAirDate'];
-    public episodeDescription!: EpisodeAttributes['episodeDescription'];
-    public episodeImageUrl!: EpisodeAttributes['episodeImageUrl'];
+    public episodeDescription!: EpisodeAttributes['episodeDescription'] | null;
+    public episodeImageUrl!: EpisodeAttributes['episodeImageUrl'] | null;
 
     static associate(models: any) {
       this.belongsTo(models.Seasons, {
@@ -68,7 +68,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
       },
       episodeTitle: {
         type: DataTypes.STRING(150),
-        allowNull: false,
+        allowNull: true,
         field: 'EPISODE_TITLE',
       },
       episodeAirDate: {
@@ -78,12 +78,12 @@ const EpisodeModel = (sequelize: Sequelize) => {
       },
       episodeDescription: {
         type: DataTypes.STRING(500),
-        allowNull: false,
+        allowNull: true,
         field: 'EPISODE_DESCRIPTION',
       },
       episodeImageUrl: {
         type: DataTypes.STRING(200),
-        allowNull: false,
+        allowNull: true,
         field: 'EPISODE_IMAGE',
       },
     },

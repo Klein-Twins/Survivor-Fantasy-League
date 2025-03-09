@@ -40,6 +40,8 @@ paths:
     $ref: './paths/image/profile.yaml#/paths/leagueImage'
   /api/image/season/{seasonId}:
     $ref: './paths/image/profile.yaml#/paths/seasonLogoImage'
+  /api/image/episode/{episodeId}:
+    $ref: './paths/image/profile.yaml#/paths/episodeImage'
 
   /api/league/{leagueId}/survey:
     $ref: './paths/league/picks/survey.yaml#/paths/survey'

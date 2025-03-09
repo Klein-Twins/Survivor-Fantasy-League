@@ -22,4 +22,10 @@ router.get(
   ImageController.getSeasonLogoImage
 );
 
+router.get(
+  '/episode/:episodeId',
+  tokenMiddleware.authenticateToken,
+  ImageController.getEpisodeImage
+);
+
 export default router;

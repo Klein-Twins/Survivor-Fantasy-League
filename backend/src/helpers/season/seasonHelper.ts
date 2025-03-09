@@ -1,6 +1,7 @@
 import logger from '../../config/logger';
 import {
   CreateSeasonRequestBody,
+  Episode,
   Season,
   Survivor,
   Tribe,
@@ -19,7 +20,8 @@ const seasonHelper = {
 function buildSeason(
   seasonAttributes: SeasonsAttributes,
   survivors: Survivor[],
-  tribes: Tribe[]
+  tribes: Tribe[],
+  episodes: Episode[]
 ): Season {
   return {
     id: seasonAttributes.seasonId,
@@ -31,6 +33,7 @@ function buildSeason(
     isActive: seasonAttributes.isActive,
     survivors: survivors,
     tribes: tribes,
+    episodes: episodes,
   };
 }
 

@@ -13,7 +13,9 @@ interface UseFormReturn<T extends Record<string, any>> {
   errors: Partial<Record<keyof T, string>>;
   touched: Partial<Record<keyof T, boolean>>;
   handleChange: (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => void;
   handleBlur: (name: keyof T) => void;
   handleSubmit: (e: React.FormEvent) => void;
@@ -32,7 +34,9 @@ function useForm<T extends Record<string, any>>({
   const [touched, setTouched] = useState<Partial<Record<keyof T, boolean>>>({});
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
 

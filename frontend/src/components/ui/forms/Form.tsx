@@ -1,5 +1,5 @@
 import React from 'react';
-import SubmitButton, { FormSubmitButtonClassName } from './SubmitButton';
+import SubmitButton from './SubmitButton';
 import { DefaultClassName } from './FormInput';
 import { TextErrorColor } from '../../../styles/CommonColorClassNames';
 
@@ -26,6 +26,13 @@ const defaultFormClassName: FormClassName = {
   formTextDarkColor: 'dark:text-primary-a0-dark',
   formSubmitButtonClassName: undefined,
 };
+
+interface SubmitButtonText {
+  submitButtonSubmitText?: string;
+  submitButtonLoadingText?: string;
+  submitButtonErrorText?: string;
+  submitButton;
+}
 
 const Form: React.FC<FormProps> = ({
   title,

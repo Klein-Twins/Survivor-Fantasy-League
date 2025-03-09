@@ -1,13 +1,17 @@
+import { Transaction } from 'sequelize';
 import { models } from '../../config/db';
-import { Episode } from '../../generated-api';
+import { Episode, Season } from '../../generated-api';
 import episodeHelper from '../../helpers/season/episodeHelper';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import { NotFoundError } from '../../utils/errors/errors';
+import { v4 as uuidv4 } from 'uuid';
 
 const episodeRepository = {
   getEpisodeByEpisodeId,
   getEpisodeBySeasonAndEpisodeNumber,
+  createEpisode,
+  getEpisodesBySeasonId,
 };
 
 // async function getEpisode(
@@ -17,6 +21,36 @@ const episodeRepository = {
 //   seasonId: SeasonsAttributes['seasonId'],
 //   episodeNumber: EpisodeAttributes['episodeNumber']
 // ): Promise<Episode>;
+
+async function createEpisode(
+  seasonId: SeasonsAttributes['seasonId'],
+  episodeNumber: EpisodeAttributes['episodeNumber'],
+  episodeAirDate: EpisodeAttributes['episodeAirDate'],
+  transaction?: Transaction
+): Promise<EpisodeAttributes> {
+  let t = transaction;
+  if (!transaction) {
+    t = await models.sequelize.transaction();
+  }
+  try {
+    const episodeId = uuidv4();
+    const episodeAttributes: EpisodeAttributes = await models.Episode.create({
+      seasonId: seasonId,
+      episodeId: episodeId,
+      episodeNumber: episodeNumber,
+      episodeTitle: null,
+      episodeAirDate: episodeAirDate,
+      episodeDescription: null,
+      episodeImageUrl: null,
+    });
+    return episodeAttributes;
+  } catch (error) {
+    if (!transaction && t) {
+      await t.rollback();
+    }
+    throw error;
+  }
+}
 
 async function getEpisodeByEpisodeId(
   episodeId: EpisodeAttributes['episodeId']
@@ -52,6 +86,17 @@ async function getEpisodeBySeasonAndEpisodeNumber(
   }
 
   return episodeHelper.buildEpisode(episodeAttributes);
+}
+
+async function getEpisodesBySeasonId(
+  seasonId: SeasonsAttributes['seasonId']
+): Promise<EpisodeAttributes[]> {
+  const episodeAttributes: EpisodeAttributes[] = await models.Episode.findAll({
+    where: {
+      seasonId: seasonId,
+    },
+  });
+  return episodeAttributes;
 }
 
 export default episodeRepository;

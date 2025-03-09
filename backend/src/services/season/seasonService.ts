@@ -1,11 +1,16 @@
+import { Transaction } from 'sequelize';
 import {
   CreateSeasonRequestBody,
+  Episode,
   GetSeasonsResponseData,
   Season,
 } from '../../generated-api';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import seasonRepository from '../../repositories/seasons/seasonRepository';
 import { NotFoundError } from '../../utils/errors/errors';
+import { sequelize } from '../../config/db';
+import episodeService from './episodeService';
+import seasonHelper from '../../helpers/season/seasonHelper';
 
 const seasonService = {
   doesSeasonExist,
@@ -39,7 +44,27 @@ async function getAllSeasons(): Promise<GetSeasonsResponseData> {
 async function createSeason(
   seasonData: CreateSeasonRequestBody
 ): Promise<Season> {
-  return await seasonRepository.createSeason(seasonData);
+  const transaction: Transaction = await sequelize.transaction();
+
+  try {
+    const newSeasonAttributes = await seasonRepository.createSeason(
+      seasonData,
+      transaction
+    );
+
+    const episodes: Episode[] = await episodeService.createEpisodesForNewSeason(
+      seasonData.seasonNumber,
+      new Date(seasonData.startDate),
+      new Date(seasonData.endDate),
+      transaction
+    );
+
+    await transaction.commit();
+    return seasonHelper.buildSeason(newSeasonAttributes, [], [], episodes);
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
 }
 
 export default seasonService;
