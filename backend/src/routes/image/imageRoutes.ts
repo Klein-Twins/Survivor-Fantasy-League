@@ -28,4 +28,10 @@ router.get(
   ImageController.getEpisodeImage
 );
 
+router.get(
+  '/survivor/:seasonId/:survivorId',
+  tokenMiddleware.authenticateToken,
+  ImageController.getSurvivorImage
+);
+
 export default router;

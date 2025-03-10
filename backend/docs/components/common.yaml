@@ -55,12 +55,28 @@ components:
           example: 1
         totalCount:
           type: integer
-          description: The total number of profiles that match the search criteria.
+          description:
+            The total number of profiles that match the search criteria.
           example: 8
     SurveyType:
       type: string
       enum: ['Weekly', 'Premier', 'All']
       default: 'All'
+
+    Color:
+      type: object
+      required:
+        - color
+        - hex
+      properties:
+        color:
+          type: string
+          description: The name of the color
+          example: 'Red'
+        hex:
+          type: string
+          description: The hex code of the color
+          example: '#FF0000'
 
   securitySchemes:
     accessTokenCookie:

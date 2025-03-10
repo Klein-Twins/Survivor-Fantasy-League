@@ -1,0 +1,45 @@
+components:
+  schemas:
+    Episode:
+      type: object
+      required:
+        - id
+        - seasonId
+        - episodeNumber
+        - episodeAirDate
+        - episodeTitle
+        - episodeDescription
+        - episodeImage
+      properties:
+        id:
+          type: string
+          description: The ID of the episode
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
+        seasonId:
+          type: number
+          description: The ID of the season the episode is in
+          example: '47'
+        episodeNumber:
+          type: number
+          description: The number of the episode
+          example: '1'
+        episodeAirDate:
+          type: string
+          format: date
+          description: The air date of the episode
+          example: '2021-09-22'
+        episodeTitle:
+          type: string
+          description: The title of the episode
+          example: 'The Beginning'
+          nullable: true
+        episodeDescription:
+          type: string
+          description: The description of the episode
+          example: 'The first episode of the season'
+          nullable: true
+        episodeImage:
+          type: string
+          description: The image of the episode
+          example: 'https://www.image.com/episode.jpg'
+          nullable: true

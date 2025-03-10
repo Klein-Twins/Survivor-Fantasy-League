@@ -137,3 +137,85 @@ paths:
             application/json:
               schema:
                 $ref: '../../components/common.yaml#/components/schemas/ApiError'
+
+  survivorImage:
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve survivor image
+      description:
+        This endpoint allows you to retrieve a survivor image by survivor ID.
+      operationId: getSurvivorImage
+      parameters:
+        - name: survivorId
+          in: path
+          required: true
+          description: The ID of the survivor.
+          schema:
+            type: string
+        - name: seasonId
+          in: path
+          required: true
+          description: The ID of the season.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/Image'
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'
+
+  tribeImage:
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve tribe image
+      description:
+        This endpoint allows you to retrieve a tribe image by tribe ID.
+      operationId: getTribeImage
+      parameters:
+        - name: tribeId
+          in: path
+          required: true
+          description: The ID of the tribe.
+          schema:
+            type: string
+        - name: seasonId
+          in: path
+          required: true
+          description: The ID of the season.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/Image'
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/common.yaml#/components/schemas/ApiError'

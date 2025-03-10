@@ -34,7 +34,7 @@ components:
 
     SignupUserResponseData:
       type: object
-      requires:
+      required:
         - userSession
         - account
       properties:

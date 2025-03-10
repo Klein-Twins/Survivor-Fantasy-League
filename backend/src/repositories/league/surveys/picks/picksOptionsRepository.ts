@@ -3,7 +3,6 @@ import {
   BinaryOptionsEnum,
   BinaryPickOptions,
   ColorPickOptions,
-  ColorsEnum,
   PickOptionTypeEnum,
   SurvivorPickOptions,
   Tribe,
@@ -69,7 +68,12 @@ async function getColorPickOptions(): Promise<ColorPickOptions> {
     throw new NotFoundError('Color PickOptions not found');
   }
   return {
-    options: Object.values(ColorsEnum),
+    options: pickOptionsAttributes.map((pickOption) => {
+      return {
+        color: pickOption.choiceDescription,
+        hex: pickOption.choice,
+      };
+    }),
   };
 }
 

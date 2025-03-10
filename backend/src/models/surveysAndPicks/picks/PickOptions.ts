@@ -1,17 +1,22 @@
-import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { ColorsEnum, PickOptionTypeEnum } from '../../../generated-api';
+import { PickOptionTypeEnum } from '../../../generated-api';
 import { PickTypeEnum } from './PickType';
+import { InternalServerError } from '../../../utils/errors/errors';
 
 export interface PickOptionsAttributes {
   type: PickOptionTypeEnum;
   choice: string;
+  choiceDescription: string;
 }
 
 const PickOptionsModel = (sequelize: Sequelize) => {
-  class PickOptions extends Model<PickOptionsAttributes> implements PickOptionsAttributes {
+  class PickOptions
+    extends Model<PickOptionsAttributes>
+    implements PickOptionsAttributes
+  {
     public type!: PickOptionTypeEnum;
     public choice!: string;
+    public choiceDescription!: string;
 
     static associate(models: any) {
       //   this.hasMany(models.ProfilePicks, {
@@ -38,14 +43,31 @@ const PickOptionsModel = (sequelize: Sequelize) => {
         field: 'PICK_OPTION_TYPE',
         allowNull: false,
       },
+      choiceDescription: {
+        type: DataTypes.STRING(50),
+        allowNull: true,
+        field: 'CHOICE_DESCRIPTION',
+
+        validate: {
+          isValidChoiceDescription(value: string) {
+            if (this.type === 'color' && !value) {
+              throw new InternalServerError(
+                'Choice Description must be provided when type is color'
+              );
+            }
+          },
+        },
+      },
       choice: {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'CHOICE',
         validate: {
           isValidChoice(value: string) {
-            if (this.type === 'color' && !Object.values(ColorsEnum).includes(value as ColorsEnum)) {
-              throw new Error('Choice must be a valid color when type is color');
+            if (this.type === 'color' && !value.match(/^#([A-Fa-f0-9]{6})$/)) {
+              throw new Error(
+                'Choice must be a hexadecimal value when type is color'
+              );
             }
           },
         },

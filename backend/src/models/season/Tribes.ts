@@ -10,6 +10,7 @@ export interface TribeAttributes {
   tribeColor: string;
   mergeTribe: boolean;
   episodeStarted: EpisodeAttributes['episodeId'];
+  tribeHexColor: string;
 }
 
 const TribeModel = (sequelize: Sequelize) => {
@@ -18,6 +19,7 @@ const TribeModel = (sequelize: Sequelize) => {
     public name!: TribeAttributes['name'];
     public seasonId!: TribeAttributes['seasonId'];
     public tribeColor!: TribeAttributes['tribeColor'];
+    public tribeHexColor!: TribeAttributes['tribeHexColor'];
     public mergeTribe!: TribeAttributes['mergeTribe'];
     public episodeStarted!: EpisodeAttributes['episodeId'];
 
@@ -78,6 +80,19 @@ const TribeModel = (sequelize: Sequelize) => {
         type: DataTypes.UUID,
         allowNull: false,
         field: 'EPISODE_STARTED',
+      },
+      tribeHexColor: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+        field: 'TRIBE_HEX_COLOR',
+        validate: {
+          //If tribeHexColor is not a valid hex color, throw an error
+          isHexColor(value: string) {
+            if (!/^#([A-Fa-f0-9]{6})$/.test(value)) {
+              throw new Error('Invalid hex color');
+            }
+          },
+        },
       },
     },
     {

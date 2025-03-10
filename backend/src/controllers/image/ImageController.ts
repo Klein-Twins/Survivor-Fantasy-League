@@ -78,11 +78,32 @@ async function getEpisodeImage(
   }
 }
 
+async function getSurvivorImage(
+  req: Request,
+  res: Response,
+  next: NextFunction
+): Promise<void> {
+  try {
+    const { seasonId, survivorId } = req.params;
+    const { buffer, contentType } = await s3Service.getSurvivorImage(
+      seasonId,
+      survivorId
+    );
+    setResHeaders(res, contentType);
+    res.send(buffer);
+    return;
+  } catch (error) {
+    console.error('Error fetching survivor image:', error);
+    res.status(500).json({ error: 'Failed to fetch image' });
+  }
+}
+
 const ProfileImageController = {
   getProfileImage,
   getLeagueImage,
   getSeasonLogoImage,
   getEpisodeImage,
+  getSurvivorImage,
 };
 
 export default ProfileImageController;

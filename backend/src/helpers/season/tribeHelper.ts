@@ -1,4 +1,9 @@
-import { CreateTribeRequestBody, Episode, Tribe } from '../../generated-api';
+import {
+  Color,
+  CreateTribeRequestBody,
+  Episode,
+  Tribe,
+} from '../../generated-api';
 import { TribeAttributes } from '../../models/season/Tribes';
 import episodeRepository from '../../repositories/seasons/episodeRepository';
 import episodeService from '../../services/season/episodeService';
@@ -19,7 +24,10 @@ async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
   return {
     id: tribeAttributes.id,
     name: tribeAttributes.name,
-    color: tribeAttributes.tribeColor,
+    color: {
+      color: tribeAttributes.tribeColor,
+      hex: tribeAttributes.tribeHexColor,
+    },
     isMergeTribe: tribeAttributes.mergeTribe,
     episodeStarted: episode,
     imageUrl: '',
@@ -70,13 +78,16 @@ function validateIsMergeTribe(isMergeTribe: boolean | string) {
   }
 }
 
-function validateTribeColor(color: string) {
-  if (!color || color.trim().length === 0) {
+function validateTribeColor(color: Color) {
+  if (!color || !color.hex || !color.color || color.color.trim().length === 0) {
     throw new BadRequestError('Tribe color is required');
   }
   //Color must be hex
-  if (!/^#[0-9A-F]{6}$/i.test(color)) {
+  if (!/^#[0-9A-F]{6}$/i.test(color.hex)) {
     throw new BadRequestError('Tribe color must be a hex color');
+  }
+  if (!/^[a-zA-Z ]+$/.test(color.color)) {
+    throw new BadRequestError('Tribe color must be alpha with spaces');
   }
 }
 
@@ -88,7 +99,7 @@ function formatCreateTribeRequest(
     seasonId: req.seasonId,
     isMergeTribe: req.isMergeTribe,
     episodeStarted: req.episodeStarted,
-    color: req.color.trim(),
+    color: req.color,
   };
 }
 

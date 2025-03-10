@@ -9,6 +9,8 @@ const s3Service = {
   getSeasonLogoImage,
   uploadSeasonLogo,
   getEpisodeImage,
+  getImage,
+  getSurvivorImage,
 };
 
 async function getSeasonLogoImage(seasonId: string) {
@@ -39,6 +41,14 @@ async function getProfileImage(
 ): Promise<{ buffer: any; contentType?: string }> {
   const profileImageUrl = `images/profile/${profileId}.jpg`;
   return await getImage(profileImageUrl);
+}
+
+async function getSurvivorImage(
+  seasonId: string,
+  survivorId: string
+): Promise<{ buffer: any; contentType?: string }> {
+  const survivorImageUrl = `images/survivors/${seasonId}/${survivorId}.jpeg`;
+  return await getImage(survivorImageUrl);
 }
 
 async function getImage(

@@ -15,7 +15,7 @@ async function validateAndFormatGetSurveyForLeagueMember(
 ): Promise<{
   leagueId: LeagueAttributes['leagueId'];
   profileIds: ProfileAttributes['profileId'][];
-  episodeNumbers: EpisodeAttributes['episodeNumber'][];
+  episodeIds: EpisodeAttributes['episodeId'][];
 }> {
   const leagueId = req.params.leagueId;
   leagueHelper.validateLeagueId(leagueId);
@@ -27,17 +27,17 @@ async function validateAndFormatGetSurveyForLeagueMember(
     : [];
   await profileHelper.validateProfileIds(profileIds);
 
-  const episodeNumbers = Array.isArray(req.query.episodeNumber)
-    ? (req.query.episodeNumber as string[]).map(Number)
-    : req.query.episodeNumber
-    ? [Number(req.query.episodeNumber)]
+  const episodeIds = Array.isArray(req.query.episodeId)
+    ? (req.query.episodeId as string[]).map(String)
+    : req.query.episodeId
+    ? [String(req.query.episodeId)]
     : [];
-  await episodeHelper.validateEpisodeNumbers(episodeNumbers);
+  await episodeHelper.validateEpisodeIds(episodeIds);
 
   return {
     leagueId,
     profileIds,
-    episodeNumbers,
+    episodeIds,
   };
 }
 

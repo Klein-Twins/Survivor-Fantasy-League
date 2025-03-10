@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { Color } from './color';
 import { Episode } from './episode';
  /**
  * 
@@ -40,13 +41,10 @@ export interface Tribe {
     name: string;
 
     /**
-     * The tribe's color
-     *
-     * @type {string}
+     * @type {Color}
      * @memberof Tribe
-     * @example #FF0000
      */
-    color: string;
+    color: Color;
 
     /**
      * The tribe's image URL

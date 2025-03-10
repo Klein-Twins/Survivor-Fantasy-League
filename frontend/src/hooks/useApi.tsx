@@ -42,7 +42,7 @@ export function useApi<
   TResponse extends ApiResponse = ApiResponse
 >(
   serviceFunction: (
-    params?: ApiRequestParams<TRequestBody, TQueryParams>
+    params: ApiRequestParams<TRequestBody, TQueryParams>
   ) => Promise<AxiosResponse<TResponse>>
 ): UseApiResult<TRequestBody, TQueryParams, TResponse> {
   const [state, setState] = useState<UseApiState<TResponse>>({

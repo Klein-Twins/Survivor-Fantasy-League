@@ -26,11 +26,11 @@ export interface SignupUserResponseData {
      * @type {Account}
      * @memberof SignupUserResponseData
      */
-    account?: Account;
+    account: Account;
 
     /**
      * @type {UserSession}
      * @memberof SignupUserResponseData
      */
-    userSession?: UserSession;
+    userSession: UserSession;
 }

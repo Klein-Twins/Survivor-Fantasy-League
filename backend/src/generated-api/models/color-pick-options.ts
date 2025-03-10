@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { ColorsEnum } from './colors-enum';
+import { Color } from './color';
  /**
  * 
  *
@@ -22,8 +22,8 @@ import { ColorsEnum } from './colors-enum';
 export interface ColorPickOptions {
 
     /**
-     * @type {Array<ColorsEnum>}
+     * @type {Array<Color>}
      * @memberof ColorPickOptions
      */
-    options: Array<ColorsEnum>;
+    options: Array<Color>;
 }

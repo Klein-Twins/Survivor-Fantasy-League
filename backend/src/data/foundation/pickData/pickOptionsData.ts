@@ -4,31 +4,38 @@ import { PickOptionsAttributes } from '../../../models/surveysAndPicks/picks/Pic
 const pickOptionsData: PickOptionsAttributes[] = [
   {
     type: PickOptionTypeEnum.Color,
-    choice: 'red',
+    choiceDescription: 'red',
+    choice: '#FF0000',
   },
   {
     type: PickOptionTypeEnum.Color,
-    choice: 'orange',
+    choiceDescription: 'orange',
+    choice: '#FFA500',
   },
   {
     type: PickOptionTypeEnum.Color,
-    choice: 'yellow',
+    choiceDescription: 'yellow',
+    choice: '#FFFF00',
   },
   {
     type: PickOptionTypeEnum.Color,
-    choice: 'green',
+    choiceDescription: 'green',
+    choice: '#008000',
   },
   {
     type: PickOptionTypeEnum.Color,
-    choice: 'blue',
+    choiceDescription: 'blue',
+    choice: '#0000FF',
   },
   {
     type: PickOptionTypeEnum.Color,
-    choice: 'purple',
+    choiceDescription: 'purple',
+    choice: '#800080',
   },
   {
     type: PickOptionTypeEnum.Color,
-    choice: 'pink',
+    choiceDescription: 'pink',
+    choice: '#FFC0CB',
   },
 ];
 

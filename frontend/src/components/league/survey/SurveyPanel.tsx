@@ -1,41 +1,69 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import SurveyForm from './SurveyForm';
+import { Button } from '@headlessui/react';
+import { Account, Episode, League, Season } from '../../../../generated-api';
+import {
+  ButtonPrimaryColors,
+  ButtonSubtleColors,
+} from '../../../styles/CommonColorClassNames';
 
-const SurveyPanel = () => {
-  const [activeEpisode, setActiveEpisode] = useState(1);
-  const episodes = Array.from({ length: 14 }, (_, i) => i + 1);
+interface SurveyPanelProps {
+  account: Account;
+  league: League;
+}
+
+const SurveyPanel: React.FC<SurveyPanelProps> = ({ account, league }) => {
+  const [activeEpisode, setActiveEpisode] = useState<Episode>(
+    league.season.episodes[0]
+  );
 
   return (
     <div className='bg-surface-a1-dark rounded-lg shadow-lg'>
-      <div
-        className='overflow-x-auto scrollbar-thin scrollbar-track-surface-a2-dark scrollbar-thumb-primary'
-        style={{}}>
-        <div className='flex space-x-1 mb-2'>
-          {episodes.map((episode) => (
-            <button
-              key={episode}
-              onClick={() => setActiveEpisode(episode)}
-              className={`
-                    px-4 py-2 
-                    min-w-[100px]
-                    text-sm font-medium
-                    transition-all
-                    rounded-t-lg
-                    dark:hover:bg-surface-a2-dark
-                    ${
-                      activeEpisode === episode
-                        ? 'border-b-2 border-primary text-primary'
-                        : 'text-text-secondary hover:text-text-primary'
-                    }
-                  `}>
-              Episode {episode}
-            </button>
-          ))}
-        </div>
-      </div>
-      <SurveyForm episodeNumber={activeEpisode} />
+      <h1 className='text-center text-3xl py-2 font-bold'>Surveys</h1>
+      <EpisodeSelectBar
+        activeEpisode={activeEpisode}
+        setActiveEpisode={setActiveEpisode}
+        episodes={league.season.episodes}
+      />
+      <SurveyForm
+        episodeId={activeEpisode.id}
+        profileId={account.profileId}
+        leagueId={league.leagueId}
+      />
+      {/* <SurveyForm episodeNumber={activeEpisode} /> */}
     </div>
   );
 };
 
 export default SurveyPanel;
+
+interface EpisodeSelectBarProps {
+  activeEpisode: Episode;
+  setActiveEpisode: (episode: Episode) => void;
+  episodes: Episode[];
+}
+
+const EpisodeSelectBar: React.FC<EpisodeSelectBarProps> = ({
+  activeEpisode,
+  setActiveEpisode,
+  episodes,
+}) => {
+  return (
+    <div className='bg-surgace-a1-light dark:bg-surface-a1-dark flex space-x-2 overflow-x-auto whitespace-nowrap'>
+      {episodes.map((episode) => {
+        return (
+          <Button
+            key={episode.id}
+            onClick={() => setActiveEpisode(episode)}
+            className={`${
+              activeEpisode.id === episode.id
+                ? ButtonPrimaryColors
+                : ButtonSubtleColors
+            } p-2 rounded-lg`}>
+            Episode {episode.episodeNumber}
+          </Button>
+        );
+      })}
+    </div>
+  );
+};

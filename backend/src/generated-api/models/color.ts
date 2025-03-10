@@ -12,18 +12,29 @@
  * Do not edit the class manually.
  */
 
-/**
+ /**
  * 
+ *
  * @export
- * @enum {string}
+ * @interface Color
  */
-export enum ColorsEnum {
-    Red = 'red',
-    Orange = 'orange',
-    Yellow = 'yellow',
-    Green = 'green',
-    Blue = 'blue',
-    Purple = 'purple',
-    Pink = 'pink'
-}
+export interface Color {
 
+    /**
+     * The name of the color
+     *
+     * @type {string}
+     * @memberof Color
+     * @example Red
+     */
+    color: string;
+
+    /**
+     * The hex code of the color
+     *
+     * @type {string}
+     * @memberof Color
+     * @example #FF0000
+     */
+    hex: string;
+}

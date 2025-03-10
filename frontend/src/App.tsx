@@ -2,7 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import DashboardPage from './pages/DashboardPage.tsx';
 import RootLayout from './pages/RootLayout.tsx';
 import SurvivorCastPage from './pages/SurvivorCastPage.tsx';
-import LeagueDetailView from './pages/LeagueDetailView.tsx';
+import LeagueDetailView from './pages/LeaguePage.tsx';
 import AboutPage from './pages/AboutPage.tsx';
 import HomePage from './pages/HomePage.tsx';
 import AdminPage from './pages/AdminPage.tsx';

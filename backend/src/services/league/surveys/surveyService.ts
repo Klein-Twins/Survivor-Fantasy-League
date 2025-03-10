@@ -19,7 +19,7 @@ const surveyService = {
 async function getSurveys(
   leagueId: LeagueAttributes['leagueId'],
   profileIds: ProfileAttributes['profileId'][],
-  episodeNumbers: EpisodeAttributes['episodeNumber'][]
+  episodeIds: EpisodeAttributes['episodeId'][]
 ): Promise<GetSurveyForEpisodeForLeagueMemberResponseData> {
   const league: League = await leagueService.getLeague(leagueId);
 
@@ -29,10 +29,7 @@ async function getSurveys(
 
   const seasonId = league.season.id;
 
-  const episodes: Episode[] = await episodeService.getEpisodes(
-    seasonId,
-    episodeNumbers
-  );
+  const episodes: Episode[] = await episodeService.getEpisodes(episodeIds);
 
   let surveys: LeagueSurvey[] = [];
   for (const profileId of profileIds) {

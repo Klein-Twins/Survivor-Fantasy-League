@@ -17,16 +17,17 @@ async function getSurveyForLeagueMember(
 ) {
   let response: GetSurveyForEpisodeForLeagueMember;
   try {
-    const { leagueId, profileIds, episodeNumbers } =
+    const { leagueId, profileIds, episodeIds } =
       await surveyHelper.validateAndFormatGetSurveyForLeagueMember(req);
     const responseData: GetSurveyForEpisodeForLeagueMemberResponseData =
-      await surveyService.getSurveys(leagueId, profileIds, episodeNumbers);
+      await surveyService.getSurveys(leagueId, profileIds, episodeIds);
     response = {
       success: true,
       message: 'Successfully retrieved league surveys',
       statusCode: 200,
       responseData: responseData,
     };
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }

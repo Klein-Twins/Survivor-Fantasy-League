@@ -102,7 +102,7 @@ paths:
                     properties:
                       responseData:
                         type: object
-                        requires:
+                        required:
                           - userSession
                           - account
                         properties:
@@ -726,9 +726,19 @@ paths:
                                                 description: The tribe's name
                                                 example: Luzon
                                               color:
-                                                type: string
-                                                description: The tribe's color
-                                                example: '#FF0000'
+                                                type: object
+                                                required:
+                                                  - color
+                                                  - hex
+                                                properties:
+                                                  color:
+                                                    type: string
+                                                    description: The name of the color
+                                                    example: Red
+                                                  hex:
+                                                    type: string
+                                                    description: The hex code of the color
+                                                    example: '#FF0000'
                                               imageUrl:
                                                 type: string
                                                 description: The tribe's image URL
@@ -1163,9 +1173,19 @@ paths:
                                           description: The tribe's name
                                           example: Luzon
                                         color:
-                                          type: string
-                                          description: The tribe's color
-                                          example: '#FF0000'
+                                          type: object
+                                          required:
+                                            - color
+                                            - hex
+                                          properties:
+                                            color:
+                                              type: string
+                                              description: The name of the color
+                                              example: Red
+                                            hex:
+                                              type: string
+                                              description: The hex code of the color
+                                              example: '#FF0000'
                                         imageUrl:
                                           type: string
                                           description: The tribe's image URL
@@ -1656,9 +1676,19 @@ paths:
                                             description: The tribe's name
                                             example: Luzon
                                           color:
-                                            type: string
-                                            description: The tribe's color
-                                            example: '#FF0000'
+                                            type: object
+                                            required:
+                                              - color
+                                              - hex
+                                            properties:
+                                              color:
+                                                type: string
+                                                description: The name of the color
+                                                example: Red
+                                              hex:
+                                                type: string
+                                                description: The hex code of the color
+                                                example: '#FF0000'
                                           imageUrl:
                                             type: string
                                             description: The tribe's image URL
@@ -2007,9 +2037,19 @@ paths:
                                           description: The tribe's name
                                           example: Luzon
                                         color:
-                                          type: string
-                                          description: The tribe's color
-                                          example: '#FF0000'
+                                          type: object
+                                          required:
+                                            - color
+                                            - hex
+                                          properties:
+                                            color:
+                                              type: string
+                                              description: The name of the color
+                                              example: Red
+                                            hex:
+                                              type: string
+                                              description: The hex code of the color
+                                              example: '#FF0000'
                                         imageUrl:
                                           type: string
                                           description: The tribe's image URL
@@ -2560,6 +2600,194 @@ paths:
                         type: string
                         description: Error message describing what went wrong
                         example: Invalid Credentials provided
+  '/api/image/episode/{episodeId}':
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve episode image
+      description: This endpoint allows you to retrieve an episode image by episode ID.
+      operationId: getEpisodeImage
+      parameters:
+        - name: episodeId
+          in: path
+          required: true
+          description: The ID of the episode.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+                contentEncoding: base64
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
+  '/api/image/survivor/{seasonId}/{survivorId}':
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve survivor image
+      description: This endpoint allows you to retrieve a survivor image by survivor ID.
+      operationId: getSurvivorImage
+      parameters:
+        - name: survivorId
+          in: path
+          required: true
+          description: The ID of the survivor.
+          schema:
+            type: string
+        - name: seasonId
+          in: path
+          required: true
+          description: The ID of the season.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+                contentEncoding: base64
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
   '/api/league/{leagueId}/survey':
     get:
       summary: Get survey(s) for provided episodeId and profileId
@@ -2588,13 +2816,14 @@ paths:
               - 123e4567-e89b-12d3-a456-426614174000
               - 987fcdeb-51a2-43c7-9123-426614174111
         - in: query
-          name: episodeNumber
+          name: episodeId
           required: true
           schema:
             type: array
             items:
-              type: integer
-            description: Array of episode Number to retrieve picks for.
+              type: string
+              format: uuid
+            description: Array of episode id to retrieve picks for.
       responses:
         '200':
           description: Retrieves a survey for the specified profileId in leagueId for episodeId
@@ -2819,15 +3048,19 @@ paths:
                                               options:
                                                 type: array
                                                 items:
-                                                  type: string
-                                                  enum:
-                                                    - red
-                                                    - orange
-                                                    - yellow
-                                                    - green
-                                                    - blue
-                                                    - purple
-                                                    - pink
+                                                  type: object
+                                                  required:
+                                                    - color
+                                                    - hex
+                                                  properties:
+                                                    color:
+                                                      type: string
+                                                      description: The name of the color
+                                                      example: Red
+                                                    hex:
+                                                      type: string
+                                                      description: The hex code of the color
+                                                      example: '#FF0000'
                                           - type: object
                                             required:
                                               - options
@@ -2851,9 +3084,19 @@ paths:
                                                       description: The tribe's name
                                                       example: Luzon
                                                     color:
-                                                      type: string
-                                                      description: The tribe's color
-                                                      example: '#FF0000'
+                                                      type: object
+                                                      required:
+                                                        - color
+                                                        - hex
+                                                      properties:
+                                                        color:
+                                                          type: string
+                                                          description: The name of the color
+                                                          example: Red
+                                                        hex:
+                                                          type: string
+                                                          description: The hex code of the color
+                                                          example: '#FF0000'
                                                     imageUrl:
                                                       type: string
                                                       description: The tribe's image URL
@@ -3102,9 +3345,19 @@ paths:
                                         description: The tribe's name
                                         example: Luzon
                                       color:
-                                        type: string
-                                        description: The tribe's color
-                                        example: '#FF0000'
+                                        type: object
+                                        required:
+                                          - color
+                                          - hex
+                                        properties:
+                                          color:
+                                            type: string
+                                            description: The name of the color
+                                            example: Red
+                                          hex:
+                                            type: string
+                                            description: The hex code of the color
+                                            example: '#FF0000'
                                       imageUrl:
                                         type: string
                                         description: The tribe's image URL
@@ -3429,9 +3682,19 @@ paths:
                                       description: The tribe's name
                                       example: Luzon
                                     color:
-                                      type: string
-                                      description: The tribe's color
-                                      example: '#FF0000'
+                                      type: object
+                                      required:
+                                        - color
+                                        - hex
+                                      properties:
+                                        color:
+                                          type: string
+                                          description: The name of the color
+                                          example: Red
+                                        hex:
+                                          type: string
+                                          description: The hex code of the color
+                                          example: '#FF0000'
                                     imageUrl:
                                       type: string
                                       description: The tribe's image URL
@@ -3884,9 +4147,19 @@ paths:
                                         description: The tribe's name
                                         example: Luzon
                                       color:
-                                        type: string
-                                        description: The tribe's color
-                                        example: '#FF0000'
+                                        type: object
+                                        required:
+                                          - color
+                                          - hex
+                                        properties:
+                                          color:
+                                            type: string
+                                            description: The name of the color
+                                            example: Red
+                                          hex:
+                                            type: string
+                                            description: The hex code of the color
+                                            example: '#FF0000'
                                       imageUrl:
                                         type: string
                                         description: The tribe's image URL
@@ -4033,9 +4306,19 @@ paths:
                   description: The episode the tribe started in
                   example: 1
                 color:
-                  type: string
-                  description: The tribe's color
-                  example: '#FF0000'
+                  type: object
+                  required:
+                    - color
+                    - hex
+                  properties:
+                    color:
+                      type: string
+                      description: The name of the color
+                      example: Red
+                    hex:
+                      type: string
+                      description: The hex code of the color
+                      example: '#FF0000'
       responses:
         '201':
           description: Tribe created successfully
@@ -4089,9 +4372,19 @@ paths:
                                 description: The tribe's name
                                 example: Luzon
                               color:
-                                type: string
-                                description: The tribe's color
-                                example: '#FF0000'
+                                type: object
+                                required:
+                                  - color
+                                  - hex
+                                properties:
+                                  color:
+                                    type: string
+                                    description: The name of the color
+                                    example: Red
+                                  hex:
+                                    type: string
+                                    description: The hex code of the color
+                                    example: '#FF0000'
                               imageUrl:
                                 type: string
                                 description: The tribe's image URL

@@ -18,11 +18,22 @@ components:
         options:
           type: array
           items:
-            $ref: '#/components/schemas/ColorsEnum'
+            $ref: '../../common.yaml#/components/schemas/Color'
 
-    ColorsEnum:
-      type: string
-      enum: [red, orange, yellow, green, blue, purple, pink]
+    Color:
+      type: object
+      required:
+        - name
+        - hexValue
+      properties:
+        name:
+          type: string
+          description: The name of the color
+          example: 'Red'
+        hexValue:
+          type: string
+          description: The hex value of the color
+          example: '#FF0000'
 
     TribePickOptions:
       type: object

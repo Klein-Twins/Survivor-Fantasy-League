@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { Color } from './color';
  /**
  * 
  *
@@ -57,11 +58,8 @@ export interface CreateTribeRequestBody {
     episodeStarted: number;
 
     /**
-     * The tribe's color
-     *
-     * @type {string}
+     * @type {Color}
      * @memberof CreateTribeRequestBody
-     * @example #FF0000
      */
-    color: string;
+    color: Color;
 }

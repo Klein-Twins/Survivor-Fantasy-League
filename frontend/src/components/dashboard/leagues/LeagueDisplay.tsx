@@ -33,14 +33,14 @@ export const LeagueDisplay: React.FC<LeagueDisplayProps> = ({
               <div className='text-text-primary text-subtitle'>{message}</div>
             )}
           </div>
-          <div className='flex justify-start items-center space-x-4'>
+          {/* <div className='flex justify-start items-center space-x-4'>
             {league.leagueMembers.map((member) => (
               <LeagueCardProfile
                 key={member.profile.profileId}
                 leagueMember={member}
               />
             ))}
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

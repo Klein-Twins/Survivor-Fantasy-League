@@ -8,6 +8,7 @@ const episodeHelper = {
   validateEpisodeNumbers,
   buildEpisode,
   doesEpisodeExist,
+  validateEpisodeIds,
 };
 
 async function validateEpisodeNumber(episodeNumber: number): Promise<void> {
@@ -16,6 +17,31 @@ async function validateEpisodeNumber(episodeNumber: number): Promise<void> {
   }
   if (episodeNumber < 1) {
     throw new BadRequestError('Invalid episode number');
+  }
+}
+
+async function validateEpisodeIds(
+  episodeIds: EpisodeAttributes['episodeId'][]
+): Promise<void> {
+  if (episodeIds.length === 0) {
+    throw new BadRequestError('Missing episode id');
+  }
+  for (const episodeId of episodeIds) {
+    await validateEpisodeId(episodeId);
+  }
+}
+
+async function validateEpisodeId(
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<void> {
+  if (!episodeId) {
+    throw new BadRequestError('Missing episode id');
+  }
+  const episode: Episode | null = await episodeRepository.getEpisodeByEpisodeId(
+    episodeId
+  );
+  if (!episode) {
+    throw new NotFoundError('Episode not found');
   }
 }
 

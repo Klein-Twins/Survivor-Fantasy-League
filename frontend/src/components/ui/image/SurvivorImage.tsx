@@ -1,83 +1,101 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from 'react';
+import api from '../../../services/apiContainer';
 
-type ImageSize = 'small' | 'medium' | 'large';
-type ImageShape = 'circle' | 'square';
-
-interface ProfileImageProps {
-  survivorId: string;
+interface SurvivorImageProps {
+  seasonId: number;
   survivorName: string;
-  size?: ImageSize;
-  shape?: ImageShape;
+  survivorId: string;
   className?: string;
 }
 
-const sizeClasses: Record<ImageSize, string> = {
-  small: 'w-16 h-16',
-  medium: 'w-12 h-12',
-  large: 'w-20 h-20',
-};
+const SurvivorImage: React.FC<SurvivorImageProps> = ({
+  seasonId,
+  survivorName,
+  survivorId,
+  className,
+}) => {
+  const [imageUrl, setImageUrl] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
-const shapeClasses: Record<ImageShape, string> = {
-  circle: 'rounded-full',
-  square: 'rounded-md',
-};
+  useEffect(() => {
+    async function loadImage() {
+      try {
+        setIsLoading(true);
+        setError(false);
 
+        const cacheName = 'survivor-images';
+        const cache = await caches.open(cacheName);
+        const cachedResponse = await cache.match(
+          `/images/survivors/${survivorId}.jpeg`
+        );
 
-const SurvivorImage: React.FC<ProfileImageProps> = ({
-    survivorId,
-    survivorName,
-    size = 'medium',
-    shape = 'circle',
-    className = '',
-  }) => {
-    const [imageUrl, setImageUrl] = useState<string>();
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(false);
-
-    useEffect(() => {
-        async function loadImage() {
-            try {
-              setIsLoading(true);
-              setError(false);
-      
-              console.log('Fetching image for profileId:', profileId);
-              //Debug response
-              const response = await api.ImageServiceApi.getProfileImage(profileId, {
-                withCredentials: true,
-                responseType: 'arraybuffer', // Enable this
-                headers: {
-                  Accept: 'image/jpeg',
-                  'Content-Type': 'image/jpeg',
-                },
-              });
-              // const response = await axios.get(`http://localhost:3000/api/image/profile/${profileId}`, {
-              //   withCredentials: true,
-              //   responseType: 'arraybuffer', // Enable this
-              //   headers: {
-              //     Accept: 'image/jpeg',
-              //     'Content-Type': 'image/jpeg',
-              //   },
-              // });
-      
-              // Cast response.data as ArrayBuffer
-              const arrayBuffer = response.data as ArrayBuffer;
-              const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
-              const url = URL.createObjectURL(blob);
-              console.debug('Created URL:', url);
-              setImageUrl(url);
-            } catch (error) {
-              console.error('Failed to load image:', error);
-              setError(true);
-            } finally {
-              setIsLoading(false);
+        if (cachedResponse) {
+          const blob = await cachedResponse.blob();
+          const url = URL.createObjectURL(blob);
+          setImageUrl(url);
+          setIsLoading(false);
+        } else {
+          const response = await api.ImageServiceApi.getSurvivorImage(
+            survivorId,
+            seasonId.toString(),
+            {
+              withCredentials: true,
+              responseType: 'arraybuffer', // Enable this
+              headers: {
+                Accept: 'image/jpeg',
+                'Content-Type': 'image/jpeg',
+              },
             }
-          }
+          );
+          const arrayBuffer = response.data as ArrayBuffer;
+          const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+          const url = URL.createObjectURL(blob);
+          setImageUrl(url);
+          cache.put(`/images/survivors/${survivorId}.jpeg`, new Response(blob));
+        }
+      } catch (error) {
+        console.error('Failed to load image:', error);
+        setError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
 
-    }, [])
+    loadImage();
 
-    const imageClasses = `object-cover ${sizeClasses[size]} ${shapeClasses[shape]} ${className}`;
+    return () => {
+      if (imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+      }
+    };
+  }, [seasonId, survivorId]);
 
-    return <img src={imageUrl} alt={survivorName} className={imageClasses}
+  if (isLoading) {
+    return <div className={`animate-pulse bg-gray-200 ${className}`} />;
   }
 
-  export default SurvivorImage;
+  if (error) {
+    return (
+      <div className={`w-24 h-24 ${className}`}>
+        <img
+          src='/defaultEpisodeImage.jpeg'
+          alt='Default Survivor Image'
+          className='object-cover w-full h-full'
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className={`w-24 h-24 ${className}`}>
+      <img
+        src={imageUrl}
+        alt={survivorName}
+        className='object-cover w-full h-full'
+      />
+    </div>
+  );
+};
+
+export default SurvivorImage;

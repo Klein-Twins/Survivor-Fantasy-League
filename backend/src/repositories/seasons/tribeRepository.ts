@@ -25,11 +25,12 @@ async function createTribe(tribeData: CreateTribeRequestBody): Promise<Tribe> {
 
   const tribeAttributes: TribeAttributes = await models.Tribe.create({
     name: tribeData.name,
-    tribeColor: tribeData.color,
+    tribeColor: tribeData.color.color,
     seasonId: tribeData.seasonId,
     mergeTribe: tribeData.isMergeTribe,
     episodeStarted: episodeId,
     id: tribeId,
+    tribeHexColor: tribeData.color.hex,
   });
 
   return await tribeHelper.buildTribe(tribeAttributes);

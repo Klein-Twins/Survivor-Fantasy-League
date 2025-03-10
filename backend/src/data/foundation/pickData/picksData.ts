@@ -51,6 +51,13 @@ const picksData: PicksAttributes[] = [
     isCustom: false,
     type: PickOptionTypeEnum.Survivor,
   },
+  {
+    pickId: 'd9b2d63d-a233-4d4b-8f3e-3c2b2b2b2b2b',
+    surveyType: SurveyType.Premier,
+    description: 'Will we see Jeff Probst?',
+    isCustom: false,
+    type: PickOptionTypeEnum.Binary,
+  },
 ];
 
 export default picksData;

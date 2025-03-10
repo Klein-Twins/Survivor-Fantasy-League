@@ -42,6 +42,10 @@ paths:
     $ref: './paths/image/profile.yaml#/paths/seasonLogoImage'
   /api/image/episode/{episodeId}:
     $ref: './paths/image/profile.yaml#/paths/episodeImage'
+  /api/image/survivor/{seasonId}/{survivorId}:
+    $ref: './paths/image/profile.yaml#/paths/survivorImage'
+  /api/image/tribe/{seasonId}/{tribeId}:
+    $ref: './paths/image/profile.yaml#/paths/tribeImage'
 
   /api/league/{leagueId}/survey:
     $ref: './paths/league/picks/survey.yaml#/paths/survey'

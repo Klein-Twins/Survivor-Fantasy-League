@@ -17,9 +17,7 @@ components:
           description: The tribe's name
           example: 'Luzon'
         color:
-          type: string
-          description: The tribe's color
-          example: '#FF0000'
+          $ref: './common.yaml#/components/schemas/Color'
         imageUrl:
           type: string
           description: The tribe's image URL
@@ -29,4 +27,4 @@ components:
           description: Whether the tribe is a merge tribe
           example: false
         episodeStarted:
-          $ref: './leagues/picks/survey.yaml#/components/schemas/Episode'
+          $ref: './season/episode.yaml#/components/schemas/Episode'
