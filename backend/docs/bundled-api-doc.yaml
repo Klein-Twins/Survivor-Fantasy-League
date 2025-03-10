@@ -716,7 +716,12 @@ paths:
                                               - name
                                               - color
                                               - imageUrl
+                                              - seasonId
                                             properties:
+                                              seasonId:
+                                                type: string
+                                                description: The season's unique identifier
+                                                example: 47
                                               id:
                                                 type: string
                                                 description: The tribe's unique identifier
@@ -1163,7 +1168,12 @@ paths:
                                         - name
                                         - color
                                         - imageUrl
+                                        - seasonId
                                       properties:
+                                        seasonId:
+                                          type: string
+                                          description: The season's unique identifier
+                                          example: 47
                                         id:
                                           type: string
                                           description: The tribe's unique identifier
@@ -1666,7 +1676,12 @@ paths:
                                           - name
                                           - color
                                           - imageUrl
+                                          - seasonId
                                         properties:
+                                          seasonId:
+                                            type: string
+                                            description: The season's unique identifier
+                                            example: 47
                                           id:
                                             type: string
                                             description: The tribe's unique identifier
@@ -2027,7 +2042,12 @@ paths:
                                         - name
                                         - color
                                         - imageUrl
+                                        - seasonId
                                       properties:
+                                        seasonId:
+                                          type: string
+                                          description: The season's unique identifier
+                                          example: 47
                                         id:
                                           type: string
                                           description: The tribe's unique identifier
@@ -2788,6 +2808,103 @@ paths:
                         type: string
                         description: Error message describing what went wrong
                         example: Invalid Credentials provided
+  '/api/image/tribe/{seasonId}/{tribeId}':
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve tribe image
+      description: This endpoint allows you to retrieve a tribe image by tribe ID.
+      operationId: getTribeImage
+      parameters:
+        - name: tribeId
+          in: path
+          required: true
+          description: The ID of the tribe.
+          schema:
+            type: string
+        - name: seasonId
+          in: path
+          required: true
+          description: The ID of the season.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                type: string
+                format: binary
+                contentEncoding: base64
+        '404':
+          description: Profile image not found
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
   '/api/league/{leagueId}/survey':
     get:
       summary: Get survey(s) for provided episodeId and profileId
@@ -3074,7 +3191,12 @@ paths:
                                                     - name
                                                     - color
                                                     - imageUrl
+                                                    - seasonId
                                                   properties:
+                                                    seasonId:
+                                                      type: string
+                                                      description: The season's unique identifier
+                                                      example: 47
                                                     id:
                                                       type: string
                                                       description: The tribe's unique identifier
@@ -3335,7 +3457,12 @@ paths:
                                       - name
                                       - color
                                       - imageUrl
+                                      - seasonId
                                     properties:
+                                      seasonId:
+                                        type: string
+                                        description: The season's unique identifier
+                                        example: 47
                                       id:
                                         type: string
                                         description: The tribe's unique identifier
@@ -3672,7 +3799,12 @@ paths:
                                     - name
                                     - color
                                     - imageUrl
+                                    - seasonId
                                   properties:
+                                    seasonId:
+                                      type: string
+                                      description: The season's unique identifier
+                                      example: 47
                                     id:
                                       type: string
                                       description: The tribe's unique identifier
@@ -4137,7 +4269,12 @@ paths:
                                       - name
                                       - color
                                       - imageUrl
+                                      - seasonId
                                     properties:
+                                      seasonId:
+                                        type: string
+                                        description: The season's unique identifier
+                                        example: 47
                                       id:
                                         type: string
                                         description: The tribe's unique identifier
@@ -4362,7 +4499,12 @@ paths:
                               - name
                               - color
                               - imageUrl
+                              - seasonId
                             properties:
+                              seasonId:
+                                type: string
+                                description: The season's unique identifier
+                                example: 47
                               id:
                                 type: string
                                 description: The tribe's unique identifier

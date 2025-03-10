@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tribe } from '../../../../generated-api';
+import TribeImage from './TribeImage';
 
 interface TribeViewProps {
   tribe: Tribe;
@@ -8,19 +9,18 @@ interface TribeViewProps {
 
 function TribeView({ tribe, className }: TribeViewProps) {
   if (!className) {
-    className = 'w-full';
+    className = 'w-full flex flex-col space-y-0 shadow-none rounded-sm';
   }
   return (
-    <div className={className} style={{ backgroundColor: tribe.color.hex }}>
-      <h2 className='text-2xl font-bold mb-2'>{tribe.name}</h2>
-      <p className='text-lg mb-4'>{tribe.color.color}</p>
-      <div className='w-32 h-32 bg-gray-200 rounded-full flex items-center justify-center'>
-        <img
-          src={tribe.imageUrl}
-          alt={`${tribe.name} Tribe`}
-          className='w-full h-full object-cover rounded-full'
-        />
+    <div
+      className={`${className}`}
+      style={{ backgroundColor: tribe.color.hex, opacity: 0.7 }}>
+      <div className='p-2 rounded-md'>
+        <TribeImage seasonId={tribe.seasonId} tribeId={tribe.id} />
       </div>
+      <h2 className='text-center text-black text-2xl font-bold pt-2 pb-4'>
+        {tribe.name}
+      </h2>
     </div>
   );
 }

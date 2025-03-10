@@ -71,11 +71,11 @@ const useImage = (imageType: ImageType, parameters: ImageParameters) => {
         error: 'Failed to load image',
       });
     }
-  }, [imageType, parameters]);
+  }, [imageType, parameters.id, parameters.seasonId]);
 
   useEffect(() => {
     fetchImage();
-  }, [fetchImage]);
+  }, [fetchImage, imageType, parameters.id, parameters.seasonId]);
 
   return { ...state, fetchImage };
 };

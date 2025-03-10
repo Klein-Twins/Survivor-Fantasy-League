@@ -23,6 +23,15 @@ import { Episode } from './episode';
 export interface Tribe {
 
     /**
+     * The season's unique identifier
+     *
+     * @type {string}
+     * @memberof Tribe
+     * @example 47
+     */
+    seasonId: string;
+
+    /**
      * The tribe's unique identifier
      *
      * @type {string}

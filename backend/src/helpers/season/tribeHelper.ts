@@ -22,6 +22,7 @@ async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
   );
 
   return {
+    seasonId: tribeAttributes.seasonId.toString(),
     id: tribeAttributes.id,
     name: tribeAttributes.name,
     color: {

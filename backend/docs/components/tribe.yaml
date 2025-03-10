@@ -7,7 +7,12 @@ components:
         - name
         - color
         - imageUrl
+        - seasonId
       properties:
+        seasonId:
+          type: string
+          description: The season's unique identifier
+          example: 47
         id:
           type: string
           description: The tribe's unique identifier
