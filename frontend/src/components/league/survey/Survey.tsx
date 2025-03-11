@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Account,
+  ApiError,
   Episode,
   GetSurveyForEpisodeForLeagueMember,
   League,
@@ -22,6 +23,10 @@ interface SurveyProps {
 }
 
 const Survey: React.FC<SurveyProps> = ({ episodeId, profileId, leagueId }) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<any>(null);
+  const [submitData, setSubmitData] = useState<string>('');
+
   const {
     data: leagueSurvey,
     isLoading,
@@ -51,7 +56,7 @@ const Survey: React.FC<SurveyProps> = ({ episodeId, profileId, leagueId }) => {
   }
 
   if (error) {
-    return <h1>Error: {error}</h1>;
+    return <h1>Error: {error.toString()}</h1>;
   }
 
   if (!survey || survey === undefined) {
@@ -61,24 +66,36 @@ const Survey: React.FC<SurveyProps> = ({ episodeId, profileId, leagueId }) => {
   async function handleSurveySubmit(
     picksWithPlayerChoice: PickWithPlayerChoice[]
   ) {
-    const body: SubmitSurveyWithPickChoicesRequestBody = {
-      episodeId: episodeId,
-      leagueSurveyId: survey!.leagueSurveyId,
-      surveyId: survey!.surveyId,
-      leagueId: leagueId,
-      profileId: profileId,
-      pickChoices: picksWithPlayerChoice,
-    };
-    const response = await api.LeagueSurveyService.submitSurveyWithPickChoices(
-      body,
-      {
-        withCredentials: true,
-      }
-    );
-    console.log(response);
+    setIsSubmitting(true);
+    try {
+      const body: SubmitSurveyWithPickChoicesRequestBody = {
+        episodeId: episodeId,
+        leagueSurveyId: survey!.leagueSurveyId,
+        surveyId: survey!.surveyId,
+        leagueId: leagueId,
+        profileId: profileId,
+        pickChoices: picksWithPlayerChoice,
+      };
+      const response =
+        await api.LeagueSurveyService.submitSurveyWithPickChoices(body, {
+          withCredentials: true,
+        });
+      setIsSubmitting(false);
+      setSubmitData(response.toString());
+    } catch (error: any) {
+      setSubmitError(error);
+      setIsSubmitting(false);
+    }
   }
 
-  return <SurveyForm picks={survey.picks} onSubmit={handleSurveySubmit} />;
+  return (
+    <div className='flex flex-col'>
+      {isSubmitting && <h1>Submitting...</h1>}
+      {submitError && <h1>Error: {submitError.toString()}</h1>}
+      {submitData && <h1>Submitted: {submitData}</h1>}
+      <SurveyForm picks={survey.picks} onSubmit={handleSurveySubmit} />
+    </div>
+  );
 };
 
 export default Survey;

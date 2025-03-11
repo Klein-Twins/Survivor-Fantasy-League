@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Color,
   Pick,
@@ -30,13 +30,37 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ picks, onSubmit }) => {
     })
   );
 
+  const [allPicksSelected, setAllPicksSelected] = useState(false);
+
+  useEffect(() => {
+    const allSelected = picksWithPlayerChoice.every(
+      (pick) => pick.playerChoice !== null
+    );
+    setAllPicksSelected(allSelected);
+  }, [picksWithPlayerChoice]);
+
+  const handlePickChange = (pickId: string, playerChoice: string | null) => {
+    setPicksWithPlayerChoice((prevPicks) =>
+      prevPicks.map((p) =>
+        p.pick.id === pickId ? { ...p, playerChoice: playerChoice } : p
+      )
+    );
+  };
+
   return (
     <div className='flex flex-col space-y-4 px-4'>
       {picks.map((pick) => {
-        return <FormPickInput key={pick.id} pick={pick} />;
+        return (
+          <FormPickInput
+            key={pick.id}
+            pick={pick}
+            onPickChange={handlePickChange}
+          />
+        );
       })}
       <Button
         onClick={() => onSubmit(picksWithPlayerChoice)}
+        disabled={!allPicksSelected}
         className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}>
         Submit
       </Button>
@@ -48,8 +72,12 @@ export default SurveyForm;
 
 interface FormPickInputProps {
   pick: Pick;
+  onPickChange: (pickId: string, playerChoice: string | null) => void;
 }
-const FormPickInput: React.FC<FormPickInputProps> = ({ pick }) => {
+const FormPickInput: React.FC<FormPickInputProps> = ({
+  pick,
+  onPickChange,
+}) => {
   return (
     <div className='flex flex-col space-y-4 p-4 border border-gray-300 rounded-lg shadow-md'>
       <div className='flex justify-between'>
@@ -60,6 +88,8 @@ const FormPickInput: React.FC<FormPickInputProps> = ({ pick }) => {
         <FormPickOptions
           pickOptionType={pick.pickOptionType}
           pickOptions={pick.pickOptions}
+          pickId={pick.id}
+          onPickChange={onPickChange}
         />
       </div>
     </div>
@@ -69,38 +99,71 @@ const FormPickInput: React.FC<FormPickInputProps> = ({ pick }) => {
 interface FormPickOptionsProps {
   pickOptionType: Pick['pickOptionType'];
   pickOptions: Pick['pickOptions'];
+  pickId: string;
+  onPickChange: (pickId: string, playerChoice: string | null) => void;
 }
 
 const FormPickOptions: React.FC<FormPickOptionsProps> = ({
   pickOptionType,
   pickOptions,
+  pickId,
+  onPickChange,
 }) => {
   switch (pickOptionType) {
     case PickOptionTypeEnum.Binary:
-      return <BinaryPickOptions pickOptions={pickOptions} />;
+      return (
+        <BinaryPickOptions
+          pickOptions={pickOptions}
+          pickId={pickId}
+          onPickChange={onPickChange}
+        />
+      );
     case PickOptionTypeEnum.Color:
-      return <ColorPickOptions colors={pickOptions.options as Color[]} />;
+      return (
+        <ColorPickOptions
+          colors={pickOptions.options as Color[]}
+          pickId={pickId}
+          onPickChange={onPickChange}
+        />
+      );
     case PickOptionTypeEnum.Survivor:
       return (
-        <SurvivorPickOptions survivors={pickOptions.options as Survivor[]} />
+        <SurvivorPickOptions
+          survivors={pickOptions.options as Survivor[]}
+          pickId={pickId}
+          onPickChange={onPickChange}
+        />
       );
     case PickOptionTypeEnum.Tribe:
-      return <TribePickOptions tribes={pickOptions.options as Tribe[]} />;
+      return (
+        <TribePickOptions
+          tribes={pickOptions.options as Tribe[]}
+          pickId={pickId}
+          onPickChange={onPickChange}
+        />
+      );
     default:
       return null;
   }
 };
 
-const BinaryPickOptions: React.FC<{ pickOptions: Pick['pickOptions'] }> = ({
-  pickOptions,
-}) => {
+const BinaryPickOptions: React.FC<{
+  pickOptions: Pick['pickOptions'];
+  pickId: string;
+  onPickChange: (pickId: string, playerChoice: string | null) => void;
+}> = ({ pickOptions, pickId, onPickChange }) => {
   const [selectedOption, setSelectedOption] = useState<string>('');
+
+  const handleOptionChange = (option: string) => {
+    setSelectedOption(option);
+    onPickChange(pickId, option);
+  };
 
   return (
     <div className='flex space-x-4 justify-center'>
       <div className='flex flex-col w-full space-y-2 items-center justify-center'>
         <Button
-          onClick={() => setSelectedOption('yes')}
+          onClick={() => handleOptionChange('yes')}
           className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}>
           Yes
         </Button>
@@ -109,7 +172,7 @@ const BinaryPickOptions: React.FC<{ pickOptions: Pick['pickOptions'] }> = ({
       <div className='flex flex-col w-full space-y-2 items-center justify-center'>
         <Button
           className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}
-          onClick={() => setSelectedOption('no')}>
+          onClick={() => handleOptionChange('no')}>
           No
         </Button>
         <SelectedIcon isSelected={selectedOption === 'no'} />
@@ -118,8 +181,18 @@ const BinaryPickOptions: React.FC<{ pickOptions: Pick['pickOptions'] }> = ({
   );
 };
 
-const ColorPickOptions: React.FC<{ colors: Color[] }> = ({ colors }) => {
+const ColorPickOptions: React.FC<{
+  colors: Color[];
+  pickId: string;
+  onPickChange: (pickId: string, playerChoice: string | null) => void;
+}> = ({ colors, pickId, onPickChange }) => {
   const [selectedColor, setSelectedColor] = useState<Color | null>(null);
+
+  const handleColorChange = (color: Color) => {
+    setSelectedColor(color);
+    onPickChange(pickId, color.hex);
+  };
+
   return (
     <div className='flex flex-row space-x-2 overflow-x-auto items-center justify-between'>
       {colors.map((color) => {
@@ -136,7 +209,7 @@ const ColorPickOptions: React.FC<{ colors: Color[] }> = ({ colors }) => {
               backgroundColor: color.hex,
               opacity: isSelected ? 1.0 : 0.7,
             }}
-            onClick={() => setSelectedColor(color)}>
+            onClick={() => handleColorChange(color)}>
             <p
               className={`text-black font-bold ${
                 isSelected ? 'underline' : ''
@@ -151,27 +224,34 @@ const ColorPickOptions: React.FC<{ colors: Color[] }> = ({ colors }) => {
   );
 };
 
-const SurvivorPickOptions: React.FC<{ survivors: Survivor[] }> = ({
-  survivors,
-}) => {
+const SurvivorPickOptions: React.FC<{
+  survivors: Survivor[];
+  pickId: string;
+  onPickChange: (pickId: string, playerChoice: string | null) => void;
+}> = ({ survivors, pickId, onPickChange }) => {
   const [selectedSurvivorId, setSelectedSurvivorId] = useState<
     Survivor['survivorId'] | null
   >(null);
+
+  const handleSurvivorChange = (survivorId: string) => {
+    setSelectedSurvivorId(survivorId);
+    onPickChange(pickId, survivorId);
+  };
 
   return (
     <div className='grid grid-cols-3 md:grid-cols-6 lg:grid-cols-9 gap-4'>
       {survivors.map((survivor) => {
         return (
           <div
+            key={survivor.survivorId}
             className={`flex flex-col items-center rounded-md`}
             style={{
               opacity: survivor.survivorId === selectedSurvivorId ? 1.0 : 0.7,
             }}
-            onClick={() => setSelectedSurvivorId(survivor.survivorId)}>
+            onClick={() => handleSurvivorChange(survivor.survivorId)}>
             <SurvivorImage
               seasonId={47}
               survivorName={survivor.firstName}
-              key={survivor.survivorId}
               survivorId={survivor.survivorId}
               className='w-16 h-16'
             />
@@ -190,16 +270,26 @@ const SurvivorPickOptions: React.FC<{ survivors: Survivor[] }> = ({
   );
 };
 
-const TribePickOptions: React.FC<{ tribes: Tribe[] }> = ({ tribes }) => {
+const TribePickOptions: React.FC<{
+  tribes: Tribe[];
+  pickId: string;
+  onPickChange: (pickId: string, playerChoice: string | null) => void;
+}> = ({ tribes, pickId, onPickChange }) => {
   const preMergeTribes = tribes.filter((tribe) => !tribe.isMergeTribe);
   const [selectedTribe, setSelectedTribe] = useState<Tribe | null>(null);
+
+  const handleTribeChange = (tribe: Tribe) => {
+    setSelectedTribe(tribe);
+    onPickChange(pickId, tribe.id);
+  };
 
   return (
     <div className='flex flex-row items-center justify-between space-x-4'>
       {preMergeTribes.map((tribe) => {
         return (
           <div
-            onClick={() => setSelectedTribe(tribe)}
+            key={tribe.id}
+            onClick={() => handleTribeChange(tribe)}
             className={`w-full items-center flex flex-col space-y-0 shadow-none rounded-sm`}
             style={{
               backgroundColor: tribe.color.hex,
