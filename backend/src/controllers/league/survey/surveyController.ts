@@ -3,11 +3,13 @@ import surveyHelper from '../../../helpers/league/surveys/surveyHelper';
 import {
   GetSurveyForEpisodeForLeagueMember,
   GetSurveyForEpisodeForLeagueMemberResponseData,
+  SubmitSurveyWithPickChoicesRequestBody,
 } from '../../../generated-api';
 import surveyService from '../../../services/league/surveys/surveyService';
 
 const surveyController = {
   getSurveyForLeagueMember,
+  submitSurvey,
 };
 
 async function getSurveyForLeagueMember(
@@ -28,6 +30,17 @@ async function getSurveyForLeagueMember(
       responseData: responseData,
     };
     res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function submitSurvey(req: Request, res: Response, next: NextFunction) {
+  try {
+    const requestBody: any = req.body;
+    const submitSurveyRequest: SubmitSurveyWithPickChoicesRequestBody =
+      await surveyHelper.validateAndFormatSubmitSurveyRequest(requestBody);
+    await surveyService.submitSurvey(submitSurveyRequest);
   } catch (error) {
     next(error);
   }

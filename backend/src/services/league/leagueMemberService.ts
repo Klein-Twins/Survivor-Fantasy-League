@@ -9,6 +9,7 @@ import { InviteStatusEnum } from '../../models/league/LeagueProfile';
 const leagueMemberService = {
   createLeagueOwner,
   getLeagueMembers,
+  getLeagueProfile,
   isProfileInLeague,
 };
 
@@ -17,6 +18,13 @@ async function getLeagueMembers(
   transaction?: Transaction
 ): Promise<LeagueMember[]> {
   return await leagueMemberRepository.getLeagueMembers(leagueId, transaction);
+}
+
+async function getLeagueProfile(
+  leagueId: LeagueAttributes['leagueId'],
+  profileId: ProfileAttributes['profileId']
+) {
+  return await leagueMemberRepository.getLeagueProfile(leagueId, profileId);
 }
 
 async function isProfileInLeague(

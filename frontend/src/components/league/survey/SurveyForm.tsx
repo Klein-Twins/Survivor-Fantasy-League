@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  BinaryOptionsEnum,
   Color,
   Pick,
   PickOptionTypeEnum,
@@ -152,9 +153,10 @@ const BinaryPickOptions: React.FC<{
   pickId: string;
   onPickChange: (pickId: string, playerChoice: string | null) => void;
 }> = ({ pickOptions, pickId, onPickChange }) => {
-  const [selectedOption, setSelectedOption] = useState<string>('');
+  const [selectedOption, setSelectedOption] =
+    useState<BinaryOptionsEnum | null>(null);
 
-  const handleOptionChange = (option: string) => {
+  const handleOptionChange = (option: BinaryOptionsEnum) => {
     setSelectedOption(option);
     onPickChange(pickId, option);
   };
@@ -163,19 +165,19 @@ const BinaryPickOptions: React.FC<{
     <div className='flex space-x-4 justify-center'>
       <div className='flex flex-col w-full space-y-2 items-center justify-center'>
         <Button
-          onClick={() => handleOptionChange('yes')}
+          onClick={() => handleOptionChange(BinaryOptionsEnum.True)}
           className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}>
           Yes
         </Button>
-        <SelectedIcon isSelected={selectedOption === 'yes'} />
+        <SelectedIcon isSelected={selectedOption === BinaryOptionsEnum.True} />
       </div>
       <div className='flex flex-col w-full space-y-2 items-center justify-center'>
         <Button
           className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}
-          onClick={() => handleOptionChange('no')}>
+          onClick={() => handleOptionChange(BinaryOptionsEnum.False)}>
           No
         </Button>
-        <SelectedIcon isSelected={selectedOption === 'no'} />
+        <SelectedIcon isSelected={selectedOption === BinaryOptionsEnum.False} />
       </div>
     </div>
   );

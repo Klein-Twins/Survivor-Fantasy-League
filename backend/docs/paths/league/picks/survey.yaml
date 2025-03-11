@@ -64,3 +64,16 @@ paths:
           application/json:
             schema:
               $ref: '../../../components/leagues/survey.yaml#/components/requestBodies/SubmitSurveyWithPickChoicesRequestBody'
+      responses:
+        '200':
+          description:
+            Submitted the survey for the specified profileId in leagueId for
+            episodeId
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: 'Survey submitted successfully'
