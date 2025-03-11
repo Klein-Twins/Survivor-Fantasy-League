@@ -1,87 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Color,
-  Episode,
-  GetSurveyForEpisodeForLeagueMember,
-  League,
   Pick,
   PickOptionTypeEnum,
-  Profile,
+  PickWithPlayerChoice,
   Survivor,
   Tribe,
 } from '../../../../generated-api';
-import { useApi } from '../../../hooks/useApi';
-import leagueSurveyService, {
-  GetLeagueSurveyParams,
-} from '../../../services/league/leagueSurveyService';
 import { Button } from '@headlessui/react';
 import { ButtonPrimaryColors } from '../../../styles/CommonColorClassNames';
 import SurvivorImage from '../../ui/image/SurvivorImage';
-import TribeView from '../../season/tribes/TribeView';
 import TribeImage from '../../season/tribes/TribeImage';
-import { FaCheckCircle, FaRegCircle } from 'react-icons/fa';
+import SelectedIcon from './SelectedIcon';
 
 interface SurveyFormProps {
-  episodeId: Episode['id'];
-  profileId: Profile['profileId'];
-  leagueId: League['leagueId'];
+  picks: Pick[];
+  onSubmit: (picksWithPlayerChoice: PickWithPlayerChoice[]) => void;
 }
 
-const SurveyForm: React.FC<SurveyFormProps> = ({
-  episodeId,
-  profileId,
-  leagueId,
-}) => {
-  const {
-    data: leagueSurvey,
-    isLoading,
-    error,
-    execute,
-  } = useApi<void, GetLeagueSurveyParams, GetSurveyForEpisodeForLeagueMember>(
-    leagueSurveyService.getLeagueSurvey
+const SurveyForm: React.FC<SurveyFormProps> = ({ picks, onSubmit }) => {
+  const [picksWithPlayerChoice, setPicksWithPlayerChoice] = useState<
+    PickWithPlayerChoice[]
+  >(
+    picks.map((pick): PickWithPlayerChoice => {
+      return {
+        pick: pick,
+        playerChoice: null,
+      };
+    })
   );
-
-  const [formValues, setFormValues] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    async function fetchSurvey() {
-      await execute({
-        queryParams: {
-          episodeId,
-          leagueId,
-          profileId,
-        },
-      });
-    }
-    fetchSurvey();
-  }, [episodeId, leagueId, profileId]);
-
-  useEffect(() => {
-    if (leagueSurvey) {
-      const initialValues =
-        leagueSurvey.responseData.leagueSurveys[0].picks.reduce((acc, pick) => {
-          acc[pick.id] = '';
-          return acc;
-        }, {} as Record<string, string>);
-      setFormValues(initialValues);
-    }
-  }, [leagueSurvey]);
-
-  if (isLoading) {
-    return <h1>Loading...</h1>;
-  }
-
-  if (error || !leagueSurvey) {
-    return <h1>Error: {error}</h1>;
-  }
-
-  const picks: Pick[] = leagueSurvey.responseData.leagueSurveys[0].picks;
 
   return (
     <div className='flex flex-col space-y-4 px-4'>
       {picks.map((pick) => {
         return <FormPickInput key={pick.id} pick={pick} />;
       })}
+      <Button
+        onClick={() => onSubmit(picksWithPlayerChoice)}
+        className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}>
+        Submit
+      </Button>
     </div>
   );
 };
@@ -140,12 +98,22 @@ const BinaryPickOptions: React.FC<{ pickOptions: Pick['pickOptions'] }> = ({
 
   return (
     <div className='flex space-x-4 justify-center'>
-      <Button className={`w-1/2 p-2 rounded-md ${ButtonPrimaryColors}`}>
-        Yes
-      </Button>
-      <Button className={`w-1/2 p-2 rounded-md ${ButtonPrimaryColors}`}>
-        No
-      </Button>
+      <div className='flex flex-col w-full space-y-2 items-center justify-center'>
+        <Button
+          onClick={() => setSelectedOption('yes')}
+          className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}>
+          Yes
+        </Button>
+        <SelectedIcon isSelected={selectedOption === 'yes'} />
+      </div>
+      <div className='flex flex-col w-full space-y-2 items-center justify-center'>
+        <Button
+          className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}
+          onClick={() => setSelectedOption('no')}>
+          No
+        </Button>
+        <SelectedIcon isSelected={selectedOption === 'no'} />
+      </div>
     </div>
   );
 };
@@ -250,26 +218,6 @@ const TribePickOptions: React.FC<{ tribes: Tribe[] }> = ({ tribes }) => {
           </div>
         );
       })}
-    </div>
-  );
-};
-
-interface SelectedIconProps {
-  isSelected: boolean;
-  className?: string;
-}
-
-const SelectedIcon: React.FC<SelectedIconProps> = ({
-  isSelected,
-  className,
-}) => {
-  return (
-    <div className={className}>
-      {isSelected ? (
-        <FaCheckCircle className='text-green-500 w-full h-full' />
-      ) : (
-        <FaRegCircle className='text-gray-500 w-full h-full' />
-      )}
     </div>
   );
 };

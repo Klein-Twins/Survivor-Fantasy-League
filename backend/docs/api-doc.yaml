@@ -49,6 +49,8 @@ paths:
 
   /api/league/{leagueId}/survey:
     $ref: './paths/league/picks/survey.yaml#/paths/survey'
+  /api/league/survey/submit:
+    $ref: './paths/league/picks/survey.yaml#/paths/submitSurvey'
 
   /api/admin/season:
     $ref: './paths/season/season.yaml#/paths/season'

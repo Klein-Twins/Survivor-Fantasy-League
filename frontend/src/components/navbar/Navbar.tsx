@@ -19,25 +19,35 @@ const Navbar: React.FC = () => {
 
   return (
     //Header Container
-    <header className={`px-4 py-4 relative ${NavBarColor} dark:text-primary-a3-dark`}>
+    <header
+      className={`px-4 py-4 relative ${NavBarColor} dark:text-primary-a3-dark`}>
       <div className='flex items-center justify-between md:space-x-8 relative'>
-        <div className='flex items-center justify-between flex-grow md:flex-none'>
-          {/* Title Button */}
-          <div className='flex-grow md:flex text-left '>
-            <NavLink className={'text-xl font-bold dark:text-primary-a5-dark'} onClick={handleLinkClick} to='/'>
-              <img src='/SFLLogoDark.jpeg' className='h-12 object-contain' />
-            </NavLink>
+        <div className='flex flex-row items-center justify-between flex-grow md:flex-none'>
+          <div className='flex flex-row justify-start space-x-4 items-center'>
+            {/* Title Button */}
+            <div className='flex-grow md:flex text-left '>
+              <NavLink
+                className={'text-xl font-bold dark:text-primary-a5-dark'}
+                onClick={handleLinkClick}
+                to='/'>
+                <img src='/SFLLogoDark.jpeg' className='h-12 object-contain' />
+              </NavLink>
+            </div>
+            <DarkModeToggle />
           </div>
           {/* Hamburger Button */}
           <div className='absolute right-4 md:hidden'>
-            <HamburgerButton isOpen={isHamburgerOpen} onClick={handleHamburgerClick} />
+            <HamburgerButton
+              isOpen={isHamburgerOpen}
+              onClick={handleHamburgerClick}
+            />
           </div>
         </div>
-        {/* Dark Mode Toggle */}
-        <DarkModeToggle />
+
         {/* Links on md+ size screens */}
         <div className='hidden md:flex md:w-full justify-between items-center'>
           <NavLinkButtons onClick={handleLinkClick} />
+
           <NavAuthButtons onClick={handleLinkClick} />
         </div>
       </div>

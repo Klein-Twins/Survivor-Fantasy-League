@@ -48,3 +48,19 @@ paths:
             application/json:
               schema:
                 $ref: '../../../components/leagues/picks/survey.yaml#/components/responses/GetSurveyForEpisodeForLeagueMember'
+
+  submitSurvey:
+    post:
+      summary: Submit survey for provided episodeId and profileId
+      description:
+        Submits the survey for the specified profileId's in leagueId for
+        episodeId's
+      operationId: submitSurveyWithPickChoices
+      tags:
+        - SurveyService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../../../components/leagues/survey.yaml#/components/requestBodies/SubmitSurveyWithPickChoicesRequestBody'

@@ -1,17 +1,17 @@
 import React, { useState } from 'react';
-import SurveyForm from './SurveyForm';
-import { Account, Episode, League } from '../../../../generated-api';
+import { Account, Episode, League, Profile } from '../../../../generated-api';
 import {
   ButtonPrimaryColors,
   ButtonSubtleColors,
 } from '../../../styles/CommonColorClassNames';
+import Survey from './Survey';
 
 interface SurveyPanelProps {
-  account: Account;
   league: League;
+  account: Account;
 }
 
-const SurveyPanel: React.FC<SurveyPanelProps> = ({ account, league }) => {
+const SurveyPanel: React.FC<SurveyPanelProps> = ({ league, account }) => {
   const [activeEpisode, setActiveEpisode] = useState<Episode>(
     league.season.episodes[0]
   );
@@ -26,7 +26,7 @@ const SurveyPanel: React.FC<SurveyPanelProps> = ({ account, league }) => {
         setActiveEpisode={setActiveEpisode}
         episodes={league.season.episodes}
       />
-      <SurveyForm
+      <Survey
         episodeId={activeEpisode.id}
         profileId={account.profileId}
         leagueId={league.leagueId}
