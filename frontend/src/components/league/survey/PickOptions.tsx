@@ -9,16 +9,28 @@ import {
 } from '../../../../generated-api';
 
 interface PickOptionsProps {
-  pickOptions: ColorPickOptions | TribePickOptions | SurvivorPickOptions | BinaryPickOptions;
+  pickOptions:
+    | ColorPickOptions
+    | TribePickOptions
+    | SurvivorPickOptions
+    | BinaryPickOptions;
   pickOptionType: PickOptionTypeEnum;
 }
 interface PickOptionsProps {
-  pickOptions: ColorPickOptions | TribePickOptions | SurvivorPickOptions | BinaryPickOptions;
+  pickOptions:
+    | ColorPickOptions
+    | TribePickOptions
+    | SurvivorPickOptions
+    | BinaryPickOptions;
   pickOptionType: PickOptionTypeEnum;
   onSelect?: (value: string) => void;
 }
 
-const PickOptions: React.FC<PickOptionsProps> = ({ pickOptions, pickOptionType, onSelect }) => {
+const PickOptions: React.FC<PickOptionsProps> = ({
+  pickOptions,
+  pickOptionType,
+  onSelect,
+}) => {
   const [selected, setSelected] = useState<string>('');
 
   const handleSelect = (value: string) => {
@@ -30,17 +42,17 @@ const PickOptions: React.FC<PickOptionsProps> = ({ pickOptions, pickOptionType, 
     <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2'>
       {options.options.map((color) => (
         <button
-          key={color}
-          onClick={() => handleSelect(color)}
+          key={color.color + Math.random()}
+          onClick={() => handleSelect(color.hex)}
           className={`
               p-3 rounded-lg text-left transition-all
               ${
-                selected === color
+                selected === color.hex
                   ? 'bg-primary text-white ring-2 ring-primary ring-offset-2'
                   : 'bg-surface-a2-dark hover:bg-surface-a3-dark'
               }
             `}>
-          {color}
+          {color.color}
         </button>
       ))}
     </div>
@@ -62,7 +74,10 @@ const PickOptions: React.FC<PickOptionsProps> = ({ pickOptions, pickOptionType, 
           `}>
           <div className='w-20 h-20 mb-2 overflow-hidden rounded-full'>
             <img
-              src={`http://localhost:3000/${survivor.imageUrl}` || '/default-avatar.png'}
+              src={
+                `http://localhost:3000/${survivor.imageUrl}` ||
+                '/default-avatar.png'
+              }
               alt={`${survivor.firstName} ${survivor.lastName}`}
               className='w-full h-full object-cover'
             />

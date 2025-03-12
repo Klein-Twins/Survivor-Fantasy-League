@@ -70,11 +70,7 @@ export function useApi<
 
       try {
         let response;
-        if (params) {
-          response = await serviceFunction(params);
-        } else {
-          response = await serviceFunction();
-        }
+        response = await serviceFunction(params);
 
         setState({
           data: response.data,

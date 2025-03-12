@@ -1,5 +1,4 @@
 import React from 'react';
-
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 
 interface Option {
@@ -18,7 +17,7 @@ interface SelectProps {
   required?: boolean;
   className?: string;
 }
-// border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+
 const Select: React.FC<SelectProps> = ({
   label,
   name,
@@ -38,8 +37,9 @@ const Select: React.FC<SelectProps> = ({
       <Menu as='div' className='relative inline-block w-full'>
         <div>
           <MenuButton
-            className={`inline-flex w-full justify-between gap-x-1.5 p-2 h-10 rounded dark:border-surface-a2-dark dark:bg-surface-a3-dark dark: text-primary-a0-dark focus:outline-none`}>
-            {options.find((option) => option.value === value)?.label || 'Select an option'}
+            className={`inline-flex w-full justify-between gap-x-1.5 p-2 h-10 rounded dark:border-surface-a2-dark dark:bg-surface-a3-dark dark:text-primary-a0-dark focus:outline-none`}>
+            {options.find((option) => option.value === value)?.label ||
+              'Select an option'}
           </MenuButton>
         </div>
 
@@ -48,16 +48,21 @@ const Select: React.FC<SelectProps> = ({
             {options.map((option) => (
               <MenuItem
                 key={option.value}
+                as='button'
                 onClick={() =>
-                  onChange({ target: { name, value: option.value } } as React.ChangeEvent<HTMLSelectElement>)
+                  onChange({
+                    target: { name, value: option.value },
+                  } as React.ChangeEvent<HTMLSelectElement>)
                 }>
                 {({ active }: { active: boolean }) => (
-                  <button
+                  <span
                     className={`block w-full px-4 py-2 ${
-                      active ? 'dark:bg-surface-a4-dark text-primary-a0-dark' : ''
+                      active
+                        ? 'dark:bg-surface-a4-dark text-primary-a0-dark'
+                        : ''
                     }`}>
                     {option.label}
-                  </button>
+                  </span>
                 )}
               </MenuItem>
             ))}

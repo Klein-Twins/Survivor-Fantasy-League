@@ -2,7 +2,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CreateLeagueRequestBody } from '../../../../generated-api';
 import { ApiRequestParams } from '../../../hooks/useApi';
 import useForm from '../../../hooks/useForm';
-import { CreateLeagueFormData, validateCreateLeague } from '../../../utils/league/formValidation';
+import {
+  CreateLeagueFormData,
+  validateCreateLeague,
+} from '../../../utils/league/formValidation';
 import { AppDispatch, RootState } from '../../../store/store';
 import { createLeague } from '../../../store/slices/leagueSlice';
 import Form, { FormClassName } from '../../ui/forms/Form';
@@ -22,8 +25,12 @@ interface CreateLeagueFormProps {
 const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({ className }) => {
   const dispatch = useDispatch<AppDispatch>();
   const account = useSelector((state: RootState) => state.auth.account);
-  const createLeagueLoading = useSelector((state: RootState) => state.league.loading);
-  const createLeagueError = useSelector((state: RootState) => state.league.error);
+  const createLeagueLoading = useSelector(
+    (state: RootState) => state.league.loading
+  );
+  const createLeagueError = useSelector(
+    (state: RootState) => state.league.error
+  );
 
   const {
     values,
@@ -37,13 +44,15 @@ const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({ className }) => {
     validate: validateCreateLeague,
     onSubmit: (values) => {
       try {
-        const requestData: ApiRequestParams<CreateLeagueRequestBody, undefined> = {
+        const requestData: ApiRequestParams<
+          CreateLeagueRequestBody,
+          undefined
+        > = {
           body: {
             name: values.name,
             seasonId: values.seasonId,
             profileId: account!.profileId || '',
           },
-          queryParams: undefined,
         };
         dispatch(createLeague(requestData));
       } catch (error) {

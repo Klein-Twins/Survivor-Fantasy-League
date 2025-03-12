@@ -17,21 +17,18 @@ export interface FormClassName extends DefaultClassName {
   formBackgroundDarkColor?: string;
   formErrorTextDarkColor?: string;
   formTextDarkColor?: string;
-  formSubmitButtonClassName?: FormSubmitButtonClassName;
 }
 
 const defaultFormClassName: FormClassName = {
   formBackgroundDarkColor: 'dark:bg-surface-a1-dark',
   formErrorTextDarkColor: 'dark:text-red-500',
   formTextDarkColor: 'dark:text-primary-a0-dark',
-  formSubmitButtonClassName: undefined,
 };
 
 interface SubmitButtonText {
   submitButtonSubmitText?: string;
   submitButtonLoadingText?: string;
   submitButtonErrorText?: string;
-  submitButton;
 }
 
 const Form: React.FC<FormProps> = ({
@@ -64,7 +61,6 @@ const Form: React.FC<FormProps> = ({
           <h2 className={`text-center ${TextErrorColor}`}>{submitError}</h2>
         )}
         <SubmitButton
-          className={mergedClassName.formSubmitButtonClassName}
           loading={isLoading}
           disabled={isSubmitDisabled}
           label={isLoading ? 'Submitting...' : 'Submit'}

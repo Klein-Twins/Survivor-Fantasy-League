@@ -18,7 +18,10 @@ async function createTribe(
     name: tribeData.name,
     isMergeTribe: tribeData.isMergeTribe,
     episodeStarted: tribeData.episodeStarted,
-    color: tribeData.color,
+    color: {
+      color: tribeData.color,
+      hex: '#000000',
+    },
   });
   return response;
 }
