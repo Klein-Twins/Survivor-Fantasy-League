@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { getImageFromS3 } from '../../../utils/aws/s3';
 import api from '../../../services/apiContainer';
 
 interface ImageProps {
