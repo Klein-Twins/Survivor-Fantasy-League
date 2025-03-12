@@ -82,3 +82,9 @@ testConnection();
 const models = initModels(sequelize);
 
 export { sequelize, dbConfig, models };
+
+module.exports = {
+  development: dbConfig.development,
+  test: dbConfig.test,
+  production: dbConfig.production,
+};
