@@ -1,10 +1,11 @@
 import server from './app.ts';
-import { APP_PORT } from './src/config/config.ts';
+import { APP_HOST, APP_PORT } from './src/config/config.ts';
 import sequelize from './src/config/db.ts';
 import logger from './src/config/logger.ts';
 import seedData from './src/data/seedData.ts';
 
 const PORT: number = Number(APP_PORT);
+const IP: string = APP_HOST;
 
 const startServer = async (): Promise<void> => {
   try {
@@ -16,7 +17,7 @@ const startServer = async (): Promise<void> => {
     logger.info('Data seeded successfully');
 
     server.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
+      console.log(`Server running on ${IP}:${PORT}`);
     });
   } catch (error) {
     console.error('Failed to sync database and start server:', error);
