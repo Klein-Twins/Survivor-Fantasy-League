@@ -8,8 +8,15 @@ import { swaggerSpec, swaggerUi } from './src/config/swagger.ts';
 import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
 import routes from './src/routes/index.ts';
 
+const allowedOrigins = ['http://134.199.141.129', 'http://localhost:5173'];
 const corsOptions: cors.CorsOptions = {
-  origin: ['http://134.199.141.129', 'http://localhost:5173'], // Replace with frontend URL in production
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
 };
 
@@ -43,7 +50,7 @@ app.get('/', (req, res) => {
 const server = http.createServer(app);
 export const io = new Server(server, {
   cors: {
-    origin: ['http://134.199.141.129', 'http://localhost:5173'],
+    origin: allowedOrigins,
     methods: ['GET', 'POST'],
     credentials: true,
   },
