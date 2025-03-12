@@ -35,6 +35,15 @@ export interface LeagueMember {
      * @example member
      */
     role: LeagueMemberRoleEnum;
+
+    /**
+     * The id of the league profile
+     *
+     * @type {string}
+     * @memberof LeagueMember
+     * @example 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
+     */
+    leagueProfileId: string;
 }
 
 /**

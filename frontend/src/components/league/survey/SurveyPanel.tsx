@@ -17,20 +17,21 @@ const SurveyPanel: React.FC<SurveyPanelProps> = ({ league, account }) => {
   );
 
   return (
-    <div className='bg-surface-a1-dark rounded-lg shadow-lg p-4'>
-      <h1 className='text-center text-2xl py-2 underline underline-offset-8 font-bold'>
-        Episode {activeEpisode.episodeNumber}
-      </h1>
-      <EpisodePagination
-        activeEpisode={activeEpisode}
-        setActiveEpisode={setActiveEpisode}
-        episodes={league.season.episodes}
-      />
-      <Survey
-        episodeId={activeEpisode.id}
-        profileId={account.profileId}
-        leagueId={league.leagueId}
-      />
+    <div className='flex flex-col space-y-8 dark:bg-surface-a1-dark rounded-lg shadow-lg p-4'>
+      <div className='dark:bg-surface-a2-dark p-2'>
+        <EpisodePagination
+          activeEpisode={activeEpisode}
+          setActiveEpisode={setActiveEpisode}
+          episodes={league.season.episodes}
+        />
+      </div>
+      <div className='dark:bg-surface-a2-dark p-2'>
+        <Survey
+          episodeId={activeEpisode.id}
+          profileId={account.profileId}
+          leagueId={league.leagueId}
+        />
+      </div>
     </div>
   );
 };

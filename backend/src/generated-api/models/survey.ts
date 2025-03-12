@@ -12,14 +12,27 @@
  * Do not edit the class manually.
  */
 
-/**
- * The status of the survey filled out by tha profile
+import { Pick } from './pick';
+ /**
+ * 
+ *
  * @export
- * @enum {string}
+ * @interface Survey
  */
-export enum SurveySubmissionStatusEnum {
-    NotStarted = 'Not started',
-    InProgress = 'In progress',
-    Completed = 'Completed'
-}
+export interface Survey {
 
+    /**
+     * The ID of the survey
+     *
+     * @type {string}
+     * @memberof Survey
+     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
+     */
+    id: string;
+
+    /**
+     * @type {Array<Pick>}
+     * @memberof Survey
+     */
+    picks: Array<Pick>;
+}

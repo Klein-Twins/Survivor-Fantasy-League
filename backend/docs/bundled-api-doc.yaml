@@ -860,6 +860,7 @@ paths:
                                         required:
                                           - profile
                                           - role
+                                          - leagueProfileId
                                         properties:
                                           profile:
                                             type: object
@@ -890,6 +891,11 @@ paths:
                                               - OWNER
                                               - ADMIN
                                               - MEMBER
+                                          leagueProfileId:
+                                            type: string
+                                            description: The id of the league profile
+                                            example: 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
+                                            format: uuid
                                 message:
                                   type: string
                                   description: A message indicating the success of the operation.
@@ -1312,6 +1318,7 @@ paths:
                                   required:
                                     - profile
                                     - role
+                                    - leagueProfileId
                                   properties:
                                     profile:
                                       type: object
@@ -1342,6 +1349,11 @@ paths:
                                         - OWNER
                                         - ADMIN
                                         - MEMBER
+                                    leagueProfileId:
+                                      type: string
+                                      description: The id of the league profile
+                                      example: 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
+                                      format: uuid
                           inviteId:
                             type: string
                             description: The unique ID of the league invite.
@@ -1820,6 +1832,7 @@ paths:
                                     required:
                                       - profile
                                       - role
+                                      - leagueProfileId
                                     properties:
                                       profile:
                                         type: object
@@ -1850,6 +1863,11 @@ paths:
                                           - OWNER
                                           - ADMIN
                                           - MEMBER
+                                      leagueProfileId:
+                                        type: string
+                                        description: The id of the league profile
+                                        example: 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
+                                        format: uuid
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -2186,6 +2204,7 @@ paths:
                                   required:
                                     - profile
                                     - role
+                                    - leagueProfileId
                                   properties:
                                     profile:
                                       type: object
@@ -2216,6 +2235,11 @@ paths:
                                         - OWNER
                                         - ADMIN
                                         - MEMBER
+                                    leagueProfileId:
+                                      type: string
+                                      description: The id of the league profile
+                                      example: 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
+                                      format: uuid
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -2905,7 +2929,7 @@ paths:
                         type: string
                         description: Error message describing what went wrong
                         example: Invalid Credentials provided
-  '/api/league/{leagueId}/survey':
+  '/api/league/survey/{leagueId}/{profileId}/{episodeId}':
     get:
       summary: Get survey(s) for provided episodeId and profileId
       description: Retrieves the survey for the specified profileId's in leagueId for episodeId's
@@ -2919,28 +2943,24 @@ paths:
           schema:
             type: string
             format: uuid
-            description: The ID of the league to retrieve picks for.
-        - in: query
+            description: The ID of the league.
+            example: '1'
+        - in: path
           name: profileId
-          required: false
+          required: true
           schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-            description: Array of profile IDs to retrieve picks for.
-            example:
-              - 123e4567-e89b-12d3-a456-426614174000
-              - 987fcdeb-51a2-43c7-9123-426614174111
-        - in: query
+            type: string
+            format: uuid
+            description: The ID of the profile.
+            example: '1'
+        - in: path
           name: episodeId
           required: true
           schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-            description: Array of episode id to retrieve picks for.
+            type: string
+            format: uuid
+            description: The ID of the episode.
+            example: '1'
       responses:
         '200':
           description: Retrieves a survey for the specified profileId in leagueId for episodeId
@@ -2975,334 +2995,664 @@ paths:
                       responseData:
                         type: object
                         required:
-                          - leagueSurveys
+                          - leagueSurvey
+                          - isCompleted
                         properties:
-                          leagueSurveys:
-                            type: array
-                            items:
-                              type: object
-                              required:
-                                - leagueSurveyId
-                                - surveyId
-                                - episode
-                                - surveyType
-                                - picks
-                              properties:
-                                leagueSurveyId:
-                                  type: string
-                                  format: uuid
-                                  description: The ID of the league survey
-                                surveyId:
-                                  type: string
-                                  description: The ID of the survey
-                                  example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                episode:
-                                  type: object
-                                  required:
-                                    - id
-                                    - seasonId
-                                    - episodeNumber
-                                    - episodeAirDate
-                                    - episodeTitle
-                                    - episodeDescription
-                                    - episodeImage
-                                  properties:
-                                    id:
-                                      type: string
-                                      description: The ID of the episode
-                                      example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                    seasonId:
-                                      type: number
-                                      description: The ID of the season the episode is in
-                                      example: '47'
-                                    episodeNumber:
-                                      type: number
-                                      description: The number of the episode
-                                      example: '1'
-                                    episodeAirDate:
-                                      type: string
-                                      format: date
-                                      description: The air date of the episode
-                                      example: '2021-09-22'
-                                    episodeTitle:
-                                      type: string
-                                      description: The title of the episode
-                                      example: The Beginning
-                                      nullable: true
-                                    episodeDescription:
-                                      type: string
-                                      description: The description of the episode
-                                      example: The first episode of the season
-                                      nullable: true
-                                    episodeImage:
-                                      type: string
-                                      description: The image of the episode
-                                      example: 'https://www.image.com/episode.jpg'
-                                      nullable: true
-                                surveyType:
-                                  type: string
-                                  enum:
-                                    - Weekly
-                                    - Premier
-                                    - Finale
-                                    - All
-                                  default: All
-                                  description: The type of survey
-                                  example: Weekly
-                                picks:
-                                  type: array
-                                  items:
-                                    type: object
+                          leagueSurvey:
+                            oneOf:
+                              - allOf:
+                                  - type: object
                                     required:
                                       - id
-                                      - pickOptionType
-                                      - pickOptions
-                                      - numPointsWorth
-                                      - description
+                                      - picks
                                     properties:
                                       id:
                                         type: string
-                                        description: The ID of the pick
+                                        description: The ID of the survey
                                         example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                      description:
+                                      picks:
+                                        type: array
+                                        items:
+                                          type: object
+                                          required:
+                                            - id
+                                            - pickOptionType
+                                            - pickOptions
+                                            - numPointsWorth
+                                            - description
+                                          properties:
+                                            id:
+                                              type: string
+                                              description: The ID of the pick
+                                              example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                            description:
+                                              type: string
+                                              description: The description of the pick
+                                              example: Who will be voted out this week?
+                                            pickOptionType:
+                                              type: string
+                                              enum:
+                                                - survivor
+                                                - color
+                                                - tribe
+                                                - binary
+                                              description: The type of pick
+                                              example: Survivor
+                                            numPointsWorth:
+                                              type: integer
+                                              description: The number of points the pick is worth
+                                              example: 10
+                                            pickOptions:
+                                              oneOf:
+                                                - type: object
+                                                  required:
+                                                    - options
+                                                  properties:
+                                                    options:
+                                                      type: array
+                                                      items:
+                                                        type: object
+                                                        allOf:
+                                                          - type: object
+                                                            required:
+                                                              - survivorId
+                                                              - firstName
+                                                              - lastName
+                                                            properties:
+                                                              survivorId:
+                                                                type: string
+                                                                description: The survivor's unique identifier
+                                                                example: 1
+                                                              firstName:
+                                                                type: string
+                                                                description: The survivor's first name
+                                                                example: Andy
+                                                              lastName:
+                                                                type: string
+                                                                description: The survivor's last name
+                                                                example: Rueda
+                                                          - type: object
+                                                            required:
+                                                              - seasonId
+                                                              - fromState
+                                                              - fromCountry
+                                                              - age
+                                                              - description
+                                                              - job
+                                                              - imageUrl
+                                                            properties:
+                                                              seasonId:
+                                                                type: integer
+                                                                description: The season tied with this survivor's details
+                                                                example: 47I
+                                                              nickName:
+                                                                type: string
+                                                                description: The survivor's nickname
+                                                                example: The Brain
+                                                                nullable: true
+                                                              fromCity:
+                                                                type: string
+                                                                description: The city the survivor is from
+                                                                example: Brooklyn
+                                                                nullable: true
+                                                              fromState:
+                                                                type: string
+                                                                description: The state the survivor is from
+                                                                example: New York
+                                                              fromCountry:
+                                                                type: string
+                                                                description: The country the survivor is from
+                                                                example: US
+                                                              age:
+                                                                type: integer
+                                                                description: The survivor's age at the time of the season
+                                                                example: 31
+                                                              description:
+                                                                type: string
+                                                                description: A short description about the survivor
+                                                                example: An outgoing and energetic person.
+                                                              job:
+                                                                type: string
+                                                                description: The survivor's job/occupation
+                                                                example: AI Research Assistant
+                                                              imageUrl:
+                                                                type: string
+                                                                description: The path of the survivor image
+                                                                example: /assets/images/survivors/AndyRueda47.jpeg
+                                                - type: object
+                                                  required:
+                                                    - options
+                                                  properties:
+                                                    options:
+                                                      type: array
+                                                      items:
+                                                        type: object
+                                                        required:
+                                                          - color
+                                                          - hex
+                                                        properties:
+                                                          color:
+                                                            type: string
+                                                            description: The name of the color
+                                                            example: Red
+                                                          hex:
+                                                            type: string
+                                                            description: The hex code of the color
+                                                            example: '#FF0000'
+                                                - type: object
+                                                  required:
+                                                    - options
+                                                  properties:
+                                                    options:
+                                                      type: array
+                                                      items:
+                                                        type: object
+                                                        required:
+                                                          - id
+                                                          - name
+                                                          - color
+                                                          - imageUrl
+                                                          - seasonId
+                                                        properties:
+                                                          seasonId:
+                                                            type: string
+                                                            description: The season's unique identifier
+                                                            example: 47
+                                                          id:
+                                                            type: string
+                                                            description: The tribe's unique identifier
+                                                            example: 1
+                                                          name:
+                                                            type: string
+                                                            description: The tribe's name
+                                                            example: Luzon
+                                                          color:
+                                                            type: object
+                                                            required:
+                                                              - color
+                                                              - hex
+                                                            properties:
+                                                              color:
+                                                                type: string
+                                                                description: The name of the color
+                                                                example: Red
+                                                              hex:
+                                                                type: string
+                                                                description: The hex code of the color
+                                                                example: '#FF0000'
+                                                          imageUrl:
+                                                            type: string
+                                                            description: The tribe's image URL
+                                                            example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                                          isMergeTribe:
+                                                            type: boolean
+                                                            description: Whether the tribe is a merge tribe
+                                                            example: false
+                                                          episodeStarted:
+                                                            type: object
+                                                            required:
+                                                              - id
+                                                              - seasonId
+                                                              - episodeNumber
+                                                              - episodeAirDate
+                                                              - episodeTitle
+                                                              - episodeDescription
+                                                              - episodeImage
+                                                            properties:
+                                                              id:
+                                                                type: string
+                                                                description: The ID of the episode
+                                                                example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                                              seasonId:
+                                                                type: number
+                                                                description: The ID of the season the episode is in
+                                                                example: '47'
+                                                              episodeNumber:
+                                                                type: number
+                                                                description: The number of the episode
+                                                                example: '1'
+                                                              episodeAirDate:
+                                                                type: string
+                                                                format: date
+                                                                description: The air date of the episode
+                                                                example: '2021-09-22'
+                                                              episodeTitle:
+                                                                type: string
+                                                                description: The title of the episode
+                                                                example: The Beginning
+                                                                nullable: true
+                                                              episodeDescription:
+                                                                type: string
+                                                                description: The description of the episode
+                                                                example: The first episode of the season
+                                                                nullable: true
+                                                              episodeImage:
+                                                                type: string
+                                                                description: The image of the episode
+                                                                example: 'https://www.image.com/episode.jpg'
+                                                                nullable: true
+                                                - type: object
+                                                  required:
+                                                    - options
+                                                  properties:
+                                                    options:
+                                                      type: array
+                                                      items:
+                                                        type: string
+                                                        enum:
+                                                          - 'yes'
+                                                          - 'no'
+                                          discriminator:
+                                            propertyName: pickOptionType
+                                            mapping:
+                                              survivor: '#/components/schemas/SurvivorPickOptions'
+                                              color: '#/components/schemas/ColorPickOptions'
+                                              tribe: '#/components/schemas/TribePickOptions'
+                                              binary: '#/components/schemas/BinaryPickOptions'
+                                  - type: object
+                                    required:
+                                      - leagueSurveyId
+                                      - episode
+                                      - availabilityStatus
+                                      - submissionStatus
+                                    properties:
+                                      leagueSurveyId:
                                         type: string
-                                        description: The description of the pick
-                                        example: Who will be voted out this week?
-                                      pickOptionType:
+                                        format: uuid
+                                        description: The ID of the league survey
+                                      episode:
+                                        type: object
+                                        required:
+                                          - id
+                                          - seasonId
+                                          - episodeNumber
+                                          - episodeAirDate
+                                          - episodeTitle
+                                          - episodeDescription
+                                          - episodeImage
+                                        properties:
+                                          id:
+                                            type: string
+                                            description: The ID of the episode
+                                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                          seasonId:
+                                            type: number
+                                            description: The ID of the season the episode is in
+                                            example: '47'
+                                          episodeNumber:
+                                            type: number
+                                            description: The number of the episode
+                                            example: '1'
+                                          episodeAirDate:
+                                            type: string
+                                            format: date
+                                            description: The air date of the episode
+                                            example: '2021-09-22'
+                                          episodeTitle:
+                                            type: string
+                                            description: The title of the episode
+                                            example: The Beginning
+                                            nullable: true
+                                          episodeDescription:
+                                            type: string
+                                            description: The description of the episode
+                                            example: The first episode of the season
+                                            nullable: true
+                                          episodeImage:
+                                            type: string
+                                            description: The image of the episode
+                                            example: 'https://www.image.com/episode.jpg'
+                                            nullable: true
+                                      availabilityStatus:
                                         type: string
                                         enum:
-                                          - survivor
-                                          - color
-                                          - tribe
-                                          - binary
-                                        description: The type of pick
-                                        example: Survivor
-                                      numPointsWorth:
-                                        type: integer
-                                        description: The number of points the pick is worth
-                                        example: 10
-                                      pickOptions:
-                                        oneOf:
-                                          - type: object
-                                            required:
-                                              - options
-                                            properties:
-                                              options:
-                                                type: array
-                                                items:
-                                                  type: object
-                                                  allOf:
-                                                    - type: object
-                                                      required:
-                                                        - survivorId
-                                                        - firstName
-                                                        - lastName
-                                                      properties:
-                                                        survivorId:
-                                                          type: string
-                                                          description: The survivor's unique identifier
-                                                          example: 1
-                                                        firstName:
-                                                          type: string
-                                                          description: The survivor's first name
-                                                          example: Andy
-                                                        lastName:
-                                                          type: string
-                                                          description: The survivor's last name
-                                                          example: Rueda
-                                                    - type: object
-                                                      required:
-                                                        - seasonId
-                                                        - fromState
-                                                        - fromCountry
-                                                        - age
-                                                        - description
-                                                        - job
-                                                        - imageUrl
-                                                      properties:
-                                                        seasonId:
-                                                          type: integer
-                                                          description: The season tied with this survivor's details
-                                                          example: 47I
-                                                        nickName:
-                                                          type: string
-                                                          description: The survivor's nickname
-                                                          example: The Brain
-                                                          nullable: true
-                                                        fromCity:
-                                                          type: string
-                                                          description: The city the survivor is from
-                                                          example: Brooklyn
-                                                          nullable: true
-                                                        fromState:
-                                                          type: string
-                                                          description: The state the survivor is from
-                                                          example: New York
-                                                        fromCountry:
-                                                          type: string
-                                                          description: The country the survivor is from
-                                                          example: US
-                                                        age:
-                                                          type: integer
-                                                          description: The survivor's age at the time of the season
-                                                          example: 31
-                                                        description:
-                                                          type: string
-                                                          description: A short description about the survivor
-                                                          example: An outgoing and energetic person.
-                                                        job:
-                                                          type: string
-                                                          description: The survivor's job/occupation
-                                                          example: AI Research Assistant
-                                                        imageUrl:
-                                                          type: string
-                                                          description: The path of the survivor image
-                                                          example: /assets/images/survivors/AndyRueda47.jpeg
-                                          - type: object
-                                            required:
-                                              - options
-                                            properties:
-                                              options:
-                                                type: array
-                                                items:
-                                                  type: object
-                                                  required:
-                                                    - color
-                                                    - hex
-                                                  properties:
-                                                    color:
-                                                      type: string
-                                                      description: The name of the color
-                                                      example: Red
-                                                    hex:
-                                                      type: string
-                                                      description: The hex code of the color
-                                                      example: '#FF0000'
-                                          - type: object
-                                            required:
-                                              - options
-                                            properties:
-                                              options:
-                                                type: array
-                                                items:
-                                                  type: object
-                                                  required:
-                                                    - id
-                                                    - name
-                                                    - color
-                                                    - imageUrl
-                                                    - seasonId
-                                                  properties:
-                                                    seasonId:
-                                                      type: string
-                                                      description: The season's unique identifier
-                                                      example: 47
-                                                    id:
-                                                      type: string
-                                                      description: The tribe's unique identifier
-                                                      example: 1
-                                                    name:
-                                                      type: string
-                                                      description: The tribe's name
-                                                      example: Luzon
-                                                    color:
-                                                      type: object
-                                                      required:
-                                                        - color
-                                                        - hex
-                                                      properties:
-                                                        color:
-                                                          type: string
-                                                          description: The name of the color
-                                                          example: Red
-                                                        hex:
-                                                          type: string
-                                                          description: The hex code of the color
-                                                          example: '#FF0000'
-                                                    imageUrl:
-                                                      type: string
-                                                      description: The tribe's image URL
-                                                      example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
-                                                    isMergeTribe:
-                                                      type: boolean
-                                                      description: Whether the tribe is a merge tribe
-                                                      example: false
-                                                    episodeStarted:
-                                                      type: object
-                                                      required:
-                                                        - id
-                                                        - seasonId
-                                                        - episodeNumber
-                                                        - episodeAirDate
-                                                        - episodeTitle
-                                                        - episodeDescription
-                                                        - episodeImage
-                                                      properties:
-                                                        id:
-                                                          type: string
-                                                          description: The ID of the episode
-                                                          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                                        seasonId:
-                                                          type: number
-                                                          description: The ID of the season the episode is in
-                                                          example: '47'
-                                                        episodeNumber:
-                                                          type: number
-                                                          description: The number of the episode
-                                                          example: '1'
-                                                        episodeAirDate:
-                                                          type: string
-                                                          format: date
-                                                          description: The air date of the episode
-                                                          example: '2021-09-22'
-                                                        episodeTitle:
-                                                          type: string
-                                                          description: The title of the episode
-                                                          example: The Beginning
-                                                          nullable: true
-                                                        episodeDescription:
-                                                          type: string
-                                                          description: The description of the episode
-                                                          example: The first episode of the season
-                                                          nullable: true
-                                                        episodeImage:
-                                                          type: string
-                                                          description: The image of the episode
-                                                          example: 'https://www.image.com/episode.jpg'
-                                                          nullable: true
-                                          - type: object
-                                            required:
-                                              - options
-                                            properties:
-                                              options:
-                                                type: array
-                                                items:
+                                          - Available
+                                          - Not Open Yet
+                                          - Closed
+                              - allOf:
+                                  - allOf:
+                                      - type: object
+                                        required:
+                                          - id
+                                          - picks
+                                        properties:
+                                          id:
+                                            type: string
+                                            description: The ID of the survey
+                                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                          picks:
+                                            type: array
+                                            items:
+                                              type: object
+                                              required:
+                                                - id
+                                                - pickOptionType
+                                                - pickOptions
+                                                - numPointsWorth
+                                                - description
+                                              properties:
+                                                id:
+                                                  type: string
+                                                  description: The ID of the pick
+                                                  example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                                description:
+                                                  type: string
+                                                  description: The description of the pick
+                                                  example: Who will be voted out this week?
+                                                pickOptionType:
                                                   type: string
                                                   enum:
-                                                    - 'yes'
-                                                    - 'no'
-                                    discriminator:
-                                      propertyName: pickOptionType
-                                      mapping:
-                                        survivor: ./pickOptions.yaml#/components/schemas/SurvivorPickOptions
-                                        color: ./pickOptions.yaml#/components/schemas/ColorPickOptions
-                                        tribe: ./pickOptions.yaml#/components/schemas/TribePickOptions
-                                        binary: ./pickOptions.yaml#/components/schemas/BinaryPickOptions
-                                SurveySubmissionStatus:
-                                  type: string
-                                  enum:
-                                    - Not started
-                                    - In progress
-                                    - Completed
-                                  default: Not Started
-                                  description: The status of the survey filled out by tha profile
-                                  example: Not Started
-                                SurveyAvailabilityStatus:
-                                  type: string
-                                  enum:
-                                    - Available
-                                    - Not Open Yet
-                                    - Closed
+                                                    - survivor
+                                                    - color
+                                                    - tribe
+                                                    - binary
+                                                  description: The type of pick
+                                                  example: Survivor
+                                                numPointsWorth:
+                                                  type: integer
+                                                  description: The number of points the pick is worth
+                                                  example: 10
+                                                pickOptions:
+                                                  oneOf:
+                                                    - type: object
+                                                      required:
+                                                        - options
+                                                      properties:
+                                                        options:
+                                                          type: array
+                                                          items:
+                                                            type: object
+                                                            allOf:
+                                                              - type: object
+                                                                required:
+                                                                  - survivorId
+                                                                  - firstName
+                                                                  - lastName
+                                                                properties:
+                                                                  survivorId:
+                                                                    type: string
+                                                                    description: The survivor's unique identifier
+                                                                    example: 1
+                                                                  firstName:
+                                                                    type: string
+                                                                    description: The survivor's first name
+                                                                    example: Andy
+                                                                  lastName:
+                                                                    type: string
+                                                                    description: The survivor's last name
+                                                                    example: Rueda
+                                                              - type: object
+                                                                required:
+                                                                  - seasonId
+                                                                  - fromState
+                                                                  - fromCountry
+                                                                  - age
+                                                                  - description
+                                                                  - job
+                                                                  - imageUrl
+                                                                properties:
+                                                                  seasonId:
+                                                                    type: integer
+                                                                    description: The season tied with this survivor's details
+                                                                    example: 47I
+                                                                  nickName:
+                                                                    type: string
+                                                                    description: The survivor's nickname
+                                                                    example: The Brain
+                                                                    nullable: true
+                                                                  fromCity:
+                                                                    type: string
+                                                                    description: The city the survivor is from
+                                                                    example: Brooklyn
+                                                                    nullable: true
+                                                                  fromState:
+                                                                    type: string
+                                                                    description: The state the survivor is from
+                                                                    example: New York
+                                                                  fromCountry:
+                                                                    type: string
+                                                                    description: The country the survivor is from
+                                                                    example: US
+                                                                  age:
+                                                                    type: integer
+                                                                    description: The survivor's age at the time of the season
+                                                                    example: 31
+                                                                  description:
+                                                                    type: string
+                                                                    description: A short description about the survivor
+                                                                    example: An outgoing and energetic person.
+                                                                  job:
+                                                                    type: string
+                                                                    description: The survivor's job/occupation
+                                                                    example: AI Research Assistant
+                                                                  imageUrl:
+                                                                    type: string
+                                                                    description: The path of the survivor image
+                                                                    example: /assets/images/survivors/AndyRueda47.jpeg
+                                                    - type: object
+                                                      required:
+                                                        - options
+                                                      properties:
+                                                        options:
+                                                          type: array
+                                                          items:
+                                                            type: object
+                                                            required:
+                                                              - color
+                                                              - hex
+                                                            properties:
+                                                              color:
+                                                                type: string
+                                                                description: The name of the color
+                                                                example: Red
+                                                              hex:
+                                                                type: string
+                                                                description: The hex code of the color
+                                                                example: '#FF0000'
+                                                    - type: object
+                                                      required:
+                                                        - options
+                                                      properties:
+                                                        options:
+                                                          type: array
+                                                          items:
+                                                            type: object
+                                                            required:
+                                                              - id
+                                                              - name
+                                                              - color
+                                                              - imageUrl
+                                                              - seasonId
+                                                            properties:
+                                                              seasonId:
+                                                                type: string
+                                                                description: The season's unique identifier
+                                                                example: 47
+                                                              id:
+                                                                type: string
+                                                                description: The tribe's unique identifier
+                                                                example: 1
+                                                              name:
+                                                                type: string
+                                                                description: The tribe's name
+                                                                example: Luzon
+                                                              color:
+                                                                type: object
+                                                                required:
+                                                                  - color
+                                                                  - hex
+                                                                properties:
+                                                                  color:
+                                                                    type: string
+                                                                    description: The name of the color
+                                                                    example: Red
+                                                                  hex:
+                                                                    type: string
+                                                                    description: The hex code of the color
+                                                                    example: '#FF0000'
+                                                              imageUrl:
+                                                                type: string
+                                                                description: The tribe's image URL
+                                                                example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
+                                                              isMergeTribe:
+                                                                type: boolean
+                                                                description: Whether the tribe is a merge tribe
+                                                                example: false
+                                                              episodeStarted:
+                                                                type: object
+                                                                required:
+                                                                  - id
+                                                                  - seasonId
+                                                                  - episodeNumber
+                                                                  - episodeAirDate
+                                                                  - episodeTitle
+                                                                  - episodeDescription
+                                                                  - episodeImage
+                                                                properties:
+                                                                  id:
+                                                                    type: string
+                                                                    description: The ID of the episode
+                                                                    example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                                                  seasonId:
+                                                                    type: number
+                                                                    description: The ID of the season the episode is in
+                                                                    example: '47'
+                                                                  episodeNumber:
+                                                                    type: number
+                                                                    description: The number of the episode
+                                                                    example: '1'
+                                                                  episodeAirDate:
+                                                                    type: string
+                                                                    format: date
+                                                                    description: The air date of the episode
+                                                                    example: '2021-09-22'
+                                                                  episodeTitle:
+                                                                    type: string
+                                                                    description: The title of the episode
+                                                                    example: The Beginning
+                                                                    nullable: true
+                                                                  episodeDescription:
+                                                                    type: string
+                                                                    description: The description of the episode
+                                                                    example: The first episode of the season
+                                                                    nullable: true
+                                                                  episodeImage:
+                                                                    type: string
+                                                                    description: The image of the episode
+                                                                    example: 'https://www.image.com/episode.jpg'
+                                                                    nullable: true
+                                                    - type: object
+                                                      required:
+                                                        - options
+                                                      properties:
+                                                        options:
+                                                          type: array
+                                                          items:
+                                                            type: string
+                                                            enum:
+                                                              - 'yes'
+                                                              - 'no'
+                                              discriminator:
+                                                propertyName: pickOptionType
+                                                mapping:
+                                                  survivor: '#/components/schemas/SurvivorPickOptions'
+                                                  color: '#/components/schemas/ColorPickOptions'
+                                                  tribe: '#/components/schemas/TribePickOptions'
+                                                  binary: '#/components/schemas/BinaryPickOptions'
+                                      - type: object
+                                        required:
+                                          - leagueSurveyId
+                                          - episode
+                                          - availabilityStatus
+                                          - submissionStatus
+                                        properties:
+                                          leagueSurveyId:
+                                            type: string
+                                            format: uuid
+                                            description: The ID of the league survey
+                                          episode:
+                                            type: object
+                                            required:
+                                              - id
+                                              - seasonId
+                                              - episodeNumber
+                                              - episodeAirDate
+                                              - episodeTitle
+                                              - episodeDescription
+                                              - episodeImage
+                                            properties:
+                                              id:
+                                                type: string
+                                                description: The ID of the episode
+                                                example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                              seasonId:
+                                                type: number
+                                                description: The ID of the season the episode is in
+                                                example: '47'
+                                              episodeNumber:
+                                                type: number
+                                                description: The number of the episode
+                                                example: '1'
+                                              episodeAirDate:
+                                                type: string
+                                                format: date
+                                                description: The air date of the episode
+                                                example: '2021-09-22'
+                                              episodeTitle:
+                                                type: string
+                                                description: The title of the episode
+                                                example: The Beginning
+                                                nullable: true
+                                              episodeDescription:
+                                                type: string
+                                                description: The description of the episode
+                                                example: The first episode of the season
+                                                nullable: true
+                                              episodeImage:
+                                                type: string
+                                                description: The image of the episode
+                                                example: 'https://www.image.com/episode.jpg'
+                                                nullable: true
+                                          availabilityStatus:
+                                            type: string
+                                            enum:
+                                              - Available
+                                              - Not Open Yet
+                                              - Closed
+                                  - type: object
+                                    required:
+                                      - pickSelections
+                                      - leagueId
+                                      - profileId
+                                    properties:
+                                      pickSelections:
+                                        type: array
+                                        items:
+                                          type: object
+                                          required:
+                                            - pickId
+                                            - playerChoice
+                                          properties:
+                                            pickId:
+                                              type: string
+                                              format: uuid
+                                              description: The ID of the pick.
+                                            playerChoice:
+                                              type: string
+                                              description: The player choice.
+                                              example: '1'
+                                      leagueId:
+                                        type: string
+                                        format: uuid
+                                        description: The ID of the league the survey is submitted in
+                                      profileId:
+                                        type: string
+                                        format: uuid
+                                        description: The ID of the profile submitting the survey
+                          isCompleted:
+                            type: boolean
+                            description: 'Indicates if the survey is completed. If true, then leagueSurvey should be CompletedLeagueSurvey and if not then LeagueSurvey'
+                            example: true
   /api/league/survey/submit:
     post:
       summary: Submit survey for provided episodeId and profileId
@@ -3354,249 +3704,15 @@ paths:
                   items:
                     type: object
                     required:
-                      - pick
+                      - pickId
                       - playerChoice
                     properties:
-                      pick:
-                        type: object
-                        required:
-                          - id
-                          - pickOptionType
-                          - pickOptions
-                          - numPointsWorth
-                          - description
-                        properties:
-                          id:
-                            type: string
-                            description: The ID of the pick
-                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                          description:
-                            type: string
-                            description: The description of the pick
-                            example: Who will be voted out this week?
-                          pickOptionType:
-                            type: string
-                            enum:
-                              - survivor
-                              - color
-                              - tribe
-                              - binary
-                            description: The type of pick
-                            example: Survivor
-                          numPointsWorth:
-                            type: integer
-                            description: The number of points the pick is worth
-                            example: 10
-                          pickOptions:
-                            oneOf:
-                              - type: object
-                                required:
-                                  - options
-                                properties:
-                                  options:
-                                    type: array
-                                    items:
-                                      type: object
-                                      allOf:
-                                        - type: object
-                                          required:
-                                            - survivorId
-                                            - firstName
-                                            - lastName
-                                          properties:
-                                            survivorId:
-                                              type: string
-                                              description: The survivor's unique identifier
-                                              example: 1
-                                            firstName:
-                                              type: string
-                                              description: The survivor's first name
-                                              example: Andy
-                                            lastName:
-                                              type: string
-                                              description: The survivor's last name
-                                              example: Rueda
-                                        - type: object
-                                          required:
-                                            - seasonId
-                                            - fromState
-                                            - fromCountry
-                                            - age
-                                            - description
-                                            - job
-                                            - imageUrl
-                                          properties:
-                                            seasonId:
-                                              type: integer
-                                              description: The season tied with this survivor's details
-                                              example: 47I
-                                            nickName:
-                                              type: string
-                                              description: The survivor's nickname
-                                              example: The Brain
-                                              nullable: true
-                                            fromCity:
-                                              type: string
-                                              description: The city the survivor is from
-                                              example: Brooklyn
-                                              nullable: true
-                                            fromState:
-                                              type: string
-                                              description: The state the survivor is from
-                                              example: New York
-                                            fromCountry:
-                                              type: string
-                                              description: The country the survivor is from
-                                              example: US
-                                            age:
-                                              type: integer
-                                              description: The survivor's age at the time of the season
-                                              example: 31
-                                            description:
-                                              type: string
-                                              description: A short description about the survivor
-                                              example: An outgoing and energetic person.
-                                            job:
-                                              type: string
-                                              description: The survivor's job/occupation
-                                              example: AI Research Assistant
-                                            imageUrl:
-                                              type: string
-                                              description: The path of the survivor image
-                                              example: /assets/images/survivors/AndyRueda47.jpeg
-                              - type: object
-                                required:
-                                  - options
-                                properties:
-                                  options:
-                                    type: array
-                                    items:
-                                      type: object
-                                      required:
-                                        - color
-                                        - hex
-                                      properties:
-                                        color:
-                                          type: string
-                                          description: The name of the color
-                                          example: Red
-                                        hex:
-                                          type: string
-                                          description: The hex code of the color
-                                          example: '#FF0000'
-                              - type: object
-                                required:
-                                  - options
-                                properties:
-                                  options:
-                                    type: array
-                                    items:
-                                      type: object
-                                      required:
-                                        - id
-                                        - name
-                                        - color
-                                        - imageUrl
-                                        - seasonId
-                                      properties:
-                                        seasonId:
-                                          type: string
-                                          description: The season's unique identifier
-                                          example: 47
-                                        id:
-                                          type: string
-                                          description: The tribe's unique identifier
-                                          example: 1
-                                        name:
-                                          type: string
-                                          description: The tribe's name
-                                          example: Luzon
-                                        color:
-                                          type: object
-                                          required:
-                                            - color
-                                            - hex
-                                          properties:
-                                            color:
-                                              type: string
-                                              description: The name of the color
-                                              example: Red
-                                            hex:
-                                              type: string
-                                              description: The hex code of the color
-                                              example: '#FF0000'
-                                        imageUrl:
-                                          type: string
-                                          description: The tribe's image URL
-                                          example: 'https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg'
-                                        isMergeTribe:
-                                          type: boolean
-                                          description: Whether the tribe is a merge tribe
-                                          example: false
-                                        episodeStarted:
-                                          type: object
-                                          required:
-                                            - id
-                                            - seasonId
-                                            - episodeNumber
-                                            - episodeAirDate
-                                            - episodeTitle
-                                            - episodeDescription
-                                            - episodeImage
-                                          properties:
-                                            id:
-                                              type: string
-                                              description: The ID of the episode
-                                              example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                            seasonId:
-                                              type: number
-                                              description: The ID of the season the episode is in
-                                              example: '47'
-                                            episodeNumber:
-                                              type: number
-                                              description: The number of the episode
-                                              example: '1'
-                                            episodeAirDate:
-                                              type: string
-                                              format: date
-                                              description: The air date of the episode
-                                              example: '2021-09-22'
-                                            episodeTitle:
-                                              type: string
-                                              description: The title of the episode
-                                              example: The Beginning
-                                              nullable: true
-                                            episodeDescription:
-                                              type: string
-                                              description: The description of the episode
-                                              example: The first episode of the season
-                                              nullable: true
-                                            episodeImage:
-                                              type: string
-                                              description: The image of the episode
-                                              example: 'https://www.image.com/episode.jpg'
-                                              nullable: true
-                              - type: object
-                                required:
-                                  - options
-                                properties:
-                                  options:
-                                    type: array
-                                    items:
-                                      type: string
-                                      enum:
-                                        - 'yes'
-                                        - 'no'
-                        discriminator:
-                          propertyName: pickOptionType
-                          mapping:
-                            survivor: ./pickOptions.yaml#/components/schemas/SurvivorPickOptions
-                            color: ./pickOptions.yaml#/components/schemas/ColorPickOptions
-                            tribe: ./pickOptions.yaml#/components/schemas/TribePickOptions
-                            binary: ./pickOptions.yaml#/components/schemas/BinaryPickOptions
+                      pickId:
+                        type: string
+                        format: uuid
+                        description: The ID of the pick.
                       playerChoice:
                         type: string
-                        nullable: true
                         description: The player choice.
                         example: '1'
       responses:

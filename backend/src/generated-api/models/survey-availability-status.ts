@@ -12,27 +12,14 @@
  * Do not edit the class manually.
  */
 
-import { Pick } from './pick';
- /**
+/**
  * 
- *
  * @export
- * @interface PickWithPlayerChoice
+ * @enum {string}
  */
-export interface PickWithPlayerChoice {
-
-    /**
-     * @type {Pick}
-     * @memberof PickWithPlayerChoice
-     */
-    pick: Pick;
-
-    /**
-     * The player choice.
-     *
-     * @type {string}
-     * @memberof PickWithPlayerChoice
-     * @example 1
-     */
-    playerChoice: string | null;
+export enum SurveyAvailabilityStatus {
+    Available = 'Available',
+    NotOpenYet = 'Not Open Yet',
+    Closed = 'Closed'
 }
+

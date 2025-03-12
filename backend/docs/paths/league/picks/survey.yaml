@@ -15,30 +15,24 @@ paths:
           schema:
             type: string
             format: uuid
-            description: The ID of the league to retrieve picks for.
-        - in: query
+            description: The ID of the league.
+            example: '1'
+        - in: path
           name: profileId
-          required: false
+          required: true
           schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-            description: Array of profile IDs to retrieve picks for.
-            example:
-              [
-                '123e4567-e89b-12d3-a456-426614174000',
-                '987fcdeb-51a2-43c7-9123-426614174111',
-              ]
-        - in: query
+            type: string
+            format: uuid
+            description: The ID of the profile.
+            example: '1'
+        - in: path
           name: episodeId
           required: true
           schema:
-            type: array
-            items:
-              type: string
-              format: uuid
-            description: Array of episode id to retrieve picks for.
+            type: string
+            format: uuid
+            description: The ID of the episode.
+            example: '1'
       responses:
         '200':
           description:
@@ -47,7 +41,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '../../../components/leagues/picks/survey.yaml#/components/responses/GetSurveyForEpisodeForLeagueMember'
+                $ref: '#/components/responses/GetLeagueSurveyResponse'
 
   submitSurvey:
     post:
@@ -63,7 +57,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '../../../components/leagues/survey.yaml#/components/requestBodies/SubmitSurveyWithPickChoicesRequestBody'
+              $ref: '#/components/requestBodies/SubmitSurveyRequestBody'
       responses:
         '200':
           description:
@@ -77,3 +71,97 @@ paths:
                   message:
                     type: string
                     example: 'Survey submitted successfully'
+
+components:
+  requestBodies:
+    GetSurveyRequestBody:
+      type: object
+      required:
+        - episodeId
+        - profileId
+        - leagueId
+      properties:
+        episodeId:
+          type: string
+          format: uuid
+          description: The ID of the episode.
+          example: 1
+        profileId:
+          type: string
+          format: uuid
+          description: The ID of the profile.
+          example: 1
+        leagueId:
+          type: string
+          format: uuid
+          description: The ID of the league.
+          example: 1
+
+    SubmitSurveyRequestBody:
+      type: object
+      required:
+        - episodeId
+        - leagueSurveyId
+        - surveyId
+        - leagueId
+        - profileId
+        - pickChoices
+      properties:
+        episodeId:
+          type: string
+          format: uuid
+          description: The ID of the episode.
+          example: 1
+        leagueSurveyId:
+          type: string
+          format: uuid
+          description: The ID of the league survey.
+          example: 1
+        surveyId:
+          type: string
+          format: uuid
+          description: The ID of the survey.
+          example: 1
+        leagueId:
+          type: string
+          format: uuid
+          description: The ID of the league.
+          example: 1
+        profileId:
+          type: string
+          format: uuid
+          description: The ID of the profile.
+          example: 1
+        pickChoices:
+          type: array
+          items:
+            $ref: '../../../components/survey/pick.yaml#/components/schemas/PickSelection'
+
+  responses:
+    GetLeagueSurveyResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetLeagueSurveyResponseData'
+  schemas:
+    GetLeagueSurveyResponseData:
+      type: object
+      required:
+        - leagueSurvey
+        - isCompleted
+      properties:
+        leagueSurvey:
+          oneOf:
+            - $ref: '../../../components/survey/survey.yaml#/components/schemas/LeagueSurvey'
+            - $ref: '../../../components/survey/survey.yaml#/components/schemas/CompletedLeagueSurvey'
+        isCompleted:
+          type: boolean
+          description:
+            Indicates if the survey is completed. If true, then leagueSurvey
+            should be CompletedLeagueSurvey and if not then LeagueSurvey
+          example: true

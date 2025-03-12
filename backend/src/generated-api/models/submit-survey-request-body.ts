@@ -12,20 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { PickWithPlayerChoice } from './pick-with-player-choice';
+import { PickSelection } from './pick-selection';
  /**
  * 
  *
  * @export
- * @interface SubmitSurveyWithPickChoicesRequestBody
+ * @interface SubmitSurveyRequestBody
  */
-export interface SubmitSurveyWithPickChoicesRequestBody {
+export interface SubmitSurveyRequestBody {
 
     /**
      * The ID of the episode.
      *
      * @type {string}
-     * @memberof SubmitSurveyWithPickChoicesRequestBody
+     * @memberof SubmitSurveyRequestBody
      */
     episodeId: string;
 
@@ -33,7 +33,7 @@ export interface SubmitSurveyWithPickChoicesRequestBody {
      * The ID of the league survey.
      *
      * @type {string}
-     * @memberof SubmitSurveyWithPickChoicesRequestBody
+     * @memberof SubmitSurveyRequestBody
      */
     leagueSurveyId: string;
 
@@ -41,7 +41,7 @@ export interface SubmitSurveyWithPickChoicesRequestBody {
      * The ID of the survey.
      *
      * @type {string}
-     * @memberof SubmitSurveyWithPickChoicesRequestBody
+     * @memberof SubmitSurveyRequestBody
      */
     surveyId: string;
 
@@ -49,7 +49,7 @@ export interface SubmitSurveyWithPickChoicesRequestBody {
      * The ID of the league.
      *
      * @type {string}
-     * @memberof SubmitSurveyWithPickChoicesRequestBody
+     * @memberof SubmitSurveyRequestBody
      */
     leagueId: string;
 
@@ -57,13 +57,13 @@ export interface SubmitSurveyWithPickChoicesRequestBody {
      * The ID of the profile.
      *
      * @type {string}
-     * @memberof SubmitSurveyWithPickChoicesRequestBody
+     * @memberof SubmitSurveyRequestBody
      */
     profileId: string;
 
     /**
-     * @type {Array<PickWithPlayerChoice>}
-     * @memberof SubmitSurveyWithPickChoicesRequestBody
+     * @type {Array<PickSelection>}
+     * @memberof SubmitSurveyRequestBody
      */
-    pickChoices: Array<PickWithPlayerChoice>;
+    pickChoices: Array<PickSelection>;
 }

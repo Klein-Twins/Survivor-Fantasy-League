@@ -17,8 +17,26 @@ import { SeasonsAttributes } from '../../models/season/Seasons';
 const leagueRepository = {
   createLeague,
   getLeague,
+  getLeagueByLeagueProfileId,
   getLeaguesForProfile,
 };
+
+async function getLeagueByLeagueProfileId(
+  leagueProfileId: LeagueProfileAttributes['id']
+): Promise<League> {
+  const leagueProfileAttributes: LeagueProfileAttributes | null =
+    await models.LeagueProfile.findOne({
+      where: {
+        id: leagueProfileId,
+      },
+    });
+
+  if (!leagueProfileAttributes) {
+    throw new NotFoundError(`League Profile Id Not Foun ${leagueProfileId}`);
+  }
+
+  return await leagueService.getLeague(leagueProfileAttributes.leagueId);
+}
 
 async function getLeaguesForProfile(
   profileId: ProfileAttributes['profileId'],

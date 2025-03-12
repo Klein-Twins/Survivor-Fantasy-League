@@ -14,16 +14,15 @@
 
 import { Episode } from './episode';
 import { Pick } from './pick';
-import { SurveyAvailabilityStatusEnum } from './survey-availability-status-enum';
-import { SurveySubmissionStatusEnum } from './survey-submission-status-enum';
-import { SurveyType } from './survey-type';
+import { Survey } from './survey';
+import { SurveyAvailabilityStatus } from './survey-availability-status';
  /**
  * 
  *
  * @export
  * @interface LeagueSurvey
  */
-export interface LeagueSurvey {
+export interface LeagueSurvey extends Survey {
 
     /**
      * The ID of the league survey
@@ -34,41 +33,14 @@ export interface LeagueSurvey {
     leagueSurveyId: string;
 
     /**
-     * The ID of the survey
-     *
-     * @type {string}
-     * @memberof LeagueSurvey
-     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
-     */
-    surveyId: string;
-
-    /**
      * @type {Episode}
      * @memberof LeagueSurvey
      */
     episode: Episode;
 
     /**
-     * @type {SurveyType}
+     * @type {SurveyAvailabilityStatus}
      * @memberof LeagueSurvey
      */
-    surveyType: SurveyType;
-
-    /**
-     * @type {Array<Pick>}
-     * @memberof LeagueSurvey
-     */
-    picks: Array<Pick>;
-
-    /**
-     * @type {SurveySubmissionStatusEnum}
-     * @memberof LeagueSurvey
-     */
-    surveySubmissionStatus?: SurveySubmissionStatusEnum;
-
-    /**
-     * @type {SurveyAvailabilityStatusEnum}
-     * @memberof LeagueSurvey
-     */
-    surveyAvailabilityStatus?: SurveyAvailabilityStatusEnum;
+    availabilityStatus: SurveyAvailabilityStatus;
 }

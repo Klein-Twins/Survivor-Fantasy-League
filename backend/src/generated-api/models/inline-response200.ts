@@ -12,15 +12,18 @@
  * Do not edit the class manually.
  */
 
-/**
- * The type of survey
+ /**
+ * 
+ *
  * @export
- * @enum {string}
+ * @interface InlineResponse200
  */
-export enum SurveyType {
-    Weekly = 'Weekly',
-    Premier = 'Premier',
-    Finale = 'Finale',
-    All = 'All'
-}
+export interface InlineResponse200 {
 
+    /**
+     * @type {string}
+     * @memberof InlineResponse200
+     * @example Survey submitted successfully
+     */
+    message?: string;
+}

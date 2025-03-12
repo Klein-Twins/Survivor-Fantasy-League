@@ -31,6 +31,7 @@ async function buildLeagueMember(
   return {
     role: leagueProfile.role,
     profile,
+    leagueProfileId: leagueProfile.id,
   };
 }
 

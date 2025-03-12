@@ -1,0 +1,74 @@
+components:
+  schemas:
+    Survey:
+      type: object
+      required:
+        - id
+        - picks
+      properties:
+        id:
+          type: string
+          description: The ID of the survey
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
+        picks:
+          type: array
+          items:
+            $ref: './pick.yaml#/components/schemas/Pick'
+
+    LeagueSurvey:
+      allOf:
+        - $ref: '#/components/schemas/Survey'
+        - type: object
+          required:
+            - leagueSurveyId
+            - episode
+            - availabilityStatus
+            - submissionStatus
+          properties:
+            leagueSurveyId:
+              type: string
+              format: uuid
+              description: The ID of the league survey
+            episode:
+              $ref: '../season/episode.yaml#/components/schemas/Episode'
+            availabilityStatus:
+              $ref: '#/components/schemas/SurveyAvailabilityStatus'
+
+    CompletedLeagueSurvey:
+      allOf:
+        - $ref: '#/components/schemas/LeagueSurvey'
+        - type: object
+          required:
+            - pickSelections
+            - leagueId
+            - profileId
+          properties:
+            pickSelections:
+              type: array
+              items:
+                $ref: './pick.yaml#/components/schemas/PickSelection'
+            leagueId:
+              type: string
+              format: uuid
+              description: The ID of the league the survey is submitted in
+            profileId:
+              type: string
+              format: uuid
+              description: The ID of the profile submitting the survey
+
+    SurveyAvailabilityStatus:
+      type: string
+      enum:
+        - 'Available'
+        - 'Not Open Yet'
+        - 'Closed'
+
+    SurveySubmissionStatus:
+      type: string
+      enum:
+        - 'Not started'
+        - 'In progress'
+        - 'Completed'
+      default: 'Not Started'
+      description: The status of the survey filled out by tha profile
+      example: 'Not Started'

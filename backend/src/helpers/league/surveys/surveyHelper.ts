@@ -2,25 +2,22 @@ import { Request } from 'express';
 import { ProfileAttributes } from '../../../models/account/Profile';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
 import { LeagueAttributes } from '../../../models/league/League';
-import leagueHelper from '../leagueHelper';
-import profileHelper from '../../auth/profileHelper';
-import episodeHelper from '../../season/episodeHelper';
-import { SubmitSurveyWithPickChoicesRequestBody } from '../../../generated-api';
-import { validate } from 'uuid';
+import { validate as validateUUID } from 'uuid';
 import { BadRequestError } from '../../../utils/errors/errors';
+import { SubmitSurveyRequestBody } from '../../../generated-api';
 const surveyHelper = {
   validateAndFormatGetSurveyForLeagueMember,
   validateAndFormatSubmitSurveyRequest,
 };
 
 function validateAndFormatSubmitSurveyRequest(
-  reqBody: any
-): SubmitSurveyWithPickChoicesRequestBody {
+  reqBody: Request['body']
+): SubmitSurveyRequestBody {
   const episodeId = reqBody.episodeId;
   if (!episodeId) {
     throw new BadRequestError('episodeId is required');
   }
-  if (!validate(episodeId)) {
+  if (!validateUUID(episodeId)) {
     throw new BadRequestError('Invalid leagueSurveyId');
   }
 
@@ -28,7 +25,7 @@ function validateAndFormatSubmitSurveyRequest(
   if (!leagueSurveyId) {
     throw new BadRequestError('leagueSurveyId is required');
   }
-  if (!validate(leagueSurveyId)) {
+  if (!validateUUID(leagueSurveyId)) {
     throw new BadRequestError('Invalid leagueSurveyId');
   }
 
@@ -36,7 +33,7 @@ function validateAndFormatSubmitSurveyRequest(
   if (!surveyId) {
     throw new BadRequestError('leagueSurveyId is required');
   }
-  if (!validate(surveyId)) {
+  if (!validateUUID(surveyId)) {
     throw new BadRequestError('Invalid leagueSurveyId');
   }
 
@@ -44,7 +41,7 @@ function validateAndFormatSubmitSurveyRequest(
   if (!leagueId) {
     throw new BadRequestError('leagueSurveyId is required');
   }
-  if (!validate(leagueId)) {
+  if (!validateUUID(leagueId)) {
     throw new BadRequestError('Invalid leagueSurveyId');
   }
 
@@ -52,7 +49,7 @@ function validateAndFormatSubmitSurveyRequest(
   if (!profileId) {
     throw new BadRequestError('leagueSurveyId is required');
   }
-  if (!validate(profileId)) {
+  if (!validateUUID(profileId)) {
     throw new BadRequestError('Invalid leagueSurveyId');
   }
 
@@ -63,23 +60,21 @@ function validateAndFormatSubmitSurveyRequest(
   if (!Array.isArray(picksChoices)) {
     throw new BadRequestError('pickChoices must be an array');
   }
-  if (picksChoices.length === 0) {
-    throw new BadRequestError('pickChoices must not be empty');
+  for (const pickSelection of picksChoices) {
+    if (pickSelection.pickId === undefined) {
+      throw new BadRequestError('pickId is required in all pick selections');
+    }
+    if (pickSelection.playerChoice === undefined) {
+      throw new BadRequestError(
+        'playerChoice is required in all pick selections'
+      );
+    }
+    if (!validateUUID(pickSelection.pickId)) {
+      throw new BadRequestError('Invalid pickId in pick selection');
+    }
   }
 
-  picksChoices.map((pickChoices) => {
-    if (!pickChoices.pick || !pickChoices.pick.id) {
-      throw new BadRequestError('pick is required');
-    }
-    if (!validate(pickChoices.pick.id)) {
-      throw new BadRequestError('Invalid pickId');
-    }
-    if (!pickChoices.playerChoice) {
-      throw new BadRequestError('playerChoice is required');
-    }
-  });
-
-  const formattedRequest: SubmitSurveyWithPickChoicesRequestBody = {
+  const formattedRequest: SubmitSurveyRequestBody = {
     episodeId,
     leagueSurveyId,
     surveyId,
@@ -91,34 +86,38 @@ function validateAndFormatSubmitSurveyRequest(
   return formattedRequest;
 }
 
-async function validateAndFormatGetSurveyForLeagueMember(
-  req: Request
-): Promise<{
+async function validateAndFormatGetSurveyForLeagueMember({
+  leagueId,
+  profileId,
+  episodeId,
+}: any): Promise<{
   leagueId: LeagueAttributes['leagueId'];
-  profileIds: ProfileAttributes['profileId'][];
-  episodeIds: EpisodeAttributes['episodeId'][];
+  profileId: ProfileAttributes['profileId'];
+  episodeId: EpisodeAttributes['episodeId'];
 }> {
-  const leagueId = req.params.leagueId;
-  leagueHelper.validateLeagueId(leagueId);
-
-  const profileIds = Array.isArray(req.query.profileId)
-    ? (req.query.profileId as string[])
-    : req.query.profileId
-    ? [req.query.profileId as string]
-    : [];
-  await profileHelper.validateProfileIds(profileIds);
-
-  const episodeIds = Array.isArray(req.query.episodeId)
-    ? (req.query.episodeId as string[]).map(String)
-    : req.query.episodeId
-    ? [String(req.query.episodeId)]
-    : [];
-  await episodeHelper.validateEpisodeIds(episodeIds);
+  if (!leagueId) {
+    throw new BadRequestError('leagueId is required');
+  }
+  if (!validateUUID(leagueId)) {
+    throw new BadRequestError('Invalid leagueId');
+  }
+  if (!profileId) {
+    throw new BadRequestError('profileId is required');
+  }
+  if (!validateUUID(profileId)) {
+    throw new BadRequestError('Invalid profileId');
+  }
+  if (!episodeId) {
+    throw new BadRequestError('episodeId is required');
+  }
+  if (!validateUUID(episodeId)) {
+    throw new BadRequestError('Invalid episodeId');
+  }
 
   return {
     leagueId,
-    profileIds,
-    episodeIds,
+    profileId,
+    episodeId,
   };
 }
 

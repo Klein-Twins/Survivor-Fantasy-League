@@ -1,15 +1,20 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model } from 'sequelize';
+import { PicksAttributes } from './picks/Picks';
+import { SurveyAttributes } from './Survey';
 
 export interface SurveyPicksAttributes {
-  surveyId: UUID;
-  pickId: UUID;
+  surveyId: SurveyAttributes['surveyId'];
+  pickId: PicksAttributes['pickId'];
 }
 
 const SurveyPicksModel = (sequelize: any) => {
-  class SurveyPicks extends Model<SurveyPicksAttributes> implements SurveyPicksAttributes {
-    public surveyId!: UUID;
-    public pickId!: UUID;
+  class SurveyPicks
+    extends Model<SurveyPicksAttributes>
+    implements SurveyPicksAttributes
+  {
+    public surveyId!: SurveyPicksAttributes['surveyId'];
+    public pickId!: SurveyPicksAttributes['pickId'];
 
     static associate(models: any) {
       //TODO: Add association to LGE_LEAGUE_SURVEYS

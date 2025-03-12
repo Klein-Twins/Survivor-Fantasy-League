@@ -1,15 +1,13 @@
-import { UUID } from 'crypto';
 import { models } from '../../../config/db';
 import {
+  CompletedLeagueSurvey,
   Episode,
-  GetSurveyForEpisodeForLeagueMemberResponseData,
   League,
+  LeagueMember,
   LeagueSurvey,
-  PickOptionTypeEnum,
-  SubmitSurveyWithPickChoicesRequestBody,
+  SubmitSurveyRequestBody,
 } from '../../../generated-api';
 import leagueMemberHelper from '../../../helpers/league/leagueMemberHelper';
-import surveyHelper from '../../../helpers/league/surveys/surveyHelper';
 import { ProfileAttributes } from '../../../models/account/Profile';
 import { LeagueAttributes } from '../../../models/league/League';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
@@ -18,113 +16,76 @@ import picksRepository from '../../../repositories/league/surveys/picks/picksRep
 import surveyRepository from '../../../repositories/league/surveys/surveyRepository';
 import {
   BadRequestError,
-  InternalServerError,
+  ConflictError,
   NotFoundError,
 } from '../../../utils/errors/errors';
 import episodeService from '../../season/episodeService';
 import leagueMemberService from '../leagueMemberService';
 import leagueService from '../leagueService';
 import logger from '../../../config/logger';
+import leagueMemberRepository from '../../../repositories/league/leagueMemberRepository';
+import { UUID } from 'crypto';
 
 const surveyService = {
-  getSurveys,
+  getLeagueSurvey,
   submitSurvey,
 };
 
 async function submitSurvey(
-  submitSurveyRequest: SubmitSurveyWithPickChoicesRequestBody
-): Promise<void> {
-  await leagueMemberHelper.validateProfileIsInLeague(
-    submitSurveyRequest.leagueId,
-    submitSurveyRequest.profileId
-  );
-  const episodes = await episodeService.getEpisodes([
-    submitSurveyRequest.episodeId,
-  ]);
-  if (episodes.length === 0) {
-    throw new NotFoundError('Episode not found');
-  } else if (episodes.length > 1) {
-    throw new InternalServerError('Multiple episodes found');
-  }
-  const episode = episodes[0];
+  submitSurveyRequest: SubmitSurveyRequestBody
+): Promise<CompletedLeagueSurvey> {
+  const episodeId = submitSurveyRequest.episodeId;
+  const leagueSurveyId = submitSurveyRequest.leagueSurveyId;
+  const surveyId = submitSurveyRequest.surveyId;
+  const leagueId = submitSurveyRequest.leagueId;
+  const profileId = submitSurveyRequest.profileId;
+  const pickChoices = submitSurveyRequest.pickChoices;
 
-  const leagueProfile = leagueMemberService.getLeagueProfile(
-    submitSurveyRequest.leagueId,
-    submitSurveyRequest.profileId
+  const leagueMember: LeagueMember = await leagueMemberService.getLeagueProfile(
+    leagueId,
+    profileId
   );
-  if (!leagueProfile) {
-    throw new NotFoundError('League profile not found');
+  const leagueSurvey: LeagueSurvey | CompletedLeagueSurvey =
+    await getLeagueSurvey(leagueId, profileId, episodeId);
+  if ((leagueSurvey as CompletedLeagueSurvey).pickSelections !== undefined) {
+    throw new ConflictError('Survey has already been submitted');
   }
 
-  const surveyAttributes: SurveyAttributes | null = await models.Survey.findOne(
-    {
-      where: {
-        surveyId: submitSurveyRequest.surveyId,
-      },
-    }
-  );
-  if (!surveyAttributes) {
-    throw new NotFoundError('Survey Id not found');
-  }
-
-  await Promise.all(
-    submitSurveyRequest.pickChoices.map(async (pickChoice) => {
-      const isValid: boolean = await picksRepository.validatePickInSurvey(
-        submitSurveyRequest.surveyId as SurveyAttributes['surveyId'],
-        pickChoice.pick.id
-      );
-      if (!isValid) {
-        logger.error(
-          `Pick id ${pickChoice.pick.id} not found in survey with id ${submitSurveyRequest.surveyId}`
-        );
-        throw new BadRequestError('Pick does not belong to survey');
-      }
-    })
+  await surveyRepository.submitSurvey(
+    pickChoices,
+    leagueMember.leagueProfileId,
+    leagueSurvey.leagueSurveyId as UUID
   );
 
-  await Promise.all(
-    submitSurveyRequest.pickChoices.map(async (pickChoice) => {
-      const isValid: boolean = await picksRepository.validatePickChoice(
-        pickChoice
-      );
-      if (!isValid) {
-        logger.error(
-          `Invalid pick choice for pick id ${pickChoice.pick.id} and player choice ${pickChoice.playerChoice}`
-        );
-        logger.error(
-          `Expected of type ${pickChoice.pick.pickOptionType} but got ${pickChoice.playerChoice}`
-        );
-        throw new BadRequestError('Invalid pick choice');
-      }
-    })
-  );
+  return (await getLeagueSurvey(
+    leagueId,
+    profileId,
+    episodeId
+  )) as CompletedLeagueSurvey;
 }
-
-async function getSurveys(
+async function getLeagueSurvey(
   leagueId: LeagueAttributes['leagueId'],
-  profileIds: ProfileAttributes['profileId'][],
-  episodeIds: EpisodeAttributes['episodeId'][]
-): Promise<GetSurveyForEpisodeForLeagueMemberResponseData> {
-  const league: League = await leagueService.getLeague(leagueId);
+  profileId: ProfileAttributes['profileId'],
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<LeagueSurvey | CompletedLeagueSurvey> {
+  const leagueMember: LeagueMember = await leagueMemberService.getLeagueProfile(
+    leagueId,
+    profileId
+  );
 
-  profileIds.map(async (profileId) => {
-    await leagueMemberHelper.validateProfileIsInLeague(leagueId, profileId);
-  });
+  const isSubmitted = await surveyRepository.isLeagueSurveySubmitted(
+    leagueMember.leagueProfileId,
+    episodeId
+  );
 
-  const seasonId = league.season.id;
+  const leagueSurvey: CompletedLeagueSurvey | LeagueSurvey = isSubmitted
+    ? await surveyRepository.getCompletedLeagueSurvey(
+        leagueMember.leagueProfileId,
+        episodeId
+      )
+    : await surveyRepository.getLeagueSurvey(episodeId);
 
-  const episodes: Episode[] = await episodeService.getEpisodes(episodeIds);
-
-  let surveys: LeagueSurvey[] = [];
-  for (const profileId of profileIds) {
-    for (const episode of episodes) {
-      surveys = surveys.concat(
-        await surveyRepository.getSurvey(leagueId, profileId, episode.id)
-      );
-    }
-  }
-
-  return { leagueSurveys: surveys };
+  return leagueSurvey;
 }
 
 export default surveyService;

@@ -60,7 +60,7 @@ const sequelize = new Sequelize(
     host: currentConfig.host,
     port: currentConfig.port,
     dialect: currentConfig.dialect,
-    logging: false, // Set to true for visibility of SQL queries
+    logging: true, // Set to true for visibility of SQL queries
   }
 );
 

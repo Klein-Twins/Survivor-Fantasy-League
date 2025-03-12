@@ -25,6 +25,7 @@ import ProfilePickModel from './league/LeagueProfilePicks';
 import PickTypeModel from './surveysAndPicks/picks/PickType';
 import logger from '../config/logger';
 import SurveySubmissionModel from './league/SurveySubmissions';
+import PickSubmissionModel from './league/PickSubmission';
 
 const initModels = (sequelize: Sequelize) => {
   logger.debug('Initializing models');
@@ -54,6 +55,7 @@ const initModels = (sequelize: Sequelize) => {
   const ChallengeWinners = ChallengeWinnersModel(sequelize);
   const SeasonEliminations = SeasonEliminationsModel(sequelize);
   const SurveySubmissions = SurveySubmissionModel(sequelize);
+  const PickSubmissions = PickSubmissionModel(sequelize);
 
   logger.debug('Models initialized');
 
@@ -107,6 +109,7 @@ const initModels = (sequelize: Sequelize) => {
     ChallengeWinners,
     SeasonEliminations,
     SurveySubmissions,
+    PickSubmissions,
   };
 };
 

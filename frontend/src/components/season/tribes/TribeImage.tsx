@@ -11,8 +11,8 @@ interface TribeImageProps {
 const TribeImage: React.FC<TribeImageProps> = ({
   seasonId,
   tribeId,
-  className,
-  imageClassName = '',
+  className = 'w-24 h-24',
+  imageClassName = 'object-cover w-full h-full',
 }) => {
   const { imageUrl, isLoading, error } = useImage('tribe', {
     id: tribeId,
@@ -36,7 +36,7 @@ const TribeImage: React.FC<TribeImageProps> = ({
   }
 
   return (
-    <div className={`w-24 h-24 ${className}`}>
+    <div className={`${className}`}>
       <img
         src={imageUrl || '/defaultTribeImage.jpeg'}
         alt='Tribe'

@@ -1,0 +1,120 @@
+components:
+  schemas:
+    Pick:
+      type: object
+      required:
+        - id
+        - pickOptionType
+        - pickOptions
+        - numPointsWorth
+        - description
+
+      properties:
+        id:
+          type: string
+          description: The ID of the pick
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
+        description:
+          type: string
+          description: The description of the pick
+          example: 'Who will be voted out this week?'
+        pickOptionType:
+          $ref: '#/components/schemas/PickOptionTypeEnum'
+        numPointsWorth:
+          type: integer
+          description: The number of points the pick is worth
+          example: 10
+        pickOptions:
+          oneOf:
+            - $ref: '#/components/schemas/SurvivorPickOptions'
+            - $ref: '#/components/schemas/ColorPickOptions'
+            - $ref: '#/components/schemas/TribePickOptions'
+            - $ref: '#/components/schemas/BinaryPickOptions'
+      discriminator:
+        propertyName: pickOptionType
+        mapping:
+          survivor: '#/components/schemas/SurvivorPickOptions'
+          color: '#/components/schemas/ColorPickOptions'
+          tribe: '#/components/schemas/TribePickOptions'
+          binary: '#/components/schemas/BinaryPickOptions'
+
+    PickOptionTypeEnum:
+      type: string
+      enum: ['survivor', 'color', 'tribe', 'binary']
+      description: The type of pick
+      example: 'Survivor'
+
+    SurvivorPickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '../survivor.yaml#/components/schemas/Survivor'
+
+    # PICK OPTIONS
+    ColorPickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '../common.yaml#/components/schemas/Color'
+
+    Color:
+      type: object
+      required:
+        - name
+        - hexValue
+      properties:
+        name:
+          type: string
+          description: The name of the color
+          example: 'Red'
+        hexValue:
+          type: string
+          description: The hex value of the color
+          example: '#FF0000'
+
+    TribePickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '../tribe.yaml#/components/schemas/Tribe'
+
+    BinaryPickOptions:
+      type: object
+      required:
+        - options
+      properties:
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/BinaryOptionsEnum'
+
+    BinaryOptionsEnum:
+      type: string
+      enum: [yes, no]
+
+    PickSelection:
+      type: object
+      required:
+        - pickId
+        - playerChoice
+      properties:
+        pickId:
+          type: string
+          format: uuid
+          description: The ID of the pick.
+        playerChoice:
+          type: string
+          description: The player choice.
+          example: '1'

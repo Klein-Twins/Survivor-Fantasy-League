@@ -1,7 +1,9 @@
 import { Pick } from '../../../../generated-api';
 import picksHelper from '../../../../helpers/league/surveys/picks/picksHelper';
 import { PicksAttributes } from '../../../../models/surveysAndPicks/picks/Picks';
+import { SurveyAttributes } from '../../../../models/surveysAndPicks/Survey';
 import picksRepository from '../../../../repositories/league/surveys/picks/picksRepository';
+import surveyRepository from '../../../../repositories/league/surveys/surveyRepository';
 
 const picksService = {
   getPick,

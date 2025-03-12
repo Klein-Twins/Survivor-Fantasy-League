@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from 'react';
 import {
   Account,
+  CompletedLeagueSurvey,
   Episode,
-  GetSurveyForEpisodeForLeagueMember,
+  GetLeagueSurveyResponse,
   League,
-  PickWithPlayerChoice,
-  SubmitSurveyWithPickChoicesRequestBody,
+  LeagueSurvey,
+  PickSelection,
+  SubmitSurveyRequestBody,
 } from '../../../../generated-api';
 import leagueSurveyService, {
-  GetLeagueSurveyParams,
+  GetLeagueSurveyPathParams,
 } from '../../../services/league/leagueSurveyService';
 import { useApi } from '../../../hooks/useApi';
 import SurveyForm from './SurveyForm';
 import api from '../../../services/apiContainer';
+import { FaCircle, FaSpinner } from 'react-icons/fa';
+import CompletedSurveyView from './CompletedSurveyView';
 
 interface SurveyProps {
   episodeId: Episode['id'];
@@ -26,16 +30,20 @@ const Survey: React.FC<SurveyProps> = ({ episodeId, profileId, leagueId }) => {
   const [submitData, setSubmitData] = useState<string>('');
 
   const {
-    data: leagueSurvey,
-    isLoading,
+    data,
+    isLoading: surveyIsLoading,
     error,
     execute,
-  } = useApi<void, GetLeagueSurveyParams, GetSurveyForEpisodeForLeagueMember>(
+  } = useApi<void, GetLeagueSurveyPathParams, GetLeagueSurveyResponse>(
     leagueSurveyService.getLeagueSurvey
   );
 
   useEffect(() => {
     async function fetchSurvey() {
+      if (!episodeId || !leagueId || !profileId) {
+        console.error('Missing required data');
+      }
+
       await execute({
         queryParams: {
           episodeId,
@@ -47,32 +55,42 @@ const Survey: React.FC<SurveyProps> = ({ episodeId, profileId, leagueId }) => {
     fetchSurvey();
   }, [episodeId, leagueId, profileId, execute]);
 
-  const survey = leagueSurvey?.responseData.leagueSurveys[0];
-
-  if (isLoading) {
-    return <h1>Loading...</h1>;
+  if (surveyIsLoading) {
+    return (
+      <div className='flex flex-col justify-center items-center space-y-4 my-8'>
+        <FaSpinner className='animate-spin-slow text-4xl' />
+        <h1 className='text-4xl'>Loading Survey</h1>
+      </div>
+    );
   }
 
   if (error) {
     return <h1>Error: {error.toString()}</h1>;
   }
 
-  if (!survey || survey === undefined) {
-    return <h1>Error: No survey</h1>;
+  if (!data) {
+    return <h1>No data</h1>;
   }
 
-  async function handleSurveySubmit(
-    picksWithPlayerChoice: PickWithPlayerChoice[]
-  ) {
+  const isSurveyCompleted = data.responseData.isCompleted;
+  const survey = isSurveyCompleted
+    ? (data.responseData.leagueSurvey as CompletedLeagueSurvey)
+    : (data.responseData.leagueSurvey as LeagueSurvey);
+
+  if (isSurveyCompleted) {
+    return <CompletedSurveyView survey={survey as CompletedLeagueSurvey} />;
+  }
+
+  async function handleSurveySubmit(pickSelections: PickSelection[]) {
     setIsSubmitting(true);
     try {
-      const body: SubmitSurveyWithPickChoicesRequestBody = {
+      const body: SubmitSurveyRequestBody = {
         episodeId: episodeId,
         leagueSurveyId: survey!.leagueSurveyId,
-        surveyId: survey!.surveyId,
+        surveyId: survey.id,
         leagueId: leagueId,
         profileId: profileId,
-        pickChoices: picksWithPlayerChoice,
+        pickChoices: pickSelections,
       };
       const response =
         await api.LeagueSurveyService.submitSurveyWithPickChoices(body, {

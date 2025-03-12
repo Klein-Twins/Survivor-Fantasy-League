@@ -4,7 +4,7 @@ import {
   Color,
   Pick,
   PickOptionTypeEnum,
-  PickWithPlayerChoice,
+  PickSelection,
   Survivor,
   Tribe,
 } from '../../../../generated-api';
@@ -16,34 +16,35 @@ import SelectedIcon from './SelectedIcon';
 
 interface SurveyFormProps {
   picks: Pick[];
-  onSubmit: (picksWithPlayerChoice: PickWithPlayerChoice[]) => void;
+  onSubmit: (pickSelection: PickSelection[]) => void;
+}
+
+export interface FormPickSelection extends Omit<PickSelection, 'playerChoice'> {
+  playerChoice: PickSelection['playerChoice'] | null;
 }
 
 const SurveyForm: React.FC<SurveyFormProps> = ({ picks, onSubmit }) => {
-  const [picksWithPlayerChoice, setPicksWithPlayerChoice] = useState<
-    PickWithPlayerChoice[]
-  >(
-    picks.map((pick): PickWithPlayerChoice => {
+  const [pickSelections, setPickSelections] = useState<FormPickSelection[]>(
+    picks.map((pick): FormPickSelection => {
       return {
-        pick: pick,
+        pickId: pick.id,
         playerChoice: null,
       };
     })
   );
 
   const [allPicksSelected, setAllPicksSelected] = useState(false);
-
   useEffect(() => {
-    const allSelected = picksWithPlayerChoice.every(
+    const allSelected = pickSelections.every(
       (pick) => pick.playerChoice !== null
     );
     setAllPicksSelected(allSelected);
-  }, [picksWithPlayerChoice]);
+  }, [pickSelections]);
 
   const handlePickChange = (pickId: string, playerChoice: string | null) => {
-    setPicksWithPlayerChoice((prevPicks) =>
+    setPickSelections((prevPicks) =>
       prevPicks.map((p) =>
-        p.pick.id === pickId ? { ...p, playerChoice: playerChoice } : p
+        p.pickId === pickId ? { ...p, playerChoice: playerChoice } : p
       )
     );
   };
@@ -60,7 +61,7 @@ const SurveyForm: React.FC<SurveyFormProps> = ({ picks, onSubmit }) => {
         );
       })}
       <Button
-        onClick={() => onSubmit(picksWithPlayerChoice)}
+        onClick={() => onSubmit(pickSelections as PickSelection[])}
         disabled={!allPicksSelected}
         className={`w-full p-2 rounded-md ${ButtonPrimaryColors}`}>
         Submit

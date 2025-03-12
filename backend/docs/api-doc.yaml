@@ -47,7 +47,7 @@ paths:
   /api/image/tribe/{seasonId}/{tribeId}:
     $ref: './paths/image/profile.yaml#/paths/tribeImage'
 
-  /api/league/{leagueId}/survey:
+  /api/league/survey/{leagueId}/{profileId}/{episodeId}:
     $ref: './paths/league/picks/survey.yaml#/paths/survey'
   /api/league/survey/submit:
     $ref: './paths/league/picks/survey.yaml#/paths/submitSurvey'

@@ -12,6 +12,7 @@ const episodeService = {
   getEpisodeBySeasonAndEpisodeNumber,
   createEpisodesForNewSeason,
   getEpisodesBySeasonId,
+  getEpisodeByEpisodeId,
 };
 
 async function getEpisodeBySeasonAndEpisodeNumber(
@@ -22,6 +23,12 @@ async function getEpisodeBySeasonAndEpisodeNumber(
     seasonId,
     episodeNumber
   );
+}
+
+async function getEpisodeByEpisodeId(
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<Episode> {
+  return await episodeRepository.getEpisodeByEpisodeId(episodeId);
 }
 
 async function getEpisodes(

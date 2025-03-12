@@ -12,18 +12,28 @@
  * Do not edit the class manually.
  */
 
-import { LeagueSurvey } from './league-survey';
  /**
  * 
  *
  * @export
- * @interface GetSurveyForEpisodeForLeagueMemberResponseData
+ * @interface PickSelection
  */
-export interface GetSurveyForEpisodeForLeagueMemberResponseData {
+export interface PickSelection {
 
     /**
-     * @type {Array<LeagueSurvey>}
-     * @memberof GetSurveyForEpisodeForLeagueMemberResponseData
+     * The ID of the pick.
+     *
+     * @type {string}
+     * @memberof PickSelection
      */
-    leagueSurveys: Array<LeagueSurvey>;
+    pickId: string;
+
+    /**
+     * The player choice.
+     *
+     * @type {string}
+     * @memberof PickSelection
+     * @example 1
+     */
+    playerChoice: string;
 }

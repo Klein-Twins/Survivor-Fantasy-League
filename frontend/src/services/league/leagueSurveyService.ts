@@ -1,27 +1,25 @@
 import { AxiosResponse } from 'axios';
 import { ApiRequestParams } from '../../hooks/useApi';
-import {
-  Episode,
-  GetSurveyForEpisodeForLeagueMember,
-  League,
-  Profile,
-} from '../../../generated-api';
+import { GetLeagueSurveyResponse } from '../../../generated-api';
 import api from '../apiContainer';
 
-export interface GetLeagueSurveyParams {
-  leagueId: League['leagueId'];
-  profileId: Profile['profileId'];
-  episodeId: Episode['id'];
+export interface GetLeagueSurveyPathParams {
+  leagueId: string;
+  episodeId: string;
+  profileId: string;
 }
 
 async function getLeagueSurvey(
-  requestData: ApiRequestParams<void, GetLeagueSurveyParams>
-): Promise<AxiosResponse<GetSurveyForEpisodeForLeagueMember>> {
-  const response =
+  requestData: ApiRequestParams<void, GetLeagueSurveyPathParams>
+): Promise<AxiosResponse<GetLeagueSurveyResponse>> {
+  const response: AxiosResponse<GetLeagueSurveyResponse> =
     await api.LeagueSurveyService.getSurveyForEpisodeForLeagueMember(
       requestData.queryParams.leagueId,
-      [requestData.queryParams.episodeId],
-      [requestData.queryParams.profileId]
+      requestData.queryParams.profileId,
+      requestData.queryParams.episodeId,
+      {
+        withCredentials: true,
+      }
     );
   return response;
 }

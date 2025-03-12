@@ -13,7 +13,7 @@ const SurvivorImage: React.FC<SurvivorImageProps> = ({
   seasonId,
   survivorName,
   survivorId,
-  className = 'w-full',
+  className = 'w-24 h-24',
   imageClassName = '',
 }) => {
   const { imageUrl, isLoading, error } = useImage('survivor', {
@@ -27,7 +27,7 @@ const SurvivorImage: React.FC<SurvivorImageProps> = ({
 
   if (error) {
     return (
-      <div className={`w-24 h-24 ${className}`}>
+      <div className={`${className}`}>
         <img
           src='/defaultEpisodeImage.jpeg'
           alt='Default Survivor Image'
@@ -38,7 +38,7 @@ const SurvivorImage: React.FC<SurvivorImageProps> = ({
   }
 
   return (
-    <div className={`w-24 h-24 ${className}`}>
+    <div className={`${className}`}>
       <img
         src={imageUrl || '/defaultEpisodeImage.jpeg'}
         alt={survivorName}

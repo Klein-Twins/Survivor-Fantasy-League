@@ -4,6 +4,9 @@ module.exports = {
   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
   theme: {
     extend: {
+      animation: {
+        'spin-slow': 'spin 2s linear infinite',
+      },
       backgroundImage: {
         'gradient-to-l': 'linear-gradient(to left, var(--tw-gradient-stops))',
         'gradient-to-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
