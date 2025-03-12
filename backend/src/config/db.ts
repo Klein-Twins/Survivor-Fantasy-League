@@ -40,7 +40,6 @@ const dbConfig: Record<Environment, DbConfig> = {
   production: {
     username: DB_USERNAME,
     password: DB_PASSWORD,
-    // database: `${DB_NAME}_production`,
     database: DB_NAME,
     host: DB_HOST,
     port: DB_PORT,
@@ -83,8 +82,4 @@ const models = initModels(sequelize);
 
 export { sequelize, dbConfig, models };
 
-module.exports = {
-  development: dbConfig.development,
-  test: dbConfig.test,
-  production: dbConfig.production,
-};
+export default sequelize;

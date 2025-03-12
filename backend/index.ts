@@ -1,6 +1,6 @@
 import server from './app.ts';
 import { APP_PORT } from './src/config/config.ts';
-import { sequelize } from './src/config/db.ts';
+import sequelize from './src/config/db.ts';
 import logger from './src/config/logger.ts';
 import seedData from './src/data/seedData.ts';
 
