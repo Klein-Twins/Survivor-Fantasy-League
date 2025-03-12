@@ -1,1 +1,1 @@
-export const NODE_ENV = import.meta.env.NODE_ENV || 'deployed';
+export const NODE_ENV = import.meta.env.VITE_NODE_ENV || 'deployed';
