@@ -10,9 +10,15 @@ import {
   TribeServiceApi,
   UserSessionServiceApi,
 } from '../../generated-api';
+import { NODE_ENV } from '../config/config';
+
+let basePath = 'http://localhost:3000';
+if (NODE_ENV === 'deployed') {
+  let basePath = 'http://134.199.141.129:3000';
+}
 
 const config = new Configuration({
-  basePath: 'http://localhost:3000',
+  basePath,
 });
 
 const api = {
