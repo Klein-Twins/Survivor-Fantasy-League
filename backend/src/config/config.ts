@@ -27,11 +27,16 @@ requiredEnvVars.forEach((envVar) => {
   }
 });
 
+const parseBoolean = (value: string | undefined): boolean => {
+  return value === 'true';
+};
+
 export const DB_NAME = process.env.DB_NAME!;
 export const DB_HOST = process.env.DB_HOST!;
 export const DB_PORT = parseInt(process.env.DB_PORT!, 10);
 export const DB_USERNAME = process.env.DB_USERNAME!;
 export const DB_PASSWORD = process.env.DB_PASSWORD!;
+export const DB_LOGGING = parseBoolean(process.env.DB_LOGGING!);
 
 export const NODE_ENV = process.env.NODE_ENV!;
 
@@ -42,7 +47,8 @@ export const APP_PROTOCOL = process.env.APP_PROTOCOL!;
 export const JWT_ACCESS_SECRET = process.env.JWT_ACCESS_SECRET!;
 export const JWT_ACCESS_EXPIRATION = process.env.JWT_ACCESS_EXPIRATION || '5m';
 export const JWT_REFRESH_SECRET = process.env.JWT_REFRESH_SECRET!;
-export const JWT_REFRESH_EXPIRATION = process.env.JWT_REFRESH_EXPIRATION || '1h';
+export const JWT_REFRESH_EXPIRATION =
+  process.env.JWT_REFRESH_EXPIRATION || '1h';
 
 export const AWS_REGION = process.env.AWS_REGION!;
 export const AWS_ACCESS_KEY_ID = process.env.AWS_ACCESS_KEY_ID!;

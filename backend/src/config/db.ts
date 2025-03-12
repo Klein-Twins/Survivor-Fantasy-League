@@ -2,6 +2,7 @@ import { Sequelize } from 'sequelize';
 import initModels from '../models/InitModels';
 import {
   DB_HOST,
+  DB_LOGGING,
   DB_NAME,
   DB_PASSWORD,
   DB_PORT,
@@ -59,7 +60,7 @@ const sequelize = new Sequelize(
     host: currentConfig.host,
     port: currentConfig.port,
     dialect: currentConfig.dialect,
-    logging: true, // Set to true for visibility of SQL queries
+    logging: DB_LOGGING, // Set to true for visibility of SQL queries
   }
 );
 
