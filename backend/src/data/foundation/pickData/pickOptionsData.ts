@@ -1,5 +1,5 @@
 import { PickOptionTypeEnum } from '../../../generated-api';
-import { PickOptionsAttributes } from '../../../models/surveysAndPicks/picks/PickOptions';
+import { PickOptionsAttributes } from '../../../models/surveyAndPick/picks/PickOptions';
 
 const pickOptionsData: PickOptionsAttributes[] = [
   {

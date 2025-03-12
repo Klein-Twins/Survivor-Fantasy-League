@@ -15,8 +15,8 @@ import {
 import survivorService from '../../servicesAndHelpersBackup/survivor/survivorService';
 
 import { TribeAttributes } from '../../models/season/Tribes';
-import { PicksAttributes } from '../../models/surveysAndPicks/picks/Picks';
-import { PickOptionsAttributes } from '../../models/surveysAndPicks/picks/PickOptions';
+import { PicksAttributes } from '../../models/surveyAndPick/picks/Picks';
+import { PickOptionsAttributes } from '../../models/surveyAndPick/picks/PickOptions';
 import { BadRequestError, NotFoundError } from '../../utils/errors/errors';
 import tribeRepository from '../../repositoriesBackup/season/tribeRepository';
 
@@ -60,11 +60,15 @@ async function getPickById(pickId: string, seasonId?: number): Promise<Pick> {
 async function getPickOptions(
   pickOptionType: PickOptionTypeEnum,
   seasonId?: number
-): Promise<SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions> {
+): Promise<
+  SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions
+> {
   switch (pickOptionType) {
     case PickOptionTypeEnum.Survivor:
       if (!seasonId) {
-        throw new BadRequestError('SeasonId is required for Survivor PickOptions');
+        throw new BadRequestError(
+          'SeasonId is required for Survivor PickOptions'
+        );
       }
       return await getSurvivorPickOptions(seasonId);
     case PickOptionTypeEnum.Color:
@@ -81,18 +85,21 @@ async function getPickOptions(
   }
 }
 
-async function getSurvivorPickOptions(seasonId: number): Promise<SurvivorPickOptions> {
+async function getSurvivorPickOptions(
+  seasonId: number
+): Promise<SurvivorPickOptions> {
   return {
     options: await survivorService.getSurvivorsBySeason(seasonId),
   };
 }
 
 async function getColorPickOptions(): Promise<ColorPickOptions> {
-  const pickOptionsAttributes: PickOptionsAttributes[] = await models.PickOptions.findAll({
-    where: {
-      type: PickOptionTypeEnum.Color,
-    },
-  });
+  const pickOptionsAttributes: PickOptionsAttributes[] =
+    await models.PickOptions.findAll({
+      where: {
+        type: PickOptionTypeEnum.Color,
+      },
+    });
   if (pickOptionsAttributes.length === 0) {
     throw new NotFoundError('Color PickOptions not found');
   }
@@ -101,7 +108,9 @@ async function getColorPickOptions(): Promise<ColorPickOptions> {
   };
 }
 
-async function getTribePickOptions(seasonId: number): Promise<TribePickOptions> {
+async function getTribePickOptions(
+  seasonId: number
+): Promise<TribePickOptions> {
   const tribes: Tribe[] = await tribeRepository.getTribesBySeasonId(seasonId);
   return {
     options: tribes,

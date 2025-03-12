@@ -1,4 +1,4 @@
-import { SurveyAttributes } from '../../../models/surveysAndPicks/Survey';
+import { SurveyAttributes } from '../../../models/surveyAndPick/Survey';
 import { defaultSurveyIds } from '../foundationIds';
 
 const defaultSurveysData: SurveyAttributes[] = [

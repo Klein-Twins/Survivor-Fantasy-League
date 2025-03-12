@@ -1,11 +1,28 @@
 import { UUID } from 'crypto';
-import { SurveyAttributes } from '../../models/surveysAndPicks/Survey';
+import { SurveyAttributes } from '../../models/surveyAndPick/Survey';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 
-type EpisodeKeys = `episode${1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14}`;
+type EpisodeKeys = `episode${
+  | 1
+  | 2
+  | 3
+  | 4
+  | 5
+  | 6
+  | 7
+  | 8
+  | 9
+  | 10
+  | 11
+  | 12
+  | 13
+  | 14}`;
 
-export const season47EpisodeIds: Record<EpisodeKeys, EpisodeAttributes['episodeId']> = {
+export const season47EpisodeIds: Record<
+  EpisodeKeys,
+  EpisodeAttributes['episodeId']
+> = {
   episode1: '7d9c4e1a-8b2f-4c3d-9e5a-6f1b8c7d9e0f',
   episode2: 'a2b3c4d5-e6f7-8901-2345-678901abcdef',
   episode3: 'b3c4d5e6-f7a8-9012-3456-789012abcdef',
@@ -42,7 +59,10 @@ type Season47SurvivorNames =
   | 'TerranFoster'
   | 'TiyanaHallums';
 
-export const season47SurvivorIds: Record<Season47SurvivorNames, SurvivorsAttributes['survivorId']> = {
+export const season47SurvivorIds: Record<
+  Season47SurvivorNames,
+  SurvivorsAttributes['survivorId']
+> = {
   AndyRueda: 'c76c0a3b-8f2d-4a7e-9483-4b5c0a3e8f2d',
   AnikaDhar: '9d8b7c6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a',
   AyshaWelch: 'f1e2d3c4-b5a6-7890-1234-567890abcdef',
@@ -146,7 +166,10 @@ export const season47ChallengeIds: EpisodeChallengeMap = {
   },
 };
 
-export const defaultSurveyIds: Record<'DefaultWeeklySurvey' | 'DefaultPremierSurvey', SurveyAttributes['surveyId']> = {
+export const defaultSurveyIds: Record<
+  'DefaultWeeklySurvey' | 'DefaultPremierSurvey',
+  SurveyAttributes['surveyId']
+> = {
   DefaultWeeklySurvey: '550e8400-e29b-41d4-a716-446655440000',
   DefaultPremierSurvey: '67e55044-10b1-426f-9247-bb680e5fe0c8',
 };

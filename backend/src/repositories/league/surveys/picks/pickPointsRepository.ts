@@ -1,7 +1,7 @@
 import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
-import { PickPointsAttributes } from '../../../../models/surveysAndPicks/picks/PickPoints';
-import { PicksAttributes } from '../../../../models/surveysAndPicks/picks/Picks';
+import { PickPointsAttributes } from '../../../../models/surveyAndPick/picks/PickPoints';
+import { PicksAttributes } from '../../../../models/surveyAndPick/picks/Picks';
 
 const pickPointsRepository = {
   getPickPoints,

@@ -11,7 +11,7 @@ import leagueMemberHelper from '../../../helpers/league/leagueMemberHelper';
 import { ProfileAttributes } from '../../../models/account/Profile';
 import { LeagueAttributes } from '../../../models/league/League';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
-import { SurveyAttributes } from '../../../models/surveysAndPicks/Survey';
+import { SurveyAttributes } from '../../../models/surveyAndPick/Survey';
 import picksRepository from '../../../repositories/league/surveys/picks/picksRepository';
 import surveyRepository from '../../../repositories/league/surveys/surveyRepository';
 import {

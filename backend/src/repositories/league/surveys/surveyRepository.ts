@@ -11,11 +11,11 @@ import {
 } from '../../../generated-api';
 import { LeagueSurveyAttributes } from '../../../models/league/LeagueSurveys';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
-import { SurveyAttributes } from '../../../models/surveysAndPicks/Survey';
+import { SurveyAttributes } from '../../../models/surveyAndPick/Survey';
 import episodeService from '../../../services/season/episodeService';
 import { NotFoundError } from '../../../utils/errors/errors';
 import { LeagueProfileAttributes } from '../../../models/league/LeagueProfile';
-import { PicksAttributes } from '../../../models/surveysAndPicks/picks/Picks';
+import { PicksAttributes } from '../../../models/surveyAndPick/picks/Picks';
 
 import { v4 as uuidv4 } from 'uuid';
 import { PickSubmissionAttributes } from '../../../models/league/PickSubmission';

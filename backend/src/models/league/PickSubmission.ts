@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
 import { LeagueProfileAttributes } from './LeagueProfile';
-import { PicksAttributes } from '../surveysAndPicks/picks/Picks';
-import { PickPointsAttributes } from '../surveysAndPicks/picks/PickPoints';
+import { PicksAttributes } from '../surveyAndPick/picks/Picks';
+import { PickPointsAttributes } from '../surveyAndPick/picks/PickPoints';
 import { LeagueSurveyAttributes } from './LeagueSurveys';
 import { SurvivorsAttributes } from '../survivors/Survivors';
 import { TribeAttributes } from '../season/Tribes';

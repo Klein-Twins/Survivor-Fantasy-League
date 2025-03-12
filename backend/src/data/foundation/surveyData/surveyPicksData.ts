@@ -1,4 +1,4 @@
-import { SurveyPicksAttributes } from '../../../models/surveysAndPicks/SurveyPicks';
+import { SurveyPicksAttributes } from '../../../models/surveyAndPick/SurveyPicks';
 import { defaultSurveyIds } from '../foundationIds';
 
 const surveyPicksData: SurveyPicksAttributes[] = [

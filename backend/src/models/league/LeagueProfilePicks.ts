@@ -1,6 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { PickTypeEnum } from '../surveysAndPicks/picks/PickType';
+import { PickTypeEnum } from '../surveyAndPick/picks/PickType';
 
 export enum ProfilePickAnswerStatus {
   correct = 'correct',
@@ -23,7 +23,10 @@ export interface ProfilePickAttributes {
 }
 
 const ProfilePickModel = (sequelize: Sequelize) => {
-  class ProfilePick extends Model<ProfilePickAttributes> implements ProfilePickAttributes {
+  class ProfilePick
+    extends Model<ProfilePickAttributes>
+    implements ProfilePickAttributes
+  {
     public pickId!: UUID;
     public leagueProfileId!: string;
     public leagueId!: UUID;
@@ -37,12 +40,24 @@ const ProfilePickModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       // this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
-      this.belongsTo(models.LeagueProfile, { foreignKey: 'leagueProfileId', as: 'leagueProfile' });
+      this.belongsTo(models.LeagueProfile, {
+        foreignKey: 'leagueProfileId',
+        as: 'leagueProfile',
+      });
       this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
-      this.belongsTo(models.Episode, { foreignKey: 'episodeId', as: 'episode' });
+      this.belongsTo(models.Episode, {
+        foreignKey: 'episodeId',
+        as: 'episode',
+      });
       //TODO: Add association to pickOptionType
-      this.belongsTo(models.Survivors, { foreignKey: 'pickAnswerSurvivorId', as: 'survivor' });
-      this.belongsTo(models.Tribe, { foreignKey: 'pickAnswerTribeId', as: 'tribe' });
+      this.belongsTo(models.Survivors, {
+        foreignKey: 'pickAnswerSurvivorId',
+        as: 'survivor',
+      });
+      this.belongsTo(models.Tribe, {
+        foreignKey: 'pickAnswerTribeId',
+        as: 'tribe',
+      });
     }
   }
 

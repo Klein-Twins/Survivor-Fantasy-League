@@ -1,6 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { SurveyAttributes } from '../surveysAndPicks/Survey';
+import { SurveyAttributes } from '../surveyAndPick/Survey';
 import { EpisodeAttributes } from '../season/Episodes';
 import { LeagueAttributes } from './League';
 
@@ -16,7 +16,10 @@ export interface LeagueSurveyAttributes {
 }
 
 const LeagueSurveyModel = (sequelize: Sequelize) => {
-  class LeagueSurvey extends Model<LeagueSurveyAttributes> implements LeagueSurveyAttributes {
+  class LeagueSurvey
+    extends Model<LeagueSurveyAttributes>
+    implements LeagueSurveyAttributes
+  {
     public leagueSurveyId!: LeagueSurveyAttributes['leagueSurveyId'];
     public surveyId!: LeagueSurveyAttributes['surveyId'];
     public leagueId!: LeagueSurveyAttributes['leagueId'];

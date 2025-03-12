@@ -9,10 +9,10 @@ import {
 import picksHelper from '../../../../helpers/league/surveys/picks/picksHelper';
 import { PickSubmissionAttributes } from '../../../../models/league/PickSubmission';
 import { SurveySubmissionAttributes } from '../../../../models/league/SurveySubmissions';
-import { PickOptionsAttributes } from '../../../../models/surveysAndPicks/picks/PickOptions';
-import { PicksAttributes } from '../../../../models/surveysAndPicks/picks/Picks';
-import { SurveyAttributes } from '../../../../models/surveysAndPicks/Survey';
-import { SurveyPicksAttributes } from '../../../../models/surveysAndPicks/SurveyPicks';
+import { PickOptionsAttributes } from '../../../../models/surveyAndPick/picks/PickOptions';
+import { PicksAttributes } from '../../../../models/surveyAndPick/picks/Picks';
+import { SurveyAttributes } from '../../../../models/surveyAndPick/Survey';
+import { SurveyPicksAttributes } from '../../../../models/surveyAndPick/SurveyPicks';
 import picksService from '../../../../services/league/surveys/picks/picksService';
 import {
   BadRequestError,

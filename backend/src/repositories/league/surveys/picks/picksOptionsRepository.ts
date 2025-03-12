@@ -8,7 +8,7 @@ import {
   Tribe,
   TribePickOptions,
 } from '../../../../generated-api';
-import { PickOptionsAttributes } from '../../../../models/surveysAndPicks/picks/PickOptions';
+import { PickOptionsAttributes } from '../../../../models/surveyAndPick/picks/PickOptions';
 import tribeService from '../../../../services/season/tribeService';
 import survivorService from '../../../../services/survivor/survivorService';
 import {

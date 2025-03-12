@@ -1,5 +1,5 @@
 import { validate } from 'uuid';
-import { PicksAttributes } from '../../../../models/surveysAndPicks/picks/Picks';
+import { PicksAttributes } from '../../../../models/surveyAndPick/picks/Picks';
 import {
   BinaryPickOptions,
   ColorPickOptions,
