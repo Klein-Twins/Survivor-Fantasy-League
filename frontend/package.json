@@ -12,9 +12,11 @@
     "start": "npm run dev"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.758.0",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@reduxjs/toolkit": "^2.3.0",
+    "@types/aws-sdk": "^0.0.42",
     "axios": "^1.7.7",
     "date-fns": "^4.1.0",
     "dotenv": "^16.4.7",
