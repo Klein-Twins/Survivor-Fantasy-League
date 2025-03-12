@@ -11,6 +11,7 @@ import { createLeague } from '../../../store/slices/leagueSlice';
 import Form, { FormClassName } from '../../ui/forms/Form';
 import FormInput from '../../ui/forms/FormInput';
 import Select from '../../ui/forms/Select';
+import { closeModal } from '../../../store/slices/modalSlice';
 
 const seasonOptions = [
   { label: 'Season 47', value: '47' },
@@ -31,7 +32,6 @@ const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({ className }) => {
   const createLeagueError = useSelector(
     (state: RootState) => state.league.error
   );
-
   const {
     values,
     errors: formValidationError,
@@ -55,6 +55,7 @@ const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({ className }) => {
           },
         };
         dispatch(createLeague(requestData));
+        dispatch(closeModal());
       } catch (error) {
         console.error('Error creating league', error);
       }

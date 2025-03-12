@@ -6,6 +6,7 @@ type ModalType =
   | 'logout'
   | 'notify'
   | 'survivorDetail'
+  | 'createLeague'
   | 'createTribe'
   | 'createSeason'
   | null;

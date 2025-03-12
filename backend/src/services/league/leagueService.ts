@@ -2,15 +2,22 @@ import { Transaction } from 'sequelize';
 import { sequelize } from '../../config/db';
 import logger from '../../config/logger';
 import {
-  CreateLeagueRequestBody,
   CreateLeagueResponseData,
   GetLeaguesForProfileResponseData,
   League,
+  LeagueMemberRoleEnum,
 } from '../../generated-api';
 import leagueHelper from '../../helpers/league/leagueHelper';
 import leagueRepository from '../../repositories/league/leagueRepository';
 import profileHelper from '../../helpers/auth/profileHelper';
-import { InviteStatusEnum } from '../../models/league/LeagueProfile';
+import {
+  InviteStatusEnum,
+  LeagueProfileAttributes,
+} from '../../models/league/LeagueProfile';
+import { UUID } from 'crypto';
+import { LeagueAttributes } from '../../models/league/League';
+import leagueMemberService from './leagueMemberService';
+import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
 
 const leagueService = {
   createLeague,
@@ -45,25 +52,28 @@ async function createLeague({
   name,
   seasonId,
   profileId,
-}: CreateLeagueRequestBody): Promise<CreateLeagueResponseData> {
-  leagueHelper.validateCreateLeagueData({
-    name,
-    seasonId: seasonId.toString(),
-    profileId,
-  });
+}: {
+  name: string;
+  seasonId: number;
+  profileId: UUID;
+}): Promise<League> {
   const transaction = await sequelize.transaction();
   try {
-    const league: League = await leagueRepository.createLeague(
-      seasonId,
-      name,
-      profileId,
-      transaction
-    );
+    const leagueAttributes: LeagueAttributes =
+      await leagueRepository.createLeague(seasonId, name, transaction);
+    const leagueProfileAttributes: LeagueProfileAttributes =
+      await leagueMemberRepository.createLeagueMember(
+        leagueAttributes.leagueId,
+        profileId,
+        null,
+        LeagueMemberRoleEnum.OWNER,
+        InviteStatusEnum.Accepted,
+        transaction
+      );
     await transaction.commit();
-    const responseData: CreateLeagueResponseData = {
-      league,
-    };
-    return responseData;
+
+    const league: League = await leagueHelper.buildLeague(leagueAttributes);
+    return league;
   } catch (error) {
     await transaction.rollback();
     logger.error('Transaction rolled back. Error creating league:', error);

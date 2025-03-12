@@ -88,9 +88,8 @@ async function getLeague(
 async function createLeague(
   seasonId: SeasonsAttributes['seasonId'],
   name: SeasonsAttributes['name'],
-  profileId: ProfileAttributes['profileId'],
   transaction?: Transaction
-): Promise<League> {
+): Promise<LeagueAttributes> {
   let t = transaction;
   if (!transaction) {
     t = await sequelize.transaction();
@@ -105,17 +104,10 @@ async function createLeague(
       { transaction: t }
     );
 
-    const leagueOwner: LeagueMember =
-      await leagueMemberService.createLeagueOwner(
-        leagueAttributes.leagueId,
-        profileId,
-        t
-      );
-
     if (!transaction && t) {
       await t.commit();
     }
-    return leagueHelper.buildLeague(leagueAttributes);
+    return leagueAttributes;
   } catch (error) {
     if (!transaction && t) {
       await t.rollback();

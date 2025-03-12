@@ -52,6 +52,12 @@ export const respondToLeagueInvite = createAsyncThunk<
       const response = await leagueInviteService.respondToLeagueInvite(params);
       const inviteId = response.data.responseData.inviteId;
       dispatch(removeLeagueInvite({ inviteId }));
+      if (
+        params.body.inviteResponse ===
+        RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT
+      ) {
+        dispatch(addLeague(response.data.responseData.league));
+      }
 
       return response.data;
     } catch (error: any) {

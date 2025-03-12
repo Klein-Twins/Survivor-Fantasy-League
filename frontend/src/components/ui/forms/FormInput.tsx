@@ -72,7 +72,7 @@ const FormInput = <T,>({
 
   return (
     <div className={`${mergedClassName.other} ${ClassName}`}>
-      {showLabel && <FormInputLabel name={name} labelText='Title' />}
+      {showLabel && <FormInputLabel name={name} labelText={label} />}
       {error && <p className={`${TextErrorColor} text-sm mt-1`}>{error}</p>}
       {type === 'color' && setFieldValue ? (
         <div className='flex justify-center'>

@@ -5,9 +5,11 @@ import {
   CreateLeagueResponseData,
   GetLeaguesForProfileResponse,
   GetLeaguesForProfileResponseData,
+  League,
 } from '../../generated-api';
 import leagueService from '../../services/league/leagueService';
 import logger from '../../config/logger';
+import leagueHelper from '../../helpers/league/leagueHelper';
 
 const leagueController = {
   createLeague,
@@ -48,15 +50,27 @@ async function createLeague(
   next: NextFunction
 ): Promise<void> {
   try {
-    const reqBody: CreateLeagueRequestBody = req.body;
+    const reqBody = req.body;
+    const { name, seasonId, profileId } = leagueHelper.validateCreateLeagueData(
+      {
+        name: reqBody.name,
+        seasonId: reqBody.seasonId,
+        profileId: reqBody.profileId,
+      }
+    );
 
-    const responseData: CreateLeagueResponseData =
-      await leagueService.createLeague(reqBody);
+    const league: League = await leagueService.createLeague({
+      name,
+      seasonId,
+      profileId,
+    });
 
     const response: CreateLeagueResponse = {
       success: true,
       message: 'League created successfully',
-      responseData,
+      responseData: {
+        league: league,
+      },
       statusCode: 201,
     };
 

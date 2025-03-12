@@ -71,13 +71,13 @@ async function createLeagueMember(
   role: LeagueProfileAttributes['role'],
   inviteStatus: LeagueProfileAttributes['inviteStatus'],
   transaction?: Transaction
-): Promise<LeagueMember> {
+): Promise<LeagueProfileAttributes> {
   let t = transaction;
   if (!transaction) {
     t = await sequelize.transaction();
   }
   try {
-    const leagueMember: LeagueProfileAttributes =
+    const leagueProfileAttributes: LeagueProfileAttributes =
       await models.LeagueProfile.create(
         {
           id: uuidv4(),
@@ -93,7 +93,7 @@ async function createLeagueMember(
     if (!transaction && t) {
       await t.commit();
     }
-    return await leagueMemberHelper.buildLeagueMember(leagueMember);
+    return leagueProfileAttributes;
   } catch (error) {
     if (!transaction && t) {
       await t.rollback();

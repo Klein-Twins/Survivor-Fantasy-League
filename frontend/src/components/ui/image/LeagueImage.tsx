@@ -54,7 +54,7 @@ const LeagueImage: React.FC<LeagueImageProps> = ({ leagueId, className }) => {
     return (
       <div className={imageClasses}>
         <img
-          src='/default-league-image.webp'
+          src='/defaultLeagueImage.jpeg'
           alt='Default League Image'
           className={imageClasses}
         />

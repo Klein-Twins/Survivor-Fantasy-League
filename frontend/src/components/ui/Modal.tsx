@@ -15,6 +15,7 @@ import {
 } from '../../styles/CommonColorClassNames.ts';
 import { CreateTribeForm } from '../admin/seasonDetails/AdminTribes.tsx';
 import CreateSeasonForm from '../admin/CreateSeasonForm.tsx';
+import CreateLeagueForm from '../dashboard/leagues/CreateLeagueForm.tsx';
 
 interface ModalProps {
   isOpen: boolean;
@@ -59,6 +60,7 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
           <CreateTribeForm isMergeTribe={modalProps.isMergeTribe} />
         )}
         {modalType === 'createSeason' && <CreateSeasonForm />}
+        {modalType === 'createLeague' && <CreateLeagueForm />}
       </div>
     </div>
   );
