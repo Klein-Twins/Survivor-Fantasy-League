@@ -53,6 +53,9 @@ paths:
   /api/league/survey/submit:
     $ref: './paths/league/picks/survey.yaml#/paths/submitSurvey'
 
+  /api/league/currentEpisodeSurveys/{profileId}/{leagueIds}:
+    $ref: './paths/league/currentEpisodeSurveys.yaml#/paths/currentEpisodeSurveys'
+
   /api/admin/season:
     $ref: './paths/season/season.yaml#/paths/season'
   /api/admin/season/survivor:

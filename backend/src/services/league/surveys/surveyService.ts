@@ -18,6 +18,7 @@ import {
   BadRequestError,
   ConflictError,
   NotFoundError,
+  NotImplementedError,
 } from '../../../utils/errors/errors';
 import episodeService from '../../season/episodeService';
 import leagueMemberService from '../leagueMemberService';
@@ -29,7 +30,27 @@ import { UUID } from 'crypto';
 const surveyService = {
   getLeagueSurvey,
   submitSurvey,
+  getCurrentEpisodeSurveys,
 };
+
+async function getCurrentEpisodeSurveys(
+  profileId: ProfileAttributes['profileId'],
+  leagueIds: LeagueAttributes['leagueId'][]
+): Promise<LeagueSurvey[]> {
+  const leagueSurveys: LeagueSurvey[] = [];
+  for (const leagueId of leagueIds) {
+    const leagueMember: LeagueMember =
+      await leagueMemberService.getLeagueProfile(leagueId, profileId);
+    const outstandingAvailableSurvey: LeagueSurvey | null =
+      await surveyRepository.getCurrentEpisodeSurvey(
+        leagueMember.leagueProfileId
+      );
+    if (outstandingAvailableSurvey) {
+      leagueSurveys.push(outstandingAvailableSurvey);
+    }
+  }
+  return leagueSurveys;
+}
 
 async function submitSurvey(
   submitSurveyRequest: SubmitSurveyRequestBody
@@ -83,7 +104,10 @@ async function getLeagueSurvey(
         leagueMember.leagueProfileId,
         episodeId
       )
-    : await surveyRepository.getLeagueSurvey(episodeId);
+    : await surveyRepository.getLeagueSurvey(
+        episodeId,
+        leagueMember.leagueProfileId
+      );
 
   return leagueSurvey;
 }

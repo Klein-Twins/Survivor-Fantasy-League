@@ -5,10 +5,44 @@ import { LeagueAttributes } from '../../../models/league/League';
 import { validate as validateUUID } from 'uuid';
 import { BadRequestError } from '../../../utils/errors/errors';
 import { SubmitSurveyRequestBody } from '../../../generated-api';
+import { GetOustandingOpenSurveysRequestParams } from '../../../controllers/league/survey/surveyController';
 const surveyHelper = {
   validateAndFormatGetSurveyForLeagueMember,
   validateAndFormatSubmitSurveyRequest,
+  validateAndFormatGetOutstandingSurveyRequest,
 };
+
+function validateAndFormatGetOutstandingSurveyRequest(
+  req: Request
+): GetOustandingOpenSurveysRequestParams {
+  const profileId = req.params.profileId;
+  let leagueIds = req.query.leagueIds;
+
+  if (!profileId) {
+    throw new BadRequestError('profileId is required');
+  }
+  if (!validateUUID(profileId)) {
+    throw new BadRequestError('Invalid profileId');
+  }
+  if (!leagueIds) {
+    throw new BadRequestError('leagueIds is required');
+  }
+  // Ensure leagueIds is an array
+  if (typeof leagueIds === 'string') {
+    leagueIds = leagueIds.split(',');
+  }
+
+  for (const leagueId of leagueIds as string[]) {
+    if (!validateUUID(leagueId)) {
+      throw new BadRequestError('Invalid leagueId');
+    }
+  }
+
+  return {
+    profileId: profileId,
+    leagueIds: leagueIds as LeagueAttributes['leagueId'][],
+  };
+}
 
 function validateAndFormatSubmitSurveyRequest(
   reqBody: Request['body']

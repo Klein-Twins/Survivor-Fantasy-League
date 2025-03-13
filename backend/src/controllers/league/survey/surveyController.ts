@@ -3,20 +3,59 @@ import surveyHelper from '../../../helpers/league/surveys/surveyHelper';
 import surveyService from '../../../services/league/surveys/surveyService';
 import {
   CompletedLeagueSurvey,
+  GetCurrentEpisodSurveysResponse,
+  GetCurrentEpisodSurveysResponseData,
   GetLeagueSurveyResponse,
   GetLeagueSurveyResponseData,
   SubmitSurveyRequestBody,
 } from '../../../generated-api';
+import { LeagueAttributes } from '../../../models/league/League';
+import { ProfileAttributes } from '../../../models/account/Profile';
 
 const surveyController = {
   getSurveyForLeagueMember,
   submitSurvey,
+  getOutstandingSurveysForProfile,
 };
 
 export interface GetSurveyRequestParams {
   leagueId: string;
   episodeId: string;
   profileId: string;
+}
+
+export interface GetOustandingOpenSurveysRequestParams {
+  profileId: ProfileAttributes['profileId'];
+  leagueIds: LeagueAttributes['leagueId'][];
+}
+
+async function getOutstandingSurveysForProfile(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    const { profileId, leagueIds } =
+      surveyHelper.validateAndFormatGetOutstandingSurveyRequest(req);
+
+    const currentEpisodeLeagueSurveys =
+      await surveyService.getCurrentEpisodeSurveys(profileId, leagueIds);
+
+    const responseData: GetCurrentEpisodSurveysResponseData = {
+      leagueSurveys: currentEpisodeLeagueSurveys,
+    };
+
+    const response: GetCurrentEpisodSurveysResponse = {
+      success: true,
+      message: 'Successfully retrieved league surveys',
+      statusCode: 200,
+      responseData: responseData,
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 }
 
 async function getSurveyForLeagueMember(

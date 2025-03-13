@@ -16,6 +16,7 @@ import { Episode } from './episode';
 import { Pick } from './pick';
 import { Survey } from './survey';
 import { SurveyAvailabilityStatus } from './survey-availability-status';
+import { SurveySubmissionStatus } from './survey-submission-status';
  /**
  * 
  *
@@ -43,4 +44,18 @@ export interface LeagueSurvey extends Survey {
      * @memberof LeagueSurvey
      */
     availabilityStatus: SurveyAvailabilityStatus;
+
+    /**
+     * The ID of the league the survey is for
+     *
+     * @type {string}
+     * @memberof LeagueSurvey
+     */
+    leagueId: string;
+
+    /**
+     * @type {SurveySubmissionStatus}
+     * @memberof LeagueSurvey
+     */
+    submissionStatus: SurveySubmissionStatus;
 }

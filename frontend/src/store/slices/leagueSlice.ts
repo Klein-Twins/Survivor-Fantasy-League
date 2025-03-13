@@ -1,10 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   ApiError,
+  CompletedLeagueSurvey,
   CreateLeagueRequestBody,
   CreateLeagueResponse,
   GetLeaguesForProfileResponse,
   League,
+  LeagueSurvey,
 } from '../../../generated-api';
 import leagueService, {
   GetLeaguesForProfileRequestParams,
@@ -15,6 +17,11 @@ enum AuthActionTypes {
   GetLeagues = 'league/getLeagues',
   CreateLeague = 'league/createLeague',
 }
+
+type LeagueAndLeagueSurvey = {
+  league: League;
+  survey: LeagueSurvey | CompletedLeagueSurvey;
+};
 
 interface LeagueState {
   leagues: League[];

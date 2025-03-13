@@ -23,6 +23,7 @@ components:
             - leagueSurveyId
             - episode
             - availabilityStatus
+            - leagueId
             - submissionStatus
           properties:
             leagueSurveyId:
@@ -33,6 +34,12 @@ components:
               $ref: '../season/episode.yaml#/components/schemas/Episode'
             availabilityStatus:
               $ref: '#/components/schemas/SurveyAvailabilityStatus'
+            leagueId:
+              type: string
+              format: uuid
+              description: The ID of the league the survey is for
+            submissionStatus:
+              $ref: '#/components/schemas/SurveySubmissionStatus'
 
     CompletedLeagueSurvey:
       allOf:
@@ -40,17 +47,12 @@ components:
         - type: object
           required:
             - pickSelections
-            - leagueId
             - profileId
           properties:
             pickSelections:
               type: array
               items:
                 $ref: './pick.yaml#/components/schemas/PickSelection'
-            leagueId:
-              type: string
-              format: uuid
-              description: The ID of the league the survey is submitted in
             profileId:
               type: string
               format: uuid

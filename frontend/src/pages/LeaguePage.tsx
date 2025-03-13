@@ -8,6 +8,7 @@ import LeagueName from '../components/league/leaguePage/LeagueName';
 import LeagueWelcomeMessage from '../components/league/leaguePage/WelcomeMessage';
 import { Profile } from '../../generated-api';
 import LeagueMemberPanel from '../components/league/leaguePage/leagueMembers/LeagueMemberPanel';
+import SurveyStatusMessage from '../components/league/leaguePage/survey/SurveyStatusMessage';
 
 const LeaguePage: React.FC = () => {
   const { leagueId } = useParams<{ leagueId: string }>();
@@ -30,6 +31,7 @@ const LeaguePage: React.FC = () => {
         profile={account as Profile}
         className='text-2xl text-center font-semibold'
       />
+      <SurveyStatusMessage />
       <LeagueMemberPanel leagueMembers={league.leagueMembers} />
     </div>
   );

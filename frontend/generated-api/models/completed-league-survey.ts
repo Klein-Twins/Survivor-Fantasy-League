@@ -16,6 +16,7 @@ import { Episode } from './episode';
 import { LeagueSurvey } from './league-survey';
 import { PickSelection } from './pick-selection';
 import { SurveyAvailabilityStatus } from './survey-availability-status';
+import { SurveySubmissionStatus } from './survey-submission-status';
  /**
  * 
  *
@@ -29,14 +30,6 @@ export interface CompletedLeagueSurvey extends LeagueSurvey {
      * @memberof CompletedLeagueSurvey
      */
     pickSelections: Array<PickSelection>;
-
-    /**
-     * The ID of the league the survey is submitted in
-     *
-     * @type {string}
-     * @memberof CompletedLeagueSurvey
-     */
-    leagueId: string;
 
     /**
      * The ID of the profile submitting the survey

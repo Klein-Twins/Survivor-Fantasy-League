@@ -11,6 +11,7 @@ import leagueInviteRoutes from './leagues/leagueInviteRoutes';
 import imageRoutes from './image/imageRoutes';
 import leagueSurveyRoutes from './leagues/surveyRoutes';
 import adminRoutes from './admin/index.ts';
+import leagueRoutes from './leagues/leagueRoutes.ts';
 import surveyController from '../controllers/league/survey/surveyController.ts';
 
 router.use('/auth', authRoutes);
@@ -18,6 +19,7 @@ router.use('/league/profile', leagueProfileRoutes);
 router.use('/season/survivors', survivorRoute);
 router.use('/profile', profileLeagueRoutes);
 router.use('/league/invite', leagueInviteRoutes);
+router.use('/league', leagueRoutes);
 router.use('/league/survey', leagueSurveyRoutes);
 router.use('/image', imageRoutes);
 router.use('/notification', notificationRoutes);

@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 export * from './apis/image-service-api';
+export * from './apis/league-api';
 export * from './apis/league-invite-service-api';
 export * from './apis/league-service-api';
 export * from './apis/profile-service-api';

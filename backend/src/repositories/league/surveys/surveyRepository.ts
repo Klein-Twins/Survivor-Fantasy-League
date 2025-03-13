@@ -2,12 +2,14 @@ import { UUID } from 'crypto';
 import { models } from '../../../config/db';
 import {
   CompletedLeagueSurvey,
+  Episode,
   League,
   LeagueSurvey,
   Pick,
   PickSelection,
   Survey,
   SurveyAvailabilityStatus,
+  SurveySubmissionStatus,
 } from '../../../generated-api';
 import { LeagueSurveyAttributes } from '../../../models/league/LeagueSurveys';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
@@ -23,6 +25,8 @@ import picksRepository from './picks/picksRepository';
 import leagueRepository from '../leagueRepository';
 import { ProfileAttributes } from '../../../models/account/Profile';
 import profileRepository from '../../profile/profileRepository';
+import leagueService from '../../../services/league/leagueService';
+import leagueMemberService from '../../../services/league/leagueMemberService';
 
 const surveyRepository = {
   getSurvey,
@@ -30,7 +34,21 @@ const surveyRepository = {
   submitSurvey,
   isLeagueSurveySubmitted,
   getCompletedLeagueSurvey,
+  getCurrentEpisodeSurvey,
 };
+
+async function getCurrentEpisodeSurvey(
+  leagueProfileId: LeagueProfileAttributes['id']
+): Promise<LeagueSurvey | null> {
+  const upcomingEpisode: Episode =
+    await episodeService.getEpisodeBySeasonAndEpisodeNumber(47, 1);
+  const leagueSurvey: LeagueSurvey = await surveyRepository.getLeagueSurvey(
+    upcomingEpisode.id,
+    leagueProfileId
+  );
+
+  return leagueSurvey;
+}
 
 async function getSurvey(
   surveyId: SurveyAttributes['surveyId']
@@ -114,7 +132,10 @@ async function getCompletedLeagueSurvey(
     );
   }
 
-  const leagueSurvey: LeagueSurvey = await getLeagueSurvey(episodeId);
+  const leagueSurvey: LeagueSurvey = await getLeagueSurvey(
+    episodeId,
+    leagueProfileId
+  );
 
   const league: League = await leagueRepository.getLeagueByLeagueProfileId(
     leagueProfileId
@@ -137,7 +158,8 @@ async function getCompletedLeagueSurvey(
 }
 
 async function getLeagueSurvey(
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['episodeId'],
+  leagueProfileId: LeagueProfileAttributes['id']
 ): Promise<LeagueSurvey> {
   const leagueSurveyAttributes: LeagueSurveyAttributes | null =
     await models.LeagueSurveys.findOne({
@@ -154,11 +176,23 @@ async function getLeagueSurvey(
   const survey: Survey = await surveyRepository.getSurvey(
     leagueSurveyAttributes.surveyId
   );
+
+  const league = await leagueRepository.getLeagueByLeagueProfileId(
+    leagueProfileId
+  );
+
+  const isLeagueSurveySubmitted: boolean =
+    await surveyRepository.isLeagueSurveySubmitted(leagueProfileId, episodeId);
+
   const leagueSurvey: LeagueSurvey = {
     ...survey,
     episode: await episodeService.getEpisodeByEpisodeId(episodeId),
     leagueSurveyId: leagueSurveyAttributes.leagueSurveyId,
     availabilityStatus: SurveyAvailabilityStatus.Available,
+    submissionStatus: isLeagueSurveySubmitted
+      ? SurveySubmissionStatus.Completed
+      : SurveySubmissionStatus.NotStarted,
+    leagueId: league.leagueId,
   };
   return leagueSurvey;
 }

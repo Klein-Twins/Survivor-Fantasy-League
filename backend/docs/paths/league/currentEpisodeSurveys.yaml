@@ -1,0 +1,61 @@
+paths:
+  currentEpisodeSurveys:
+    get:
+      tags:
+        - league
+      summary: Get all outstanding open surveys
+      description: |
+        Get all outstanding open surveys for the current user.
+      operationId: getCurrentEpisodeSurveys
+      security:
+        - accessTokenCookie: []
+      parameters:
+        - profileId:
+          in: path
+          name: profileId
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+            format: uuid
+        - leagueIds:
+          in: query
+          name: leagueIds
+          required: true
+          description: The ID of the league.
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+      responses:
+        '200':
+          description: A list of outstanding open surveys
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/GetCurrentEpisodSurveysResponse'
+
+components:
+  responses:
+    GetCurrentEpisodSurveysResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetCurrentEpisodSurveysResponseData'
+
+  schemas:
+    GetCurrentEpisodSurveysResponseData:
+      type: object
+      required:
+        - leagueSurveys
+      properties:
+        leagueSurveys:
+          type: array
+          items:
+            $ref: '../../components/survey/survey.yaml#/components/schemas/LeagueSurvey'

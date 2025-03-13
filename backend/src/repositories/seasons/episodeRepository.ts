@@ -1,6 +1,6 @@
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { models } from '../../config/db';
-import { Episode, Season } from '../../generated-api';
+import { Episode } from '../../generated-api';
 import episodeHelper from '../../helpers/season/episodeHelper';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonsAttributes } from '../../models/season/Seasons';
@@ -12,6 +12,7 @@ const episodeRepository = {
   getEpisodeBySeasonAndEpisodeNumber,
   createEpisode,
   getEpisodesBySeasonId,
+  getUpcomingEpisode,
 };
 
 // async function getEpisode(
@@ -21,6 +22,28 @@ const episodeRepository = {
 //   seasonId: SeasonsAttributes['seasonId'],
 //   episodeNumber: EpisodeAttributes['episodeNumber']
 // ): Promise<Episode>;
+
+async function getUpcomingEpisode(
+  seasonId: SeasonsAttributes['seasonId'],
+  currentTime: Date
+) {
+  const episodeAttributes: EpisodeAttributes | null =
+    await models.Episode.findOne({
+      where: {
+        episodeAirDate: {
+          [Op.gt]: currentTime,
+          seasonId: seasonId,
+        },
+      },
+      order: [['episodeAirDate', 'ASC']],
+    });
+
+  if (!episodeAttributes) {
+    return null;
+  }
+
+  return episodeHelper.buildEpisode(episodeAttributes);
+}
 
 async function createEpisode(
   seasonId: SeasonsAttributes['seasonId'],

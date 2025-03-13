@@ -1,12 +1,22 @@
 import { AxiosResponse } from 'axios';
 import { ApiRequestParams } from '../../hooks/useApi';
-import { GetLeagueSurveyResponse } from '../../../generated-api';
+import {
+  GetCurrentEpisodSurveysResponse,
+  GetLeagueSurveyResponse,
+  League,
+  Profile,
+} from '../../../generated-api';
 import api from '../apiContainer';
 
 export interface GetLeagueSurveyPathParams {
   leagueId: string;
   episodeId: string;
   profileId: string;
+}
+
+export interface GetCurrentEpisodeSurveysParams {
+  profileId: Profile['profileId'];
+  leagueIds: League['leagueId'][];
 }
 
 async function getLeagueSurvey(
@@ -24,8 +34,21 @@ async function getLeagueSurvey(
   return response;
 }
 
+async function getCurrentEpisodeLeagueSurveys(
+  requestData: ApiRequestParams<void, GetCurrentEpisodeSurveysParams>
+): Promise<AxiosResponse<GetCurrentEpisodSurveysResponse>> {
+  const response: AxiosResponse<GetCurrentEpisodSurveysResponse> =
+    await api.currentEpisodeService.getCurrentEpisodeSurveys(
+      requestData.queryParams.profileId,
+      requestData.queryParams.leagueIds,
+      { withCredentials: true }
+    );
+  return response;
+}
+
 const leagueSurveyService = {
   getLeagueSurvey,
+  getCurrentEpisodeLeagueSurveys,
 };
 
 export default leagueSurveyService;
