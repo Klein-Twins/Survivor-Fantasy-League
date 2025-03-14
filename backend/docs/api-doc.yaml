@@ -25,6 +25,8 @@ paths:
 
   /api/season:
     $ref: './paths/season/season.yaml#/paths/season'
+  /api/season/survivors:
+    $ref: './paths/survivors.yaml#/paths/survivors'
 
   /api/auth/check-auth:
     $ref: './paths/auth/userSession.yaml#/paths/checkAuth'
@@ -35,8 +37,6 @@ paths:
     $ref: './paths/profile/search.yaml#/paths/search'
   /api/profile/league:
     $ref: './paths/league.yaml#/paths/league'
-  /api/season/survivors:
-    $ref: './paths/survivors.yaml#/paths/survivors'
 
   /api/image/profile/{profileId}:
     $ref: './paths/image/profile.yaml#/paths/profileImage'

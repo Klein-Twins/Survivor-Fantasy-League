@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa';
-import Drawer from '../components/about/Drawer';
+import Drawer from '../components/ui/Drawer';
 
 const AboutPage: React.FC = () => {
   const [isTechOpen, setIsTechOpen] = useState(true);
@@ -9,18 +9,30 @@ const AboutPage: React.FC = () => {
     <div className='container mx-auto px-4 py-8 space-y-8 dark:text-primary-a0-dark'>
       {/* Hero Section */}
       <div className='flex flex-col md:flex-row items-center gap-8'>
-        <img className='w-48 h-48 rounded-full object-cover' src='/AboutMe.jpeg' alt='Patrick Klein' />
+        <img
+          className='w-48 h-48 rounded-full object-cover'
+          src='/AboutMe.jpeg'
+          alt='Patrick Klein'
+        />
         <div className='space-y-4'>
-          <h1 className='text-4xl font-bold dark:text-primary-a2-dark'>Patrick Klein</h1>
+          <h1 className='text-4xl font-bold dark:text-primary-a2-dark'>
+            Patrick Klein
+          </h1>
           <p className='text-xl'>Full Stack Developer</p>
           <div className='flex gap-4'>
-            <a href='https://github.com/Patrick687' className='text-3xl dark:hover:text-primary-a3-dark'>
+            <a
+              href='https://github.com/Patrick687'
+              className='text-3xl dark:hover:text-primary-a3-dark'>
               <FaGithub />
             </a>
-            <a href='https://linkedin.com/in/patrick-hal-klein' className='text-3xl dark:hover:text-primary-a3-dark'>
+            <a
+              href='https://linkedin.com/in/patrick-hal-klein'
+              className='text-3xl dark:hover:text-primary-a3-dark'>
               <FaLinkedin />
             </a>
-            <a href='mailto:pklein111697@gmail.com' className='text-3xl dark:hover:text-primary-a3-dark'>
+            <a
+              href='mailto:pklein111697@gmail.com'
+              className='text-3xl dark:hover:text-primary-a3-dark'>
               <FaEnvelope />
             </a>
           </div>
@@ -32,7 +44,9 @@ const AboutPage: React.FC = () => {
           <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4'>
             {/* Languages */}
             <div className='space-y-2'>
-              <h3 className='font-semibold text-xl underline underline-offset-8'>Languages</h3>
+              <h3 className='font-semibold text-xl underline underline-offset-8'>
+                Languages
+              </h3>
               <ul className='list-disc list-inside'>
                 <li>Java</li>
                 <li>JavaScript</li>
@@ -43,7 +57,9 @@ const AboutPage: React.FC = () => {
 
             {/* Frameworks */}
             <div className='space-y-2'>
-              <h3 className='font-semibold text-xl underline underline-offset-8'>Frameworks & Libraries</h3>
+              <h3 className='font-semibold text-xl underline underline-offset-8'>
+                Frameworks & Libraries
+              </h3>
               <ul className='list-disc list-inside'>
                 <li>React with TypeScript</li>
                 <li>Redux Toolkit</li>
@@ -54,7 +70,9 @@ const AboutPage: React.FC = () => {
 
             {/* Tools */}
             <div className='space-y-2'>
-              <h3 className='font-semibold text-xl underline underline-offset-8'>Tools & Technologies</h3>
+              <h3 className='font-semibold text-xl underline underline-offset-8'>
+                Tools & Technologies
+              </h3>
               <ul className='list-disc list-inside'>
                 <li>Docker</li>
                 <li>OpenAPI 3.0</li>
@@ -65,7 +83,9 @@ const AboutPage: React.FC = () => {
 
             {/* Database */}
             <div className='space-y-2'>
-              <h3 className='font-semibold text-xl underline underline-offset-8'>Database & Testing</h3>
+              <h3 className='font-semibold text-xl underline underline-offset-8'>
+                Database & Testing
+              </h3>
               <ul className='list-disc list-inside'>
                 <li>PostgreSQL</li>
                 <li>MySQL</li>
@@ -92,8 +112,9 @@ const AboutPage: React.FC = () => {
         <Drawer title='Professional Background' defaultOpen={false}>
           <h2 className='text-2xl font-bold'>Professional Background</h2>
           <p>
-            With 4 years of experience in software development, primarily focused on Java and retail systems, I've
-            successfully transitioned to full-stack web development. My background includes:
+            With 4 years of experience in software development, primarily
+            focused on Java and retail systems, I've successfully transitioned
+            to full-stack web development. My background includes:
           </p>
           <ul className='list-disc list-inside'>
             <li>API integration experience with major retail systems</li>

@@ -29,7 +29,7 @@ const SurvivorImage: React.FC<SurvivorImageProps> = ({
     return (
       <div className={`${className}`}>
         <img
-          src='/defaultEpisodeImage.jpeg'
+          src='/defaultSurvivorImage.jpeg'
           alt='Default Survivor Image'
           className={`object-cover w-full h-full ${imageClassName}`}
         />

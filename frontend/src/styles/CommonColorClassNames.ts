@@ -79,3 +79,9 @@ export const ModalColors =
 export const TextErrorColor = 'dark:text-red-500 text-red-500';
 
 export const InputColors = `${InputBackgroundColor} text-white`;
+
+export const CardBgColor = `
+dark:bg-surface-a5-dark
+bg-surface-a1-light
+text-black
+`;

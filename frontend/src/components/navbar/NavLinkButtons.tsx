@@ -37,14 +37,14 @@ const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({ onClick }) => {
       </li>
       <li>
         <NavLink
-          to='/survivor-cast'
+          to='/season-details'
           className={({ isActive }) =>
             isActive
               ? `${styles.activeLink} ${ButtonPrimaryTextColor}`
               : `${styles.linkButton} ${ButtonSubtleTextColor}`
           }
           onClick={onClick}>
-          Survivor Cast
+          Season Details
         </NavLink>
       </li>
       {/* {isAuthenticated && (

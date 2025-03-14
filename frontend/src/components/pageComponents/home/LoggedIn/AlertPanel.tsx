@@ -1,17 +1,18 @@
 import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
-import { useApi } from '../../../hooks/useApi';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../../store/store';
+import leagueSurveyService, {
+  GetCurrentEpisodeSurveysParams,
+} from '../../../../services/league/leagueSurveyService';
 import {
   GetCurrentEpisodSurveysResponse,
   League,
   SurveySubmissionStatus,
-} from '../../../../generated-api';
-import leagueSurveyService, {
-  GetCurrentEpisodeSurveysParams,
-} from '../../../services/league/leagueSurveyService';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../../store/store';
-import { HorizontalLinePrimaryColors } from '../../../styles/CommonColorClassNames';
+} from '../../../../../generated-api';
+import { useApi } from '../../../../hooks/useApi';
+import Panel from '../../../ui/panels/Panel';
+import { HorizontalLinePrimaryColors } from '../../../../styles/CommonColorClassNames';
 
 const AlertPanel: React.FC = () => {
   const leagueState = useSelector((state: RootState) => state.league);
@@ -73,10 +74,19 @@ const AlertPanel: React.FC = () => {
     });
 
   return (
-    <div className='flex flex-col w-full rounded-md dark:bg-surface-a1-dark dark:text-primary-a1-dark bg-surface-a1-light text-primary-a1-light'>
-      <AlertPanelHeader />
-      {pendingSurveyAlerts.map((alert) => alert)}
-    </div>
+    <Panel
+      header='Alerts'
+      actions={
+        <FaTimes className='text-3xl text-primary-a1-light dark:text-primary-a1-dark hover:text-primary-a3-light hover:dark:text-primary-a4-dark cursor-pointer' />
+      }>
+      {pendingSurveyAlerts.length === 0 ? (
+        <div className='text-center'>No alerts available</div>
+      ) : (
+        pendingSurveyAlerts.map((alert) => (
+          <div key={Math.random()}>{alert}</div>
+        ))
+      )}
+    </Panel>
   );
 };
 

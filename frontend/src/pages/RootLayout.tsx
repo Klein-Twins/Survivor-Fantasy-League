@@ -1,7 +1,7 @@
-import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import React from 'react';
+import { useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
-import { AppDispatch, RootState } from '../store/store';
+import { RootState } from '../store/store';
 import Navbar from '../components/navbar/Navbar';
 import Modal from '../components/ui/Modal';
 import ExtendSessionToast from '../components/auth/ExtendSessionToast';
@@ -10,21 +10,12 @@ import {
   MainBackgroundColor,
   TextPrimaryColor,
 } from '../styles/CommonColorClassNames';
-import { getSeasons } from '../store/slices/seasonSlice';
-// import { checkAuthentication } from "../store/slices/authSlice";
 
 const RootLayout: React.FC = () => {
-  const dispatch = useDispatch<AppDispatch>();
-
   const isOpen = useSelector((state: RootState) => state.modal.isOpen);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
-
-  useEffect(() => {
-    // dispatch(checkAuthentication());
-    dispatch(getSeasons());
-  }, [dispatch]);
 
   return (
     <>

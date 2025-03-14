@@ -1,6 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ButtonPrimaryColors, TextPrimaryColor, TextTertiaryColor } from '../../../styles/CommonColorClassNames';
+import {
+  ButtonPrimaryColors,
+  TextPrimaryColor,
+  TextTertiaryColor,
+} from '../../../../styles/CommonColorClassNames';
 
 const CallToAction: React.FC = () => {
   return (
@@ -10,7 +14,8 @@ const CallToAction: React.FC = () => {
           Ready to Start Your Survivor Fantasy Journey?
         </h2>
         <p className={`text-xl mb-8 max-w-2xl mx-auto ${TextPrimaryColor}`}>
-          Join Survivor fans competing for glory. Create your team and prove your strategic prowess!
+          Join Survivor fans competing for glory. Create your team and prove
+          your strategic prowess!
         </p>
         <Link
           to='/register'

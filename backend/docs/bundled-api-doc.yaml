@@ -709,6 +709,129 @@ paths:
                                 - survivors
                                 - tribes
                                 - episodes
+  /api/season/survivors:
+    get:
+      summary: Get survivors
+      operationId: getSurvivors
+      description: 'Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.'
+      tags:
+        - SurvivorService
+      parameters:
+        - in: query
+          name: seasonId
+          required: false
+          schema:
+            type: integer
+            description: 'The ID of the season to retrieve survivors from. If omitted, returns all survivors.'
+            example: 47
+        - in: query
+          name: withDetails
+          required: false
+          schema:
+            type: boolean
+            default: false
+            description: Whether to include detailed information about the survivors. Defaults to false.
+            example: true
+      responses:
+        '200':
+          description: Retrieves a list of survivors per season
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - responseData
+                    properties:
+                      responseData:
+                        type: object
+                        properties:
+                          survivors:
+                            type: array
+                            items:
+                              type: object
+                              allOf:
+                                - type: object
+                                  required:
+                                    - survivorId
+                                    - firstName
+                                    - lastName
+                                  properties:
+                                    survivorId:
+                                      type: string
+                                      description: The survivor's unique identifier
+                                      example: 1
+                                    firstName:
+                                      type: string
+                                      description: The survivor's first name
+                                      example: Andy
+                                    lastName:
+                                      type: string
+                                      description: The survivor's last name
+                                      example: Rueda
+                                - type: object
+                                  required:
+                                    - seasonId
+                                    - fromState
+                                    - fromCountry
+                                    - age
+                                    - description
+                                    - job
+                                  properties:
+                                    seasonId:
+                                      type: integer
+                                      description: The season tied with this survivor's details
+                                      example: 47I
+                                    nickName:
+                                      type: string
+                                      description: The survivor's nickname
+                                      example: The Brain
+                                      nullable: true
+                                    fromCity:
+                                      type: string
+                                      description: The city the survivor is from
+                                      example: Brooklyn
+                                      nullable: true
+                                    fromState:
+                                      type: string
+                                      description: The state the survivor is from
+                                      example: New York
+                                    fromCountry:
+                                      type: string
+                                      description: The country the survivor is from
+                                      example: US
+                                    age:
+                                      type: integer
+                                      description: The survivor's age at the time of the season
+                                      example: 31
+                                    description:
+                                      type: string
+                                      description: A short description about the survivor
+                                      example: An outgoing and energetic person.
+                                    job:
+                                      type: string
+                                      description: The survivor's job/occupation
+                                      example: AI Research Assistant
   /api/auth/check-auth:
     get:
       summary: Validate refresh token authenticity
@@ -2460,129 +2583,6 @@ paths:
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
-  /api/season/survivors:
-    get:
-      summary: Get survivors
-      operationId: getSurvivors
-      description: 'Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.'
-      tags:
-        - SurvivorService
-      parameters:
-        - in: query
-          name: seasonId
-          required: false
-          schema:
-            type: integer
-            description: 'The ID of the season to retrieve survivors from. If omitted, returns all survivors.'
-            example: 47
-        - in: query
-          name: withDetails
-          required: false
-          schema:
-            type: boolean
-            default: false
-            description: Whether to include detailed information about the survivors. Defaults to false.
-            example: true
-      responses:
-        '200':
-          description: Retrieves a list of survivors per season
-          content:
-            application/json:
-              schema:
-                type: object
-                allOf:
-                  - type: object
-                    required:
-                      - success
-                      - message
-                      - statusCode
-                    properties:
-                      success:
-                        type: boolean
-                        example: true
-                      message:
-                        type: string
-                        example: Operation completed successfully.
-                      statusCode:
-                        type: integer
-                        example: 200
-                      error:
-                        type: string
-                        nullable: true
-                        example: An error occurred.
-                  - type: object
-                    required:
-                      - responseData
-                    properties:
-                      responseData:
-                        type: object
-                        properties:
-                          survivors:
-                            type: array
-                            items:
-                              type: object
-                              allOf:
-                                - type: object
-                                  required:
-                                    - survivorId
-                                    - firstName
-                                    - lastName
-                                  properties:
-                                    survivorId:
-                                      type: string
-                                      description: The survivor's unique identifier
-                                      example: 1
-                                    firstName:
-                                      type: string
-                                      description: The survivor's first name
-                                      example: Andy
-                                    lastName:
-                                      type: string
-                                      description: The survivor's last name
-                                      example: Rueda
-                                - type: object
-                                  required:
-                                    - seasonId
-                                    - fromState
-                                    - fromCountry
-                                    - age
-                                    - description
-                                    - job
-                                  properties:
-                                    seasonId:
-                                      type: integer
-                                      description: The season tied with this survivor's details
-                                      example: 47I
-                                    nickName:
-                                      type: string
-                                      description: The survivor's nickname
-                                      example: The Brain
-                                      nullable: true
-                                    fromCity:
-                                      type: string
-                                      description: The city the survivor is from
-                                      example: Brooklyn
-                                      nullable: true
-                                    fromState:
-                                      type: string
-                                      description: The state the survivor is from
-                                      example: New York
-                                    fromCountry:
-                                      type: string
-                                      description: The country the survivor is from
-                                      example: US
-                                    age:
-                                      type: integer
-                                      description: The survivor's age at the time of the season
-                                      example: 31
-                                    description:
-                                      type: string
-                                      description: A short description about the survivor
-                                      example: An outgoing and energetic person.
-                                    job:
-                                      type: string
-                                      description: The survivor's job/occupation
-                                      example: AI Research Assistant
   '/api/image/profile/{profileId}':
     get:
       tags:

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../store/store';
 import { getLeagues } from '../../store/slices/leagueSlice';
 import { getLeagueInvites } from '../../store/slices/leagueInviteSlice';
-import LeaguesPanel from '../../components/home/LoggedIn/LeaguesPanel';
-import LeagueInvitesPanel from '../../components/home/LoggedIn/LeagueInvitesPanel';
-import AlertPanel from '../../components/home/LoggedIn/AlertPanel';
+import AlertPanel from '../../components/pageComponents/home/LoggedIn/AlertPanel';
+import LeaguesPanel from '../../components/pageComponents/home/LoggedIn/LeaguesPanel';
+import LeagueInvitesPanel from '../../components/pageComponents/home/LoggedIn/LeagueInvitesPanel';
 
 function LoggedInHomePage() {
   const dispatch = useDispatch<AppDispatch>();

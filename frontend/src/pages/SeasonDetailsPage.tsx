@@ -1,37 +1,48 @@
-import { useParams } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../store/store';
-import { TextPrimaryColor } from '../styles/CommonColorClassNames';
-import Drawer from '../components/about/Drawer';
-import AdminSurvivors from '../components/admin/seasonDetails/AdminSurvivors';
-import AdminTribes from '../components/admin/seasonDetails/AdminTribes';
-import AdminEpisodes from '../components/admin/seasonDetails/AdminEpisodes';
-
+import React, { useState } from 'react';
+import { Season } from '../../generated-api';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../store/store';
+import SeasonSelect from '../components/pageComponents/seasonDetails/SeasonSelect';
+import SurvivorSection from '../components/pageComponents/seasonDetails/survivorSection/SurvivorSection';
+import { getSeasons } from '../store/slices/seasonSlice';
 const SeasonDetailsPage: React.FC = () => {
-  const { seasonId } = useParams<{ seasonId: string }>();
-  const season = useSelector((state: RootState) =>
-    state.season.seasons.find((s) => s.id.toString() === seasonId)
+  const seasonState = useSelector((state: RootState) => state.season);
+
+  const dispatch = useDispatch<AppDispatch>();
+  if (seasonState.seasons.length === 0) {
+    dispatch(getSeasons());
+  }
+
+  const [selectedSeason, setSelectedSeason] = useState<Season>(
+    seasonState.activeSeason
   );
 
-  if (!season) {
-    return <h1> Season not found! </h1>;
+  const seasonOptions = seasonState.seasons.map((season) => ({
+    season: season,
+    label: `Season: ${season.id}`,
+  }));
+
+  function handleSeasonChange(seasonId: number) {
+    setSelectedSeason(
+      seasonState.seasons.find((season) => season.id === seasonId)
+    );
   }
 
   return (
-    <div className='container mx-auto p-4'>
-      <h1 className={`text-2xl font-bold text-center ${TextPrimaryColor}`}>
-        Season {season.id}: {season.name}
-      </h1>
-
-      <Drawer title='Tribes' defaultOpen={false}>
-        <AdminTribes tribes={season.tribes} />
-      </Drawer>
-      <Drawer title='Survivors' defaultOpen={false}>
-        <AdminSurvivors survivors={season.survivors} />
-      </Drawer>
-      <Drawer title='Episodes' defaultOpen={false}>
-        <AdminEpisodes episodes={season.episodes} />
-      </Drawer>
+    <div className='flex flex-col items-center w-full'>
+      <div className='w-full md:w-1/2 px-2'>
+        <SeasonSelect
+          seasonOptions={seasonOptions}
+          onChangeSeason={handleSeasonChange}
+          selectedSeason={selectedSeason}
+        />
+      </div>
+      <section className='w-full px-2'>
+        <SurvivorSection
+          seasonId={selectedSeason.id}
+          survivors={selectedSeason.survivors}
+        />
+      </section>
     </div>
   );
 };

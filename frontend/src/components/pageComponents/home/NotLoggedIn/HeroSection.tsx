@@ -4,7 +4,7 @@ import {
   ButtonSubtleColors,
   TextPrimaryColor,
   TextTertiaryColor,
-} from '../../../styles/CommonColorClassNames';
+} from '../../../../styles/CommonColorClassNames';
 const HeroSection: React.FC = () => {
   return (
     <div>
@@ -13,14 +13,18 @@ const HeroSection: React.FC = () => {
         <div className='flex flex-col-reverse lg:flex-row items-center justify-between gap-12'>
           {/* Left Content */}
           <div className='flex-1 space-y-8 text-center lg:text-left'>
-            <h1 className={`text-4xl md:text-5xl lg:text-6xl font-bold ${TextPrimaryColor} `}>
+            <h1
+              className={`text-4xl md:text-5xl lg:text-6xl font-bold ${TextPrimaryColor} `}>
               Where Strategy Meets
-              <span className={`block ${TextTertiaryColor}`}>Survivor Fantasy</span>
+              <span className={`block ${TextTertiaryColor}`}>
+                Survivor Fantasy
+              </span>
             </h1>
 
             <p className={`text-lg md:text-xl ${TextPrimaryColor} max-w-2xl`}>
-              Join the ultimate fantasy league for Survivor fans. Create your team, track the game, and compete against
-              others to see who has the best strategy!
+              Join the ultimate fantasy league for Survivor fans. Create your
+              team, track the game, and compete against others to see who has
+              the best strategy!
             </p>
 
             <div className='flex flex-col sm:flex-row gap-4 justify-center lg:justify-start'>
