@@ -14,25 +14,6 @@ paths:
             application/json:
               schema:
                 $ref: '../../components/season/season.yaml#/components/schemas/GetSeasonsResponse'
-    post:
-      summary: Create a season
-      operationId: createSeason
-      description: Creates a new season.
-      tags:
-        - SeasonService
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '../../components/season/season.yaml#/components/schemas/CreateSeasonRequestBody'
-      responses:
-        '200':
-          description: Created a new season
-          content:
-            application/json:
-              schema:
-                $ref: '../../components/season/season.yaml#/components/schemas/CreateSeasonResponse'
   seasonWithId:
     get:
       summary: Get seasons by ID
@@ -55,3 +36,24 @@ paths:
             application/json:
               schema:
                 $ref: '../../components/season/season.yaml#/components/schemas/GetSeasonsResponse'
+
+  seasonAdmin:
+    post:
+      summary: Create a season
+      operationId: createSeason
+      description: Creates a new season.
+      tags:
+        - SeasonService
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '../../components/season/season.yaml#/components/schemas/CreateSeasonRequestBody'
+      responses:
+        '200':
+          description: Created a new season
+          content:
+            application/json:
+              schema:
+                $ref: '../../components/season/season.yaml#/components/schemas/CreateSeasonResponse'

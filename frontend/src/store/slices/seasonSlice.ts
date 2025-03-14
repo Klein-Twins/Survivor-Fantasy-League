@@ -3,6 +3,7 @@ import {
   ApiError,
   CreateSeasonRequestBody,
   CreateSeasonResponse,
+  Episode,
   GetSeasonsResponse,
   Season,
 } from '../../../generated-api';
@@ -17,7 +18,8 @@ enum SeasonActionTypes {
 interface SeasonState {
   seasons: Season[];
   activeSeason: Season | null;
-  selectedSeason: Season | null;
+  activeEpisode: Episode | null;
+  nextSeason: Season | null;
   loading: boolean;
   error: ApiError | null;
 }
@@ -25,23 +27,12 @@ interface SeasonState {
 const initialState: SeasonState = {
   seasons: [],
   activeSeason: null,
-  selectedSeason: null,
+  nextSeason: null,
+  activeEpisode: null,
   loading: false,
   error: null,
 };
 
-// export const getSeasons = createAsyncThunk<
-//   GetSeasonsResponse,
-//   ApiRequestParams<void, void>,
-//   { rejectValue: ApiError }
-// >(SeasonActionTypes.GetSeasons, async (seasonData, { rejectWithValue }) => {
-//   try {
-//     const response = await seasonService.getSeasons();
-//     return response.data;
-//   } catch (error: any) {
-//     return rejectWithValue(error.response?.data);
-//   }
-// });
 export const getSeasons = createAsyncThunk<
   GetSeasonsResponse,
   void,
@@ -77,9 +68,6 @@ const seasonSlice = createSlice({
     setActiveSeason: (state, action: PayloadAction<Season>) => {
       state.activeSeason = action.payload;
     },
-    setSelectedSeason: (state, action: PayloadAction<Season>) => {
-      state.selectedSeason = action.payload;
-    },
   },
   extraReducers: (builder) => {
     builder
@@ -90,6 +78,19 @@ const seasonSlice = createSlice({
       .addCase(getSeasons.fulfilled, (state, action) => {
         state.loading = false;
         state.seasons = action.payload.responseData.seasons || [];
+        state.activeSeason =
+          action.payload.responseData.seasons.find(
+            (season) => season.isActive
+          ) || null;
+        if (state.activeSeason) {
+          const currentDate = new Date();
+          state.activeEpisode =
+            state.activeSeason.episodes?.find(
+              (episode) => new Date(episode.episodeAirDate) > currentDate
+            ) || null;
+        } else {
+          state.activeEpisode = null;
+        }
       })
       .addCase(getSeasons.rejected, (state, action) => {
         state.loading = false;

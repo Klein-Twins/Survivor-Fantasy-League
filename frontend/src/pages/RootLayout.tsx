@@ -6,23 +6,31 @@ import Navbar from '../components/navbar/Navbar';
 import Modal from '../components/ui/Modal';
 import ExtendSessionToast from '../components/auth/ExtendSessionToast';
 import Footer from '../components/footer/Footer';
-import { MainBackgroundColor, TextPrimaryColor } from '../styles/CommonColorClassNames';
+import {
+  MainBackgroundColor,
+  TextPrimaryColor,
+} from '../styles/CommonColorClassNames';
+import { getSeasons } from '../store/slices/seasonSlice';
 // import { checkAuthentication } from "../store/slices/authSlice";
 
 const RootLayout: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const isOpen = useSelector((state: RootState) => state.modal.isOpen);
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
   useEffect(() => {
     // dispatch(checkAuthentication());
+    dispatch(getSeasons());
   }, [dispatch]);
 
   return (
     <>
       <Navbar />
-      <main className={`min-h-screen ${MainBackgroundColor} ${TextPrimaryColor}`}>
+      <main
+        className={`min-h-screen ${MainBackgroundColor} ${TextPrimaryColor}`}>
         <Outlet />
       </main>
       {isOpen && <Modal isOpen={isOpen} />}

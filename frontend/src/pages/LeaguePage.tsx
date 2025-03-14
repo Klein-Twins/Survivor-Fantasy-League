@@ -33,6 +33,7 @@ const LeaguePage: React.FC = () => {
       />
       <SurveyStatusMessage />
       <LeagueMemberPanel leagueMembers={league.leagueMembers} />
+      <SurveyPanel league={league} account={account} />
     </div>
   );
 };

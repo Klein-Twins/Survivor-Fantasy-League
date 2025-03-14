@@ -9,7 +9,6 @@ export interface EpisodeAttributes {
   episodeTitle: string | null;
   episodeAirDate: Date;
   episodeDescription: string | null;
-  episodeImageUrl: string | null;
 }
 
 const EpisodeModel = (sequelize: Sequelize) => {
@@ -20,7 +19,6 @@ const EpisodeModel = (sequelize: Sequelize) => {
     public episodeTitle!: EpisodeAttributes['episodeTitle'] | null;
     public episodeAirDate!: EpisodeAttributes['episodeAirDate'];
     public episodeDescription!: EpisodeAttributes['episodeDescription'] | null;
-    public episodeImageUrl!: EpisodeAttributes['episodeImageUrl'] | null;
 
     static associate(models: any) {
       this.belongsTo(models.Seasons, {
@@ -80,11 +78,6 @@ const EpisodeModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING(500),
         allowNull: true,
         field: 'EPISODE_DESCRIPTION',
-      },
-      episodeImageUrl: {
-        type: DataTypes.STRING(200),
-        allowNull: true,
-        field: 'EPISODE_IMAGE',
       },
     },
     {

@@ -9,7 +9,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 31,
     description: '',
     job: 'AI Research Assistant',
-    imageUrl: 'images/survivors/AndyRueda47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.AnikaDhar,
@@ -18,7 +17,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 26,
     description: '',
     job: 'Marketing Manager',
-    imageUrl: 'images/survivors/AnikaDhar47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.AyshaWelch,
@@ -27,7 +25,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 32,
     description: '',
     job: 'Dont know',
-    imageUrl: 'images/survivors/AyshaWelch47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.CarolineVidmar,
@@ -36,7 +33,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 27,
     description: '',
     job: 'Strategy Consultant',
-    imageUrl: 'images/survivors/CarolineVidmar47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.GabeOrtis,
@@ -45,7 +41,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 26,
     description: '',
     job: 'Radio Host',
-    imageUrl: 'images/survivors/GabeOrtis47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.GenevieveMushaluk,
@@ -54,7 +49,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 33,
     description: '',
     job: 'Corporate Lawyer',
-    imageUrl: 'images/survivors/GenevieveMushaluk47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.RomeCooney,
@@ -63,7 +57,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 30,
     description: '',
     job: 'E-Sports Commentator',
-    imageUrl: 'images/survivors/RomeCooney47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.JonLovett,
@@ -72,7 +65,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 42,
     description: '',
     job: 'Podcast Host',
-    imageUrl: 'images/survivors/JonLovett47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.KishanPatel,
@@ -81,7 +73,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 28,
     description: '',
     job: 'Emergency Room Doctor',
-    imageUrl: 'images/survivors/KishanPatel47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.KyleOstwald,
@@ -90,7 +81,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 31,
     description: '',
     job: 'Construction Worker',
-    imageUrl: 'images/survivors/KyleOstwald47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.RachelLaMont,
@@ -99,7 +89,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 34,
     description: '',
     job: 'Graphic Designer',
-    imageUrl: 'images/survivors/RachelLaMont47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.SamPhalen,
@@ -108,7 +97,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 24,
     description: '',
     job: 'Sports Recruiter',
-    imageUrl: 'images/survivors/SamPhalen47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.SierraWright,
@@ -117,7 +105,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 27,
     description: '',
     job: 'Nurse',
-    imageUrl: 'images/survivors/SierraWright47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.SolomonYi,
@@ -126,7 +113,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 43,
     description: '',
     job: 'Medical Device Sales',
-    imageUrl: 'images/survivors/SolomonYi47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.SueSmey,
@@ -135,7 +121,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 59,
     description: '',
     job: 'Flight School Owner',
-    imageUrl: 'images/survivors/SueSmey47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.TeenyChirichillo,
@@ -144,7 +129,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 23,
     description: '',
     job: 'Freelance Writer',
-    imageUrl: 'images/survivors/TeenyChirichillo47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.TerranFoster,
@@ -153,7 +137,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 31,
     description: '',
     job: 'Athlete Marketing Manager',
-    imageUrl: 'images/survivors/TerranFoster47.jpeg',
   },
   {
     survivorId: season47SurvivorIds.TiyanaHallums,
@@ -162,7 +145,6 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     age: 27,
     description: '',
     job: 'Flight Attendant',
-    imageUrl: 'images/survivors/TiyanaHallums47.jpeg',
   },
 ];
 

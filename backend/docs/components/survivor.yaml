@@ -54,7 +54,6 @@ components:
             - age
             - description
             - job
-            - imageUrl
           properties:
             seasonId:
               type: integer
@@ -90,7 +89,3 @@ components:
               type: string
               description: The survivor's job/occupation
               example: 'AI Research Assistant'
-            imageUrl:
-              type: string
-              description: The path of the survivor image
-              example: '/assets/images/survivors/AndyRueda47.jpeg'

@@ -10,7 +10,6 @@ export interface SurvivorDetailsOnSeasonAttributes {
   age: number;
   description: string;
   job: string;
-  imageUrl: string;
 }
 
 const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
@@ -24,7 +23,6 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
     public age!: SurvivorDetailsOnSeasonAttributes['age'];
     public description!: SurvivorDetailsOnSeasonAttributes['description'];
     public job!: SurvivorDetailsOnSeasonAttributes['job'];
-    public imageUrl!: SurvivorDetailsOnSeasonAttributes['imageUrl'];
 
     static associate(models: any) {
       this.belongsTo(models.Survivors, {
@@ -78,11 +76,6 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'JOB',
-      },
-      imageUrl: {
-        type: DataTypes.STRING(100),
-        allowNull: false,
-        field: 'IMAGE_URL',
       },
     },
     {

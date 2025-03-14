@@ -52,8 +52,6 @@ async function createSurvivor(
           age: survivorData.age,
           description: survivorData.description,
           job: survivorData.job,
-          //TODO: Fix imageUrl
-          imageUrl: '/images/survivor/' + survivorId + '.jpg',
         });
       if (!transaction && t) {
         await t.commit();

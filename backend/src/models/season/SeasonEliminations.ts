@@ -8,13 +8,18 @@ export interface SeasonEliminationAttributes {
   episodeId: EpisodeAttributes['episodeId'];
   survivorId: SurvivorsAttributes['survivorId'];
   notes: string | null;
+  day: number;
   seq: number;
 }
 
 const SeasonEliminationsModel = (sequelize: Sequelize) => {
-  class SeasonEliminations extends Model<SeasonEliminationAttributes> implements SeasonEliminationAttributes {
+  class SeasonEliminations
+    extends Model<SeasonEliminationAttributes>
+    implements SeasonEliminationAttributes
+  {
     public seasonId!: SeasonEliminationAttributes['seasonId'];
     public episodeId!: SeasonEliminationAttributes['episodeId'];
+    public day!: SeasonEliminationAttributes['day'];
     public survivorId!: SeasonEliminationAttributes['survivorId'];
     public notes!: SeasonEliminationAttributes['notes'];
     public seq!: SeasonEliminationAttributes['seq'];
@@ -58,6 +63,11 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
           key: 'EPISODE_ID',
         },
         field: 'EPISODE_ID',
+      },
+      day: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'DAY',
       },
       survivorId: {
         type: DataTypes.UUID,

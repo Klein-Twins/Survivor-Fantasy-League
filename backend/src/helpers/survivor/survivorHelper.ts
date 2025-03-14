@@ -36,7 +36,6 @@ function buildSurvivor(
     age: survivorDetailAttributes.age,
     description: survivorDetailAttributes.description,
     job: survivorDetailAttributes.job,
-    imageUrl: survivorDetailAttributes.imageUrl,
   };
 }
 

@@ -9,7 +9,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'One Glourious and Perfect Episode',
     episodeAirDate: new Date('2024-09-18'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/1.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode2,
@@ -18,7 +17,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Epic Boss Girl Move',
     episodeAirDate: new Date('2024-09-25'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/2.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode3,
@@ -27,7 +25,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Belly of the Beast',
     episodeAirDate: new Date('2024-10-02'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/3.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode4,
@@ -36,7 +33,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Is That Blood in Your Hair?',
     episodeAirDate: new Date('2024-10-09'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/4.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode5,
@@ -45,7 +41,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'The Scales be Tippin',
     episodeAirDate: new Date('2024-10-16'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/5.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode6,
@@ -54,7 +49,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Feel the FOMO',
     episodeAirDate: new Date('2024-10-23'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/6.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode7,
@@ -63,7 +57,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Our Pick on Blast',
     episodeAirDate: new Date('2024-10-30'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/7.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode8,
@@ -72,7 +65,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: "He's All That",
     episodeAirDate: new Date('2024-12-06'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/8.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode9,
@@ -81,7 +73,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Nightmare Fuel',
     episodeAirDate: new Date('2024-11-13'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/9.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode10,
@@ -90,7 +81,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Loyal to the Soil',
     episodeAirDate: new Date('2024-11-20'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/10.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode11,
@@ -99,7 +89,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Flipping the Win Switch',
     episodeAirDate: new Date('2024-11-27'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/11.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode12,
@@ -108,7 +97,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Operation: Italy',
     episodeAirDate: new Date('2024-12-04'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/12.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode13,
@@ -117,7 +105,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'Bob and Weave',
     episodeAirDate: new Date('2024-12-11'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/13.jpg',
   },
   {
     episodeId: season47EpisodeIds.episode14,
@@ -126,7 +113,6 @@ const season47EpisodeData: EpisodeAttributes[] = [
     episodeTitle: 'The Last Stand',
     episodeAirDate: new Date('2024-12-18'),
     episodeDescription: '',
-    episodeImageUrl: 'episodes/47/14.jpg',
   },
 ];
 

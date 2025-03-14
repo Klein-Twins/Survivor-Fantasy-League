@@ -7,6 +7,7 @@ import { SurvivorsAttributes } from '../survivors/Survivors';
 import { TribeAttributes } from '../season/Tribes';
 import { PickOptionTypeEnum } from '../../generated-api';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { validate as uuidValidate } from 'uuid';
 
 export interface PickSubmissionAttributes {
   surveySubmissionId: UUID;
@@ -47,23 +48,21 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
         field: 'PLAYER_CHOICE',
-        validate: {
-          isValidChoice(value: string) {
-            const uuidV4Regex =
-              /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
-            const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
-            const validChoices = ['true', 'false', 'yes', 'no'];
-            if (
-              !uuidV4Regex.test(value) &&
-              !validChoices.includes(value) &&
-              !hexColorRegex.test(value)
-            ) {
-              throw new Error(
-                'PLAYER_CHOICE must be a valid UUID or a valid string choice or hex color'
-              );
-            }
-          },
-        },
+        // validate: {
+        //   isValidChoice(value: string) {
+        //     const hexColorRegex = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/;
+        //     const validChoices = ['true', 'false', 'yes', 'no'];
+        //     if (
+        //       !uuidValidate(value) &&
+        //       !validChoices.includes(value) &&
+        //       !hexColorRegex.test(value)
+        //     ) {
+        //       throw new Error(
+        //         'PLAYER_CHOICE must be a valid UUID or a valid string choice or hex color'
+        //       );
+        //     }
+        //   },
+        // },
       },
       pointsEarned: {
         type: DataTypes.INTEGER,

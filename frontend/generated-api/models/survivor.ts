@@ -91,13 +91,4 @@ export interface Survivor extends SurvivorBasic {
      * @example AI Research Assistant
      */
     job: string;
-
-    /**
-     * The path of the survivor image
-     *
-     * @type {string}
-     * @memberof Survivor
-     * @example /assets/images/survivors/AndyRueda47.jpeg
-     */
-    imageUrl: string;
 }

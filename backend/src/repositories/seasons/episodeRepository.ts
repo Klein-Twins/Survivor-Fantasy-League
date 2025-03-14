@@ -64,7 +64,6 @@ async function createEpisode(
       episodeTitle: null,
       episodeAirDate: episodeAirDate,
       episodeDescription: null,
-      episodeImageUrl: null,
     });
     return episodeAttributes;
   } catch (error) {

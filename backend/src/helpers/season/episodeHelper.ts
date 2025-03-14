@@ -61,7 +61,6 @@ function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
     seasonId: episodeAttributes.seasonId,
     episodeAirDate: episodeAttributes.episodeAirDate.toString(),
     episodeDescription: episodeAttributes.episodeDescription,
-    episodeImage: episodeAttributes.episodeImageUrl,
     episodeTitle: episodeAttributes.episodeTitle,
   };
 }

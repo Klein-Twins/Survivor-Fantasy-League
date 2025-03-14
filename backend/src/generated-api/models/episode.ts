@@ -73,13 +73,4 @@ export interface Episode {
      * @example The first episode of the season
      */
     episodeDescription: string | null;
-
-    /**
-     * The image of the episode
-     *
-     * @type {string}
-     * @memberof Episode
-     * @example https://www.image.com/episode.jpg
-     */
-    episodeImage: string | null;
 }

@@ -191,7 +191,7 @@ export const SeasonServiceApiAxiosParamCreator = function (configuration?: Confi
          * @throws {RequiredError}
          */
         getSeasons: async (options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/admin/season`;
+            const localVarPath = `/api/season`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;

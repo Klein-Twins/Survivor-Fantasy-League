@@ -16,6 +16,7 @@ import { EpisodeAttributes } from '../Episodes';
 export enum ChallengeType {
   REWARD = 'Reward',
   IMMUNITY = 'Immunity',
+  REWARD_AND_IMMUNITY = 'Reward and Immunity',
 }
 export interface ChallengeAttributes {
   challengeId: UUID;
@@ -26,7 +27,10 @@ export interface ChallengeAttributes {
 }
 
 const ChallengeModel = (sequelize: Sequelize) => {
-  class Challenge extends Model<ChallengeAttributes> implements ChallengeAttributes {
+  class Challenge
+    extends Model<ChallengeAttributes>
+    implements ChallengeAttributes
+  {
     public challengeId!: ChallengeAttributes['challengeId'];
     public episodeId!: ChallengeAttributes['episodeId'];
     public description!: ChallengeAttributes['description'];
@@ -57,7 +61,7 @@ const ChallengeModel = (sequelize: Sequelize) => {
         field: 'DESCRIPTION',
       },
       notes: {
-        type: DataTypes.STRING(500),
+        type: DataTypes.STRING(1000),
         allowNull: true,
         field: 'NOTES',
       },

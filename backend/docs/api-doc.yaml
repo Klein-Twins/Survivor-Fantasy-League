@@ -23,6 +23,9 @@ paths:
   /api/auth/extend-session:
     $ref: './paths/auth/userSession.yaml#/paths/extendSession'
 
+  /api/season:
+    $ref: './paths/season/season.yaml#/paths/season'
+
   /api/auth/check-auth:
     $ref: './paths/auth/userSession.yaml#/paths/checkAuth'
 
@@ -57,7 +60,7 @@ paths:
     $ref: './paths/league/currentEpisodeSurveys.yaml#/paths/currentEpisodeSurveys'
 
   /api/admin/season:
-    $ref: './paths/season/season.yaml#/paths/season'
+    $ref: './paths/season/season.yaml#/paths/seasonAdmin'
   /api/admin/season/survivor:
     $ref: './paths/season/survivor.yaml#/paths/survivor'
   /api/admin/season/{seasonId}:
