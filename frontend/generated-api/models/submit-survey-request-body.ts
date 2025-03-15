@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { PickSelection } from './pick-selection';
+import { PickIdAndPlayerChoice } from './pick-id-and-player-choice';
  /**
  * 
  *
@@ -62,8 +62,8 @@ export interface SubmitSurveyRequestBody {
     profileId: string;
 
     /**
-     * @type {Array<PickSelection>}
+     * @type {Array<PickIdAndPlayerChoice>}
      * @memberof SubmitSurveyRequestBody
      */
-    pickChoices: Array<PickSelection>;
+    picksWithChoice: Array<PickIdAndPlayerChoice>;
 }

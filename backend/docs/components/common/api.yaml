@@ -1,0 +1,35 @@
+components:
+  schemas:
+    ApiResponse:
+      type: object
+      required:
+        - success
+        - message
+        - statusCode
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: 'Operation completed successfully.'
+        statusCode:
+          type: integer
+          example: 200
+        error:
+          type: string
+          nullable: true
+          example: 'An error occurred.'
+
+    ApiError:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - error
+          properties:
+            error:
+              type: string
+              description: Error message describing what went wrong
+              example: 'Invalid Credentials provided'

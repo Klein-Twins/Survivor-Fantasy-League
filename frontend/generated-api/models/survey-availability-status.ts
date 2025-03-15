@@ -19,7 +19,7 @@
  */
 export enum SurveyAvailabilityStatus {
     Available = 'Available',
-    NotOpenYet = 'Not Open Yet',
-    Closed = 'Closed'
+    Closed = 'Closed',
+    NotOpenYet = 'Not Open Yet'
 }
 

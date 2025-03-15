@@ -145,47 +145,7 @@ export const SeasonServiceApiAxiosParamCreator = function (configuration?: Confi
             };
         },
         /**
-         * Retrieves a specific season by ID.
-         * @summary Get seasons by ID
-         * @param {number} seasonId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSeasonById: async (seasonId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            // verify required parameter 'seasonId' is not null or undefined
-            if (seasonId === null || seasonId === undefined) {
-                throw new RequiredError('seasonId','Required parameter seasonId was null or undefined when calling getSeasonById.');
-            }
-            const localVarPath = `/api/admin/season/{seasonId}`
-                .replace(`{${"seasonId"}}`, encodeURIComponent(String(seasonId)));
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * Retrieves a list of seasons. Optionally, filter by season ID.
+         * Retrieves a list of seasons
          * @summary Get seasons
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -250,21 +210,7 @@ export const SeasonServiceApiFp = function(configuration?: Configuration) {
             };
         },
         /**
-         * Retrieves a specific season by ID.
-         * @summary Get seasons by ID
-         * @param {number} seasonId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSeasonById(seasonId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetSeasonsResponse>>> {
-            const localVarAxiosArgs = await SeasonServiceApiAxiosParamCreator(configuration).getSeasonById(seasonId, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * Retrieves a list of seasons. Optionally, filter by season ID.
+         * Retrieves a list of seasons
          * @summary Get seasons
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -304,17 +250,7 @@ export const SeasonServiceApiFactory = function (configuration?: Configuration, 
             return SeasonServiceApiFp(configuration).createSeasonForm(seasonNumber, isActive, theme, location, name, numberOfContestants, startDate, endDate, seasonLogo, options).then((request) => request(axios, basePath));
         },
         /**
-         * Retrieves a specific season by ID.
-         * @summary Get seasons by ID
-         * @param {number} seasonId 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSeasonById(seasonId: number, options?: AxiosRequestConfig): Promise<AxiosResponse<GetSeasonsResponse>> {
-            return SeasonServiceApiFp(configuration).getSeasonById(seasonId, options).then((request) => request(axios, basePath));
-        },
-        /**
-         * Retrieves a list of seasons. Optionally, filter by season ID.
+         * Retrieves a list of seasons
          * @summary Get seasons
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
@@ -352,18 +288,7 @@ export class SeasonServiceApi extends BaseAPI {
         return SeasonServiceApiFp(this.configuration).createSeasonForm(seasonNumber, isActive, theme, location, name, numberOfContestants, startDate, endDate, seasonLogo, options).then((request) => request(this.axios, this.basePath));
     }
     /**
-     * Retrieves a specific season by ID.
-     * @summary Get seasons by ID
-     * @param {number} seasonId 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SeasonServiceApi
-     */
-    public async getSeasonById(seasonId: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetSeasonsResponse>> {
-        return SeasonServiceApiFp(this.configuration).getSeasonById(seasonId, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * Retrieves a list of seasons. Optionally, filter by season ID.
+     * Retrieves a list of seasons
      * @summary Get seasons
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}

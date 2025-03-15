@@ -5,11 +5,10 @@ components:
       required:
         - id
         - seasonId
-        - episodeNumber
-        - episodeAirDate
-        - episodeTitle
-        - episodeDescription
-        - episodeImage
+        - number
+        - airDate
+        - title
+        - description
       properties:
         id:
           type: string
@@ -19,21 +18,21 @@ components:
           type: number
           description: The ID of the season the episode is in
           example: '47'
-        episodeNumber:
+        number:
           type: number
           description: The number of the episode
           example: '1'
-        episodeAirDate:
+        airDate:
           type: string
           format: date
           description: The air date of the episode
           example: '2021-09-22'
-        episodeTitle:
+        title:
           type: string
           description: The title of the episode
           example: 'The Beginning'
           nullable: true
-        episodeDescription:
+        description:
           type: string
           description: The description of the episode
           example: 'The first episode of the season'

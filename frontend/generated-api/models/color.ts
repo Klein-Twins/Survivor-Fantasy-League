@@ -27,7 +27,7 @@ export interface Color {
      * @memberof Color
      * @example Red
      */
-    color: string;
+    name: string;
 
     /**
      * The hex code of the color

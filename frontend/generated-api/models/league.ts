@@ -13,7 +13,6 @@
  */
 
 import { LeagueMember } from './league-member';
-import { Season } from './season';
  /**
  * 
  *
@@ -29,7 +28,7 @@ export interface League {
      * @memberof League
      * @example c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f
      */
-    leagueId: string;
+    id: string;
 
     /**
      * The name of the league.
@@ -41,10 +40,13 @@ export interface League {
     name: string;
 
     /**
-     * @type {Season}
+     * The ID of the season the league is for.
+     *
+     * @type {string}
      * @memberof League
+     * @example 1
      */
-    season: Season;
+    seasonId: string;
 
     /**
      * @type {Array<LeagueMember>}

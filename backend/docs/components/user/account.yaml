@@ -1,0 +1,26 @@
+components:
+  schemas:
+    Account:
+      type: object
+      required:
+        - email
+        - userId
+        - accountRole
+      allOf:
+        - $ref: './profile.yaml#/components/schemas/Profile'
+        - type: object
+          properties:
+            email:
+              type: string
+              description: Email of user
+            userId:
+              type: string
+              description: User Id of user
+            accountRole:
+              $ref: '#/components/schemas/AccountRole'
+
+    AccountRole:
+      type: string
+      enum:
+        - Admin
+        - User

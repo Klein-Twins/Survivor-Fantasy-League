@@ -1,0 +1,108 @@
+paths:
+  league:
+    get:
+      summary: Get leagues for a profile
+      description: Gets profile's enrolled leagues
+      tags:
+        - LeagueService
+      operationId: getLeagues
+      parameters:
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: string
+          description: Profile Id for the getLeaguesQuery
+      responses:
+        '200':
+          description: A list of leagues for the profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/GetLeaguesResponse'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+    post:
+      summary: Create a new League
+      description: Creates a new league for a given season.
+      tags:
+        - LeagueService
+      operationId: createLeague
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/CreateLeagueRequestBody'
+      responses:
+        '201':
+          description: League created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CreateLeagueResponse'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+components:
+  schemas:
+    GetLeaguesResponseData:
+      type: object
+      required:
+        - leagues
+      properties:
+        leagues:
+          type: array
+          items:
+            $ref: '../../components/league/league.yaml#/components/schemas/League'
+    CreateLeagueResponseData:
+      type: object
+      required:
+        - league
+      properties:
+        league:
+          $ref: '../../components/league/league.yaml#/components/schemas/League'
+  requestBodies:
+    CreateLeagueRequestBody:
+      type: object
+      required:
+        - name
+        - seasonId
+        - profileId
+      properties:
+        name:
+          type: string
+          description: The name of the league
+          example: 'Corner By The Bookshelf'
+        seasonId:
+          type: integer
+          description: The ID of the season the league belongs to
+          example: 47
+        profileId:
+          type: string
+          description: The profileId of the user creating the league
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
+  responses:
+    CreateLeagueResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/CreateLeagueResponseData'
+    GetLeaguesResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetLeaguesResponseData'

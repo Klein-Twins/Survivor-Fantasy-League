@@ -45,7 +45,7 @@ export interface Episode {
      * @memberof Episode
      * @example 1
      */
-    episodeNumber: number;
+    number: number;
 
     /**
      * The air date of the episode
@@ -54,7 +54,7 @@ export interface Episode {
      * @memberof Episode
      * @example Wed Sep 22 00:00:00 UTC 2021
      */
-    episodeAirDate: string;
+    airDate: string;
 
     /**
      * The title of the episode
@@ -63,7 +63,7 @@ export interface Episode {
      * @memberof Episode
      * @example The Beginning
      */
-    episodeTitle: string | null;
+    title: string | null;
 
     /**
      * The description of the episode
@@ -72,5 +72,5 @@ export interface Episode {
      * @memberof Episode
      * @example The first episode of the season
      */
-    episodeDescription: string | null;
+    description: string | null;
 }

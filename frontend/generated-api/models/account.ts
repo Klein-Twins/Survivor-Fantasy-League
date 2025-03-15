@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { AccountRole } from './account-role';
 import { Profile } from './profile';
  /**
  * 
@@ -38,20 +39,8 @@ export interface Account extends Profile {
     userId: string;
 
     /**
-     * User role ADMIN or USER
-     *
-     * @type {string}
+     * @type {AccountRole}
      * @memberof Account
      */
-    userRole: AccountUserRoleEnum;
+    accountRole: AccountRole;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum AccountUserRoleEnum {
-    ADMIN = 'ADMIN',
-    USER = 'USER'
-}
-

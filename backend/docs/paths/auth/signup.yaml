@@ -1,0 +1,82 @@
+paths:
+  signup:
+    post:
+      operationId: signupUser
+      summary: Registers a new user account
+      description: |
+        Creates a new user account and returns authentication tokens via cookies.
+        Upon success:
+        - Access and refresh tokens are set in `Set-Cookie` headers.
+        - A success message and account details are returned in the response body.
+      tags:
+        - UserSessionService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/SignupUserRequestBody'
+      responses:
+        '200':
+          description: Signed up and logged in user successfully
+          headers:
+            Set-Cookie:
+              $ref: '../../components/common/security.yaml#/components/headers/AuthCookies'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SignupUserResponse'
+
+components:
+  schemas:
+    SignupUserResponseData:
+      type: object
+      required:
+        - userSession
+        - account
+      properties:
+        account:
+          $ref: '../../components/user/account.yaml#/components/schemas/Account'
+        userSession:
+          $ref: '../../components/user/userSession.yaml#/components/schemas/UserSession'
+  responses:
+    SignupUserResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/SignupUserResponseData'
+  requestBodies:
+    SignupUserRequestBody:
+      type: object
+      required:
+        - email
+        - password
+        - username
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address for the new user
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          description: Password for the new account
+          example: StrongPassword123!
+        username:
+          type: string
+          description: Unique username for the account
+          example: SurvivorFan69
+        firstName:
+          type: string
+          description: First name of the user
+          example: Jeff
+        lastName:
+          type: string
+          description: Last name of the user
+          example: Probst

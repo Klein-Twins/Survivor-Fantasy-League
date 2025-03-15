@@ -1,0 +1,44 @@
+paths:
+  checkAuth:
+    get:
+      summary: Validate refresh token authenticity
+      operationId: checkAuth
+      description: |
+        This endpoint verifies if the refresh token is valid. It is used to confirm 
+        the user's authentication status, such as during a page reload. Requires the 
+        refresh token cookie and the associated profile ID as input.
+      tags:
+        - UserSessionService
+      responses:
+        '200':
+          description: User authentication status retrieved successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CheckAuthResponse'
+      security:
+        - refreshTokenCookie: []
+
+components:
+  schemas:
+    CheckAuthResponseData:
+      type: object
+      required:
+        - userSession
+      properties:
+        account:
+          $ref: '../../components/user/account.yaml#/components/schemas/Account'
+        userSession:
+          $ref: '../../components/user/userSession.yaml#/components/schemas/UserSession'
+  responses:
+    CheckAuthResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/CheckAuthResponseData'
+  requestBodies:

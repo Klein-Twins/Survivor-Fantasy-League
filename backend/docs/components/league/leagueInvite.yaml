@@ -1,0 +1,28 @@
+components:
+  schemas:
+    LeagueInvite:
+      type: object
+      required:
+        - league
+        - message
+        - inviterProfile
+        - inviteId
+      properties:
+        league:
+          $ref: './league.yaml#/components/schemas/League'
+        message:
+          type: string
+          description: A message indicating the success of the operation.
+          example: Tony Stark has invited you to join a league
+        inviterProfile:
+          $ref: '../user/profile.yaml#/components/schemas/Profile'
+        inviteId:
+          type: string
+          description: The unique ID of the league invite.
+          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+
+    InviteResponseEnum:
+      type: string
+      enum:
+        - Accept
+        - Decline

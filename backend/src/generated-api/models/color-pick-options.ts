@@ -19,11 +19,5 @@ import { Color } from './color';
  * @export
  * @interface ColorPickOptions
  */
-export interface ColorPickOptions {
-
-    /**
-     * @type {Array<Color>}
-     * @memberof ColorPickOptions
-     */
-    options: Array<Color>;
+export interface ColorPickOptions extends Array<Color> {
 }

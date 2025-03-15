@@ -12,9 +12,8 @@
  * Do not edit the class manually.
  */
 
-import { Episode } from './episode';
 import { LeagueSurvey } from './league-survey';
-import { PickSelection } from './pick-selection';
+import { PickAndChoice } from './pick-and-choice';
 import { SurveyAvailabilityStatus } from './survey-availability-status';
 import { SurveySubmissionStatus } from './survey-submission-status';
  /**
@@ -26,16 +25,24 @@ import { SurveySubmissionStatus } from './survey-submission-status';
 export interface CompletedLeagueSurvey extends LeagueSurvey {
 
     /**
-     * @type {Array<PickSelection>}
-     * @memberof CompletedLeagueSurvey
-     */
-    pickSelections: Array<PickSelection>;
-
-    /**
      * The ID of the profile submitting the survey
      *
      * @type {string}
      * @memberof CompletedLeagueSurvey
      */
     profileId: string;
+
+    /**
+     * The ID of the league profile submitting the survey
+     *
+     * @type {string}
+     * @memberof CompletedLeagueSurvey
+     */
+    leagueProfileId: string;
+
+    /**
+     * @type {Array<PickAndChoice>}
+     * @memberof CompletedLeagueSurvey
+     */
+    picks: Array<PickAndChoice>;
 }

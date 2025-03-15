@@ -1,0 +1,29 @@
+paths:
+  tribeImage:
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve tribe image
+      description:
+        This endpoint allows you to retrieve a tribe image by tribe ID.
+      operationId: getTribeImage
+      parameters:
+        - name: tribeId
+          in: path
+          required: true
+          description: The ID of the tribe.
+          schema:
+            type: string
+        - name: seasonId
+          in: path
+          required: true
+          description: The ID of the season.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                $ref: '../../components/common/image.yaml#/components/schemas/Image'

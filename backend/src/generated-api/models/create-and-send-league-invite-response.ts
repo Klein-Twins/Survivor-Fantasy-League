@@ -13,6 +13,7 @@
  */
 
 import { ApiResponse } from './api-response';
+import { CreateAndSendLeagueInviteResponseData } from './create-and-send-league-invite-response-data';
  /**
  * 
  *
@@ -20,4 +21,10 @@ import { ApiResponse } from './api-response';
  * @interface CreateAndSendLeagueInviteResponse
  */
 export interface CreateAndSendLeagueInviteResponse extends ApiResponse {
+
+    /**
+     * @type {CreateAndSendLeagueInviteResponseData}
+     * @memberof CreateAndSendLeagueInviteResponse
+     */
+    responseData: CreateAndSendLeagueInviteResponseData;
 }

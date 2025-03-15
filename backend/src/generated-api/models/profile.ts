@@ -43,10 +43,4 @@ export interface Profile {
      * @memberof Profile
      */
     lastName: string | null;
-
-    /**
-     * @type {string}
-     * @memberof Profile
-     */
-    profileImageUrl: string;
 }

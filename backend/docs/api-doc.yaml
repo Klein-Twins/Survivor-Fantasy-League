@@ -15,58 +15,50 @@ servers:
     variables: {}
 paths:
   /api/auth/signup:
-    $ref: './paths/auth/userSession.yaml#/paths/signup'
+    $ref: './paths/auth/signup.yaml#/paths/signup'
   /api/auth/login:
-    $ref: './paths/auth/userSession.yaml#/paths/login'
+    $ref: './paths/auth/login.yaml#/paths/login'
   /api/auth/logout:
-    $ref: './paths/auth/userSession.yaml#/paths/logout'
+    $ref: './paths/auth/logout.yaml#/paths/logout'
   /api/auth/extend-session:
-    $ref: './paths/auth/userSession.yaml#/paths/extendSession'
+    $ref: './paths/auth/extendSession.yaml#/paths/extendSession'
+  /api/auth/check-auth:
+    $ref: './paths/auth/checkAuth.yaml#/paths/checkAuth'
 
   /api/season:
     $ref: './paths/season/season.yaml#/paths/season'
-  /api/season/survivors:
-    $ref: './paths/survivors.yaml#/paths/survivors'
 
-  /api/auth/check-auth:
-    $ref: './paths/auth/userSession.yaml#/paths/checkAuth'
+  /api/league/{profileId}:
+    $ref: './paths/league/league.yaml#/paths/league'
+  /api/league/invite/{profileId}:
+    $ref: './paths/league/invite/invite.yaml#/paths/leagueInvite'
+  /api/league/invite/search:
+    $ref: './paths/league/invite/search/search.yaml#/paths/search'
 
-  /api/league/invite:
-    $ref: './paths/profile/leagueInvite.yaml#/paths/leagueInvite'
-  /api/profile/search:
-    $ref: './paths/profile/search.yaml#/paths/search'
-  /api/profile/league:
-    $ref: './paths/league.yaml#/paths/league'
+  /api/league/survey/{leagueId}/{profileId}/{episodeId}:
+    $ref: './paths/league/survey/survey.yaml#/paths/survey'
+  /api/league/survey/submit:
+    $ref: './paths/league/survey/survey.yaml#/paths/submitSurvey'
 
   /api/image/profile/{profileId}:
     $ref: './paths/image/profile.yaml#/paths/profileImage'
   /api/image/league/{leagueId}:
-    $ref: './paths/image/profile.yaml#/paths/leagueImage'
+    $ref: './paths/image/league.yaml#/paths/leagueImage'
   /api/image/season/{seasonId}:
-    $ref: './paths/image/profile.yaml#/paths/seasonLogoImage'
+    $ref: './paths/image/season.yaml#/paths/seasonLogoImage'
   /api/image/episode/{episodeId}:
-    $ref: './paths/image/profile.yaml#/paths/episodeImage'
+    $ref: './paths/image/episode.yaml#/paths/episodeImage'
   /api/image/survivor/{seasonId}/{survivorId}:
-    $ref: './paths/image/profile.yaml#/paths/survivorImage'
+    $ref: './paths/image/survivor.yaml#/paths/survivorImage'
   /api/image/tribe/{seasonId}/{tribeId}:
-    $ref: './paths/image/profile.yaml#/paths/tribeImage'
-
-  /api/league/survey/{leagueId}/{profileId}/{episodeId}:
-    $ref: './paths/league/picks/survey.yaml#/paths/survey'
-  /api/league/survey/submit:
-    $ref: './paths/league/picks/survey.yaml#/paths/submitSurvey'
-
-  /api/league/currentEpisodeSurveys/{profileId}/{leagueIds}:
-    $ref: './paths/league/currentEpisodeSurveys.yaml#/paths/currentEpisodeSurveys'
+    $ref: './paths/image/tribe.yaml#/paths/tribeImage'
 
   /api/admin/season:
-    $ref: './paths/season/season.yaml#/paths/seasonAdmin'
+    $ref: './paths/admin/season/season.yaml#/paths/season'
   /api/admin/season/survivor:
-    $ref: './paths/season/survivor.yaml#/paths/survivor'
-  /api/admin/season/{seasonId}:
-    $ref: './paths/season/season.yaml#/paths/seasonWithId'
+    $ref: './paths/admin/season/survivor/survivor.yaml#/paths/survivor'
   /api/admin/season/tribe:
-    $ref: './paths/season/tribe.yaml#/paths/tribe'
+    $ref: './paths/admin/season/tribe/tribe.yaml#/paths/tribe'
 
 components:
   securitySchemes:
@@ -80,7 +72,3 @@ components:
       in: cookie
       name: refreshToken
       description: JWT token used to refresh access tokens.
-
-  schemas:
-    ApiResponseError:
-      $ref: './components/common.yaml#/components/schemas/ApiError'

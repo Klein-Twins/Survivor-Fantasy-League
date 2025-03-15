@@ -1,0 +1,26 @@
+components:
+  schemas:
+    LeagueMember:
+      type: object
+      required:
+        - profile
+        - role
+        - leagueProfileId
+      properties:
+        profile:
+          $ref: '../user/profile.yaml#/components/schemas/Profile'
+        role:
+          $ref: '#/components/schemas/LeagueMemberRole'
+        leagueProfileId:
+          type: string
+          description: The id of the league profile
+          example: 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
+          format: uuid
+
+    LeagueMemberRole:
+      type: string
+      enum:
+        - Owner
+        - Admin
+        - Member
+        - Invited

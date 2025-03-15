@@ -17,7 +17,7 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { SearchProfilesForLeagueInviteResponse } from '../models';
+import { LeagueInviteProfileSearchResponse } from '../models';
 import { SortByEnum } from '../models';
 /**
  * ProfileServiceApi - axios parameter creator
@@ -44,7 +44,7 @@ export const ProfileServiceApiAxiosParamCreator = function (configuration?: Conf
             if (leagueId === null || leagueId === undefined) {
                 throw new RequiredError('leagueId','Required parameter leagueId was null or undefined when calling searchProfilesForLeagueInvite.');
             }
-            const localVarPath = `/api/profile/search`;
+            const localVarPath = `/api/league/invite/search`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -142,7 +142,7 @@ export const ProfileServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async searchProfilesForLeagueInvite(leagueId: string, userName?: string, firstName?: string, lastName?: string, page?: number, limit?: number, sortBy?: SortByEnum, isAsc?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<SearchProfilesForLeagueInviteResponse>>> {
+        async searchProfilesForLeagueInvite(leagueId: string, userName?: string, firstName?: string, lastName?: string, page?: number, limit?: number, sortBy?: SortByEnum, isAsc?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<LeagueInviteProfileSearchResponse>>> {
             const localVarAxiosArgs = await ProfileServiceApiAxiosParamCreator(configuration).searchProfilesForLeagueInvite(leagueId, userName, firstName, lastName, page, limit, sortBy, isAsc, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -172,7 +172,7 @@ export const ProfileServiceApiFactory = function (configuration?: Configuration,
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async searchProfilesForLeagueInvite(leagueId: string, userName?: string, firstName?: string, lastName?: string, page?: number, limit?: number, sortBy?: SortByEnum, isAsc?: boolean, options?: AxiosRequestConfig): Promise<AxiosResponse<SearchProfilesForLeagueInviteResponse>> {
+        async searchProfilesForLeagueInvite(leagueId: string, userName?: string, firstName?: string, lastName?: string, page?: number, limit?: number, sortBy?: SortByEnum, isAsc?: boolean, options?: AxiosRequestConfig): Promise<AxiosResponse<LeagueInviteProfileSearchResponse>> {
             return ProfileServiceApiFp(configuration).searchProfilesForLeagueInvite(leagueId, userName, firstName, lastName, page, limit, sortBy, isAsc, options).then((request) => request(axios, basePath));
         },
     };
@@ -200,7 +200,7 @@ export class ProfileServiceApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof ProfileServiceApi
      */
-    public async searchProfilesForLeagueInvite(leagueId: string, userName?: string, firstName?: string, lastName?: string, page?: number, limit?: number, sortBy?: SortByEnum, isAsc?: boolean, options?: AxiosRequestConfig) : Promise<AxiosResponse<SearchProfilesForLeagueInviteResponse>> {
+    public async searchProfilesForLeagueInvite(leagueId: string, userName?: string, firstName?: string, lastName?: string, page?: number, limit?: number, sortBy?: SortByEnum, isAsc?: boolean, options?: AxiosRequestConfig) : Promise<AxiosResponse<LeagueInviteProfileSearchResponse>> {
         return ProfileServiceApiFp(this.configuration).searchProfilesForLeagueInvite(leagueId, userName, firstName, lastName, page, limit, sortBy, isAsc, options).then((request) => request(this.axios, this.basePath));
     }
 }

@@ -91,4 +91,22 @@ export interface Survivor extends SurvivorBasic {
      * @example AI Research Assistant
      */
     job: string;
+
+    /**
+     * The survivor's first name
+     *
+     * @type {string}
+     * @memberof Survivor
+     * @example John
+     */
+    firstName: string;
+
+    /**
+     * The survivor's last name
+     *
+     * @type {string}
+     * @memberof Survivor
+     * @example Doe
+     */
+    lastName: string;
 }

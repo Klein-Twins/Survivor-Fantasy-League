@@ -30,7 +30,6 @@ export interface Pick {
      *
      * @type {string}
      * @memberof Pick
-     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
      */
     id: string;
 
@@ -47,7 +46,7 @@ export interface Pick {
      * @type {PickOptionTypeEnum}
      * @memberof Pick
      */
-    pickOptionType: PickOptionTypeEnum;
+    optionType: PickOptionTypeEnum;
 
     /**
      * The number of points the pick is worth
@@ -56,11 +55,11 @@ export interface Pick {
      * @memberof Pick
      * @example 10
      */
-    numPointsWorth: number;
+    pointValue: number;
 
     /**
      * @type {SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions}
      * @memberof Pick
      */
-    pickOptions: SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions;
+    options: SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions;
 }

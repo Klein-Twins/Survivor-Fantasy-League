@@ -1,0 +1,42 @@
+paths:
+  extendSession:
+    post:
+      summary: Extend user session
+      operationId: extendSession
+      description: |
+        Extends the user session by generating a new refresh token and access token, 
+        if the refresh token is valid. The response includes both tokens set as cookies 
+        and a time-to-expiry value for the refresh token.
+      tags:
+        - UserSessionService
+      responses:
+        '200':
+          description: User session extended successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/ExtendSessionResponse'
+      security:
+        - refreshTokenCookie: []
+
+components:
+  schemas:
+    ExtendSessionResponseData:
+      type: object
+      required:
+        - userSession
+      properties:
+        account:
+          $ref: '../../components/user/account.yaml#/components/schemas/Account'
+        userSession:
+          $ref: '../../components/user/userSession.yaml#/components/schemas/UserSession'
+  responses:
+    ExtendSessionResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            responseData:
+              $ref: '#/components/schemas/ExtendSessionResponseData'
+  requestBodies:

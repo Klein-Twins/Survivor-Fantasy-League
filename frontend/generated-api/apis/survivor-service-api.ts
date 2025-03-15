@@ -19,7 +19,6 @@ import { Configuration } from '../configuration';
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { CreateSurvivorRequestBody } from '../models';
 import { CreateSurvivorResponse } from '../models';
-import { GetSurvivorsResponse } from '../models';
 /**
  * SurvivorServiceApi - axios parameter creator
  * @export
@@ -85,50 +84,6 @@ export const SurvivorServiceApiAxiosParamCreator = function (configuration?: Con
                 options: localVarRequestOptions,
             };
         },
-        /**
-         * Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.
-         * @summary Get survivors
-         * @param {number} [seasonId] 
-         * @param {boolean} [withDetails] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        getSurvivors: async (seasonId?: number, withDetails?: boolean, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
-            const localVarPath = `/api/season/survivors`;
-            // use dummy base URL string because the URL constructor only accepts absolute URLs.
-            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
-            let baseOptions;
-            if (configuration) {
-                baseOptions = configuration.baseOptions;
-            }
-            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            if (seasonId !== undefined) {
-                localVarQueryParameter['seasonId'] = seasonId;
-            }
-
-            if (withDetails !== undefined) {
-                localVarQueryParameter['withDetails'] = withDetails;
-            }
-
-            const query = new URLSearchParams(localVarUrlObj.search);
-            for (const key in localVarQueryParameter) {
-                query.set(key, localVarQueryParameter[key]);
-            }
-            for (const key in options.params) {
-                query.set(key, options.params[key]);
-            }
-            localVarUrlObj.search = (new URLSearchParams(query)).toString();
-            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
-            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
-
-            return {
-                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
-                options: localVarRequestOptions,
-            };
-        },
     }
 };
 
@@ -147,21 +102,6 @@ export const SurvivorServiceApiFp = function(configuration?: Configuration) {
          */
         async createSurvivor(body: CreateSurvivorRequestBody, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CreateSurvivorResponse>>> {
             const localVarAxiosArgs = await SurvivorServiceApiAxiosParamCreator(configuration).createSurvivor(body, options);
-            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
-                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
-                return axios.request(axiosRequestArgs);
-            };
-        },
-        /**
-         * Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.
-         * @summary Get survivors
-         * @param {number} [seasonId] 
-         * @param {boolean} [withDetails] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSurvivors(seasonId?: number, withDetails?: boolean, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetSurvivorsResponse>>> {
-            const localVarAxiosArgs = await SurvivorServiceApiAxiosParamCreator(configuration).getSurvivors(seasonId, withDetails, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -186,17 +126,6 @@ export const SurvivorServiceApiFactory = function (configuration?: Configuration
         async createSurvivor(body: CreateSurvivorRequestBody, options?: AxiosRequestConfig): Promise<AxiosResponse<CreateSurvivorResponse>> {
             return SurvivorServiceApiFp(configuration).createSurvivor(body, options).then((request) => request(axios, basePath));
         },
-        /**
-         * Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.
-         * @summary Get survivors
-         * @param {number} [seasonId] 
-         * @param {boolean} [withDetails] 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        async getSurvivors(seasonId?: number, withDetails?: boolean, options?: AxiosRequestConfig): Promise<AxiosResponse<GetSurvivorsResponse>> {
-            return SurvivorServiceApiFp(configuration).getSurvivors(seasonId, withDetails, options).then((request) => request(axios, basePath));
-        },
     };
 };
 
@@ -217,17 +146,5 @@ export class SurvivorServiceApi extends BaseAPI {
      */
     public async createSurvivor(body: CreateSurvivorRequestBody, options?: AxiosRequestConfig) : Promise<AxiosResponse<CreateSurvivorResponse>> {
         return SurvivorServiceApiFp(this.configuration).createSurvivor(body, options).then((request) => request(this.axios, this.basePath));
-    }
-    /**
-     * Retrieves a list of survivors. Optionally, filter by season ID and request detailed information.
-     * @summary Get survivors
-     * @param {number} [seasonId] 
-     * @param {boolean} [withDetails] 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof SurvivorServiceApi
-     */
-    public async getSurvivors(seasonId?: number, withDetails?: boolean, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetSurvivorsResponse>> {
-        return SurvivorServiceApiFp(this.configuration).getSurvivors(seasonId, withDetails, options).then((request) => request(this.axios, this.basePath));
     }
 }

@@ -1,0 +1,73 @@
+paths:
+  tribe:
+    post:
+      summary: Create a new tribe
+      description: Creates a new tribe for a given season.
+      tags:
+        - TribeService
+      operationId: createTribe
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/CreateTribeRequestBody'
+      responses:
+        '201':
+          description: Tribe created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CreateTribeResponse'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+components:
+  schemas:
+    CreateTribeResponseData:
+      type: object
+      required:
+        - tribe
+      properties:
+        tribe:
+          $ref: '../../../../components/season/tribe.yaml#/components/schemas/Tribe'
+  requestBodies:
+    CreateTribeRequestBody:
+      type: object
+      required:
+        - name
+        - seasonId
+        - isMergeTribe
+        - episodeStarted
+        - color
+      properties:
+        name:
+          type: string
+          description: The tribe's name
+          example: 'Luzon'
+        seasonId:
+          type: number
+          description: The season's unique identifier
+          example: 1
+        isMergeTribe:
+          type: boolean
+          description: Whether the tribe is a merge tribe
+          example: false
+        episodeStarted:
+          type: integer
+          description: The episode the tribe started in
+          example: 1
+        color:
+          $ref: '../../../../components/common/color.yaml#/components/schemas/Color'
+  responses:
+    CreateTribeResponse:
+      type: object
+      allOf:
+        - $ref: '../../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/CreateTribeResponseData'

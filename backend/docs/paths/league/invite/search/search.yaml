@@ -1,0 +1,123 @@
+paths:
+  search:
+    get:
+      summary: Retrieve profiles by search criteria
+      description:
+        This endpoint allows you to search for profiles based on username, first
+        name, and league ID, with pagination options.
+      operationId: searchProfilesForLeagueInvite
+      tags:
+        - ProfileService
+      parameters:
+        - $ref: '#/components/parameters/userNameParam'
+        - $ref: '#/components/parameters/firstNameParam'
+        - $ref: '#/components/parameters/lastNameParam'
+        - $ref: '#/components/parameters/leagueIdParam'
+        - $ref: '#/components/parameters/pageParam'
+        - $ref: '#/components/parameters/limitParam'
+        - $ref: '#/components/parameters/sortByParam'
+        - $ref: '#/components/parameters/isAscParam'
+      responses:
+        '200':
+          description: A list of profiles matching the search criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/LeagueInviteProfileSearchResponse'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+components:
+  parameters:
+    userNameParam:
+      name: userName
+      in: query
+      description: The username of the profile
+      required: false
+      schema:
+        type: string
+
+    firstNameParam:
+      name: firstName
+      in: query
+      description: The first name of the profile
+      required: false
+      schema:
+        type: string
+
+    lastNameParam:
+      name: lastName
+      in: query
+      description: The last name of the profile
+      required: false
+      schema:
+        type: string
+
+    leagueIdParam:
+      name: leagueId
+      in: query
+      required: true
+      description: The ID of the league
+      schema:
+        type: string
+
+    pageParam:
+      name: page
+      in: query
+      description: The page number
+      required: false
+      schema:
+        type: integer
+        default: 1
+
+    limitParam:
+      name: limit
+      in: query
+      description: Items per page
+      required: false
+      schema:
+        type: integer
+        default: 10
+
+    sortByParam:
+      name: sortBy
+      in: query
+      description: Field to sort by
+      required: false
+      schema:
+        $ref: '../../../../components/league/leagueSearch.yaml#/components/schemas/SortByEnum'
+
+    isAscParam:
+      name: isAsc
+      in: query
+      description: Sort direction
+      required: false
+      schema:
+        type: boolean
+        default: true
+  schemas:
+    LeagueInviteProfileSearchResponseData:
+      type: object
+      required:
+        - profilesFound
+      properties:
+        profilesFound:
+          type: array
+          items:
+            $ref: '../../../../components/league/leagueSearch.yaml#/components/schemas/LeagueInviteProfileSearchResult'
+
+        pagination:
+          $ref: '../../../../components/league/leagueSearch.yaml#/components/schemas/Pagination'
+  requestBodies:
+  responses:
+    LeagueInviteProfileSearchResponse:
+      type: object
+      allOf:
+        - $ref: '../../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/LeagueInviteProfileSearchResponseData'

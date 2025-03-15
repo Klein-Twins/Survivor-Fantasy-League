@@ -1,0 +1,154 @@
+paths:
+  survey:
+    get:
+      summary: Get survey for profileId, and episodeId with optional leagueId
+      operationId: getLeagueSurvey
+      tags:
+        - SurveyService
+      parameters:
+        - in: path
+          name: leagueId
+          required: false
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the league.
+            example: '1'
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the profile.
+            example: '1'
+        - in: path
+          name: episodeId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the episode.
+            example: '1'
+      responses:
+        '200':
+          description:
+            Retrieves a survey for the specified profileId in leagueId for
+            episodeId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/GetLeagueSurveyResponse'
+
+  submitSurvey:
+    post:
+      summary: Submit survey for provided episodeId and profileId
+      description:
+        Submits the survey for the specified profileId's in leagueId for
+        episodeId's
+      operationId: submitSurveyWithPickChoices
+      tags:
+        - SurveyService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/SubmitSurveyRequestBody'
+      responses:
+        '200':
+          description:
+            Submits the survey for the specified profileId's in leagueId for
+            episodeId's
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/SubmitSurveyResponse'
+
+components:
+  schemas:
+    GetLeagueSurveyResponseData:
+      type: object
+      required:
+        - leagueSurvey
+        - isCompleted
+      properties:
+        leagueSurvey:
+          oneOf:
+            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueSurvey'
+            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueSurvey'
+        isCompleted:
+          type: boolean
+          description:
+            Indicates if the survey is completed. If true, then leagueSurvey
+            should be CompletedLeagueSurvey and if not then LeagueSurvey
+          example: true
+    SubmitSurveyResponseData:
+      type: object
+      required:
+        - leagueSurvey
+      properties:
+        leagueSurvey:
+          $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueSurvey'
+  requestBodies:
+    SubmitSurveyRequestBody:
+      type: object
+      required:
+        - episodeId
+        - leagueSurveyId
+        - surveyId
+        - leagueId
+        - profileId
+        - picksWithChoice
+      properties:
+        episodeId:
+          type: string
+          format: uuid
+          description: The ID of the episode.
+          example: 1
+        leagueSurveyId:
+          type: string
+          format: uuid
+          description: The ID of the league survey.
+          example: 1
+        surveyId:
+          type: string
+          format: uuid
+          description: The ID of the survey.
+          example: 1
+        leagueId:
+          type: string
+          format: uuid
+          description: The ID of the league.
+          example: 1
+        profileId:
+          type: string
+          format: uuid
+          description: The ID of the profile.
+          example: 1
+        picksWithChoice:
+          type: array
+          items:
+            $ref: '../../../components/league/survey/pick.yaml#/components/schemas/PickIdAndPlayerChoice'
+
+  responses:
+    GetLeagueSurveyResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetLeagueSurveyResponseData'
+    SubmitSurveyResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/SubmitSurveyResponseData'

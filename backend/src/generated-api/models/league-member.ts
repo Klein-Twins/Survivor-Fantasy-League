@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { LeagueMemberRole } from './league-member-role';
 import { Profile } from './profile';
  /**
  * 
@@ -28,13 +29,10 @@ export interface LeagueMember {
     profile: Profile;
 
     /**
-     * The role of the league member
-     *
-     * @type {string}
+     * @type {LeagueMemberRole}
      * @memberof LeagueMember
-     * @example member
      */
-    role: LeagueMemberRoleEnum;
+    role: LeagueMemberRole;
 
     /**
      * The id of the league profile
@@ -45,14 +43,3 @@ export interface LeagueMember {
      */
     leagueProfileId: string;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum LeagueMemberRoleEnum {
-    OWNER = 'OWNER',
-    ADMIN = 'ADMIN',
-    MEMBER = 'MEMBER'
-}
-

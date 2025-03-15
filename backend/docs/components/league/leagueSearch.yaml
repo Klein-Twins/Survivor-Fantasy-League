@@ -1,0 +1,43 @@
+components:
+  schemas:
+    SortByEnum:
+      type: string
+      enum: [firstName, lastName, userName, createdAt]
+      default: createdAt
+
+    LeagueInviteProfileSearchResult:
+      type: object
+      required:
+        - profile
+        - isInvited
+        - isJoined
+      properties:
+        profile:
+          $ref: '../user/profile.yaml#/components/schemas/Profile'
+        isInvited:
+          type: boolean
+          description: Indicates if the profile has been invited to the league.
+        isJoined:
+          type: boolean
+          description: Indicates if the profile has joined the league.
+
+    Pagination:
+      type: object
+      required:
+        - currentPage
+        - totalPages
+        - totalCount
+      properties:
+        currentPage:
+          type: integer
+          description: The current page of the result set.
+          example: 1
+        totalPages:
+          type: integer
+          description: The total number of pages available.
+          example: 1
+        totalCount:
+          type: integer
+          description:
+            The total number of profiles that match the search criteria.
+          example: 8

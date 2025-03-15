@@ -1,0 +1,26 @@
+components:
+  schemas:
+    League:
+      type: object
+      required:
+        - id
+        - name
+        - seasonId
+        - leagueMembers
+      properties:
+        id:
+          type: string
+          description: The ID of the league.
+          example: c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f
+        name:
+          type: string
+          description: The name of the league.
+          example: Corner By The Bookshelf
+        seasonId:
+          type: string
+          description: The ID of the season the league is for.
+          example: 1
+        leagueMembers:
+          type: array
+          items:
+            $ref: './leagueMember.yaml#/components/schemas/LeagueMember'

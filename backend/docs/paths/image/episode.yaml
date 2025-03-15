@@ -1,0 +1,23 @@
+paths:
+  episodeImage:
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve episode image
+      description:
+        This endpoint allows you to retrieve an episode image by episode ID.
+      operationId: getEpisodeImage
+      parameters:
+        - name: episodeId
+          in: path
+          required: true
+          description: The ID of the episode.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                $ref: '../../components/common/image.yaml#/components/schemas/Image'

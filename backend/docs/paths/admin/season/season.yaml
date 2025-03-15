@@ -1,0 +1,94 @@
+paths:
+  season:
+    post:
+      summary: Create a season
+      operationId: createSeason
+      description: Creates a new season.
+      tags:
+        - SeasonService
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/requestBodies/CreateSeasonRequestBody'
+      responses:
+        '200':
+          description: Created a new season
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CreateSeasonResponse'
+
+components:
+  schemas:
+    CreateSeasonResponseData:
+      type: object
+      required:
+        - season
+      properties:
+        season:
+          $ref: '../../../components/season/season.yaml#/components/schemas/Season'
+  requestBodies:
+    CreateSeasonRequestBody:
+      type: object
+      required:
+        - seasonNumber
+        - theme
+        - location
+        - name
+        - numberOfContestants
+        - startDate
+        - endDate
+        - isActive
+        - seasonLogo
+      properties:
+        seasonNumber:
+          type: integer
+          description: The number of the season.
+          example: 1
+        isActive:
+          type: boolean
+          description: Whether the season is active.
+          example: true
+        theme:
+          type: string
+          description: The theme of the season.
+          example: 'Survivor: Borneo'
+        location:
+          type: string
+          description: The location of the season.
+          example: 'Borneo'
+        name:
+          type: string
+          description: The name of the season.
+          example: 'Survivor: Borneo'
+        numberOfContestants:
+          type: integer
+          description: The number of contestants in the season.
+          example: 16
+        startDate:
+          type: string
+          format: date
+          description: The start date of the season.
+          example: '2000-05-31'
+        endDate:
+          type: string
+          format: date
+          description: The end date of the season.
+          example: '2000-08-23'
+        seasonLogo:
+          type: string
+          format: binary
+          description: The logo image of the season.
+  responses:
+    CreateSeasonResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/CreateSeasonResponseData'

@@ -12,18 +12,13 @@
  * Do not edit the class manually.
  */
 
-import { BinaryOptionsEnum } from './binary-options-enum';
- /**
+/**
  * 
- *
  * @export
- * @interface BinaryPickOptions
+ * @enum {string}
  */
-export interface BinaryPickOptions {
-
-    /**
-     * @type {Array<BinaryOptionsEnum>}
-     * @memberof BinaryPickOptions
-     */
-    options: Array<BinaryOptionsEnum>;
+export enum BinaryPickOptions {
+    True = 'true',
+    False = 'false'
 }
+

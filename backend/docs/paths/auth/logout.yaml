@@ -1,0 +1,38 @@
+paths:
+  logout:
+    post:
+      operationId: logoutUser
+      summary: Log out a user
+      description: |
+        Logs out a user by invalidating their JWT tokens, clearing any session information, 
+        and removing cookies from the client.
+        - If the cookies are missing or tampered with, appropriate errors are returned.
+      tags:
+        - UserSessionService
+      responses:
+        '200':
+          description: User logged out successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/LogoutUserResponse'
+
+components:
+  schemas:
+    LogoutUserResponseData:
+      type: object
+      properties:
+        message:
+          type: string
+          example: Your torch has been extinguished for now...
+          description: A logout message to be passed for the user.
+  responses:
+    LogoutUserResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          properties:
+            responseData:
+              $ref: '#/components/schemas/LogoutUserResponseData'
+  requestBodies:

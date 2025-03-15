@@ -1,0 +1,6 @@
+components:
+  schemas:
+    Image:
+      type: string
+      format: binary
+      contentEncoding: base64

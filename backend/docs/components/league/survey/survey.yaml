@@ -1,0 +1,79 @@
+components:
+  schemas:
+    Survey:
+      type: object
+      required:
+        - surveyDefinitionId
+        - picks
+      properties:
+        surveyDefinitionId:
+          type: string
+          description: The ID of the survey
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
+        picks:
+          type: array
+          items:
+            $ref: './pick.yaml#/components/schemas/Pick'
+
+    LeagueSurvey:
+      allOf:
+        - $ref: '#/components/schemas/Survey'
+        - type: object
+          required:
+            - leagueSurveyId
+            - episodeId
+            - availabilityStatus
+            - leagueId
+            - submissionStatus
+          properties:
+            leagueSurveyId:
+              type: string
+              format: uuid
+              description: The ID of the league survey
+            episodeId:
+              type: string
+              format: uuid
+              description: The ID of the episode the survey is for
+            availabilityStatus:
+              $ref: '#/components/schemas/SurveyAvailabilityStatus'
+            leagueId:
+              type: string
+              format: uuid
+              description: The ID of the league the survey is for
+            submissionStatus:
+              $ref: '#/components/schemas/SurveySubmissionStatus'
+
+    CompletedLeagueSurvey:
+      allOf:
+        - $ref: '#/components/schemas/LeagueSurvey'
+        - type: object
+          required:
+            - picks
+            - profileId
+            - leagueProfileId
+          properties:
+            profileId:
+              type: string
+              format: uuid
+              description: The ID of the profile submitting the survey
+            leagueProfileId:
+              type: string
+              format: uuid
+              description: The ID of the league profile submitting the survey
+            picks:
+              type: array
+              items:
+                $ref: './pick.yaml#/components/schemas/PickAndChoice'
+
+    SurveyAvailabilityStatus:
+      type: string
+      enum:
+        - 'Available'
+        - 'Closed'
+        - 'Not Open Yet'
+
+    SurveySubmissionStatus:
+      type: string
+      enum:
+        - 'Not Submitted'
+        - 'Submitted'

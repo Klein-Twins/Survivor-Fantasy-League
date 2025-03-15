@@ -1,0 +1,95 @@
+components:
+  schemas:
+    Pick:
+      type: object
+      required:
+        - id
+        - optionType
+        - options
+        - pointValue
+        - description
+
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: The ID of the pick
+        description:
+          type: string
+          description: The description of the pick
+          example: 'Who will be voted out this week?'
+        optionType:
+          $ref: '#/components/schemas/PickOptionTypeEnum'
+        pointValue:
+          type: integer
+          description: The number of points the pick is worth
+          example: 10
+        options:
+          oneOf:
+            - $ref: '#/components/schemas/SurvivorPickOptions'
+            - $ref: '#/components/schemas/ColorPickOptions'
+            - $ref: '#/components/schemas/TribePickOptions'
+            - $ref: '#/components/schemas/BinaryPickOptions'
+
+      discriminator:
+        propertyName: pickOptionType
+        mapping:
+          survivor: '#/components/schemas/SurvivorPickOptions'
+          color: '#/components/schemas/ColorPickOptions'
+          tribe: '#/components/schemas/TribePickOptions'
+          binary: '#/components/schemas/BinaryPickOptions'
+
+    PickOptionTypeEnum:
+      type: string
+      enum: ['survivor', 'color', 'tribe', 'binary']
+      description: The type of pick
+      example: 'Survivor'
+
+    SurvivorPickOptions:
+      type: array
+      items:
+        $ref: '../../season/survivor.yaml#/components/schemas/SurvivorBasic'
+    ColorPickOptions:
+      type: array
+      items:
+        $ref: '../../common/color.yaml#/components/schemas/Color'
+    TribePickOptions:
+      type: array
+      items:
+        $ref: '../../season/tribe.yaml#/components/schemas/Tribe'
+    BinaryPickOptions:
+      type: string
+      enum: [Yes, No]
+
+    PickAndChoice:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Pick'
+        - type: object
+          required:
+            - choice
+          properties:
+            choice:
+              $ref: '#/components/schemas/PickChoice'
+
+    PickChoice:
+      oneOf:
+        - type: string
+          format: uuid
+          description: The ID of the tribe or survivor
+        - type: string
+          description: The hex string of the color
+        - $ref: '#/components/schemas/BinaryPickOptions'
+
+    PickIdAndPlayerChoice:
+      type: object
+      required:
+        - pickId
+        - playerChoice
+      properties:
+        pickId:
+          type: string
+          format: uuid
+          description: The ID of the pick
+        choice:
+          $ref: '#/components/schemas/PickChoice'

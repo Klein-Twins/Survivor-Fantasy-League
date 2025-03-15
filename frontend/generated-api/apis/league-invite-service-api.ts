@@ -19,7 +19,7 @@ import { Configuration } from '../configuration';
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { CreateAndSendLeagueInviteRequestBody } from '../models';
 import { CreateAndSendLeagueInviteResponse } from '../models';
-import { GetLeagueInvitesForPlayerResponse } from '../models';
+import { GetLeagueInvitesResponse } from '../models';
 import { RespondToLeagueInviteRequestBody } from '../models';
 import { RespondToLeagueInviteResponse } from '../models';
 /**
@@ -40,7 +40,7 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createAndSendLeagueInvite.');
             }
-            const localVarPath = `/api/league/invite`;
+            const localVarPath = `/api/league/invite/{profileId}`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -99,7 +99,8 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
             if (profileId === null || profileId === undefined) {
                 throw new RequiredError('profileId','Required parameter profileId was null or undefined when calling getLeagueInvitesForPlayer.');
             }
-            const localVarPath = `/api/league/invite`;
+            const localVarPath = `/api/league/invite/{profileId}`
+                .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -124,10 +125,6 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
                     ? await configuration.apiKey("refreshToken")
                     : await configuration.apiKey;
                 localVarQueryParameter["refreshToken"] = localVarApiKeyValue;
-            }
-
-            if (profileId !== undefined) {
-                localVarQueryParameter['profileId'] = profileId;
             }
 
             const query = new URLSearchParams(localVarUrlObj.search);
@@ -158,7 +155,7 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling respondToLeagueInvite.');
             }
-            const localVarPath = `/api/league/invite`;
+            const localVarPath = `/api/league/invite/{profileId}`;
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -235,7 +232,7 @@ export const LeagueInviteServiceApiFp = function(configuration?: Configuration) 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getLeagueInvitesForPlayer(profileId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetLeagueInvitesForPlayerResponse>>> {
+        async getLeagueInvitesForPlayer(profileId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetLeagueInvitesResponse>>> {
             const localVarAxiosArgs = await LeagueInviteServiceApiAxiosParamCreator(configuration).getLeagueInvitesForPlayer(profileId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -282,7 +279,7 @@ export const LeagueInviteServiceApiFactory = function (configuration?: Configura
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getLeagueInvitesForPlayer(profileId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<GetLeagueInvitesForPlayerResponse>> {
+        async getLeagueInvitesForPlayer(profileId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<GetLeagueInvitesResponse>> {
             return LeagueInviteServiceApiFp(configuration).getLeagueInvitesForPlayer(profileId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -324,7 +321,7 @@ export class LeagueInviteServiceApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof LeagueInviteServiceApi
      */
-    public async getLeagueInvitesForPlayer(profileId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeagueInvitesForPlayerResponse>> {
+    public async getLeagueInvitesForPlayer(profileId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeagueInvitesResponse>> {
         return LeagueInviteServiceApiFp(this.configuration).getLeagueInvitesForPlayer(profileId, options).then((request) => request(this.axios, this.basePath));
     }
     /**

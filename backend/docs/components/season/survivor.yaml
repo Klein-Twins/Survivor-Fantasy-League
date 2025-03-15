@@ -1,74 +1,74 @@
 components:
   schemas:
-    CreateSurvivorRequestBody:
+    SurvivorBasic:
       type: object
       required:
-        - seasonId
+        - id
         - firstName
         - lastName
-        - nickname
-        - job
-        - description
-        - fromState
-        - fromCountry
-        - age
       properties:
-        seasonId:
-          type: integer
-          description: The season tied with this survivor's details
-          example: 47
-        firstName:
+        id:
           type: string
-          description: The survivor's first name
-          example: 'Andy'
-        lastName:
+          description: The survivor's unique identifier
+          example: 1
+        name:
           type: string
-          description: The survivor's last name
-          example: 'Rueda'
-        nickname:
-          type: string
-          description: The survivor's nickname
-          example: 'The Brain'
-        job:
-          type: string
-          description: The survivor's job
-          example: 'Software Engineer'
-        description:
-          type: string
-          description: The survivor's description
-          example: 'A software engineer who loves to code'
-        fromCity:
-          type: string
-          description: The survivor's city of origin
-          example: 'San Francisco'
-        fromState:
-          type: string
-          description: The survivor's state of origin
-          example: 'California'
-        fromCountry:
-          type: string
-          description: The survivor's country of origin
-          example: 'United States'
-        age:
-          type: integer
-          description: The survivor's age
-          example: 25
-
-    CreateSurvivorResponse:
+          description: The survivor's full name
+          example: 'John Doe'
+    Survivor:
       type: object
       allOf:
-        - $ref: '../common.yaml#/components/schemas/ApiResponse'
+        - $ref: '#/components/schemas/SurvivorBasic'
         - type: object
           required:
-            - responseData
+            - seasonId
+            - fromState
+            - fromCountry
+            - age
+            - description
+            - job
+            - firstName
+            - lastName
           properties:
-            responseData:
-              $ref: '#/components/schemas/CreateSurvivorResponseData'
-
-    CreateSurvivorResponseData:
-      type: object
-      required:
-        - survivor
-      properties:
-        survivor:
-          $ref: '../survivor.yaml#/components/schemas/Survivor'
+            seasonId:
+              type: integer
+              description: The season tied with this survivor's details
+              example: 47I
+            nickName:
+              type: string
+              description: The survivor's nickname
+              example: 'The Brain'
+              nullable: true
+            fromCity:
+              type: string
+              description: The city the survivor is from
+              example: 'Brooklyn'
+              nullable: true
+            fromState:
+              type: string
+              description: The state the survivor is from
+              example: 'New York'
+            fromCountry:
+              type: string
+              description: The country the survivor is from
+              example: 'US'
+            age:
+              type: integer
+              description: The survivor's age at the time of the season
+              example: 31
+            description:
+              type: string
+              description: A short description about the survivor
+              example: 'An outgoing and energetic person.'
+            job:
+              type: string
+              description: The survivor's job/occupation
+              example: 'AI Research Assistant'
+            firstName:
+              type: string
+              description: The survivor's first name
+              example: 'John'
+            lastName:
+              type: string
+              description: The survivor's last name
+              example: 'Doe'

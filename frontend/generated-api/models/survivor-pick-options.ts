@@ -12,18 +12,12 @@
  * Do not edit the class manually.
  */
 
-import { Survivor } from './survivor';
+import { SurvivorBasic } from './survivor-basic';
  /**
  * 
  *
  * @export
  * @interface SurvivorPickOptions
  */
-export interface SurvivorPickOptions {
-
-    /**
-     * @type {Array<Survivor>}
-     * @memberof SurvivorPickOptions
-     */
-    options: Array<Survivor>;
+export interface SurvivorPickOptions extends Array<SurvivorBasic> {
 }

@@ -1,0 +1,20 @@
+components:
+  schemas:
+    Profile:
+      type: object
+      required:
+        - profileId
+        - userName
+        - firstName
+        - lastName
+      properties:
+        profileId:
+          type: string
+        userName:
+          type: string
+        firstName:
+          type: string
+          nullable: true
+        lastName:
+          type: string
+          nullable: true

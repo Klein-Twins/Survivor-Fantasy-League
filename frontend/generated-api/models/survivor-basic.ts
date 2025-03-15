@@ -27,23 +27,14 @@ export interface SurvivorBasic {
      * @memberof SurvivorBasic
      * @example 1
      */
-    survivorId: string;
+    id: string;
 
     /**
-     * The survivor's first name
+     * The survivor's full name
      *
      * @type {string}
      * @memberof SurvivorBasic
-     * @example Andy
+     * @example John Doe
      */
-    firstName: string;
-
-    /**
-     * The survivor's last name
-     *
-     * @type {string}
-     * @memberof SurvivorBasic
-     * @example Rueda
-     */
-    lastName: string;
+    name?: string;
 }

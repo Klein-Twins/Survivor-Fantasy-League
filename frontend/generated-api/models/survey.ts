@@ -28,7 +28,7 @@ export interface Survey {
      * @memberof Survey
      * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
      */
-    id: string;
+    surveyDefinitionId: string;
 
     /**
      * @type {Array<Pick>}

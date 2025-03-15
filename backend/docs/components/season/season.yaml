@@ -1,127 +1,55 @@
 components:
   schemas:
-    GetSeasonsResponse:
+    Season:
       type: object
-      allOf:
-        - $ref: '../common.yaml#/components/schemas/ApiResponse'
-        - type: object
-          required:
-            - responseData
-          properties:
-            responseData:
-              $ref: '#/components/schemas/GetSeasonsResponseData'
-    GetSeasonsResponseData:
-      type: object
-      required:
-        - seasons
       properties:
-        seasons:
-          type: array
-          items:
-            $ref: '../season.yaml#/components/schemas/Season'
-
-    CreateSeasonResponse:
-      type: object
-      allOf:
-        - $ref: '../common.yaml#/components/schemas/ApiResponse'
-        - type: object
-          required:
-            - responseData
-          properties:
-            responseData:
-              $ref: '#/components/schemas/CreateSeasonResponseData'
-
-    CreateSeasonResponseData:
-      type: object
-      required:
-        - season
-      properties:
-        season:
-          $ref: '../season.yaml#/components/schemas/Season'
-
-    CreateSeasonRequestBody:
-      type: object
-      required:
-        - seasonNumber
-        - theme
-        - location
-        - name
-        - numberOfContestants
-        - startDate
-        - endDate
-        - isActive
-        - seasonLogo
-      properties:
-        seasonNumber:
+        id:
           type: integer
-          description: The number of the season.
-          example: 1
-        isActive:
-          type: boolean
-          description: Whether the season is active.
-          example: true
-        theme:
-          type: string
-          description: The theme of the season.
-          example: 'Survivor: Borneo'
-        location:
-          type: string
-          description: The location of the season.
-          example: 'Borneo'
+          format: int64
+          description: The unique identifier of the season.
         name:
           type: string
           description: The name of the season.
-          example: 'Survivor: Borneo'
-        numberOfContestants:
-          type: integer
-          description: The number of contestants in the season.
-          example: 16
-        startDate:
+        start_date:
           type: string
           format: date
           description: The start date of the season.
-          example: '2000-05-31'
-        endDate:
+        end_date:
           type: string
           format: date
           description: The end date of the season.
-          example: '2000-08-23'
-        seasonLogo:
+        location:
           type: string
-          format: binary
-          description: The logo image of the season.
-
-    # Season:
-    #   type: object
-    #   required:
-    #     - seasonId
-    #     - startDate
-    #     - endDate
-    #     - imageUrl
-    #   properties:
-    #     seasonId:
-    #       type: integer
-    #       description: The unique ID of the season.
-    #       example: 1
-    #     theme:
-    #       type: string
-    #       description: The theme of the season.
-    #       example: 'Survivor: Borneo'
-    #     location:
-    #       type: string
-    #       description: The location of the season.
-    #       example: 'Borneo'
-    #     name:
-    #       type: string
-    #       description: The name of the season.
-    #       example: 'Survivor: Borneo'
-    #     startDate:
-    #       type: string
-    #       format: date
-    #       description: The start date of the season.
-    #       example: '2000-05-31'
-    #     endDate:
-    #       type: string
-    #       format: date
-    #       description: The end date of the season.
-    #       example: '2000-08-23'
+          description: The location of the season.
+        theme:
+          type: string
+          description: The theme of the season.
+        isActive:
+          type: boolean
+          description: Whether the season is currently active.
+        survivors:
+          type: array
+          items:
+            $ref: './survivor.yaml#/components/schemas/Survivor'
+          description: The survivors in the season.
+        tribes:
+          type: array
+          items:
+            $ref: './tribe.yaml#/components/schemas/Tribe'
+          description: The tribes in the season.
+        episodes:
+          type: array
+          items:
+            $ref: './episode.yaml#/components/schemas/Episode'
+          description: The episodes in the season.
+      required:
+        - id
+        - name
+        - start_date
+        - end_date
+        - location
+        - theme
+        - isActive
+        - survivors
+        - tribes
+        - episodes

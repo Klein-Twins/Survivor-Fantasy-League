@@ -1,0 +1,181 @@
+paths:
+  leagueInvite:
+    get:
+      summary: Retrieve league invites for a player
+      description:
+        This endpoint will retrieve all pending league invitations for a player.
+      operationId: getLeagueInvitesForPlayer
+      tags:
+        - LeagueInviteService
+      parameters:
+        - name: profileId
+          in: path
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A list of league invites for the profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/GetLeagueInvitesResponse'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+    post:
+      summary: Create and send league invite for a profile
+      description:
+        This endpoint allows the user to create a new league invite for a
+        profile and then send the invite to them.
+      operationId: createAndSendLeagueInvite
+      tags:
+        - LeagueInviteService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/CreateAndSendLeagueInviteRequestBody'
+      responses:
+        '200':
+          description: Created a new league invite and sent invite.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/CreateAndSendLeagueInviteResponse'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+
+    put:
+      summary: Respond to a league invite
+      description:
+        This endpoint allows the user to accept or decline a league invitation.
+      operationId: respondToLeagueInvite
+      tags:
+        - LeagueInviteService
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/requestBodies/RespondToLeagueInviteRequestBody'
+      responses:
+        '200':
+          description:
+            Responded to league invite (accept or decline) successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/RespondToLeagueInviteResponse'
+      security:
+        - accessTokenCookie: []
+        - refreshTokenCookie: []
+components:
+  schemas:
+    GetLeagueInvitesResponseData:
+      type: object
+      required:
+        - leagueInvites
+        - numLeagueInvites
+      properties:
+        leagueInvites:
+          type: array
+          items:
+            $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/LeagueInvite'
+        numLeagueInvites:
+          type: integer
+          description: The number of league invites returned
+          example: 4
+
+    RespondToLeagueInviteResponseData:
+      type: object
+      required:
+        - inviteId
+        - inviteResponse
+      properties:
+        league:
+          $ref: '../../../components/league/league.yaml#/components/schemas/League'
+        inviteId:
+          type: string
+          description: The unique ID of the league invite.
+          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+        inviteResponse:
+          $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponseEnum'
+
+    CreateAndSendLeagueInviteResponseData:
+      type: object
+      required:
+        - invitedLeagueMember
+      properties:
+        invitedLeagueMember:
+          $ref: '../../../components/league/leagueMember.yaml#/components/schemas/LeagueMember'
+
+  requestBodies:
+    CreateAndSendLeagueInviteRequestBody:
+      type: object
+      required:
+        - inviterProfileId
+        - invitedProfileId
+        - leagueId
+      properties:
+        inviterProfileId:
+          type: string
+        invitedProfileId:
+          type: string
+        leagueId:
+          type: string
+
+    RespondToLeagueInviteRequestBody:
+      type: object
+      required:
+        - leagueId
+        - inviteResponse
+        - profileId
+      properties:
+        leagueId:
+          type: string
+          description: The unique ID of the league the user is being invited to.
+        profileId:
+          type: string
+          description:
+            THe unique ID of the profile that is responding to the invite
+        inviteResponse:
+          $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponseEnum'
+
+  responses:
+    GetLeagueInvitesResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetLeagueInvitesResponseData'
+
+    CreateAndSendLeagueInviteResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/CreateAndSendLeagueInviteResponseData'
+
+    RespondToLeagueInviteResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/RespondToLeagueInviteResponseData'

@@ -1,0 +1,23 @@
+paths:
+  leagueImage:
+    get:
+      tags:
+        - ImageService
+      summary: Retrieve league image
+      description:
+        This endpoint allows you to retrieve a profile image by league ID.
+      operationId: getLeagueImage
+      parameters:
+        - name: leagueId
+          in: path
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: A profile image successfully retrieved from S3
+          content:
+            image/jpeg:
+              schema:
+                $ref: '../../components/common/image.yaml#/components/schemas/Image'

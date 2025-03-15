@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { Episode } from './episode';
 import { Pick } from './pick';
 import { Survey } from './survey';
 import { SurveyAvailabilityStatus } from './survey-availability-status';
@@ -34,10 +33,12 @@ export interface LeagueSurvey extends Survey {
     leagueSurveyId: string;
 
     /**
-     * @type {Episode}
+     * The ID of the episode the survey is for
+     *
+     * @type {string}
      * @memberof LeagueSurvey
      */
-    episode: Episode;
+    episodeId: string;
 
     /**
      * @type {SurveyAvailabilityStatus}

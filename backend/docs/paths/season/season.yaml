@@ -3,57 +3,37 @@ paths:
     get:
       summary: Get seasons
       operationId: getSeasons
-      description: Retrieves a list of seasons. Optionally, filter by season ID.
+      description: Retrieves a list of seasons
       tags:
         - SeasonService
-      parameters: []
       responses:
         '200':
           description: Retrieves a list of seasons
           content:
             application/json:
               schema:
-                $ref: '../../components/season/season.yaml#/components/schemas/GetSeasonsResponse'
-  seasonWithId:
-    get:
-      summary: Get seasons by ID
-      operationId: getSeasonById
-      description: Retrieves a specific season by ID.
-      tags:
-        - SeasonService
-      parameters:
-        - in: path
-          name: seasonId
-          required: true
-          schema:
-            type: integer
-            description: The ID of the season to retrieve.
-            example: 47
-      responses:
-        '200':
-          description: Retrieves a specific season by ID
-          content:
-            application/json:
-              schema:
-                $ref: '../../components/season/season.yaml#/components/schemas/GetSeasonsResponse'
+                $ref: '#/components/responses/GetSeasonsResponse'
 
-  seasonAdmin:
-    post:
-      summary: Create a season
-      operationId: createSeason
-      description: Creates a new season.
-      tags:
-        - SeasonService
-      requestBody:
-        required: true
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '../../components/season/season.yaml#/components/schemas/CreateSeasonRequestBody'
-      responses:
-        '200':
-          description: Created a new season
-          content:
-            application/json:
-              schema:
-                $ref: '../../components/season/season.yaml#/components/schemas/CreateSeasonResponse'
+components:
+  schemas:
+    GetSeasonsResponseData:
+      type: object
+      required:
+        - seasons
+      properties:
+        seasons:
+          type: array
+          items:
+            $ref: '../../components/season/season.yaml#/components/schemas/Season'
+  requestBodies:
+  responses:
+    GetSeasonsResponse:
+      type: object
+      allOf:
+        - $ref: '../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetSeasonsResponseData'

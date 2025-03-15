@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { InviteResponseEnum } from './invite-response-enum';
  /**
  * 
  *
@@ -37,20 +38,8 @@ export interface RespondToLeagueInviteRequestBody {
     profileId: string;
 
     /**
-     * The response status to the league invite.
-     *
-     * @type {string}
+     * @type {InviteResponseEnum}
      * @memberof RespondToLeagueInviteRequestBody
      */
-    inviteResponse: RespondToLeagueInviteRequestBodyInviteResponseEnum;
+    inviteResponse: InviteResponseEnum;
 }
-
-/**
- * @export
- * @enum {string}
- */
-export enum RespondToLeagueInviteRequestBodyInviteResponseEnum {
-    ACCEPT = 'ACCEPT',
-    DECLINE = 'DECLINE'
-}
-

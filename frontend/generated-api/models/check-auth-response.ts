@@ -26,5 +26,5 @@ export interface CheckAuthResponse extends ApiResponse {
      * @type {CheckAuthResponseData}
      * @memberof CheckAuthResponse
      */
-    responseData?: CheckAuthResponseData;
+    responseData: CheckAuthResponseData;
 }

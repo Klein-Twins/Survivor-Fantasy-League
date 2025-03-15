@@ -19,11 +19,5 @@ import { Tribe } from './tribe';
  * @export
  * @interface TribePickOptions
  */
-export interface TribePickOptions {
-
-    /**
-     * @type {Array<Tribe>}
-     * @memberof TribePickOptions
-     */
-    options: Array<Tribe>;
+export interface TribePickOptions extends Array<Tribe> {
 }

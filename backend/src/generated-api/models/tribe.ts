@@ -23,6 +23,12 @@ import { Episode } from './episode';
 export interface Tribe {
 
     /**
+     * @type {Array<string>}
+     * @memberof Tribe
+     */
+    currentSurvivorIds: Array<string>;
+
+    /**
      * The season's unique identifier
      *
      * @type {string}
@@ -36,7 +42,6 @@ export interface Tribe {
      *
      * @type {string}
      * @memberof Tribe
-     * @example 1
      */
     id: string;
 
@@ -54,15 +59,6 @@ export interface Tribe {
      * @memberof Tribe
      */
     color: Color;
-
-    /**
-     * The tribe's image URL
-     *
-     * @type {string}
-     * @memberof Tribe
-     * @example https://www.cbs.com/shows/survivor/photos/1007124/season-28-cast-photos/1007124_1_8x6.jpg
-     */
-    imageUrl: string;
 
     /**
      * Whether the tribe is a merge tribe

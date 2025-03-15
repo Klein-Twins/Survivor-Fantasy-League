@@ -1,0 +1,13 @@
+components:
+  schemas:
+  securitySchemes:
+    accessTokenCookie:
+      type: apiKey
+      in: cookie
+      name: accessToken
+      description: JWT token for authentication.
+    refreshTokenCookie:
+      type: apiKey
+      in: cookie
+      name: refreshToken
+      description: JWT token used to refresh access tokens.

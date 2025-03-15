@@ -1,0 +1,14 @@
+components:
+  schemas:
+    UserSession:
+      type: object
+      required:
+        - isAuthenticated
+      properties:
+        numSecondsRefreshTokenExpiresIn:
+          type: number
+          description: Number of seconds the session is valid for
+          example: 1800
+        isAuthenticated:
+          type: boolean
+          example: true

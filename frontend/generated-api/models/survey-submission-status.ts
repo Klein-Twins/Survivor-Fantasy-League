@@ -13,13 +13,12 @@
  */
 
 /**
- * The status of the survey filled out by tha profile
+ * 
  * @export
  * @enum {string}
  */
 export enum SurveySubmissionStatus {
-    NotStarted = 'Not started',
-    InProgress = 'In progress',
-    Completed = 'Completed'
+    NotSubmitted = 'Not Submitted',
+    Submitted = 'Submitted'
 }
 
