@@ -17,6 +17,7 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
+import { ApiError } from '../models';
 import { CheckAuthResponse } from '../models';
 import { ExtendSessionResponse } from '../models';
 import { LoginUserRequestBody } from '../models';

@@ -1,8 +1,8 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { LeagueMemberRoleEnum } from '../../generated-api';
 
 import { ProfileAttributes } from '../account/Profile';
 import { LeagueAttributes } from './League';
+import { LeagueMemberRole } from '../../generated-api';
 
 export enum InviteStatusEnum {
   Pending = 'pending',
@@ -13,13 +13,16 @@ export interface LeagueProfileAttributes {
   id: string;
   profileId: ProfileAttributes['profileId'];
   leagueId: LeagueAttributes['leagueId'];
-  role: LeagueMemberRoleEnum;
+  role: LeagueMemberRole;
   inviteStatus: InviteStatusEnum;
   inviterProfileId: ProfileAttributes['profileId'] | null;
 }
 
 const LeagueProfileModel = (sequelize: Sequelize) => {
-  class LeagueProfile extends Model<LeagueProfileAttributes> implements LeagueProfileAttributes {
+  class LeagueProfile
+    extends Model<LeagueProfileAttributes>
+    implements LeagueProfileAttributes
+  {
     public id!: LeagueProfileAttributes['id'];
     public leagueId!: LeagueProfileAttributes['leagueId'];
     public profileId!: LeagueProfileAttributes['profileId'];
@@ -55,7 +58,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         field: 'LEAGUE_ID',
       },
       role: {
-        type: DataTypes.ENUM(...Object.values(LeagueMemberRoleEnum)),
+        type: DataTypes.ENUM(...Object.values(LeagueMemberRole)),
         allowNull: false,
         field: 'ROLE',
       },
@@ -86,11 +89,11 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
       hooks: {
         // beforeCreate Hook: Enforce single Owner per league
         beforeCreate: async (leagueProfile: LeagueProfile, options) => {
-          if (leagueProfile.role === LeagueMemberRoleEnum.OWNER) {
+          if (leagueProfile.role === LeagueMemberRole.Owner) {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,
-                role: 'OWNER',
+                role: 'Owner',
               },
             });
 
@@ -103,26 +106,35 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         // beforeUpdate Hook: Prevent updates to the Owner role
         beforeUpdate: async (leagueProfile: LeagueProfile, options) => {
           const originalLeagueProfile = await LeagueProfile.findOne({
-            where: { leagueId: leagueProfile.leagueId, profileId: leagueProfile.profileId },
+            where: {
+              leagueId: leagueProfile.leagueId,
+              profileId: leagueProfile.profileId,
+            },
           });
 
           if (!originalLeagueProfile) {
             throw new Error('League profile not found.');
           }
 
-          if (leagueProfile.changed('role') && originalLeagueProfile.role === LeagueMemberRoleEnum.OWNER) {
+          if (
+            leagueProfile.changed('role') &&
+            originalLeagueProfile.role === LeagueMemberRole.Owner
+          ) {
             throw new Error('An Owner role cannot be changed.');
           }
 
-          if (leagueProfile.role === LeagueMemberRoleEnum.OWNER) {
+          if (leagueProfile.role === LeagueMemberRole.Owner) {
             const existingOwner = await LeagueProfile.findOne({
               where: {
                 leagueId: leagueProfile.leagueId,
-                role: 'OWNER',
+                role: 'Owner',
               },
             });
 
-            if (existingOwner && existingOwner.profileId !== leagueProfile.profileId) {
+            if (
+              existingOwner &&
+              existingOwner.profileId !== leagueProfile.profileId
+            ) {
               throw new Error('A league can only have one Owner.');
             }
           }

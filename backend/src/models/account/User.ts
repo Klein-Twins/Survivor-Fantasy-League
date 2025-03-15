@@ -1,12 +1,12 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { AccountUserRoleEnum } from '../../generated-api';
+import { AccountRole } from '../../generated-api';
 
 export interface UserAttributes {
   userId: string;
   userName: string;
   profileId: string;
   email: string;
-  userRole: AccountUserRoleEnum;
+  userRole: AccountRole;
 }
 
 const UserModel = (sequelize: Sequelize) => {
@@ -15,7 +15,7 @@ const UserModel = (sequelize: Sequelize) => {
     public userName!: string;
     public profileId!: string;
     public email!: string;
-    public userRole!: AccountUserRoleEnum;
+    public userRole!: AccountRole;
 
     static associate(models: any) {
       this.hasMany(models.Password, { foreignKey: 'userId', as: 'Password' });
@@ -52,7 +52,7 @@ const UserModel = (sequelize: Sequelize) => {
         field: 'USER_EMAIL',
       },
       userRole: {
-        type: DataTypes.ENUM(...Object.values(AccountUserRoleEnum)),
+        type: DataTypes.ENUM(...Object.values(AccountRole)),
         allowNull: false,
         field: 'USER_ROLE',
       },

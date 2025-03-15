@@ -5,11 +5,10 @@ import styles from './NavLinkButtons.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../store/store';
 import {
-  ButtonPrimaryColors,
   ButtonPrimaryTextColor,
   ButtonSubtleTextColor,
 } from '../../styles/CommonColorClassNames';
-import { Account, AccountUserRoleEnum } from '../../../generated-api';
+import { AccountRole } from '../../../generated-api';
 
 interface NavLinkButtonsProps {
   onClick: () => void;
@@ -72,7 +71,7 @@ const NavLinkButtons: React.FC<NavLinkButtonsProps> = ({ onClick }) => {
           Meet the Developer
         </NavLink>
       </li>
-      {account && account.userRole === AccountUserRoleEnum.ADMIN && (
+      {account && account.accountRole === AccountRole.Admin && (
         <li>
           <NavLink
             to='/admin'

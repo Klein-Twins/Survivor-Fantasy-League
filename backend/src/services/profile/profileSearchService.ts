@@ -1,7 +1,7 @@
 import { ProfileSearchRequestParams } from '../../controllers/profile/profileSearchController';
 import {
+  LeagueInviteProfileSearchResponseData,
   Pagination,
-  SearchProfilesForLeagueInviteResponseData,
 } from '../../generated-api';
 import profileSearchHelper from '../../helpers/profile/profileSearchHelper';
 import profileSearchRepository from '../../repositories/profile/profileSearchRepository';
@@ -13,7 +13,7 @@ async function getProfilesBySearch({
   searchParamsForQuery,
   paginationInfoForQuery,
   leagueId,
-}: ProfileSearchRequestParams): Promise<SearchProfilesForLeagueInviteResponseData> {
+}: ProfileSearchRequestParams): Promise<LeagueInviteProfileSearchResponseData> {
   const { foundProfiles, totalCount } =
     await profileSearchRepository.searchForProfilesToInviteToLeague({
       searchParamsForQuery,

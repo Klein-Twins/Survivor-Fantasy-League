@@ -26,12 +26,13 @@ async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
     id: tribeAttributes.id,
     name: tribeAttributes.name,
     color: {
-      color: tribeAttributes.tribeColor,
+      name: tribeAttributes.tribeColor,
       hex: tribeAttributes.tribeHexColor,
     },
     isMergeTribe: tribeAttributes.mergeTribe,
     episodeStarted: episode,
-    imageUrl: '',
+    //TODO: Implement this for tribe history
+    currentSurvivorIds: [],
   };
 }
 
@@ -80,14 +81,14 @@ function validateIsMergeTribe(isMergeTribe: boolean | string) {
 }
 
 function validateTribeColor(color: Color) {
-  if (!color || !color.hex || !color.color || color.color.trim().length === 0) {
+  if (!color || !color.hex || !color.name || color.name.trim().length === 0) {
     throw new BadRequestError('Tribe color is required');
   }
   //Color must be hex
   if (!/^#[0-9A-F]{6}$/i.test(color.hex)) {
     throw new BadRequestError('Tribe color must be a hex color');
   }
-  if (!/^[a-zA-Z ]+$/.test(color.color)) {
+  if (!/^[a-zA-Z ]+$/.test(color.name)) {
     throw new BadRequestError('Tribe color must be alpha with spaces');
   }
 }

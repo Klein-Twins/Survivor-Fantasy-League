@@ -25,7 +25,7 @@ function buildSurvivor(
   survivorDetailAttributes: SurvivorDetailsOnSeasonAttributes
 ): Survivor {
   return {
-    survivorId: survivorAttributes.survivorId,
+    id: survivorAttributes.survivorId,
     firstName: survivorAttributes.firstName,
     lastName: survivorAttributes.lastName,
     fromCity: survivorAttributes.fromCity,

@@ -1,7 +1,6 @@
 import {
   Configuration,
   ImageServiceApi,
-  LeagueApi,
   LeagueInviteServiceApi,
   LeagueServiceApi,
   ProfileServiceApi,
@@ -28,11 +27,10 @@ const api = {
   profileService: new ProfileServiceApi(config),
   leagueInviteService: new LeagueInviteServiceApi(config),
   survivorService: new SurvivorServiceApi(config),
-  UserSessionServiceApi: new UserSessionServiceApi(config),
-  ImageServiceApi: new ImageServiceApi(config),
-  LeagueSurveyService: new SurveyServiceApi(config),
+  userSessionServiceApi: new UserSessionServiceApi(config),
+  imageServiceApi: new ImageServiceApi(config),
+  surveyService: new SurveyServiceApi(config),
   seasonService: new SeasonServiceApi(config),
   tribeService: new TribeServiceApi(config),
-  currentEpisodeService: new LeagueApi(config),
 };
 export default api;

@@ -1,7 +1,7 @@
 import {
+  InviteResponse,
   LeagueInvite,
-  LeagueMemberRoleEnum,
-  RespondToLeagueInviteRequestBodyInviteResponseEnum,
+  LeagueMemberRole,
 } from '../../generated-api';
 import { ProfileAttributes } from '../../models/account/Profile';
 import { LeagueAttributes } from '../../models/league/League';
@@ -32,7 +32,7 @@ async function buildLeagueInvite(
 ): Promise<LeagueInvite> {
   if (
     !leagueProfileAttributes.inviterProfileId ||
-    leagueProfileAttributes.role === LeagueMemberRoleEnum.OWNER
+    leagueProfileAttributes.role === LeagueMemberRole.Owner
   ) {
     throw new InternalServerError(
       'Cannot get leagueInvite for Owner of a league'
@@ -78,7 +78,7 @@ async function validateCreateAndSendLeagueInviteRequest(
 async function validateRespondToLeagueInviteRequest(
   leagueId: LeagueAttributes['leagueId'],
   profileId: ProfileAttributes['profileId'],
-  inviteResponse: RespondToLeagueInviteRequestBodyInviteResponseEnum
+  inviteResponse: InviteResponse
 ): Promise<void> {
   await leagueHelper.validateLeagueId(leagueId);
   await profileHelper.validateProfileId(profileId);
@@ -88,14 +88,8 @@ async function validateRespondToLeagueInviteRequest(
   validateInviteResponse(inviteResponse);
 }
 
-function validateInviteResponse(
-  inviteResponse: RespondToLeagueInviteRequestBodyInviteResponseEnum
-): void {
-  if (
-    !Object.values(RespondToLeagueInviteRequestBodyInviteResponseEnum).includes(
-      inviteResponse
-    )
-  ) {
+function validateInviteResponse(inviteResponse: InviteResponse): void {
+  if (!Object.values(InviteResponse).includes(inviteResponse)) {
     throw new BadRequestError('Invalid invite response');
   }
 }

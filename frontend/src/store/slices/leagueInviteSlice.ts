@@ -2,10 +2,10 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import {
   ApiError,
   LeagueInvite,
-  GetLeagueInvitesForPlayerResponse,
   RespondToLeagueInviteResponse,
   RespondToLeagueInviteRequestBody,
-  RespondToLeagueInviteRequestBodyInviteResponseEnum,
+  GetLeagueInvitesResponse,
+  InviteResponse,
 } from '../../../generated-api';
 import leagueInviteService, {
   GetLeagueInvitesForProfileRequestParams,
@@ -27,7 +27,7 @@ const initialState: LeagueInviteState = {
 };
 
 export const getLeagueInvites = createAsyncThunk<
-  GetLeagueInvitesForPlayerResponse,
+  GetLeagueInvitesResponse,
   ApiRequestParams<void, GetLeagueInvitesForProfileRequestParams>,
   { rejectValue: ApiError }
 >('leagueInvite/getLeagueInvites', async (params, { rejectWithValue }) => {
@@ -52,10 +52,7 @@ export const respondToLeagueInvite = createAsyncThunk<
       const response = await leagueInviteService.respondToLeagueInvite(params);
       const inviteId = response.data.responseData.inviteId;
       dispatch(removeLeagueInvite({ inviteId }));
-      if (
-        params.body.inviteResponse ===
-        RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT
-      ) {
+      if (params.body.inviteResponse === InviteResponse.Accept) {
         dispatch(addLeague(response.data.responseData.league));
       }
 

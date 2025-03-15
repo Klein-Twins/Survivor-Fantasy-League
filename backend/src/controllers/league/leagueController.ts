@@ -1,10 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import {
-  CreateLeagueRequestBody,
   CreateLeagueResponse,
-  CreateLeagueResponseData,
-  GetLeaguesForProfileResponse,
-  GetLeaguesForProfileResponseData,
+  GetLeaguesResponse,
+  GetLeaguesResponseData,
   League,
 } from '../../generated-api';
 import leagueService from '../../services/league/leagueService';
@@ -24,10 +22,10 @@ async function getLeague(
   try {
     const profileId = req.query.profileId as string;
 
-    const responseData: GetLeaguesForProfileResponseData =
+    const responseData: GetLeaguesResponseData =
       await leagueService.getLeaguesForProfile(profileId);
 
-    const response: GetLeaguesForProfileResponse = {
+    const response: GetLeaguesResponse = {
       success: true,
       message:
         responseData.leagues.length !== 0

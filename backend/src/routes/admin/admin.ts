@@ -1,8 +1,8 @@
 import express from 'express';
 
-const router = express.Router();
+import seasonRoutes from './season/season';
 
-import seasonRoutes from './seasonRoutes';
+const router = express.Router();
 
 router.use('/season', seasonRoutes);
 

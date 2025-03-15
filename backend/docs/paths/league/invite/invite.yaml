@@ -104,7 +104,7 @@ components:
           description: The unique ID of the league invite.
           example: 49e27bd8-dc24-4159-9630-e989025bf8fd
         inviteResponse:
-          $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponseEnum'
+          $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponse'
 
     CreateAndSendLeagueInviteResponseData:
       type: object
@@ -144,7 +144,7 @@ components:
           description:
             THe unique ID of the profile that is responding to the invite
         inviteResponse:
-          $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponseEnum'
+          $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponse'
 
   responses:
     GetLeagueInvitesResponse:

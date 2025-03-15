@@ -1,7 +1,7 @@
 import { validate } from 'uuid';
 import {
   Account,
-  AccountUserRoleEnum,
+  AccountRole,
   SignupUserRequestBody,
 } from '../../generated-api';
 import accountRepository from '../../repositories/auth/accountRepository';
@@ -103,8 +103,7 @@ function buildAccount(
     profileId: userAttributes.profileId,
     firstName: ProfileAttributes.firstName || null,
     lastName: ProfileAttributes.lastName || null,
-    profileImageUrl: ProfileAttributes.imageUrl,
-    userRole: userAttributes.userRole || AccountUserRoleEnum.USER,
+    accountRole: userAttributes.userRole || AccountRole.User,
   };
 
   return account;

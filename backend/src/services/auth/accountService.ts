@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
 import {
   Account,
-  AccountUserRoleEnum,
+  AccountRole,
   SignupUserRequestBody,
 } from '../../generated-api';
 import {
@@ -43,8 +43,7 @@ async function createAccount(
     profileId: userProfileId,
     firstName: signupData.firstName || null,
     lastName: signupData.lastName || null,
-    profileImageUrl: defaultProfileImagePath,
-    userRole: AccountUserRoleEnum.USER,
+    accountRole: AccountRole.User,
   };
 
   const account: Account = await accountRepository.createAccount(

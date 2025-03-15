@@ -20,7 +20,7 @@ const episodeService = {
 async function getUpcomingEpisode(): Promise<Episode | null> {
   const seasonId = 47;
   const episode = await getEpisodeBySeasonAndEpisodeNumber(47, 4);
-  const specificDate = new Date(episode.episodeAirDate);
+  const specificDate = new Date(episode.airDate);
   const oneHourBefore = new Date(specificDate.getTime() - 60 * 60 * 1000);
 
   return await episodeRepository.getUpcomingEpisode(seasonId, oneHourBefore);

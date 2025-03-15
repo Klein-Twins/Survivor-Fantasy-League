@@ -516,6 +516,40 @@ paths:
                               isAuthenticated:
                                 type: boolean
                                 example: true
+        '404':
+          description: User authentication status not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - error
+                    properties:
+                      error:
+                        type: string
+                        description: Error message describing what went wrong
+                        example: Invalid Credentials provided
       security:
         - refreshTokenCookie: []
   /api/season:

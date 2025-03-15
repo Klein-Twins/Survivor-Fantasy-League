@@ -3,8 +3,8 @@ import { sequelize } from '../../config/db';
 import logger from '../../config/logger';
 import { ProfileSearchRequestParams } from '../../controllers/profile/profileSearchController';
 import {
+  LeagueInviteProfileSearchResult,
   Profile,
-  ProfileAndLeagueInviteStatus,
   SortByEnum,
 } from '../../generated-api';
 import { ProfileAttributes } from '../../models/account/Profile';
@@ -30,7 +30,7 @@ async function searchForProfilesToInviteToLeague({
   paginationInfoForQuery,
   leagueId,
 }: ProfileSearchRequestParams): Promise<{
-  foundProfiles: ProfileAndLeagueInviteStatus[];
+  foundProfiles: LeagueInviteProfileSearchResult[];
   totalCount: number;
 }> {
   const offset =
@@ -134,7 +134,7 @@ async function searchForProfilesToInviteToLeague({
 
   logger.error(results);
 
-  const foundProfiles: ProfileAndLeagueInviteStatus[] = [];
+  const foundProfiles: LeagueInviteProfileSearchResult[] = [];
   for (const result of results) {
     const profile: Profile = await profileService.getProfile(
       result.profileId,

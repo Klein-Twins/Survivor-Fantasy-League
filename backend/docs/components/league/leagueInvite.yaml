@@ -21,7 +21,7 @@ components:
           description: The unique ID of the league invite.
           example: 49e27bd8-dc24-4159-9630-e989025bf8fd
 
-    InviteResponseEnum:
+    InviteResponse:
       type: string
       enum:
         - Accept

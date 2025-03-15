@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction, ErrorRequestHandler } from 'express';
 import { CustomError } from '../utils/errors/errors';
 import logger from '../config/logger';
-import { ApiResponseError } from '../generated-api';
+import { ApiError } from '../generated-api';
 
 /**
  * Global error handling middleware for Express applications.
@@ -22,7 +22,7 @@ const errorHandler: ErrorRequestHandler = (
   logger.error(err.message);
   logger.error(err.stack);
   if (err instanceof CustomError) {
-    const response: ApiResponseError = {
+    const response: ApiError = {
       success: false,
       message: err.message,
       statusCode: err.statusCode,
@@ -30,7 +30,7 @@ const errorHandler: ErrorRequestHandler = (
     };
     res.status(err.statusCode).json(response);
   } else {
-    const response: ApiResponseError = {
+    const response: ApiError = {
       success: false,
       message: 'Something went wrong',
       statusCode: 500,

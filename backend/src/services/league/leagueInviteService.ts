@@ -1,9 +1,9 @@
 import { Transaction } from 'sequelize';
 import {
-  GetLeagueInvitesForPlayerResponseData,
+  GetLeagueInvitesResponseData,
+  InviteResponse,
   LeagueInvite,
   RespondToLeagueInviteRequestBody,
-  RespondToLeagueInviteRequestBodyInviteResponseEnum,
   RespondToLeagueInviteResponseData,
 } from '../../generated-api';
 import leagueInviteRepository from '../../repositories/league/leagueInviteRepository';
@@ -41,20 +41,20 @@ async function respondToLeagueInvite(
     throw new ForbiddenError('League invite not found');
   }
 
-  if (
-    inviteResponse === RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT
-  ) {
+  if (inviteResponse === InviteResponse.Accept) {
     await leagueInviteRepository.acceptLeagueInvite(leagueInvite);
     return {
       league: await leagueService.getLeague(leagueId),
       inviteId: leagueInvite.inviteId,
+      inviteResponse,
     };
-  } else if (
-    inviteResponse ===
-    RespondToLeagueInviteRequestBodyInviteResponseEnum.DECLINE
-  ) {
+  } else if (inviteResponse === InviteResponse.Decline) {
     await leagueInviteRepository.declineLeagueInvite(leagueInvite);
-    return { league: undefined, inviteId: leagueInvite.inviteId };
+    return {
+      league: undefined,
+      inviteId: leagueInvite.inviteId,
+      inviteResponse,
+    };
   } else {
     throw new BadRequestError('Invalid invite response');
   }
@@ -63,7 +63,7 @@ async function respondToLeagueInvite(
 async function getLeagueInvitesForProfileId(
   profileId: ProfileAttributes['profileId'],
   transaction?: Transaction
-): Promise<GetLeagueInvitesForPlayerResponseData> {
+): Promise<GetLeagueInvitesResponseData> {
   await profileHelper.validateProfileId(profileId);
   const leagueInvites: LeagueInvite[] =
     await leagueInviteRepository.getLeagueInvitesForProfileId(
@@ -71,7 +71,7 @@ async function getLeagueInvitesForProfileId(
       transaction
     );
 
-  const responseData: GetLeagueInvitesForPlayerResponseData = {
+  const responseData: GetLeagueInvitesResponseData = {
     leagueInvites,
     numLeagueInvites: leagueInvites.length,
   };

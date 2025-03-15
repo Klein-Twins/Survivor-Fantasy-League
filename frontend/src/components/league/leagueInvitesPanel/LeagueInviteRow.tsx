@@ -1,8 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  LeagueInvite,
-  RespondToLeagueInviteRequestBodyInviteResponseEnum,
-} from '../../../../generated-api';
+import { InviteResponse, LeagueInvite } from '../../../../generated-api';
 import {
   ButtonPrimaryColors,
   ButtonSubtleColors,
@@ -25,10 +22,9 @@ const LeagueInviteRow: React.FC<LeagueInviteRowProps> = ({ leagueInvite }) => {
     dispatch(
       respondToLeagueInvite({
         body: {
-          leagueId: leagueInvite.league.leagueId,
+          leagueId: leagueInvite.league.id,
           profileId: profileId,
-          inviteResponse:
-            RespondToLeagueInviteRequestBodyInviteResponseEnum.ACCEPT,
+          inviteResponse: InviteResponse.Accept,
         },
       })
     );
@@ -38,10 +34,9 @@ const LeagueInviteRow: React.FC<LeagueInviteRowProps> = ({ leagueInvite }) => {
     dispatch(
       respondToLeagueInvite({
         body: {
-          leagueId: leagueInvite.league.leagueId,
+          leagueId: leagueInvite.league.id,
           profileId: profileId,
-          inviteResponse:
-            RespondToLeagueInviteRequestBodyInviteResponseEnum.DECLINE,
+          inviteResponse: InviteResponse.Decline,
         },
       })
     );
@@ -51,7 +46,7 @@ const LeagueInviteRow: React.FC<LeagueInviteRowProps> = ({ leagueInvite }) => {
     <div className='flex items-center justify-between p-4 bg-surface-a2-light dark:bg-surface-a2-dark shadow-md'>
       <div className='flex items-center'>
         <LeagueImage
-          leagueId={leagueInvite.league.leagueId}
+          leagueId={leagueInvite.league.id}
           className='w-16 h-16 object-cover rounded-md mr-4'
         />
         <div>

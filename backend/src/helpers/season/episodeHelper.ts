@@ -57,11 +57,11 @@ async function validateEpisodeNumbers(episodeNumbers: number[]): Promise<void> {
 function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
   return {
     id: episodeAttributes.episodeId,
-    episodeNumber: episodeAttributes.episodeNumber,
+    number: episodeAttributes.episodeNumber,
     seasonId: episodeAttributes.seasonId,
-    episodeAirDate: episodeAttributes.episodeAirDate.toString(),
-    episodeDescription: episodeAttributes.episodeDescription,
-    episodeTitle: episodeAttributes.episodeTitle,
+    airDate: episodeAttributes.episodeAirDate.toString(),
+    description: episodeAttributes.episodeDescription,
+    title: episodeAttributes.episodeTitle,
   };
 }
 

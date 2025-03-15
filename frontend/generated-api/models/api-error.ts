@@ -12,13 +12,21 @@
  * Do not edit the class manually.
  */
 
-/**
+import { ApiResponse } from './api-response';
+ /**
  * 
+ *
  * @export
- * @enum {string}
+ * @interface ApiError
  */
-export enum InviteResponseEnum {
-    Accept = 'Accept',
-    Decline = 'Decline'
-}
+export interface ApiError extends ApiResponse {
 
+    /**
+     * Error message describing what went wrong
+     *
+     * @type {string}
+     * @memberof ApiError
+     * @example Invalid Credentials provided
+     */
+    error: string;
+}

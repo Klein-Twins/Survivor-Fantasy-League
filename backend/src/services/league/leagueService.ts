@@ -2,10 +2,9 @@ import { Transaction } from 'sequelize';
 import { sequelize } from '../../config/db';
 import logger from '../../config/logger';
 import {
-  CreateLeagueResponseData,
-  GetLeaguesForProfileResponseData,
+  GetLeaguesResponseData,
   League,
-  LeagueMemberRoleEnum,
+  LeagueMemberRole,
 } from '../../generated-api';
 import leagueHelper from '../../helpers/league/leagueHelper';
 import leagueRepository from '../../repositories/league/leagueRepository';
@@ -16,7 +15,6 @@ import {
 } from '../../models/league/LeagueProfile';
 import { UUID } from 'crypto';
 import { LeagueAttributes } from '../../models/league/League';
-import leagueMemberService from './leagueMemberService';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
 
 const leagueService = {
@@ -27,13 +25,13 @@ const leagueService = {
 
 async function getLeaguesForProfile(
   profileId: string
-): Promise<GetLeaguesForProfileResponseData> {
+): Promise<GetLeaguesResponseData> {
   await profileHelper.validateProfileId(profileId);
   const leagues: League[] = await leagueRepository.getLeaguesForProfile(
     profileId,
     InviteStatusEnum.Accepted
   );
-  const responseData: GetLeaguesForProfileResponseData = {
+  const responseData: GetLeaguesResponseData = {
     leagues,
   };
   return responseData;
@@ -66,7 +64,7 @@ async function createLeague({
         leagueAttributes.leagueId,
         profileId,
         null,
-        LeagueMemberRoleEnum.OWNER,
+        LeagueMemberRole.Owner,
         InviteStatusEnum.Accepted,
         transaction
       );

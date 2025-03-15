@@ -1,8 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import {
-  GetLeagueInvitesForPlayerResponse,
-  GetLeagueInvitesForPlayerResponseData,
-  RespondToLeagueInviteRequestBody,
+  GetLeagueInvitesResponse,
+  GetLeagueInvitesResponseData,
   RespondToLeagueInviteResponse,
   RespondToLeagueInviteResponseData,
 } from '../../generated-api';
@@ -21,9 +20,9 @@ async function getLeagueInvitesForProfileId(
 ): Promise<void> {
   try {
     const profileId = req.query.profileId as string;
-    const responseData: GetLeagueInvitesForPlayerResponseData =
+    const responseData: GetLeagueInvitesResponseData =
       await leagueInviteService.getLeagueInvitesForProfileId(profileId);
-    const response: GetLeagueInvitesForPlayerResponse = {
+    const response: GetLeagueInvitesResponse = {
       success: true,
       message: `${responseData.numLeagueInvites} league invites retrieved successfully`,
       responseData,

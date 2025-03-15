@@ -1,6 +1,6 @@
 import { Transaction } from 'sequelize';
 import { ProfileAttributes } from '../../models/account/Profile';
-import { LeagueInvite, LeagueMemberRoleEnum } from '../../generated-api';
+import { LeagueInvite, LeagueMemberRole } from '../../generated-api';
 import {
   InviteStatusEnum,
   LeagueProfileAttributes,
@@ -151,7 +151,7 @@ async function createLeagueInvite(
           leagueId,
           profileId: invitedProfileId,
           inviterProfileId,
-          role: LeagueMemberRoleEnum.MEMBER,
+          role: LeagueMemberRole.Member,
           inviteStatus: InviteStatusEnum.Pending,
         },
         { transaction: t }

@@ -27,14 +27,11 @@ const leagueHelper = {
 async function buildLeague(
   leagueAttributes: LeagueAttributes
 ): Promise<League> {
-  const season: Season = await seasonService.getSeasonBySeasonId(
-    leagueAttributes.seasonId
-  );
   const leagueMembers: LeagueMember[] =
     await leagueMemberService.getLeagueMembers(leagueAttributes.leagueId);
   return {
-    leagueId: leagueAttributes.leagueId,
-    season,
+    id: leagueAttributes.leagueId,
+    seasonId: leagueAttributes.seasonId.toString(),
     name: leagueAttributes.name,
     leagueMembers,
   };

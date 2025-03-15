@@ -1,10 +1,9 @@
 import express from 'express';
-import tokenMiddleware from '../../middleware/tokenMiddleware';
 import authController from '../../controllers/auth/authController';
+import tokenMiddleware from '../../middleware/tokenMiddleware';
 
 const router = express.Router();
 
-//router.post('/login', authController.login, tokenController.createSession);
 router.post('/signup', authController.signup);
 router.post('/login', authController.login);
 router.post('/logout', authController.logout);

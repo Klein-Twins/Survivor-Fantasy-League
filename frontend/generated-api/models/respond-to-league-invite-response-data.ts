@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { InviteResponseEnum } from './invite-response-enum';
+import { InviteResponse } from './invite-response';
 import { League } from './league';
  /**
  * 
@@ -38,8 +38,8 @@ export interface RespondToLeagueInviteResponseData {
     inviteId: string;
 
     /**
-     * @type {InviteResponseEnum}
+     * @type {InviteResponse}
      * @memberof RespondToLeagueInviteResponseData
      */
-    inviteResponse: InviteResponseEnum;
+    inviteResponse: InviteResponse;
 }

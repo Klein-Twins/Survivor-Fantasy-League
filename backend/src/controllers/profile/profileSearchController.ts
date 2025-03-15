@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import {
-  SearchProfilesForLeagueInviteResponse,
-  SearchProfilesForLeagueInviteResponseData,
+  LeagueInviteProfileSearchResponse,
+  LeagueInviteProfileSearchResponseData,
   SortByEnum,
 } from '../../generated-api';
 import { LeagueAttributes } from '../../models/league/League';
@@ -35,18 +35,18 @@ async function getProfilesBySearch(
   res: Response,
   next: NextFunction
 ) {
-  let response: SearchProfilesForLeagueInviteResponse;
+  let response: LeagueInviteProfileSearchResponse;
   try {
     const { searchParamsForQuery, paginationInfoForQuery, leagueId } =
       profileSearchHelper.validateAndGetProfilesBySearchRequest(req);
 
-    const responseData: SearchProfilesForLeagueInviteResponseData =
+    const responseData: LeagueInviteProfileSearchResponseData =
       await profileSearchService.getProfilesBySearch({
         searchParamsForQuery,
         paginationInfoForQuery,
         leagueId,
       });
-    const response: SearchProfilesForLeagueInviteResponse = {
+    const response: LeagueInviteProfileSearchResponse = {
       responseData,
       message: `Found ${responseData.profilesFound?.length} profiles`,
       success: true,
