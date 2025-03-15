@@ -11,10 +11,10 @@ import {
 } from '../../../../generated-api';
 import leagueSurveyService, {
   GetLeagueSurveyPathParams,
-} from '../../../services/league/leagueSurveyService';
+} from '../../../servicesBackup/league/leagueSurveyService';
 import { useApi } from '../../../hooks/useApi';
 import SurveyForm from './SurveyForm';
-import api from '../../../services/apiContainer';
+import api from '../../../servicesBackup/apiContainer';
 import { FaCircle, FaSpinner } from 'react-icons/fa';
 import CompletedSurveyView from './CompletedSurveyView';
 

@@ -4,14 +4,15 @@ import {
   CompletedLeagueSurvey,
   CreateLeagueRequestBody,
   CreateLeagueResponse,
-  GetLeaguesForProfileResponse,
+  GetLeaguesResponse,
   League,
   LeagueSurvey,
 } from '../../../generated-api';
-import leagueService, {
-  GetLeaguesForProfileRequestParams,
-} from '../../services/league/leagueService';
+
 import { ApiRequestParams } from '../../hooks/useApi';
+import leagueService, {
+  GetLeaguesRequestParams,
+} from '../../services/league/leagueService';
 
 enum AuthActionTypes {
   GetLeagues = 'league/getLeagues',
@@ -51,12 +52,12 @@ export const createLeague = createAsyncThunk<
 });
 
 export const getLeagues = createAsyncThunk<
-  GetLeaguesForProfileResponse,
-  ApiRequestParams<void, GetLeaguesForProfileRequestParams>,
+  GetLeaguesResponse,
+  ApiRequestParams<void, GetLeaguesRequestParams>,
   { rejectValue: ApiError }
 >('league/getLeagues', async (params, { rejectWithValue }) => {
   try {
-    const response = await leagueService.getLeaguesForProfile(params);
+    const response = await leagueService.getLeagues(params);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);

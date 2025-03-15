@@ -3,9 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { openModal } from '../../store/slices/modalSlice';
 import { RootState } from '../../store/store';
 
-import styles from './NavAuthButtons.module.css';
 import ProfileButton from './ProfileButton';
-import { ButtonPrimaryColors, ButtonSubtleColors } from '../../styles/CommonColorClassNames';
+import {
+  ButtonPrimaryColors,
+  ButtonSubtleColors,
+} from '../../styles/CommonColorClassNames';
 
 interface NavAuthButtonsProps {
   onClick: () => void;
@@ -13,7 +15,9 @@ interface NavAuthButtonsProps {
 
 const NavAuthButtons: React.FC<NavAuthButtonsProps> = ({ onClick }) => {
   const dispatch = useDispatch();
-  const isAuthenticated = useSelector((state: RootState) => state.auth.isAuthenticated);
+  const isAuthenticated = useSelector(
+    (state: RootState) => state.auth.isAuthenticated
+  );
 
   const handleSignUpClick = () => {
     dispatch(openModal({ type: 'signup' }));
@@ -34,10 +38,14 @@ const NavAuthButtons: React.FC<NavAuthButtonsProps> = ({ onClick }) => {
     <>
       {!isAuthenticated ? (
         <div className='flex flex-row justify-center lg:justify-end items-center space-x-4'>
-          <button onClick={handleLogInClick} className={`${ButtonSubtleColors} rounded-md transition py-2 px-4`}>
+          <button
+            onClick={handleLogInClick}
+            className={`${ButtonSubtleColors} rounded-md transition py-2 px-4`}>
             Log In
           </button>
-          <button onClick={handleSignUpClick} className={`${ButtonPrimaryColors} rounded-md transition py-2 px-4`}>
+          <button
+            onClick={handleSignUpClick}
+            className={`${ButtonPrimaryColors} rounded-md transition py-2 px-4`}>
             Sign Up
           </button>
         </div>

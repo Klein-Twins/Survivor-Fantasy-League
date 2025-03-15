@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../services/apiContainer';
+import api from '../../../servicesBackup/apiContainer';
 import axios from 'axios';
 
 type ImageSize = 'small' | 'medium' | 'large';
@@ -90,12 +90,18 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
   if (error) {
     return (
       <div className={imageClasses}>
-        <img src='/default-avatar.png' alt='Default Profile' className={imageClasses} />
+        <img
+          src='/default-avatar.png'
+          alt='Default Profile'
+          className={imageClasses}
+        />
       </div>
     );
   }
 
-  return <img src={imageUrl} alt={`Profile ${profileId}`} className={imageClasses} />;
+  return (
+    <img src={imageUrl} alt={`Profile ${profileId}`} className={imageClasses} />
+  );
 };
 
 export default ProfileImage;

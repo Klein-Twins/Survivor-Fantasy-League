@@ -124,18 +124,6 @@ const AboutPage: React.FC = () => {
           </ul>
         </Drawer>
       </section>
-
-      {/* Contact Section
-      <section className='space-y-4'>
-        <h2 className='text-2xl font-bold'>Let's Connect</h2>
-        <p>
-          I'm currently seeking full-stack development opportunities. Feel free to reach out through LinkedIn or email
-          at{' '}
-          <a href='mailto:your.email@example.com' className='text-primary-a3-dark hover:underline'>
-            your.email@example.com
-          </a>
-        </p>
-      </section> */}
     </div>
   );
 };

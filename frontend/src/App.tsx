@@ -30,7 +30,7 @@ const router = createBrowserRouter([
 function App() {
   const dispatch = useDispatch<AppDispatch>();
   useEffect(() => {
-    // dispatch(checkAuthentication());
+    //dispatch(checkAuthentication());
     dispatch(getSeasons());
   }, [dispatch]);
 

@@ -20,7 +20,7 @@ async function getLeague(
   next: NextFunction
 ): Promise<void> {
   try {
-    const profileId = req.query.profileId as string;
+    const profileId = req.params.profileId;
 
     const responseData: GetLeaguesResponseData =
       await leagueService.getLeaguesForProfile(profileId);

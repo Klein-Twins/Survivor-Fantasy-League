@@ -7,12 +7,12 @@ import {
   GetLeagueInvitesResponse,
   InviteResponse,
 } from '../../../generated-api';
-import leagueInviteService, {
-  GetLeagueInvitesForProfileRequestParams,
-} from '../../services/league/leagueInviteService';
+
 import { ApiRequestParams } from '../../hooks/useApi';
-import { RootState } from '../store';
 import { addLeague } from './leagueSlice';
+import leagueInviteService, {
+  GetLeagueInvitesRequestParams,
+} from '../../services/league/invite/leagueInviteService';
 
 interface LeagueInviteState {
   leagueInvites: LeagueInvite[];
@@ -28,13 +28,11 @@ const initialState: LeagueInviteState = {
 
 export const getLeagueInvites = createAsyncThunk<
   GetLeagueInvitesResponse,
-  ApiRequestParams<void, GetLeagueInvitesForProfileRequestParams>,
+  ApiRequestParams<void, GetLeagueInvitesRequestParams>,
   { rejectValue: ApiError }
 >('leagueInvite/getLeagueInvites', async (params, { rejectWithValue }) => {
   try {
-    const response = await leagueInviteService.getLeagueInvitesForProfile(
-      params
-    );
+    const response = await leagueInviteService.getLeagueInvites(params);
     return response.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data);

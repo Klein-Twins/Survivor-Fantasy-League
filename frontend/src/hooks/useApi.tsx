@@ -2,11 +2,6 @@ import { useCallback, useState } from 'react';
 import { AxiosResponse } from 'axios';
 import { ApiResponse } from '../../generated-api';
 
-// export interface ApiExecuteParams<TRequestBody = void, TQueryParams = void> {
-//     body: TRequestBody extends void ? never : TRequestBody;
-//     queryParams: TQueryParams extends void ? never : TQueryParams;
-// }
-
 export type ApiRequestParams<TRequestBody, TQueryParams> =
   TRequestBody extends void
     ? TQueryParams extends void

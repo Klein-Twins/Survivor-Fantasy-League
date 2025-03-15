@@ -86,7 +86,7 @@ const seasonSlice = createSlice({
           const currentDate = new Date();
           state.activeEpisode =
             state.activeSeason.episodes?.find(
-              (episode) => new Date(episode.episodeAirDate) > currentDate
+              (episode) => new Date(episode.airDate) > currentDate
             ) || null;
         } else {
           state.activeEpisode = null;

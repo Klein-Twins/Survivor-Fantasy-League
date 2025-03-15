@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../services/apiContainer';
+import api from '../../../servicesBackup/apiContainer';
 
 interface SeasonLogoImageProps {
   seasonId: number;

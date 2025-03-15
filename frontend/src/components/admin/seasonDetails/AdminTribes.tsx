@@ -13,7 +13,7 @@ import {
   validateTribeFormData,
 } from '../../../utils/admin/TribeFormData';
 import useForm from '../../../hooks/useForm';
-import tribeService from '../../../services/season/tribeService';
+import tribeService from '../../../servicesBackup/season/tribeService';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useParams } from 'react-router-dom';

@@ -1,21 +1,20 @@
 import { AxiosResponse } from 'axios';
-import api from '../apiContainer';
 import {
   CreateLeagueRequestBody,
   CreateLeagueResponse,
-  GetLeaguesForProfileResponse,
+  GetLeaguesResponse,
+  Profile,
 } from '../../../generated-api';
 import { ApiRequestParams } from '../../hooks/useApi';
+import api from '../apiContainer';
 
-export interface GetLeaguesForProfileRequestParams {
-  profileId: string;
+export interface GetLeaguesRequestParams {
+  profileId: Profile['profileId'];
 }
-
-export interface CreateLeagueRequestParams {}
 
 const leagueService = {
   createLeague,
-  getLeaguesForProfile,
+  getLeagues,
 };
 
 async function createLeague(
@@ -28,19 +27,14 @@ async function createLeague(
   return response;
 }
 
-async function getLeaguesForProfile(
-  requestData: ApiRequestParams<void, GetLeaguesForProfileRequestParams>
-): Promise<AxiosResponse<GetLeaguesForProfileResponse>> {
-  const response = await api.leagueService.getLeaguesForProfile(
+async function getLeagues(
+  requestData: ApiRequestParams<void, GetLeaguesRequestParams>
+): Promise<AxiosResponse<GetLeaguesResponse>> {
+  const response = await api.leagueService.getLeagues(
     requestData.queryParams.profileId,
     { withCredentials: true }
   );
   return response;
 }
-
-// inviteLeagueMember: async (body: ProfileInviteBody, profileId: string): Promise<InviteMemberResponse> => {
-//   const response = await api.league.inviteToLeague(body, profileId, { withCredentials: true });
-//   return response.data;
-// }
 
 export default leagueService;

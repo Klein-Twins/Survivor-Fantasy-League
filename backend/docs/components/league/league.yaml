@@ -17,7 +17,7 @@ components:
           description: The name of the league.
           example: Corner By The Bookshelf
         seasonId:
-          type: string
+          type: number
           description: The ID of the season the league is for.
           example: 1
         leagueMembers:

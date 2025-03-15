@@ -1,1 +1,0 @@
-Global styles or CSS modules (for TailwinCS, you may hve Tailwin-specific file)

@@ -66,6 +66,15 @@ components:
         league:
           $ref: '../../components/league/league.yaml#/components/schemas/League'
   requestBodies:
+    GetLeaguesRequest:
+      type: object
+      required:
+        - profileId
+      properties:
+        profileId:
+          type: string
+          description: The profileId of the user
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
     CreateLeagueRequestBody:
       type: object
       required:

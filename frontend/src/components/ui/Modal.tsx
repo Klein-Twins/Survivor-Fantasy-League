@@ -4,10 +4,7 @@ import { RootState } from '../../store/store.ts';
 import { closeModal } from '../../store/slices/modalSlice.ts';
 import SignupForm from '../auth/forms/SignupForm.tsx';
 import LoginForm from '../auth/forms/LoginForm.tsx';
-import Form from './forms/Form.tsx';
 import LogoutConfirmation from '../auth/LogoutConfirmation.tsx';
-import SurvivorDetailCard from '../survivorPage/SurvivorDetailCard.tsx';
-import Notification from './Notifcation.tsx';
 import {
   ButtonPrimaryTextColor,
   MainBackgroundColors,
@@ -46,15 +43,6 @@ const Modal: React.FC<ModalProps> = ({ children }) => {
 
         {modalType === 'signup' && <SignupForm />}
         {modalType === 'login' && <LoginForm />}
-        {modalType === 'survivorDetail' && (
-          <SurvivorDetailCard survivor={modalProps.survivor} />
-        )}
-        {modalType === 'notify' && (
-          <Notification
-            title={modalProps.title}
-            description={modalProps.description}
-          />
-        )}
         {modalType === 'logout' && <LogoutConfirmation />}
         {modalType === 'createTribe' && (
           <CreateTribeForm isMergeTribe={modalProps.isMergeTribe} />

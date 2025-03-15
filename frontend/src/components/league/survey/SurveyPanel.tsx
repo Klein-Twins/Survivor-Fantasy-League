@@ -1,10 +1,7 @@
 import React, { useState } from 'react';
-import { Account, Episode, League, Profile } from '../../../../generated-api';
-import {
-  ButtonPrimaryColors,
-  ButtonSubtleColors,
-} from '../../../styles/CommonColorClassNames';
-import Survey from './Survey';
+import { Account, Episode, League } from '../../../../generated-api';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../store/store';
 
 interface SurveyPanelProps {
   league: League;
@@ -12,9 +9,14 @@ interface SurveyPanelProps {
 }
 
 const SurveyPanel: React.FC<SurveyPanelProps> = ({ league, account }) => {
-  const [activeEpisode, setActiveEpisode] = useState<Episode>(
-    league.season.episodes[0]
+  const nextEpisode = useSelector((state: RootState) =>
+    state.season.seasons
+      .find((s) => s.id === league.seasonId)
+      .episodes.sort((a, b) => a.number - b.number)
+      .find((e) => new Date(e.airDate) < new Date(Date.now()))
   );
+
+  const [activeEpisode, setActiveEpisode] = useState<Episode>(nextEpisode);
 
   return (
     <div className='flex flex-col space-y-8 dark:bg-surface-a1-dark rounded-lg shadow-lg p-4'></div>

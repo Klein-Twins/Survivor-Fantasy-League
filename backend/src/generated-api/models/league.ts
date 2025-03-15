@@ -42,11 +42,11 @@ export interface League {
     /**
      * The ID of the season the league is for.
      *
-     * @type {string}
+     * @type {number}
      * @memberof League
      * @example 1
      */
-    seasonId: string;
+    seasonId: number;
 
     /**
      * @type {Array<LeagueMember>}

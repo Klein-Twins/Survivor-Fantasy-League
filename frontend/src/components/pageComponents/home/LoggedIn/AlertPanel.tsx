@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/store';
 import leagueSurveyService, {
   GetCurrentEpisodeSurveysParams,
-} from '../../../../services/league/leagueSurveyService';
+} from '../../../../servicesBackup/league/leagueSurveyService';
 import {
   GetCurrentEpisodSurveysResponse,
   League,

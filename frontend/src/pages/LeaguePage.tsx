@@ -13,7 +13,7 @@ import SurveyStatusMessage from '../components/league/leaguePage/survey/SurveySt
 const LeaguePage: React.FC = () => {
   const { leagueId } = useParams<{ leagueId: string }>();
   const league = useSelector((state: RootState) =>
-    state.league.leagues.find((l) => l.leagueId === leagueId)
+    state.league.leagues.find((l) => l.id === leagueId)
   );
   const account = useSelector((state: RootState) => state.auth.account);
 

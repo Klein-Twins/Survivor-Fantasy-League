@@ -2,7 +2,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { AuthState } from '../../types/auth.ts';
 
 import { closeModal } from './modalSlice.ts';
-import authService from '../../services/auth/authService.ts';
 import {
   Account,
   ApiError,
@@ -13,6 +12,7 @@ import {
 } from '../../../generated-api/index.ts';
 import { ApiRequestParams } from '../../hooks/useApi.tsx';
 import { AxiosResponse } from 'axios';
+import authService from '../../services/auth/authService.ts';
 
 enum AuthActionTypes {
   Signup = 'auth/signupUser',
@@ -118,16 +118,9 @@ export const loginUser = createAsyncThunk<
 >(AuthActionTypes.Login, async (userData, { rejectWithValue }) => {
   try {
     const response = await authService.loginUser(userData);
-    if (
-      !response ||
-      !response.responseData?.account ||
-      !response.responseData.userSession
-    ) {
-      throw new Error('Invalid response data: Failed to login User');
-    }
     const payload: AccountActionPayload = {
-      account: response.responseData.account,
-      userSession: response.responseData.userSession,
+      account: response.data.responseData.account,
+      userSession: response.data.responseData.userSession,
     };
     return payload;
   } catch (error: any) {
