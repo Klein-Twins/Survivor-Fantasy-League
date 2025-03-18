@@ -1,9 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import {
+  Account,
   ApiResponse,
   CheckAuthResponse,
   CheckAuthResponseData,
   ExtendSessionResponse,
+  ExtendSessionResponseData,
   LoginUserRequestBody,
   LoginUserResponse,
   LoginUserResponseData,
@@ -11,8 +13,11 @@ import {
   SignupUserResponse,
   SignupUserResponseData,
 } from '../../generated-api';
-import authService from '../../services/auth/authService';
 import { CustomError } from '../../utils/errors/errors';
+import userService from '../../services/account/userService';
+import userSessionService from '../../services/auth/userSessionService';
+import { UUID } from 'crypto';
+import accountService from '../../services/account/accountService';
 
 const authController = {
   signup,
@@ -30,11 +35,27 @@ async function signup(
   try {
     const reqBody: SignupUserRequestBody = req.body;
 
-    //Call Auth Service to create response
-    const responseData: SignupUserResponseData = await authService.signup(
-      reqBody,
+    const account = await userService.signup({
+      email: reqBody.email,
+      password: reqBody.password,
+      userName: reqBody.userName,
+      firstName: reqBody.firstName,
+      lastName: reqBody.lastName,
+    });
+
+    const userSession = await userSessionService.createUserSession(
+      {
+        userId: account.userId as UUID,
+        profileId: account.profileId as UUID,
+        accountRole: account.accountRole,
+      },
       res
     );
+
+    const responseData: SignupUserResponseData = {
+      userSession,
+      account,
+    };
 
     //Format Response and send
     const response: SignupUserResponse = {
@@ -59,10 +80,24 @@ async function login(
     const reqBody: LoginUserRequestBody = req.body;
 
     //Call Auth Service to create response
-    const responseData: LoginUserResponseData = await authService.login(
-      reqBody,
+    const account = await userService.login({
+      email: reqBody.email,
+      password: reqBody.password,
+    });
+
+    const userSession = await userSessionService.createUserSession(
+      {
+        userId: account.userId as UUID,
+        profileId: account.profileId as UUID,
+        accountRole: account.accountRole,
+      },
       res
     );
+
+    const responseData: LoginUserResponseData = {
+      userSession,
+      account,
+    };
 
     //Format Response and send
     const response: LoginUserResponse = {
@@ -90,7 +125,9 @@ async function logout(
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
 
-    await authService.logout(tokens);
+    await userService.logout();
+
+    await userSessionService.endUserSession(tokens, false, res);
 
     const response: ApiResponse = {
       success: true,
@@ -114,7 +151,11 @@ async function extendSession(
       refreshToken: req.cookies.refreshToken,
     };
 
-    const responseData = await authService.extendSession(tokens, res);
+    const userSession = await userSessionService.extendSession(tokens, res);
+
+    const responseData: ExtendSessionResponseData = {
+      userSession,
+    };
 
     const response: ExtendSessionResponse = {
       success: true,
@@ -139,10 +180,24 @@ async function checkAuth(
       refreshToken: req.cookies.refreshToken,
     };
 
-    const responseData: CheckAuthResponseData = await authService.checkAuth(
+    const userSession = await userSessionService.checkAuthSession(
+      req.params.userId as UUID,
       tokens,
       res
     );
+
+    let account: Account | undefined = undefined;
+    if (userSession.isAuthenticated) {
+      account = await accountService.getAccount(
+        'userId',
+        req.params.userId as UUID
+      );
+    }
+
+    const responseData: CheckAuthResponseData = {
+      account,
+      userSession,
+    };
 
     const response: CheckAuthResponse = {
       success: true,

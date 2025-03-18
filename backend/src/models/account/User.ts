@@ -1,21 +1,23 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { AccountRole } from '../../generated-api';
+import { ProfileAttributes } from './Profile';
+import { UUID } from 'crypto';
 
 export interface UserAttributes {
-  userId: string;
+  userId: UUID;
   userName: string;
-  profileId: string;
+  profileId: ProfileAttributes['profileId'];
   email: string;
   userRole: AccountRole;
 }
 
 const UserModel = (sequelize: Sequelize) => {
   class User extends Model<UserAttributes> implements UserAttributes {
-    public userId!: string;
-    public userName!: string;
-    public profileId!: string;
-    public email!: string;
-    public userRole!: AccountRole;
+    public userId!: UserAttributes['userId'];
+    public userName!: UserAttributes['userName'];
+    public profileId!: UserAttributes['profileId'];
+    public email!: UserAttributes['email'];
+    public userRole!: UserAttributes['userRole'];
 
     static associate(models: any) {
       this.hasMany(models.Password, { foreignKey: 'userId', as: 'Password' });

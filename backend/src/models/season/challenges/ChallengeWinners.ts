@@ -13,7 +13,7 @@ export enum ChallengeWinnerType {
 
 export interface ChallengeWinnersAttributes {
   challengeId: ChallengeAttributes['challengeId'];
-  winnerSurvivorId: SurvivorsAttributes['survivorId'] | null;
+  winnerSurvivorId: SurvivorsAttributes['id'] | null;
   winnerTribeId: TribeAttributes['id'] | null;
   rank: number;
   reward: string | null;
@@ -22,7 +22,10 @@ export interface ChallengeWinnersAttributes {
 }
 
 const ChallengeWinnersModel = (sequelize: Sequelize) => {
-  class ChallengeWinners extends Model<ChallengeWinnersAttributes> implements ChallengeWinnersAttributes {
+  class ChallengeWinners
+    extends Model<ChallengeWinnersAttributes>
+    implements ChallengeWinnersAttributes
+  {
     public challengeId!: ChallengeWinnersAttributes['challengeId'];
     public winnerSurvivorId!: ChallengeWinnersAttributes['winnerSurvivorId'];
     public winnerTribeId!: ChallengeWinnersAttributes['winnerTribeId'];
@@ -34,7 +37,7 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
     static associate(models: any) {
       this.belongsTo(models.Survivors, {
         foreignKey: 'winnerSurvivorId',
-        targetKey: 'survivorId',
+        targetKey: 'id',
         as: 'survivorWinner',
       });
 
@@ -59,8 +62,13 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
         field: 'WINNER_SURVIVOR_ID',
         validate: {
           xorCheck(value: string | null) {
-            if ((value === null && this.winnerTribeId === null) || (value !== null && this.winnerTribeId !== null)) {
-              throw new Error('Exactly one of winnerSurvivorId or winnerTribeId must be non-null');
+            if (
+              (value === null && this.winnerTribeId === null) ||
+              (value !== null && this.winnerTribeId !== null)
+            ) {
+              throw new Error(
+                'Exactly one of winnerSurvivorId or winnerTribeId must be non-null'
+              );
             }
           },
         },
@@ -75,7 +83,9 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
               (value === null && this.winnerSurvivorId === null) ||
               (value !== null && this.winnerSurvivorId !== null)
             ) {
-              throw new Error('Exactly one of winnerSurvivorId or winnerTribeId must be non-null');
+              throw new Error(
+                'Exactly one of winnerSurvivorId or winnerTribeId must be non-null'
+              );
             }
           },
         },

@@ -1,7 +1,6 @@
 import { Request } from 'express';
 import userHelper from '../auth/userHelper';
 import profileHelper from '../auth/profileHelper';
-import leagueHelper from '../league/leagueHelper';
 import { BadRequestError } from '../../utils/errors/errors';
 import { Pagination, SortByEnum } from '../../generated-api';
 import {
@@ -9,6 +8,7 @@ import {
   ProfileSearchParamsForQuery,
   ProfileSearchRequestParams,
 } from '../../controllers/profile/profileSearchController';
+import validator from 'validator';
 
 const profileSearchHelper = {
   validateAndGetProfilesBySearchRequest,
@@ -37,7 +37,12 @@ function validateAndGetProfilesBySearchRequest(
   }
 
   const leagueId: string | undefined = req.query.leagueId as string;
-  leagueHelper.validateLeagueId(leagueId);
+  if (!leagueId) {
+    throw new BadRequestError('League ID is required');
+  }
+  if (!validator.isUUID(leagueId)) {
+    throw new BadRequestError('Invalid League ID');
+  }
 
   // Validate and convert pageNumberString
   const pageNumberString: string = (req.query.page as string) || '1';

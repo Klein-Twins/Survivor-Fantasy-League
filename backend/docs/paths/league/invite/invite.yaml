@@ -135,6 +135,7 @@ components:
         - leagueId
         - inviteResponse
         - profileId
+        - inviteId
       properties:
         leagueId:
           type: string
@@ -143,6 +144,9 @@ components:
           type: string
           description:
             THe unique ID of the profile that is responding to the invite
+        inviteId:
+          type: string
+          description: The unique ID of the league invite.
         inviteResponse:
           $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponse'
 

@@ -42,4 +42,13 @@ export interface LeagueMember {
      * @example 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
      */
     leagueProfileId: string;
+
+    /**
+     * Whether the user has joined the league
+     *
+     * @type {boolean}
+     * @memberof LeagueMember
+     * @example true
+     */
+    hasJoined: boolean;
 }

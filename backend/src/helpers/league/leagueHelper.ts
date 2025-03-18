@@ -1,117 +1,56 @@
-import { validate } from 'uuid';
 import { BadRequestError } from '../../utils/errors/errors';
-import profileHelper from '../auth/profileHelper';
-import seasonHelper from '../season/seasonHelper';
 import { LeagueAttributes } from '../../models/league/League';
-import seasonService from '../../services/season/seasonService';
-import {
-  CreateLeagueRequestBody,
-  League,
-  LeagueMember,
-  Season,
-} from '../../generated-api';
-import leagueMemberService from '../../services/league/leagueMemberService';
-import leagueRepository from '../../repositories/league/leagueRepository';
-import { Transaction } from 'sequelize';
-import { validate as validateUuid } from 'uuid';
+import { ProfileAttributes } from '../../models/account/Profile';
+import validator from 'validator';
 import { UUID } from 'crypto';
 
 const leagueHelper = {
   validateCreateLeagueData,
-  validateName,
-  validateLeagueId,
-  buildLeague,
-  validateLeagueExists,
 };
-
-async function buildLeague(
-  leagueAttributes: LeagueAttributes
-): Promise<League> {
-  const leagueMembers: LeagueMember[] =
-    await leagueMemberService.getLeagueMembers(leagueAttributes.leagueId);
-  return {
-    id: leagueAttributes.leagueId,
-    seasonId: leagueAttributes.seasonId.toString(),
-    name: leagueAttributes.name,
-    leagueMembers,
-  };
-}
-
-async function validateLeagueExists(
-  leagueId: LeagueAttributes['leagueId']
-): Promise<League> {
-  validateLeagueId(leagueId);
-  const league: League = await leagueRepository.getLeague(leagueId);
-  if (!league) {
-    throw new BadRequestError('League does not exist');
-  }
-  return league;
-}
 
 function validateCreateLeagueData(reqData: {
   name: string;
   seasonId: string;
   profileId: string;
 }): {
-  name: string;
-  seasonId: number;
-  profileId: UUID;
+  name: LeagueAttributes['name'];
+  seasonId: LeagueAttributes['seasonId'];
+  profileId: ProfileAttributes['profileId'];
 } {
-  if (!reqData.name || reqData.name.trim().length === 0) {
-    throw new BadRequestError('Missing name');
+  const name = reqData.name.trim();
+  if (!name) {
+    throw new BadRequestError('Missing league name');
   }
-  if (!reqData.name.match(/^[a-zA-Z ]+$/)) {
-    throw new BadRequestError('Invalid name');
+  if (!validator.isLength(name, { min: 3, max: 50 })) {
+    throw new BadRequestError(
+      'Invalid Name: must be between 3 and 50 characters'
+    );
   }
-
-  if (!reqData.seasonId) {
-    throw new BadRequestError('Missing seasonId');
-  }
-  if (reqData.seasonId.trim().length === 0) {
-    throw new BadRequestError('Invalid seasonId');
-  }
-  if (Number.isNaN(Number(reqData.seasonId))) {
-    throw new BadRequestError('Invalid seasonId');
-  }
-  if (Number(reqData.seasonId) <= 0) {
-    throw new BadRequestError('Invalid seasonId');
+  if (!validator.isAlphanumeric(name)) {
+    throw new BadRequestError('Invalid Name: must be alphanumeric');
   }
 
-  if (!reqData.profileId) {
-    throw new BadRequestError('Missing profileId');
+  const seasonId = reqData.seasonId.trim();
+  if (!seasonId) {
+    throw new BadRequestError('Missing season ID');
   }
-  if (!validateUuid(reqData.profileId)) {
-    throw new BadRequestError('Invalid profileId');
+  if (!validator.isNumeric(seasonId) || Number(seasonId) < 1) {
+    throw new BadRequestError('Invalid Season ID');
+  }
+
+  const profileId = reqData.profileId.trim();
+  if (!profileId) {
+    throw new BadRequestError('Missing profile ID');
+  }
+  if (!validator.isUUID(profileId)) {
+    throw new BadRequestError('Invalid Profile ID');
   }
 
   return {
-    name: reqData.name.trim(),
-    seasonId: Number(reqData.seasonId),
-    profileId: reqData.profileId as UUID,
+    name,
+    seasonId: Number(seasonId),
+    profileId: profileId as UUID,
   };
-}
-
-function validateName(name: string) {
-  if (!name || name.length === 0) {
-    throw new BadRequestError('Missing name');
-  }
-  if (!isValidName(name)) {
-    throw new BadRequestError('Invalid name');
-  }
-}
-
-function isValidName(name: string) {
-  const regex = /^(?!.*\s\s)[A-Za-zÀ-ÿ]+(?: [A-Za-zÀ-ÿ]+)*$/;
-  return regex.test(name);
-}
-
-function validateLeagueId(leagueId: string) {
-  if (!leagueId || leagueId.length === 0) {
-    throw new BadRequestError('League ID is required');
-  }
-  if (!validate(leagueId)) {
-    throw new BadRequestError('Invalid League ID');
-  }
 }
 
 export default leagueHelper;

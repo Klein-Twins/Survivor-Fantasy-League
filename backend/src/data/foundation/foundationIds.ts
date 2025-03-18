@@ -40,6 +40,46 @@ export const season47EpisodeIds: Record<
   episode14: '5b4bbc08-5600-41d8-a1b9-263ffee88b8c',
 };
 
+export const season47EpisodeSurveyIds: Record<
+  EpisodeKeys,
+  SurveyAttributes['surveyId']
+> = {
+  episode1: '08a769c0-9e7f-49f6-a913-4a5061952b5d',
+  episode2: '72c20456-e744-4b40-b3ed-e9dc00d391d9',
+  episode3: '4df12bba-1af8-4b7b-9583-17d7c7b61924',
+  episode4: 'f784594f-dc05-4637-a13d-226a383d18ca',
+  episode5: '7526cc1f-74bc-4f79-9667-175ffa57915b',
+  episode6: '49b0d820-0dc4-4b3f-b158-bee4a6b4d4be',
+  episode7: 'cf7a61b4-1e4a-4ada-a655-455b9394ee31',
+  episode8: '52909c51-8b37-4854-a5fd-ff74c4046a06',
+  episode9: '3bf2f198-736c-45af-94ac-9c8ebf26750b',
+  episode10: '31f72917-ef1b-4ee3-a7b3-77a6ab22e52a',
+  episode11: 'b6929bfc-53d1-4832-be7a-f1de588e06ee',
+  episode12: '7f141e60-be1b-4003-8b97-976b3883178b',
+  episode13: '39a6c5fe-5677-4a44-a22e-ad50092854bc',
+  episode14: 'a94d7c9f-89ef-477e-9e36-64b2389dd1bb',
+};
+
+export const season48EpisodeSurveyIds: Record<
+  EpisodeKeys,
+  SurveyAttributes['surveyId']
+> = {
+  episode1: '8861097f-d758-4897-b9f2-ffbde61ec5d1',
+  episode2: '1393cb71-bc47-4139-8711-734c9f7040a9',
+  episode3: '346737b2-3fd7-4836-bea8-6c3e4f309297',
+  episode4: '3b40fb74-421d-4bcb-bfaa-bd8fb589b079',
+  episode5: '479e101a-c8ec-4fb1-8ccb-4623bd6fda20', // 5
+  episode6: '6e0bdca0-d2ea-45e2-81a3-9d4a780b8b34',
+  episode7: '5f626824-719f-4143-a506-54118afd917f',
+  episode8: '5faefcaa-1487-4e6d-8e50-f26ad297a7e2',
+  episode9: 'cb85cf3d-0cf5-47a8-a107-ca92163b2d5e',
+  episode10: 'c1ea4089-a2b8-4456-850d-8afd1d528a2b', // 10
+  episode11: '66ad0f48-ee30-4444-ad50-90b138341693',
+  episode12: '5413f3c9-7493-45b5-b3e3-60f7e59e5b16',
+  episode13: '9b767194-7462-4aa4-ad1f-77f063af26e1',
+  episode14: '22cb2878-bc28-4160-b95a-30bef5119796',
+};
+
 export const season48EpisodeIds: Record<EpisodeKeys, UUID> = {
   episode1: 'b8f0b1b1-9b7d-4e6f-8b1c-2e6f1b8d7c9e',
   episode2: 'b1b2c3d4-e5f6-7890-1234-567890abcdef',
@@ -79,7 +119,7 @@ type Season47SurvivorNames =
 
 export const season47SurvivorIds: Record<
   Season47SurvivorNames,
-  SurvivorsAttributes['survivorId']
+  SurvivorsAttributes['id']
 > = {
   AndyRueda: 'c76c0a3b-8f2d-4a7e-9483-4b5c0a3e8f2d',
   AnikaDhar: '9d8b7c6a-5f4e-3d2c-1b0a-9f8e7d6c5b4a',

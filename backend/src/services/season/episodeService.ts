@@ -1,176 +1,96 @@
-import { Transaction } from 'sequelize';
 import { Episode } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
-import { SeasonsAttributes } from '../../models/season/Seasons';
-import episodeRepository from '../../repositories/seasons/episodeRepository';
-import { BadRequestError } from '../../utils/errors/errors';
-import { sequelize } from '../../config/db';
-import episodeHelper from '../../helpers/season/episodeHelper';
+import episodeRepository from '../../repositories/season/episode/episodeRepository';
+import { InternalServerError, NotFoundError } from '../../utils/errors/errors';
 
 const episodeService = {
-  getEpisodes,
-  getEpisodeBySeasonAndEpisodeNumber,
-  createEpisodesForNewSeason,
   getEpisodesBySeasonId,
-  getEpisodeByEpisodeId,
-  getUpcomingEpisode,
+  getEpisode,
 };
 
-//Todo: Implement getUpcomingEpisode
-async function getUpcomingEpisode(): Promise<Episode | null> {
-  const seasonId = 47;
-  const episode = await getEpisodeBySeasonAndEpisodeNumber(47, 4);
-  const specificDate = new Date(episode.airDate);
-  const oneHourBefore = new Date(specificDate.getTime() - 60 * 60 * 1000);
-
-  return await episodeRepository.getUpcomingEpisode(seasonId, oneHourBefore);
-}
-
-async function getEpisodeBySeasonAndEpisodeNumber(
-  seasonId: SeasonsAttributes['seasonId'],
-  episodeNumber: EpisodeAttributes['episodeNumber']
-): Promise<Episode> {
-  return await episodeRepository.getEpisodeBySeasonAndEpisodeNumber(
-    seasonId,
-    episodeNumber
-  );
-}
-
-async function getEpisodeByEpisodeId(
-  episodeId: EpisodeAttributes['episodeId']
-): Promise<Episode> {
-  return await episodeRepository.getEpisodeByEpisodeId(episodeId);
-}
-
-async function getEpisodes(
-  episodeIds: EpisodeAttributes['episodeId'][]
-): Promise<Episode[]>;
-async function getEpisodes(
-  seasonId: SeasonsAttributes['seasonId'],
-  episodeNumbers: EpisodeAttributes['episodeNumber'][]
-): Promise<Episode[]>;
-
-async function getEpisodes(
-  episodeIdsOrSeasonId:
-    | EpisodeAttributes['episodeId']
-    | EpisodeAttributes['episodeId'][]
-    | SeasonsAttributes['seasonId'],
-  episodeNumbers?: EpisodeAttributes['episodeNumber'][]
-): Promise<Episode[]> {
-  //Case: function called with episodeIds[]
-  if (Array.isArray(episodeIdsOrSeasonId) && episodeNumbers === undefined) {
-    return Promise.all(
-      episodeIdsOrSeasonId.map(async (episodeId) => {
-        return episodeRepository.getEpisodeByEpisodeId(episodeId);
-      })
-    );
-    //Case: function called with a single episodeId
-  } else if (
-    typeof episodeIdsOrSeasonId === 'string' &&
-    episodeNumbers === undefined
-  ) {
-    return [
-      await episodeRepository.getEpisodeByEpisodeId(episodeIdsOrSeasonId),
-    ];
-  } else if (
-    typeof episodeIdsOrSeasonId === 'number' &&
-    Array.isArray(episodeNumbers)
-  ) {
-    return Promise.all(
-      episodeNumbers.map(async (episodeNumber) => {
-        return episodeRepository.getEpisodeBySeasonAndEpisodeNumber(
-          episodeIdsOrSeasonId,
-          episodeNumber
-        );
-      })
-    );
-  } else {
-    throw new Error('Invalid arguments for episodeService.getEpisodes');
-  }
-}
-
 async function getEpisodesBySeasonId(
-  seasonId: SeasonsAttributes['seasonId']
+  seasonId: EpisodeAttributes['seasonId']
 ): Promise<Episode[]> {
   const episodesAttributes: EpisodeAttributes[] =
     await episodeRepository.getEpisodesBySeasonId(seasonId);
-  const episode: Episode[] = [];
-  for (let episodeAttributes of episodesAttributes) {
-    episode.push(episodeHelper.buildEpisode(episodeAttributes));
+  const episodes: Episode[] = [];
+  for (const episodeAttributes of episodesAttributes) {
+    episodes.push(buildEpisode(episodeAttributes));
   }
-  return episode;
+  return episodes;
 }
 
-async function createEpisodesForNewSeason(
-  seasonid: SeasonsAttributes['seasonId'],
-  seasonPremierDate: EpisodeAttributes['episodeAirDate'],
-  seasonFinaleDate: EpisodeAttributes['episodeAirDate'],
-  transaction?: Transaction
-): Promise<Episode[]> {
-  if (seasonPremierDate > seasonFinaleDate) {
-    throw new BadRequestError('Premier date must be before finale date');
+async function getEpisode(
+  field: 'episodeId',
+  value: EpisodeAttributes['episodeId']
+): Promise<Episode>;
+async function getEpisode(
+  field: 'seasonIdAndEpisodeNumber',
+  value: {
+    seasonId: EpisodeAttributes['seasonId'];
+    episodeNumber: EpisodeAttributes['episodeNumber'];
   }
-  if (seasonPremierDate.getDay() !== seasonFinaleDate.getDay()) {
-    throw new BadRequestError(
-      'Premier and finale date must be on the same day of the week.'
-    );
+): Promise<Episode>;
+async function getEpisode(
+  field: 'seasonIdAndEpisodeId',
+  value: {
+    seasonId: EpisodeAttributes['seasonId'];
+    episodeId: EpisodeAttributes['episodeId'];
+  }
+): Promise<Episode>;
+
+async function getEpisode(
+  field: 'episodeId' | 'seasonIdAndEpisodeNumber' | 'seasonIdAndEpisodeId',
+  value:
+    | EpisodeAttributes['episodeId']
+    | {
+        seasonId: EpisodeAttributes['seasonId'];
+        episodeNumber: EpisodeAttributes['episodeNumber'];
+      }
+    | {
+        seasonId: EpisodeAttributes['seasonId'];
+        episodeId: EpisodeAttributes['episodeId'];
+      }
+): Promise<Episode> {
+  let episodeAttributes: EpisodeAttributes | null = null;
+
+  if (field === 'seasonIdAndEpisodeNumber') {
+    const { seasonId, episodeNumber } = value as {
+      seasonId: EpisodeAttributes['seasonId'];
+      episodeNumber: EpisodeAttributes['episodeNumber'];
+    };
+    episodeRepository.getEpisode(field, { seasonId, episodeNumber });
+  } else if ((field = 'seasonIdAndEpisodeId')) {
+    const { seasonId, episodeId } = value as {
+      seasonId: EpisodeAttributes['seasonId'];
+      episodeId: EpisodeAttributes['episodeId'];
+    };
+    episodeAttributes = await episodeRepository.getEpisode(field, {
+      seasonId,
+      episodeId,
+    });
+  } else if (field === 'episodeId') {
+    const episodeId = value as EpisodeAttributes['episodeId'];
+    episodeAttributes = await episodeRepository.getEpisode(field, episodeId);
+  } else {
+    throw new InternalServerError('Invalid field to get episode');
   }
 
-  const dates = [];
-  let currentDate = new Date(seasonPremierDate);
-  while (currentDate <= seasonFinaleDate) {
-    dates.push(new Date(currentDate));
-    currentDate.setDate(currentDate.getDate() + 7);
+  if (!episodeAttributes) {
+    throw new NotFoundError('Episode not found');
   }
-
-  let t = transaction;
-  if (!transaction) {
-    t = await sequelize.transaction();
-  }
-  try {
-    let episodes: Episode[] = [];
-    for (let i = 1; i <= dates.length; i++) {
-      const episodeAttributes: EpisodeAttributes =
-        await episodeRepository.createEpisode(seasonid, i, dates[i - 1], t);
-      episodes = [...episodes, episodeHelper.buildEpisode(episodeAttributes)];
-    }
-    if (!transaction && t) {
-      await t.commit();
-    }
-    return episodes;
-  } catch (error) {
-    if (!transaction && t) {
-      await t.rollback();
-    }
-    throw error;
-  }
+  return buildEpisode(episodeAttributes);
 }
 
-// async function getEpisodes(
-//   episodeIds: EpisodeAttributes['episodeId'][]
-// ): Promise<Episode[]> {
-//   return Promise.all(
-//     episodeIds.map(async (episodeId) => {
-//       return episodeRepository.getEpisode(episodeId);
-//     })
-//   );
-// }
-
-// async function getEpisodes(
-//   seasonId: SeasonsAttributes['seasonId'],
-//   episodeNumbers:
-//     | EpisodeAttributes['episodeNumber'][]
-//     | EpisodeAttributes['episodeNumber']
-// ): Promise<Episode[]> {
-//   if (Array.isArray(episodeNumbers)) {
-//     return Promise.all(
-//       episodeNumbers.map(async (episodeNumber) => {
-//         return episodeRepository.getEpisode(seasonId, episodeNumber);
-//       })
-//     );
-//   } else {
-//     return [await episodeRepository.getEpisode(seasonId, episodeNumbers)];
-//   }
-// }
+function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
+  return {
+    id: episodeAttributes.episodeId,
+    number: episodeAttributes.episodeNumber,
+    seasonId: episodeAttributes.seasonId,
+    airDate: episodeAttributes.episodeAirDate.toString(),
+    description: episodeAttributes.episodeDescription,
+    title: episodeAttributes.episodeTitle,
+  };
+}
 
 export default episodeService;

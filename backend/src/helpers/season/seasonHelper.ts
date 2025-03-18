@@ -7,7 +7,6 @@ import {
   Tribe,
 } from '../../generated-api';
 import { SeasonsAttributes } from '../../models/season/Seasons';
-import seasonService from '../../services/season/seasonService';
 import { BadRequestError, NotFoundError } from '../../utils/errors/errors';
 
 const seasonHelper = {
@@ -99,10 +98,6 @@ async function validateSeasonId(seasonId: string): Promise<void> {
   if (!isSeasonIdValid(seasonId)) {
     throw new BadRequestError('Invalid season id');
   }
-
-  if (!(await doesSeasonIdExist(Number(seasonId)))) {
-    throw new NotFoundError('Season does not exist');
-  }
 }
 
 function formatSeasonId(seasonId: string): SeasonsAttributes['seasonId'] {
@@ -118,10 +113,6 @@ function isSeasonIdValid(seasonId: string | number): boolean {
     return false;
   }
   return true;
-}
-
-async function doesSeasonIdExist(seasonId: number): Promise<boolean> {
-  return await seasonService.doesSeasonExist(seasonId);
 }
 
 export default seasonHelper;

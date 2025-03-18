@@ -13,7 +13,6 @@
  */
 
 import { Color } from './color';
-import { Episode } from './episode';
  /**
  * 
  *
@@ -70,8 +69,10 @@ export interface Tribe {
     isMergeTribe?: boolean;
 
     /**
-     * @type {Episode}
+     * The id of the episode the tribe started in
+     *
+     * @type {string}
      * @memberof Tribe
      */
-    episodeStarted?: Episode;
+    episodeStarted?: string;
 }

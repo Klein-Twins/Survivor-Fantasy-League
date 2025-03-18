@@ -7,6 +7,7 @@ import {
 } from '../../generated-api';
 import tribeHelper from '../../helpers/season/tribeHelper';
 import tribeService from '../../services/season/tribeService';
+import { TribeAttributes } from '../../models/season/Tribes';
 
 const tribeController = {
   createTribe,
@@ -36,6 +37,22 @@ async function createTribe(
   } catch (error) {
     next(error);
   }
+}
+
+function buildTribe(tribeAttributes: TribeAttributes): Tribe {
+  return {
+    seasonId: tribeAttributes.seasonId.toString(),
+    id: tribeAttributes.id,
+    name: tribeAttributes.name,
+    color: {
+      name: tribeAttributes.tribeColor,
+      hex: tribeAttributes.tribeHexColor,
+    },
+    isMergeTribe: tribeAttributes.mergeTribe,
+    episodeStarted: tribeAttributes.episodeStarted.toString(),
+    //TODO: Implement this for tribe history
+    currentSurvivorIds: [],
+  };
 }
 
 export default tribeController;

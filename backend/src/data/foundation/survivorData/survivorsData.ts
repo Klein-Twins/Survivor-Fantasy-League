@@ -3,7 +3,7 @@ import { season47SurvivorIds, season48SurvivorIds } from '../foundationIds';
 
 const survivorsData: SurvivorsAttributes[] = [
   {
-    survivorId: season47SurvivorIds.AndyRueda,
+    id: season47SurvivorIds.AndyRueda,
     firstName: 'Andy',
     nickName: null,
     lastName: 'Rueda',
@@ -12,7 +12,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.AnikaDhar,
+    id: season47SurvivorIds.AnikaDhar,
     firstName: 'Anika',
     nickName: null,
     lastName: 'Dhar',
@@ -21,7 +21,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.AyshaWelch,
+    id: season47SurvivorIds.AyshaWelch,
     firstName: 'Aysha',
     nickName: null,
     lastName: 'Welch',
@@ -30,7 +30,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.CarolineVidmar,
+    id: season47SurvivorIds.CarolineVidmar,
     firstName: 'Caroline',
     nickName: null,
     lastName: 'Vidmar',
@@ -39,7 +39,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.GabeOrtis,
+    id: season47SurvivorIds.GabeOrtis,
     firstName: 'Gabe',
     nickName: null,
     lastName: 'Ortis',
@@ -48,7 +48,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.GenevieveMushaluk,
+    id: season47SurvivorIds.GenevieveMushaluk,
     firstName: 'Genevieve',
     nickName: null,
     lastName: 'Mushaluk',
@@ -57,7 +57,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.RomeCooney,
+    id: season47SurvivorIds.RomeCooney,
     firstName: 'Rome',
     nickName: null,
     lastName: 'Cooney',
@@ -66,7 +66,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.JonLovett,
+    id: season47SurvivorIds.JonLovett,
     firstName: 'Jon',
     nickName: null,
     lastName: 'Lovett',
@@ -75,7 +75,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.KishanPatel,
+    id: season47SurvivorIds.KishanPatel,
     firstName: 'Kishan',
     nickName: null,
     lastName: 'Patel',
@@ -84,7 +84,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.KyleOstwald,
+    id: season47SurvivorIds.KyleOstwald,
     firstName: 'Kyle',
     nickName: null,
     lastName: 'Ostwald',
@@ -93,7 +93,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.RachelLaMont,
+    id: season47SurvivorIds.RachelLaMont,
     firstName: 'Rachel',
     nickName: null,
     lastName: 'LaMont',
@@ -102,7 +102,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.SamPhalen,
+    id: season47SurvivorIds.SamPhalen,
     firstName: 'Sam',
     nickName: null,
     lastName: 'Phalen',
@@ -111,7 +111,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.SierraWright,
+    id: season47SurvivorIds.SierraWright,
     firstName: 'Sierra',
     nickName: null,
     lastName: 'Wright',
@@ -120,7 +120,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.SolomonYi,
+    id: season47SurvivorIds.SolomonYi,
     firstName: 'Solomon',
     nickName: 'Sol',
     lastName: 'Yi',
@@ -129,7 +129,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.SueSmey,
+    id: season47SurvivorIds.SueSmey,
     firstName: 'Sue',
     nickName: null,
     lastName: 'Smey',
@@ -138,7 +138,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.TeenyChirichillo,
+    id: season47SurvivorIds.TeenyChirichillo,
     firstName: 'Teeny',
     nickName: null,
     lastName: 'Chirichillo',
@@ -147,7 +147,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.TerranFoster,
+    id: season47SurvivorIds.TerranFoster,
     firstName: 'Terran',
     nickName: 'TK',
     lastName: 'Foster',
@@ -156,7 +156,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season47SurvivorIds.TiyanaHallums,
+    id: season47SurvivorIds.TiyanaHallums,
     firstName: 'Tiyana',
     nickName: null,
     lastName: 'Hallums',
@@ -166,7 +166,7 @@ const survivorsData: SurvivorsAttributes[] = [
   },
 
   {
-    survivorId: season48SurvivorIds.BiancaRoses,
+    id: season48SurvivorIds.BiancaRoses,
     firstName: 'Bianca',
     lastName: 'Roses',
     fromCity: 'West Orange',
@@ -174,7 +174,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.CedrekMcFadden,
+    id: season48SurvivorIds.CedrekMcFadden,
     firstName: 'Cedrek',
     lastName: 'McFadden',
     fromCity: 'Columbia',
@@ -182,7 +182,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.CharityNeims,
+    id: season48SurvivorIds.CharityNeims,
     firstName: 'Charity',
     lastName: 'Neims',
     fromCity: 'Monroe',
@@ -190,7 +190,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.ChrissySarnowsky,
+    id: season48SurvivorIds.ChrissySarnowsky,
     firstName: 'Chrissy',
     lastName: 'Sarnowsky',
     fromCity: 'South Side of Chicago',
@@ -198,7 +198,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.DavidKinne,
+    id: season48SurvivorIds.DavidKinne,
     firstName: 'David',
     lastName: 'Kinne',
     fromCity: 'Long Beach',
@@ -206,7 +206,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.EvaErickson,
+    id: season48SurvivorIds.EvaErickson,
     firstName: 'Eva',
     lastName: 'Erickson',
     fromCity: 'Eagan',
@@ -214,7 +214,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.JoeHunter,
+    id: season48SurvivorIds.JoeHunter,
     firstName: 'Joe',
     lastName: 'Hunter',
     fromCity: 'Vacaville',
@@ -222,7 +222,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.JustinPioppi,
+    id: season48SurvivorIds.JustinPioppi,
     firstName: 'Justin',
     lastName: 'Pioppi',
     fromCity: 'Winthrop',
@@ -230,14 +230,14 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.KamillaKarthigesu,
+    id: season48SurvivorIds.KamillaKarthigesu,
     firstName: 'Kamilla',
     lastName: 'Karthigesu',
     fromState: 'Toronto',
     fromCountry: 'Canada',
   },
   {
-    survivorId: season48SurvivorIds.KevinLeung,
+    id: season48SurvivorIds.KevinLeung,
     firstName: 'Kevin',
     lastName: 'Leung',
     fromCity: 'Fremont',
@@ -245,7 +245,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.KyleFraser,
+    id: season48SurvivorIds.KyleFraser,
     firstName: 'Kyle',
     lastName: 'Fraser',
     fromCity: 'Roanoke',
@@ -253,7 +253,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.MaryZheng,
+    id: season48SurvivorIds.MaryZheng,
     firstName: 'Mary',
     lastName: 'Zheng',
     fromCity: 'Montgomery Village',
@@ -261,7 +261,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.MitchGuerra,
+    id: season48SurvivorIds.MitchGuerra,
     firstName: 'Mitch',
     lastName: 'Guerra',
     fromCity: 'Waco',
@@ -269,7 +269,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.SaiouniaHughley,
+    id: season48SurvivorIds.SaiouniaHughley,
     firstName: 'Saiounia',
     lastName: 'Hughley',
     fromCity: 'Philadelphia',
@@ -277,7 +277,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.ShauhinDavari,
+    id: season48SurvivorIds.ShauhinDavari,
     firstName: 'Shauhin',
     lastName: 'Davari',
     fromCity: 'East Bay',
@@ -285,14 +285,14 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.StarToomey,
+    id: season48SurvivorIds.StarToomey,
     firstName: 'Star',
     lastName: 'Toomey',
     fromState: 'Monrovia',
     fromCountry: 'Liberia',
   },
   {
-    survivorId: season48SurvivorIds.StephanieBerger,
+    id: season48SurvivorIds.StephanieBerger,
     firstName: 'Stephanie',
     lastName: 'Berger',
     fromCity: 'New York City',
@@ -300,7 +300,7 @@ const survivorsData: SurvivorsAttributes[] = [
     fromCountry: 'US',
   },
   {
-    survivorId: season48SurvivorIds.ThomasKrottinger,
+    id: season48SurvivorIds.ThomasKrottinger,
     firstName: 'Thomas',
     lastName: 'Krottinger',
     fromCity: 'Los Angeles',

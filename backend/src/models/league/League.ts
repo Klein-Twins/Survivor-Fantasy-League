@@ -13,7 +13,6 @@ const LeagueModel = (sequelize: Sequelize) => {
     public leagueId!: LeagueAttributes['leagueId'];
     public seasonId!: LeagueAttributes['seasonId'];
     public name!: LeagueAttributes['name'];
-    public createAt?: LeagueAttributes['createdAt'];
 
     static associate(models: any) {
       this.belongsTo(models.Seasons, {

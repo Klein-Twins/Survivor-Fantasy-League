@@ -38,7 +38,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/GetLeagueSurveyResponse'
+                $ref: '#/components/responses/GetLeagueMemberSurveyResponse'
 
   submitSurvey:
     post:
@@ -67,7 +67,7 @@ paths:
 
 components:
   schemas:
-    GetLeagueSurveyResponseData:
+    GetLeagueMemberSurveyResponseData:
       type: object
       required:
         - leagueSurvey
@@ -75,8 +75,8 @@ components:
       properties:
         leagueSurvey:
           oneOf:
-            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueSurvey'
-            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueSurvey'
+            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueMemberSurvey'
+            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueMemberSurvey'
         isCompleted:
           type: boolean
           description:
@@ -89,7 +89,7 @@ components:
         - leagueSurvey
       properties:
         leagueSurvey:
-          $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueSurvey'
+          $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueMemberSurvey'
   requestBodies:
     SubmitSurveyRequestBody:
       type: object
@@ -132,7 +132,7 @@ components:
             $ref: '../../../components/league/survey/pick.yaml#/components/schemas/PickIdAndPlayerChoice'
 
   responses:
-    GetLeagueSurveyResponse:
+    GetLeagueMemberSurveyResponse:
       type: object
       allOf:
         - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
@@ -141,7 +141,7 @@ components:
             - responseData
           properties:
             responseData:
-              $ref: '#/components/schemas/GetLeagueSurveyResponseData'
+              $ref: '#/components/schemas/GetLeagueMemberSurveyResponseData'
     SubmitSurveyResponse:
       type: object
       allOf:

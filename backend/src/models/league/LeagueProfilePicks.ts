@@ -1,6 +1,7 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { PickTypeEnum } from '../surveyAndPick/picks/PickType';
+import { SurvivorsAttributes } from '../survivors/Survivors';
 
 export enum ProfilePickAnswerStatus {
   correct = 'correct',
@@ -15,7 +16,7 @@ export interface ProfilePickAttributes {
   leagueId: UUID;
   episodeId: UUID;
   pickOptionType: PickTypeEnum;
-  pickAnswerSurvivorId?: UUID | null;
+  pickAnswerSurvivorId?: SurvivorsAttributes['id'] | null;
   pickAnswerTribeId: UUID | null;
   pickAnswerBinary: boolean | null;
   pickAnswerCustom: string | null;

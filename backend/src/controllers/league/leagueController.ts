@@ -5,9 +5,12 @@ import {
   GetLeaguesResponseData,
   League,
 } from '../../generated-api';
-import leagueService from '../../services/league/leagueService';
 import logger from '../../config/logger';
 import leagueHelper from '../../helpers/league/leagueHelper';
+import leagueService from '../../services/league/leagueService';
+import { BadRequestError } from '../../utils/errors/errors';
+import validator from 'validator';
+import { UUID } from 'crypto';
 
 const leagueController = {
   createLeague,
@@ -21,9 +24,20 @@ async function getLeague(
 ): Promise<void> {
   try {
     const profileId = req.params.profileId;
+    if (!profileId) {
+      throw new BadRequestError('Profile ID is required');
+    }
+    if (validator.isUUID(profileId) === false) {
+      throw new BadRequestError('Invalid profile ID');
+    }
 
-    const responseData: GetLeaguesResponseData =
-      await leagueService.getLeaguesForProfile(profileId);
+    const leagues: League[] = await leagueService.getLeaguesForProfile(
+      profileId as UUID
+    );
+
+    const responseData: GetLeaguesResponseData = {
+      leagues,
+    };
 
     const response: GetLeaguesResponse = {
       success: true,

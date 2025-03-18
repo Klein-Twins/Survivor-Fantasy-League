@@ -2,10 +2,15 @@ import { Request, Response, NextFunction } from 'express';
 import {
   GetLeagueInvitesResponse,
   GetLeagueInvitesResponseData,
+  InviteResponse,
+  RespondToLeagueInviteRequestBody,
   RespondToLeagueInviteResponse,
   RespondToLeagueInviteResponseData,
 } from '../../generated-api';
-import leagueInviteService from '../../services/league/leagueInviteService';
+import { UUID } from 'crypto';
+import leagueInviteService from '../../services/league/leagueInvite/leagueInviteService';
+import validator from 'validator';
+import { BadRequestError } from '../../utils/errors/errors';
 
 const leagueInviteController = {
   getLeagueInvitesForProfileId,
@@ -20,8 +25,21 @@ async function getLeagueInvitesForProfileId(
 ): Promise<void> {
   try {
     const profileId = req.query.profileId as string;
-    const responseData: GetLeagueInvitesResponseData =
-      await leagueInviteService.getLeagueInvitesForProfileId(profileId);
+    if (!profileId) {
+      throw new BadRequestError('Missing profile ID');
+    }
+    if (!validator.isUUID(profileId)) {
+      throw new BadRequestError('Invalid Profile ID');
+    }
+
+    const leagueInvites =
+      await leagueInviteService.getLeagueInvitesForProfileId(profileId as UUID);
+
+    const responseData: GetLeagueInvitesResponseData = {
+      numLeagueInvites: leagueInvites.length,
+      leagueInvites,
+    };
+
     const response: GetLeagueInvitesResponse = {
       success: true,
       message: `${responseData.numLeagueInvites} league invites retrieved successfully`,
@@ -43,11 +61,30 @@ async function createAndSendLeagueInvite(
 ): Promise<void> {
   try {
     const { leagueId, inviterProfileId, invitedProfileId } = req.body;
-    await leagueInviteService.createAndSendLeagueInvite(
-      leagueId,
-      inviterProfileId,
-      invitedProfileId
-    );
+    if (!leagueId) {
+      throw new BadRequestError('Missing league ID');
+    }
+    if (!validator.isUUID(leagueId)) {
+      throw new BadRequestError('Invalid League ID');
+    }
+    if (!inviterProfileId) {
+      throw new BadRequestError('Missing inviter profile ID');
+    }
+    if (!validator.isUUID(inviterProfileId)) {
+      throw new BadRequestError('Invalid Inviter Profile ID');
+    }
+    if (!invitedProfileId) {
+      throw new BadRequestError('Missing invited profile ID');
+    }
+    if (!validator.isUUID(invitedProfileId)) {
+      throw new BadRequestError('Invalid Invited Profile ID');
+    }
+
+    await leagueInviteService.createAndSendLeagueInvite({
+      leagueId: leagueId as UUID,
+      inviterProfileId: inviterProfileId as UUID,
+      invitedProfileId: invitedProfileId as UUID,
+    });
     res.status(200).json('League invite created successfully');
   } catch (error) {
     next(error);
@@ -60,12 +97,58 @@ async function respondToLeagueInvite(
   next: NextFunction
 ): Promise<void> {
   try {
-    const respondToLeagueInviteResponseData: RespondToLeagueInviteResponseData | null =
-      await leagueInviteService.respondToLeagueInvite(req.body);
+    const {
+      leagueId,
+      profileId,
+      inviteResponse,
+      inviteId,
+    }: RespondToLeagueInviteRequestBody = req.body;
+    if (!leagueId) {
+      throw new BadRequestError('Missing league ID');
+    }
+    if (!validator.isUUID(leagueId)) {
+      throw new BadRequestError('Invalid League ID');
+    }
+    if (!profileId) {
+      throw new BadRequestError('Missing profile ID');
+    }
+    if (!validator.isUUID(profileId)) {
+      throw new BadRequestError('Invalid Profile ID');
+    }
+    if (!inviteResponse) {
+      throw new BadRequestError('Missing invite response');
+    }
+    if (
+      inviteResponse !== InviteResponse.Accept &&
+      inviteResponse !== InviteResponse.Decline
+    ) {
+      throw new BadRequestError('Invalid invite response');
+    }
+    if (!inviteId) {
+      throw new BadRequestError('Missing invite ID');
+    }
+    if (!validator.isUUID(inviteId)) {
+      throw new BadRequestError('Invalid Invite ID');
+    }
+
+    const league = await leagueInviteService.respondToLeagueInvite({
+      leagueId: leagueId as UUID,
+      profileId: profileId as UUID,
+      inviteResponse: inviteResponse as InviteResponse,
+    });
+
+    const respondToLeagueInviteResponseData: RespondToLeagueInviteResponseData =
+      {
+        league: inviteResponse === InviteResponse.Accept ? league : undefined,
+        inviteId,
+        inviteResponse,
+      };
 
     const response: RespondToLeagueInviteResponse = {
       success: true,
-      message: 'League invite response updated successfully',
+      message: `Successfully ${
+        inviteResponse === InviteResponse.Accept ? 'accepted' : 'declined'
+      } league invite for league ${league.name}`,
       responseData: respondToLeagueInviteResponseData,
       statusCode: 200,
     };

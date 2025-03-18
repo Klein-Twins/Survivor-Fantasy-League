@@ -33,4 +33,6 @@ components:
           description: Whether the tribe is a merge tribe
           example: false
         episodeStarted:
-          $ref: './episode.yaml#/components/schemas/Episode'
+          type: string
+          description: The id of the episode the tribe started in
+          format: uuid

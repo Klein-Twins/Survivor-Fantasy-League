@@ -6,6 +6,7 @@ components:
         - profile
         - role
         - leagueProfileId
+        - hasJoined
       properties:
         profile:
           $ref: '../user/profile.yaml#/components/schemas/Profile'
@@ -16,6 +17,10 @@ components:
           description: The id of the league profile
           example: 5f4e1e1f-4b7b-4b7b-8b7b-4b7b4b7b4b7b
           format: uuid
+        hasJoined:
+          type: boolean
+          description: Whether the user has joined the league
+          example: true
 
     LeagueMemberRole:
       type: string

@@ -26,7 +26,7 @@ const api = {
   profileService: new ProfileServiceApi(config),
   leagueInviteService: new LeagueInviteServiceApi(config),
   survivorService: new SurvivorServiceApi(config),
-  userSessionServiceApi: new UserSessionServiceApi(config),
+  userSessionServiceApi: new UserSessionServiceApi(config), //
   imageServiceApi: new ImageServiceApi(config),
   surveyService: new SurveyServiceApi(config),
   seasonService: new SeasonServiceApi(config),

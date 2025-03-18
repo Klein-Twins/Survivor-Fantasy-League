@@ -1,4 +1,8 @@
 import { models } from '../../config/db';
+import {
+  season47episodeSurveyData,
+  season48episodeSurveyData,
+} from '../foundation/surveyData/episodeSurveyData';
 import testPasswordData from './accountData/testPasswordData';
 import testProfileData from './accountData/testProfileData';
 import testUserData from './accountData/testUserData';
@@ -20,11 +24,17 @@ const seedLeagueData = async () => {
   await models.League.bulkCreate(testLeagueData, { validate: true });
 
   await models.LeagueProfile.destroy({ where: {} });
-  await models.LeagueProfile.bulkCreate(testLeagueProfilesData, { validate: true });
+  await models.LeagueProfile.bulkCreate(testLeagueProfilesData, {
+    validate: true,
+  });
 
-  await models.LeagueSurveys.destroy({ where: {} });
-  //Only have surveys for league 1 currently
-  await models.LeagueSurveys.bulkCreate(testLeague1SurveyData, { validate: true });
+  await models.EpisodeSurvey.destroy({ where: {} });
+  await models.EpisodeSurvey.bulkCreate(season47episodeSurveyData, {
+    validate: true,
+  });
+  await models.EpisodeSurvey.bulkCreate(season48episodeSurveyData, {
+    validate: true,
+  });
 };
 
 const seedDevData = async () => {

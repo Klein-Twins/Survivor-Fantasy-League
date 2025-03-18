@@ -1,33 +1,44 @@
 import { CreateTribeRequestBody, Tribe } from '../../generated-api';
-import { SeasonsAttributes } from '../../models/season/Seasons';
-import tribeRepository from '../../repositories/seasons/tribeRepository';
-import {
-  BadRequestError,
-  NotImplementedError,
-} from '../../utils/errors/errors';
-import seasonService from './seasonService';
+import { TribeAttributes } from '../../models/season/Tribes';
+import tribeRepository from '../../repositories/season/tribeRepository';
+import { NotImplementedError } from '../../utils/errors/errors';
 
 const tribeService = {
-  getTribes,
+  getTribesBySeasonId,
   createTribe,
 };
 
-async function getTribes(
-  seasonId: SeasonsAttributes['seasonId']
+async function getTribesBySeasonId(
+  seasonId: TribeAttributes['seasonId']
 ): Promise<Tribe[]> {
-  //TODO ADD OTHER PARAMETERS
-  return await tribeRepository.getTribesBySeasonId(seasonId);
+  const tribesAttributes: TribeAttributes[] =
+    await tribeRepository.getTribesBySeasonId(seasonId);
+
+  return Promise.all(
+    tribesAttributes.map(async (tribeAttributes) => {
+      return await buildTribe(tribeAttributes);
+    })
+  );
+}
+
+async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
+  return {
+    seasonId: tribeAttributes.seasonId.toString(),
+    id: tribeAttributes.id,
+    name: tribeAttributes.name,
+    color: {
+      name: tribeAttributes.tribeColor,
+      hex: tribeAttributes.tribeHexColor,
+    },
+    isMergeTribe: tribeAttributes.mergeTribe,
+    episodeStarted: tribeAttributes.episodeStarted.toString(),
+    //TODO: Implement this for tribe history
+    currentSurvivorIds: [],
+  };
 }
 
 async function createTribe(tribeData: CreateTribeRequestBody): Promise<Tribe> {
-  const doesSeasonExist: boolean = await seasonService.doesSeasonExist(
-    tribeData.seasonId
-  );
-  if (!doesSeasonExist) {
-    throw new BadRequestError('Season does not exist');
-  }
-
-  return await tribeRepository.createTribe(tribeData);
+  throw new NotImplementedError('createTribe');
 }
 
 export default tribeService;

@@ -1,109 +1,54 @@
 import { Transaction } from 'sequelize';
-import { TokenType } from '../../types/auth/tokenTypes';
-import { models, sequelize } from '../../config/db';
-import { TokenAttributes } from '../../models/account/Tokens';
-import { UserAttributes } from '../../models/account/User';
+import { TokenAttributes, TokenType } from '../../models/account/Tokens';
+import sequelize, { models } from '../../config/db';
+import tokenHelper from '../../helpers/auth/tokenHelper';
 
 const tokenRepository = {
-  createTokenRecord,
-  setTokenToInactive,
-  verifyToken,
+  createToken,
+  invalidateToken,
+  getTokenInDB,
 };
 
-async function verifyToken(
-  token: string,
-  userId: UserAttributes['userId'],
+async function getTokenInDB(
+  field: keyof Pick<TokenAttributes, 'userId' | 'token'>,
+  value: string,
   tokenType: TokenType
-): Promise<boolean> {
-  const tokenAttributes = await models.Tokens.findOne({
+) {
+  const tokenAttributes: TokenAttributes | null = await models.Tokens.findOne({
     where: {
-      token: token,
-      userId: userId,
+      [field]: value,
       tokenType: tokenType,
-      isActive: true,
     },
   });
-
-  if (!tokenAttributes) {
-    return false;
-  }
-
-  return true;
+  return tokenAttributes;
 }
 
-async function setTokenToInactive(
-  token: string,
-  tokenType: TokenType,
-  userId: UserAttributes['userId'],
-  transaction?: Transaction
-): Promise<void> {
-  // let t = transaction;
-  // if (!transaction) {
-  //   t = await sequelize.transaction();
-  // }
-
-  try {
-    await models.Tokens.update(
-      {
-        isActive: false,
-      },
-      {
-        where: {
-          token: token,
-          tokenType: tokenType,
-          userId: userId,
-        },
-        transaction, //t,
-      }
-    );
-
-    // if (updatedToken[0] !== 1) {
-    //   throw new Error(
-    //     'Did not update tokens - updated more or less than 1 token'
-    //   );
-    // }
-
-    // if (!transaction && t) {
-    //   await t.commit();
-    // }
-
-    // return updatedToken[1][0];
-  } catch (error) {
-    // if (!transaction && t) {
-    //   await t.rollback();
-    // }
-    throw error;
-  }
-}
-
-async function createTokenRecord(
-  token: string,
-  tokenType: TokenType,
-  userId: UserAttributes['userId'],
-  tokenExpiresTime: Date,
+async function createToken(
+  token: TokenAttributes['token'],
+  userId: TokenAttributes['userId'],
+  tokenType: TokenAttributes['tokenType'],
   transaction?: Transaction
 ): Promise<TokenAttributes> {
   let t = transaction;
-  if (!transaction) {
+  if (!t) {
     t = await sequelize.transaction();
   }
 
   try {
+    const tokenExpDate = tokenHelper.getTokenExpirationDate(token);
     const tokenAttributes = await models.Tokens.create(
       {
         token: token,
         tokenType: tokenType,
         userId,
         isActive: true,
-        tokenExpiresTime: tokenExpiresTime,
+        tokenExpiresTime: tokenExpDate,
       },
       { transaction: t }
     );
-
     if (!transaction && t) {
       await t.commit();
     }
-
     return tokenAttributes;
   } catch (error) {
     if (!transaction && t) {
@@ -112,4 +57,43 @@ async function createTokenRecord(
     throw error;
   }
 }
+
+async function invalidateToken(
+  token: TokenAttributes['token'],
+  tokenType: TokenAttributes['tokenType'],
+  transaction?: Transaction
+): Promise<{ count: number; updated: TokenAttributes[] }> {
+  let t = transaction;
+  if (!t) {
+    const t = await sequelize.transaction();
+  }
+  try {
+    const updatedData = await models.Tokens.update(
+      {
+        isActive: false,
+      },
+      {
+        where: {
+          token,
+          tokenType,
+        },
+        transaction: t,
+        returning: true,
+      }
+    );
+    if (!transaction && t) {
+      await t.commit();
+    }
+    return {
+      count: updatedData[0],
+      updated: updatedData[1],
+    };
+  } catch (error) {
+    if (!transaction && t) {
+      await t.rollback();
+    }
+    throw error;
+  }
+}
+
 export default tokenRepository;

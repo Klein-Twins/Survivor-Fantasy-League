@@ -2,7 +2,7 @@ import { ProfileAttributes } from '../../models/account/Profile';
 import { UserAttributes } from '../../models/account/User';
 import { LeagueAttributes } from '../../models/league/League';
 import { LeagueProfileAttributes } from '../../models/league/LeagueProfile';
-import { LeagueSurveyAttributes } from '../../models/league/LeagueSurveys';
+import { EpisodeSurveyAttributes } from '../../models/surveyAndPick/EpisodeSurvey';
 
 type TestProfileNames =
   | 'TonyStark'
@@ -18,7 +18,10 @@ type TestProfileNames =
   | 'StephenStrange'
   | 'TChallaWakanda';
 
-export const testProfileIds: Record<TestProfileNames, ProfileAttributes['profileId']> = {
+export const testProfileIds: Record<
+  TestProfileNames,
+  ProfileAttributes['profileId']
+> = {
   TonyStark: '48175a74-822b-4172-8665-355952d3bdc4',
   CaptainAmerica: '0088ed2a-ff8d-4fde-bebf-3f57ac6c0331',
   BruceBanner: 'd67e1e8a-b4db-4a64-9d38-93db0a8fe5a6',
@@ -48,9 +51,17 @@ export const testUserIds: Record<TestProfileNames, UserAttributes['userId']> = {
   TChallaWakanda: '9b367473-492b-471e-9d4f-2e3f1e5fa274',
 };
 
-type testLeagueNames = 'league1' | 'league2' | 'league3' | 'league4' | 'league5';
+type testLeagueNames =
+  | 'league1'
+  | 'league2'
+  | 'league3'
+  | 'league4'
+  | 'league5';
 
-export const testLeagueIds: Record<testLeagueNames, LeagueAttributes['leagueId']> = {
+export const testLeagueIds: Record<
+  testLeagueNames,
+  LeagueAttributes['leagueId']
+> = {
   league1: 'c5ea9a19-c8cd-4dfc-af1b-44d3b0d4928f',
   league2: 'd4a81f95-6c27-4e85-8d43-87f93c25f071',
   league3: '7b91f1d6-87d4-4f1c-9357-fe3f19c67a2b',
@@ -74,7 +85,10 @@ type TestLeagueProfileNames =
   | 'League5TonyStark'
   | 'League5BruceBanner';
 
-export const testLeagueProfileIds: Record<TestLeagueProfileNames, LeagueProfileAttributes['id']> = {
+export const testLeagueProfileIds: Record<
+  TestLeagueProfileNames,
+  LeagueProfileAttributes['id']
+> = {
   League1TonyStart: '9d8c7b6a-5e4f-3d2c-1b0a-9876543210fe',
   League1BruceBanner: 'b1c2d3e4-f5a6-7890-1234-567890abcdef',
   League1CaptainAmerica: 'a9b8c7d6-e5f4-3210-9876-543210fedcba',
@@ -107,7 +121,10 @@ type leagueSurveyName =
   | 'League1Season47Episode13Survey'
   | 'League1Season47Episode14Survey';
 
-export const testLeagueSurveyIds: Record<leagueSurveyName, LeagueSurveyAttributes['leagueSurveyId']> = {
+export const testLeagueSurveyIds: Record<
+  leagueSurveyName,
+  EpisodeSurveyAttributes['episodeSurveyId']
+> = {
   League1Season47Episode1Survey: '9e7fabad-8485-488e-997b-bda4be4b5abd',
   League1Season47Episode2Survey: '300cab6a-7903-45d1-8fc5-741ea5a3374b',
   League1Season47Episode3Survey: 'ce377370-fc4a-4f29-8cb9-7cc488642d2c',

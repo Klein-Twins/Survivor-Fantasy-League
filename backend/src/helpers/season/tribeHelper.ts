@@ -1,40 +1,10 @@
-import {
-  Color,
-  CreateTribeRequestBody,
-  Episode,
-  Tribe,
-} from '../../generated-api';
-import { TribeAttributes } from '../../models/season/Tribes';
-import episodeRepository from '../../repositories/seasons/episodeRepository';
-import episodeService from '../../services/season/episodeService';
+import { Color, CreateTribeRequestBody } from '../../generated-api';
 import { BadRequestError } from '../../utils/errors/errors';
-import episodeHelper from './episodeHelper';
 import seasonHelper from './seasonHelper';
 
 const tribeHelper = {
-  buildTribe,
   validateAndFormatCreateTribeRequest,
 };
-
-async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
-  const episode: Episode = await episodeRepository.getEpisodeByEpisodeId(
-    tribeAttributes.episodeStarted
-  );
-
-  return {
-    seasonId: tribeAttributes.seasonId.toString(),
-    id: tribeAttributes.id,
-    name: tribeAttributes.name,
-    color: {
-      name: tribeAttributes.tribeColor,
-      hex: tribeAttributes.tribeHexColor,
-    },
-    isMergeTribe: tribeAttributes.mergeTribe,
-    episodeStarted: episode,
-    //TODO: Implement this for tribe history
-    currentSurvivorIds: [],
-  };
-}
 
 async function validateAndFormatCreateTribeRequest(
   req: CreateTribeRequestBody
@@ -49,7 +19,6 @@ async function validateCreateTribeRequest(
   validateTribeName(req.name);
   await seasonHelper.validateSeasonId(req.seasonId.toString());
   validateIsMergeTribe(req.isMergeTribe);
-  await episodeHelper.validateEpisodeNumber(req.episodeStarted);
   validateTribeColor(req.color);
 }
 

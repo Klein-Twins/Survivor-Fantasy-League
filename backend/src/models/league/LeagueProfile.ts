@@ -4,7 +4,7 @@ import { ProfileAttributes } from '../account/Profile';
 import { LeagueAttributes } from './League';
 import { LeagueMemberRole } from '../../generated-api';
 
-export enum InviteStatusEnum {
+export enum InviteStatus {
   Pending = 'pending',
   Accepted = 'accepted',
 }
@@ -14,7 +14,7 @@ export interface LeagueProfileAttributes {
   profileId: ProfileAttributes['profileId'];
   leagueId: LeagueAttributes['leagueId'];
   role: LeagueMemberRole;
-  inviteStatus: InviteStatusEnum;
+  inviteStatus: InviteStatus;
   inviterProfileId: ProfileAttributes['profileId'] | null;
 }
 
@@ -41,7 +41,11 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         targetKey: 'profileId',
         as: 'profile',
       });
-      // this.hasMany(models.ProfilePick, { foreignKey: 'leagueProfileId', as: 'profilePicks' });
+      this.belongsTo(models.Profile, {
+        foreignKey: 'inviterProfileId',
+        targetKey: 'profileId',
+        as: 'inviterProfile',
+      });
     }
   }
 
@@ -63,7 +67,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         field: 'ROLE',
       },
       inviteStatus: {
-        type: DataTypes.ENUM(...Object.values(InviteStatusEnum)),
+        type: DataTypes.ENUM(...Object.values(InviteStatus)),
         allowNull: false,
         field: 'INVITE_STATUS',
       },

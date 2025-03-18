@@ -56,7 +56,7 @@ components:
       required:
         - email
         - password
-        - username
+        - userName
       properties:
         email:
           type: string
@@ -68,7 +68,7 @@ components:
           format: password
           description: Password for the new account
           example: StrongPassword123!
-        username:
+        userName:
           type: string
           description: Unique username for the account
           example: SurvivorFan69

@@ -1,8 +1,8 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { defaultProfileImagePath } from '../../constants/defaultImagePaths';
+import { UUID } from 'crypto';
 
 export interface ProfileAttributes {
-  profileId: string;
+  profileId: UUID;
   firstName?: string | null;
   lastName?: string | null;
 }
@@ -24,10 +24,10 @@ const ProfileModel = (sequelize: Sequelize) => {
         sourceKey: 'profileId',
         as: 'leagueProfiles',
       });
-      this.hasMany(models.Notification, {
-        foreignKey: 'profileId',
+      this.hasMany(models.LeagueProfile, {
+        foreignKey: 'inviterProfileId',
         sourceKey: 'profileId',
-        as: 'profile',
+        as: 'inviterProfile',
       });
     }
   }

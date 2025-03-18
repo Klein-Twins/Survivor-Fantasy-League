@@ -4,7 +4,7 @@ import { SeasonsAttributes } from '../season/Seasons';
 import { TribeAttributes } from '../season/Tribes';
 
 export interface SurvivorDetailsOnSeasonAttributes {
-  survivorId: SurvivorsAttributes['survivorId'];
+  id: SurvivorsAttributes['id'];
   seasonId: SeasonsAttributes['seasonId'];
   originalTribeId: TribeAttributes['id'];
   age: number;
@@ -17,7 +17,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
     extends Model<SurvivorDetailsOnSeasonAttributes>
     implements SurvivorDetailsOnSeasonAttributes
   {
-    public survivorId!: SurvivorDetailsOnSeasonAttributes['survivorId'];
+    public id!: SurvivorDetailsOnSeasonAttributes['id'];
     public seasonId!: SurvivorDetailsOnSeasonAttributes['seasonId'];
     public originalTribeId!: SurvivorDetailsOnSeasonAttributes['originalTribeId'];
     public age!: SurvivorDetailsOnSeasonAttributes['age'];
@@ -26,8 +26,8 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       this.belongsTo(models.Survivors, {
-        foreignKey: 'survivorId',
-        targetKey: 'survivorId',
+        foreignKey: 'id',
+        targetKey: 'id',
         as: 'Survivor',
       });
       this.belongsTo(models.Seasons, {
@@ -37,7 +37,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
       });
       this.hasMany(models.SeasonEliminations, {
         foreignKey: 'survivorId',
-        sourceKey: 'survivorId',
+        sourceKey: 'id',
         as: 'eliminations',
       });
     }
@@ -45,7 +45,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
 
   SurvivorDetailsOnSeason.init(
     {
-      survivorId: {
+      id: {
         type: DataTypes.UUID,
         primaryKey: true,
         allowNull: false,

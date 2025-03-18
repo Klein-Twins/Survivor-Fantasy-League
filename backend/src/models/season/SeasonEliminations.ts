@@ -6,7 +6,7 @@ import { SurvivorsAttributes } from '../survivors/Survivors';
 export interface SeasonEliminationAttributes {
   seasonId: SeasonsAttributes['seasonId'];
   episodeId: EpisodeAttributes['episodeId'];
-  survivorId: SurvivorsAttributes['survivorId'];
+  survivorId: SurvivorsAttributes['id'];
   notes: string | null;
   day: number;
   seq: number;
@@ -38,7 +38,7 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
       });
       this.belongsTo(models.Survivors, {
         foreignKey: 'survivorId',
-        targetKey: 'survivorId',
+        targetKey: 'id',
         as: 'survivor',
       });
     }

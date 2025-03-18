@@ -1,7 +1,8 @@
+import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 
 export interface SurvivorsAttributes {
-  survivorId: string;
+  id: UUID;
   firstName: string;
   lastName: string;
   fromState: string;
@@ -11,8 +12,11 @@ export interface SurvivorsAttributes {
 }
 
 const SurvivorsModel = (sequelize: Sequelize) => {
-  class Survivors extends Model<SurvivorsAttributes> implements SurvivorsAttributes {
-    public survivorId!: SurvivorsAttributes['survivorId'];
+  class Survivors
+    extends Model<SurvivorsAttributes>
+    implements SurvivorsAttributes
+  {
+    public id!: SurvivorsAttributes['id'];
     public firstName!: SurvivorsAttributes['firstName'];
     public lastName!: SurvivorsAttributes['lastName'];
     public fromState!: SurvivorsAttributes['fromState'];
@@ -22,13 +26,13 @@ const SurvivorsModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       this.hasMany(models.SurvivorDetailsOnSeason, {
-        foreignKey: 'survivorId',
-        sourceKey: 'survivorId',
+        foreignKey: 'id',
+        sourceKey: 'id',
         as: 'SurvivorDetailsOnSeason',
       });
       this.hasMany(models.ChallengeWinners, {
         foreignKey: 'winnerSurvivorId',
-        sourceKey: 'survivorId',
+        sourceKey: 'id',
         as: 'challengeWins',
       });
     }
@@ -36,7 +40,7 @@ const SurvivorsModel = (sequelize: Sequelize) => {
 
   Survivors.init(
     {
-      survivorId: {
+      id: {
         type: DataTypes.UUID,
         primaryKey: true,
         field: 'SURVIVOR_ID',

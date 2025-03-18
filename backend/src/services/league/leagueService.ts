@@ -1,21 +1,16 @@
-import { Transaction } from 'sequelize';
-import { sequelize } from '../../config/db';
+import sequelize from '../../config/db';
 import logger from '../../config/logger';
+import { League, LeagueMember, LeagueMemberRole } from '../../generated-api';
+import { ProfileAttributes } from '../../models/account/Profile';
+import { LeagueAttributes } from '../../models/league/League';
 import {
-  GetLeaguesResponseData,
-  League,
-  LeagueMemberRole,
-} from '../../generated-api';
-import leagueHelper from '../../helpers/league/leagueHelper';
-import leagueRepository from '../../repositories/league/leagueRepository';
-import profileHelper from '../../helpers/auth/profileHelper';
-import {
-  InviteStatusEnum,
+  InviteStatus,
   LeagueProfileAttributes,
 } from '../../models/league/LeagueProfile';
-import { UUID } from 'crypto';
-import { LeagueAttributes } from '../../models/league/League';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
+import leagueRepository from '../../repositories/league/leagueRepository';
+import { NotFoundError } from '../../utils/errors/errors';
+import leagueMemberService from './leagueMemberService';
 
 const leagueService = {
   createLeague,
@@ -23,27 +18,14 @@ const leagueService = {
   getLeaguesForProfile,
 };
 
-async function getLeaguesForProfile(
-  profileId: string
-): Promise<GetLeaguesResponseData> {
-  await profileHelper.validateProfileId(profileId);
-  const leagues: League[] = await leagueRepository.getLeaguesForProfile(
-    profileId,
-    InviteStatusEnum.Accepted
-  );
-  const responseData: GetLeaguesResponseData = {
-    leagues,
-  };
-  return responseData;
-}
+async function getLeague(leagueId: LeagueAttributes['leagueId']) {
+  const leagueAttributes = await leagueRepository.getLeague(leagueId);
+  if (!leagueAttributes) {
+    throw new NotFoundError('League not found');
+  }
 
-//TODO: Consider removing this function...
-async function getLeague(
-  leagueId: string,
-  transaction?: Transaction
-): Promise<League> {
-  leagueHelper.validateLeagueId(leagueId);
-  return await leagueRepository.getLeague(leagueId, transaction);
+  const leagueMembers = await leagueMemberService.getLeagueMembers(leagueId);
+  return buildLeague(leagueAttributes, leagueMembers);
 }
 
 async function createLeague({
@@ -51,32 +33,74 @@ async function createLeague({
   seasonId,
   profileId,
 }: {
-  name: string;
-  seasonId: number;
-  profileId: UUID;
+  name: LeagueAttributes['name'];
+  seasonId: LeagueAttributes['seasonId'];
+  profileId: ProfileAttributes['profileId'];
 }): Promise<League> {
   const transaction = await sequelize.transaction();
+
   try {
     const leagueAttributes: LeagueAttributes =
       await leagueRepository.createLeague(seasonId, name, transaction);
-    const leagueProfileAttributes: LeagueProfileAttributes =
-      await leagueMemberRepository.createLeagueMember(
-        leagueAttributes.leagueId,
-        profileId,
-        null,
-        LeagueMemberRole.Owner,
-        InviteStatusEnum.Accepted,
-        transaction
-      );
+
+    const leagueMember = await leagueMemberService.createLeagueMember({
+      leagueId: leagueAttributes.leagueId,
+      profileId,
+      inviterProfileId: profileId,
+      role: LeagueMemberRole.Owner,
+      inviteStatus: InviteStatus.Accepted,
+      transaction,
+    });
+
     await transaction.commit();
 
-    const league: League = await leagueHelper.buildLeague(leagueAttributes);
-    return league;
+    return buildLeague(leagueAttributes, [leagueMember]);
   } catch (error) {
     await transaction.rollback();
-    logger.error('Transaction rolled back. Error creating league:', error);
     throw error;
   }
+}
+
+async function getLeaguesForProfile(profileId: ProfileAttributes['profileId']) {
+  const leagueProfilesAttributes: LeagueProfileAttributes[] =
+    await leagueMemberRepository.getLeagueProfiles('profileId', profileId);
+
+  const enrolledProfilesAttributes = leagueProfilesAttributes.filter(
+    (leagueProfile) => leagueProfile.inviteStatus === InviteStatus.Accepted
+  );
+
+  const leagues: League[] = [];
+
+  for (const leagueProfile of enrolledProfilesAttributes) {
+    const leagueAttributes = await leagueRepository.getLeague(
+      leagueProfile.leagueId
+    );
+    if (!leagueAttributes) {
+      logger.error(
+        `League not found for leagueId: ${leagueProfile.leagueId} and leagueProfileId: ${leagueProfile.id}`
+      );
+      continue;
+    }
+    const leagueMembers = await leagueMemberService.getLeagueMembers(
+      leagueProfile.leagueId
+    );
+    const league = buildLeague(leagueAttributes, leagueMembers);
+    leagues.push(league);
+  }
+
+  return leagues;
+}
+
+function buildLeague(
+  leagueAttributes: LeagueAttributes,
+  leagueMembers: LeagueMember[]
+): League {
+  return {
+    id: leagueAttributes.leagueId,
+    seasonId: leagueAttributes.seasonId,
+    name: leagueAttributes.name,
+    leagueMembers,
+  };
 }
 
 export default leagueService;

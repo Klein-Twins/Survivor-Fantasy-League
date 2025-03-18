@@ -1,19 +1,12 @@
 import { UserSession } from '../../generated-api';
-import { TokenAttributes } from '../../models/account/Tokens';
-import tokenService from '../../services/auth/tokenService';
 import tokenHelper from './tokenHelper';
 
 const userSessionHelper = {
   buildUserSession,
 };
 
-async function buildUserSession(
-  refreshToken?: TokenAttributes['token']
-): Promise<UserSession> {
-  if (
-    !refreshToken ||
-    !(await tokenService.verifyToken(refreshToken, 'refresh'))
-  ) {
+function buildUserSession(refreshToken?: string): UserSession {
+  if (!refreshToken) {
     return {
       isAuthenticated: false,
     };

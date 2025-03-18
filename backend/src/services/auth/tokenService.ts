@@ -1,205 +1,313 @@
-import jwt from 'jsonwebtoken';
-import { Account } from '../../generated-api';
+import { Account, AccountRole } from '../../generated-api';
+import { TokenAttributes, TokenType } from '../../models/account/Tokens';
+import { UserJwtPayload } from '../../types/auth/tokenTypes';
+import { UserAttributes } from '../../models/account/User';
+import { ProfileAttributes } from '../../models/account/Profile';
 import tokenHelper from '../../helpers/auth/tokenHelper';
-import { TokenType, UserJwtPayload } from '../../types/auth/tokenTypes';
-import tokenRepository from '../../repositories/auth/tokenRepository';
+
+import jwt from 'jsonwebtoken';
 import { Transaction } from 'sequelize';
-import { models, sequelize } from '../../config/db';
-import { TokenAttributes } from '../../models/account/Tokens';
+import tokenRepository from '../../repositories/auth/tokenRepository';
+import sequelize from '../../config/db';
 import logger from '../../config/logger';
-import accountService from './accountService';
-import { InternalServerError } from '../../utils/errors/errors';
+import {
+  InternalServerError,
+  NotImplementedError,
+} from '../../utils/errors/errors';
+import accountService from '../account/accountService';
+
+interface Tokens {
+  refreshToken: string;
+  accessToken: string;
+}
 
 const tokenService = {
   createTokens,
-  createToken,
-  setTokensToInactive,
-  decodeToken,
-  getActiveTokens,
-  verifyToken,
-  authenticateToken,
-  createNewAccessTokenFromRefreshToken,
+  validateTokens,
+  invalidateTokens,
+  refreshAccessToken,
 };
 
-function verifyToken(token: string, tokenType: TokenType): boolean {
-  const tokenSecret = tokenHelper.getTokenSecret(tokenType);
-  try {
-    jwt.verify(token, tokenSecret);
-    return true;
-  } catch (error) {
-    return false;
-  }
-}
-
-async function getActiveTokens(userId: string): Promise<{
-  dbAccessToken: TokenAttributes | null;
-  dbRefreshToken: TokenAttributes | null;
-}> {
-  const dbAccessToken = await getActiveToken(userId, 'access');
-  const dbRefreshToken = await getActiveToken(userId, 'refresh');
-  return { dbAccessToken, dbRefreshToken };
-}
-
-async function getActiveToken(
-  userId: string,
-  tokenType: TokenType
-): Promise<TokenAttributes | null> {
-  const tokenAttributes: TokenAttributes | null = await models.Tokens.findOne({
-    where: {
-      userId: userId,
-      tokenType: tokenType,
-      isActive: true,
-    },
-  });
-  return tokenAttributes;
-}
-
-async function setTokensToInactive(
-  accessToken: string,
-  refreshToken: string
-): Promise<void> {
-  const accessTokenDecoded = jwt.decode(accessToken) as UserJwtPayload;
-  const refreshTokenDecoded = jwt.decode(refreshToken) as UserJwtPayload;
-
+async function createTokens({
+  userId,
+  profileId,
+  accountRole,
+}: {
+  userId: UserAttributes['userId'];
+  profileId: ProfileAttributes['profileId'];
+  accountRole: AccountRole;
+}): Promise<Tokens> {
   const transaction: Transaction = await sequelize.transaction();
   try {
-    await setTokenToInactive(
-      accessToken,
+    const accessToken = await createToken(
+      {
+        userId,
+        profileId,
+        accountRole,
+      },
       'access',
-      accessTokenDecoded.userId,
       transaction
     );
-    await setTokenToInactive(
-      refreshToken,
+    const refreshToken = await createToken(
+      {
+        userId,
+        profileId,
+        accountRole,
+      },
       'refresh',
-      refreshTokenDecoded.userId,
       transaction
     );
     await transaction.commit();
+    return { accessToken, refreshToken };
   } catch (error) {
     await transaction.rollback();
     throw error;
   }
 }
 
-async function decodeToken(token: string): Promise<UserJwtPayload> {
-  return jwt.decode(token) as UserJwtPayload;
+type ValidateTokenOptions = {
+  checkAccessTokenHasExpired: boolean;
+  checkRefreshTokenHasExpired: boolean;
+  checkAccessTokenInDBAndMarkedActive: boolean;
+  checkRefreshTokenInDBAndMarkedActive: boolean;
+  checkTokensBelongToUser: UserAttributes['userId'] | null;
+};
+
+/**
+ * This function validates the access and refresh tokens.
+ * This function will always check if the provided tokens are decodeable and if they match
+ * This will also check the options provided
+ *
+ * @param accessToken
+ * @param refreshToken
+ * @returns
+ */
+async function validateTokens(
+  tokens: {
+    accessToken?: TokenAttributes['token'];
+    refreshToken: TokenAttributes['token'];
+  },
+  options: ValidateTokenOptions
+): Promise<UserJwtPayload | null> {
+  //Decode tokens provided
+  let decodedAccessToken: UserJwtPayload | null = null;
+  if (tokens.accessToken) {
+    decodedAccessToken = tokenHelper.decodeToken(
+      tokens.accessToken
+    ) as UserJwtPayload;
+
+    //If access token cannot be decoded it is not valid.
+    if (!decodedAccessToken) {
+      return null;
+    }
+  }
+  const decodedRefreshToken = tokenHelper.decodeToken(
+    tokens.refreshToken
+  ) as UserJwtPayload;
+  //If refresh token cannot be decoded it is not valid.
+  if (!decodedRefreshToken) {
+    return null;
+  }
+
+  //If both tokens are provided
+  if (decodedAccessToken && decodedRefreshToken) {
+    const matchingPayloads = tokenHelper.checkPayloadsMatch(
+      decodedAccessToken,
+      decodedRefreshToken
+    );
+    if (!matchingPayloads) {
+      return null;
+    }
+  }
+
+  //If option checkAccessTokenHasExpired is true, check if access token has expired
+  if (options.checkAccessTokenHasExpired && tokens.accessToken) {
+    if (tokenHelper.hasTokenExpired(tokens.accessToken, 'access')) {
+      return null;
+    }
+  }
+
+  //If option checkRefreshTokenHasExpired is true, check if refresh token has expired
+  if (options.checkRefreshTokenHasExpired) {
+    if (tokenHelper.hasTokenExpired(tokens.refreshToken, 'refresh')) {
+      return null;
+    }
+  }
+
+  //If option checkAccessTokenInDBAndMarkedActive is true, check if access token is in the database
+  if (options.checkAccessTokenInDBAndMarkedActive && tokens.accessToken) {
+    const accessTokenAttributes = await tokenRepository.getTokenInDB(
+      'token',
+      tokens.accessToken,
+      'access'
+    );
+    if (!accessTokenAttributes || !accessTokenAttributes.isActive) {
+      return null;
+    }
+  }
+
+  //If option checkRefreshTokenInDBAndMarkedActive is true, check if refresh token is in the database
+  if (options.checkRefreshTokenInDBAndMarkedActive) {
+    const refreshTokenAttributes = await tokenRepository.getTokenInDB(
+      'token',
+      tokens.refreshToken,
+      'refresh'
+    );
+    if (!refreshTokenAttributes || !refreshTokenAttributes.isActive) {
+      return null;
+    }
+  }
+
+  //If option checkTokensBelongToUser is not null, check if tokens belong to the user
+  if (options.checkTokensBelongToUser) {
+    if (tokens.accessToken) {
+      if (decodedAccessToken?.userId !== options.checkTokensBelongToUser) {
+        return null;
+      }
+      const accessTokenAttributes = await tokenRepository.getTokenInDB(
+        'token',
+        tokens.accessToken,
+        'access'
+      );
+      if (accessTokenAttributes?.userId !== options.checkTokensBelongToUser) {
+        return null;
+      }
+    }
+
+    if (decodedRefreshToken.userId !== options.checkTokensBelongToUser) {
+      return null;
+    }
+    const refreshTokenAttributes = await tokenRepository.getTokenInDB(
+      'token',
+      tokens.refreshToken,
+      'refresh'
+    );
+    if (refreshTokenAttributes?.userId !== options.checkTokensBelongToUser) {
+      return null;
+    }
+  }
+
+  return decodedRefreshToken;
 }
 
-async function setTokenToInactive(
-  token: string,
-  tokenType: TokenType,
-  userId: string,
-  transaction?: Transaction
+async function invalidateTokens(
+  accessToken: TokenAttributes['token'],
+  refreshToken: TokenAttributes['token'],
+  tokensAreValidated: boolean
 ): Promise<void> {
-  await tokenRepository.setTokenToInactive(
-    token,
-    tokenType,
-    userId,
-    transaction
-  );
-}
-
-async function createTokens(
-  account: Account
-): Promise<{ refreshToken: string; accessToken: string }> {
-  const accessTokenData = await createToken(account, 'access');
-  const refreshTokenData = await createToken(account, 'refresh');
-
   const transaction: Transaction = await sequelize.transaction();
   try {
-    await tokenRepository.createTokenRecord(
-      accessTokenData.token,
-      'access',
-      account.userId,
-      getTokenExpirationDate(accessTokenData.token),
-      transaction
-    );
-    await tokenRepository.createTokenRecord(
-      refreshTokenData.token,
-      'refresh',
-      account.userId,
-      getTokenExpirationDate(refreshTokenData.token),
-      transaction
-    );
+    if (tokensAreValidated) {
+      const accessTokenInvalidatedDBInfo =
+        await tokenRepository.invalidateToken(accessToken, 'access');
+      if (accessTokenInvalidatedDBInfo.count !== 1) {
+        logger.error(
+          `Invalidating access token led to an unexpected change of ${accessTokenInvalidatedDBInfo.count} rows`
+        );
+      }
+      const refreshTokenInvalidatedDBInfo =
+        await tokenRepository.invalidateToken(refreshToken, 'refresh');
+      if (refreshTokenInvalidatedDBInfo.count !== 1) {
+        logger.error(
+          `Invalidating access token led to an unexpected change of ${refreshTokenInvalidatedDBInfo.count} rows`
+        );
+      }
+    } else {
+      throw new NotImplementedError(
+        'Invalidating tokens that are not validated is not implemented'
+      );
+    }
   } catch (error) {
     await transaction.rollback();
     throw error;
   }
-
-  return {
-    refreshToken: refreshTokenData.token,
-    accessToken: accessTokenData.token,
-  };
 }
 
-function createToken(
-  account: Account,
-  tokenType: TokenType
-): { tokenExpiresIn: string; token: string } {
+async function createToken(
+  {
+    userId,
+    profileId,
+    accountRole = AccountRole.User,
+  }: {
+    userId: UserAttributes['userId'];
+    profileId: ProfileAttributes['profileId'];
+    accountRole?: AccountRole;
+  },
+  tokenType: TokenType,
+  transaction?: Transaction
+): Promise<TokenAttributes['token']> {
   const payload: UserJwtPayload = {
-    userId: account.userId,
-    profileId: account.profileId,
+    userId,
+    profileId,
+    accountRole,
   };
   const tokenSecret = tokenHelper.getTokenSecret(tokenType);
   const tokenExpiresIn = tokenHelper.getTokenTotalLifeSpan(tokenType);
+
   const token: string = jwt.sign(payload, tokenSecret, {
     expiresIn: tokenExpiresIn,
   } as jwt.SignOptions);
-  return {
-    tokenExpiresIn: '2h',
+
+  const tokenAttributes = await tokenRepository.createToken(
     token,
-  };
+    userId,
+    tokenType,
+    transaction
+  );
+
+  return tokenAttributes.token;
 }
 
-function getTokenExpirationDate(token: string): Date {
-  const decodedToken = jwt.decode(token) as UserJwtPayload;
-  if (!decodedToken || typeof decodedToken === 'string' || !decodedToken.exp) {
-    throw new Error('Invalid token');
-  }
-  return new Date(decodedToken.exp * 1000);
-}
-
-async function authenticateToken(
-  token: string,
-  tokenType: TokenType
-): Promise<boolean> {
-  const tokenDecoded: UserJwtPayload = await decodeToken(token);
-  if (!tokenDecoded) {
-    logger.error(`${tokenType} token is not a valid JWT token`);
-    return false;
+async function refreshAccessToken(
+  refreshToken: TokenAttributes['token']
+): Promise<TokenAttributes['token']> {
+  const decodedRefreshToken = tokenHelper.decodeToken(refreshToken);
+  if (!decodedRefreshToken) {
+    throw new InternalServerError('Invalid refresh token');
   }
 
-  if (!verifyToken(token, tokenType)) {
-    return false;
-  }
+  const account: Account = await accountService.getAccount(
+    'userId',
+    decodedRefreshToken.userId
+  );
 
-  const isTokenInDatabase = await tokenRepository.verifyToken(
-    token,
-    tokenDecoded.userId,
+  const oldAccessToken = await tokenRepository.getTokenInDB(
+    'userId',
+    decodedRefreshToken.userId,
     'refresh'
   );
-  if (!isTokenInDatabase) {
-    return false;
-  }
 
-  return true;
+  const transaction = await sequelize.transaction();
+  try {
+    if (oldAccessToken) {
+      const { count } = await tokenRepository.invalidateToken(
+        oldAccessToken.token,
+        'access',
+        transaction
+      );
+      if (count !== 1) {
+        logger.warn(
+          `Invalidating old access token led to an unexpected change of ${count} rows`
+        );
+      }
+    }
+
+    const newAccessToken = await createToken(
+      {
+        userId: decodedRefreshToken.userId,
+        profileId: decodedRefreshToken.profileId,
+        accountRole: account.accountRole,
+      },
+      'access',
+      transaction
+    );
+
+    await transaction.commit();
+    return newAccessToken;
+  } catch (error) {
+    await transaction.rollback();
+    throw error;
+  }
 }
 
-async function createNewAccessTokenFromRefreshToken(
-  refreshToken: string
-): Promise<string> {
-  const decodedRefreshToken = jwt.decode(refreshToken) as UserJwtPayload;
-  if (!decodedRefreshToken) {
-    logger.error('Error decoding refresh token');
-    throw new InternalServerError('Error decoding refresh token');
-  }
-  const account: Account = await accountService.getAccount(
-    decodedRefreshToken.userId,
-    'userId'
-  );
-
-  const newAccessToken = tokenService.createToken(account, 'access');
-  return newAccessToken.token;
-}
 export default tokenService;

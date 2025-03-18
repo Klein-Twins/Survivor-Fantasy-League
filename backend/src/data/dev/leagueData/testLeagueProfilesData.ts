@@ -1,6 +1,6 @@
 import { LeagueMemberRole } from '../../../generated-api';
 import {
-  InviteStatusEnum,
+  InviteStatus,
   LeagueProfileAttributes,
 } from '../../../models/league/LeagueProfile';
 import { testLeagueIds, testLeagueProfileIds, testProfileIds } from '../devIds';
@@ -12,7 +12,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.TonyStark,
     leagueId: testLeagueIds.league1,
     role: LeagueMemberRole.Owner,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: null,
   },
   {
@@ -20,7 +20,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.BruceBanner,
     leagueId: testLeagueIds.league1,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: testProfileIds.TonyStark,
   },
   {
@@ -28,7 +28,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.CaptainAmerica,
     leagueId: testLeagueIds.league1,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Pending,
+    inviteStatus: InviteStatus.Pending,
     inviterProfileId: testProfileIds.TonyStark,
   },
 
@@ -38,7 +38,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.NatashaRomanoff,
     leagueId: testLeagueIds.league2,
     role: LeagueMemberRole.Owner,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: null,
   },
   {
@@ -46,7 +46,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.ClintBarton,
     leagueId: testLeagueIds.league2,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: testProfileIds.NatashaRomanoff,
   },
   {
@@ -54,7 +54,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.ThorOdinson,
     leagueId: testLeagueIds.league2,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Pending,
+    inviteStatus: InviteStatus.Pending,
     inviterProfileId: testProfileIds.NatashaRomanoff,
   },
 
@@ -64,7 +64,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.WandaMaximoff,
     leagueId: testLeagueIds.league3,
     role: LeagueMemberRole.Owner,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: null,
   },
   {
@@ -72,7 +72,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.VisionStone,
     leagueId: testLeagueIds.league3,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: testProfileIds.WandaMaximoff,
   },
   {
@@ -80,7 +80,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.SamWilson,
     leagueId: testLeagueIds.league3,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Pending,
+    inviteStatus: InviteStatus.Pending,
     inviterProfileId: testProfileIds.WandaMaximoff,
   },
 
@@ -90,7 +90,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.TChallaWakanda,
     leagueId: testLeagueIds.league4,
     role: LeagueMemberRole.Owner,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: null,
   },
   {
@@ -98,7 +98,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.PeterParker,
     leagueId: testLeagueIds.league4,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: testProfileIds.TChallaWakanda,
   },
 
@@ -108,7 +108,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.StephenStrange,
     leagueId: testLeagueIds.league5,
     role: LeagueMemberRole.Owner,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: null,
   },
   {
@@ -116,7 +116,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.TonyStark,
     leagueId: testLeagueIds.league5,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Accepted,
+    inviteStatus: InviteStatus.Accepted,
     inviterProfileId: testProfileIds.StephenStrange,
   },
   {
@@ -124,7 +124,7 @@ const testLeagueProfilesData: LeagueProfileAttributes[] = [
     profileId: testProfileIds.BruceBanner,
     leagueId: testLeagueIds.league5,
     role: LeagueMemberRole.Member,
-    inviteStatus: InviteStatusEnum.Pending,
+    inviteStatus: InviteStatus.Pending,
     inviterProfileId: testProfileIds.StephenStrange,
   },
 ];

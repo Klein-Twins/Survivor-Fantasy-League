@@ -5,7 +5,6 @@ import {
   CompletedLeagueSurvey,
   Pick,
   PickOptionTypeEnum,
-  PickSelection,
   Survivor,
   SurvivorPickOptions,
   Tribe,

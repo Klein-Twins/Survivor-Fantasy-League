@@ -1,12 +1,12 @@
 import { UUID } from 'crypto';
 import { LeagueProfileAttributes } from './LeagueProfile';
-import { LeagueSurveyAttributes } from './LeagueSurveys';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import { LeagueSurveyForEpisodeAttributes } from './LeagueSurveysForEpisode';
 
 export interface SurveySubmissionAttributes {
   surveySubmissionId: UUID;
   leagueProfileId: LeagueProfileAttributes['id'];
-  leagueSurveyId: LeagueSurveyAttributes['leagueSurveyId'];
+  leagueSurveyId: LeagueSurveyForEpisodeAttributes['leagueSurveyId'];
 }
 
 const SurveySubmissionModel = (sequelize: Sequelize) => {

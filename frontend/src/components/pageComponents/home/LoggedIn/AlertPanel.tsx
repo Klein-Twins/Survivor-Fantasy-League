@@ -2,14 +2,7 @@ import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../store/store';
-import leagueSurveyService, {
-  GetCurrentEpisodeSurveysParams,
-} from '../../../../servicesBackup/league/leagueSurveyService';
-import {
-  GetCurrentEpisodSurveysResponse,
-  League,
-  SurveySubmissionStatus,
-} from '../../../../../generated-api';
+import { League, SurveySubmissionStatus } from '../../../../../generated-api';
 import { useApi } from '../../../../hooks/useApi';
 import Panel from '../../../ui/panels/Panel';
 import { HorizontalLinePrimaryColors } from '../../../../styles/CommonColorClassNames';

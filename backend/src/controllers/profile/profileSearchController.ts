@@ -5,8 +5,8 @@ import {
   SortByEnum,
 } from '../../generated-api';
 import { LeagueAttributes } from '../../models/league/League';
-import profileSearchService from '../../services/profile/profileSearchService';
 import profileSearchHelper from '../../helpers/profile/profileSearchHelper';
+import profileSearchService from '../../services/league/leagueInvite/profileSearchService';
 
 const profileSearchControler = {
   getProfilesBySearch,

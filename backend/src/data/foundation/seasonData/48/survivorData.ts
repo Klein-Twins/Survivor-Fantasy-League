@@ -3,7 +3,7 @@ import { season48SurvivorIds, season48TribeIds } from '../../foundationIds';
 
 const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
   {
-    survivorId: season48SurvivorIds.BiancaRoses,
+    id: season48SurvivorIds.BiancaRoses,
     seasonId: 48,
     originalTribeId: season48TribeIds.Lagi,
     age: 33,
@@ -11,7 +11,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'PR Consultant',
   },
   {
-    survivorId: season48SurvivorIds.CedrekMcFadden,
+    id: season48SurvivorIds.CedrekMcFadden,
     seasonId: 48,
     originalTribeId: season48TribeIds.Vula,
     age: 45,
@@ -19,7 +19,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Surgeon',
   },
   {
-    survivorId: season48SurvivorIds.CharityNeims,
+    id: season48SurvivorIds.CharityNeims,
     seasonId: 48,
     originalTribeId: season48TribeIds.Civa,
     age: 34,
@@ -27,7 +27,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Flight Attendant',
   },
   {
-    survivorId: season48SurvivorIds.ChrissySarnowsky,
+    id: season48SurvivorIds.ChrissySarnowsky,
     seasonId: 48,
     originalTribeId: season48TribeIds.Civa,
     age: 55,
@@ -35,7 +35,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Fire Lieutenant',
   },
   {
-    survivorId: season48SurvivorIds.DavidKinne,
+    id: season48SurvivorIds.DavidKinne,
     seasonId: 48,
     originalTribeId: season48TribeIds.Civa,
     age: 39,
@@ -43,7 +43,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Stunt Performer',
   },
   {
-    survivorId: season48SurvivorIds.EvaErickson,
+    id: season48SurvivorIds.EvaErickson,
     seasonId: 48,
     originalTribeId: season48TribeIds.Lagi,
     age: 24,
@@ -51,7 +51,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'PhD Candidate',
   },
   {
-    survivorId: season48SurvivorIds.JoeHunter,
+    id: season48SurvivorIds.JoeHunter,
     seasonId: 48,
     originalTribeId: season48TribeIds.Lagi,
     age: 45,
@@ -59,7 +59,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Fire Captain',
   },
   {
-    survivorId: season48SurvivorIds.JustinPioppi,
+    id: season48SurvivorIds.JustinPioppi,
     seasonId: 48,
     originalTribeId: season48TribeIds.Vula,
     age: 29,
@@ -67,7 +67,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Pizzeria Manager',
   },
   {
-    survivorId: season48SurvivorIds.KamillaKarthigesu,
+    id: season48SurvivorIds.KamillaKarthigesu,
     seasonId: 48,
     originalTribeId: season48TribeIds.Civa,
     age: 31,
@@ -75,7 +75,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Software Engineer',
   },
   {
-    survivorId: season48SurvivorIds.KevinLeung,
+    id: season48SurvivorIds.KevinLeung,
     seasonId: 48,
     originalTribeId: season48TribeIds.Vula,
     age: 34,
@@ -83,7 +83,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Finance Manager',
   },
   {
-    survivorId: season48SurvivorIds.KyleFraser,
+    id: season48SurvivorIds.KyleFraser,
     seasonId: 48,
     originalTribeId: season48TribeIds.Civa,
     age: 31,
@@ -91,7 +91,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Attorney',
   },
   {
-    survivorId: season48SurvivorIds.MaryZheng,
+    id: season48SurvivorIds.MaryZheng,
     seasonId: 48,
     originalTribeId: season48TribeIds.Vula,
     age: 31,
@@ -99,7 +99,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Chaotic, dynamic, thoughtful',
   },
   {
-    survivorId: season48SurvivorIds.MitchGuerra,
+    id: season48SurvivorIds.MitchGuerra,
     seasonId: 48,
     originalTribeId: season48TribeIds.Civa,
     age: 34,
@@ -107,7 +107,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'P.E. Coach',
   },
   {
-    survivorId: season48SurvivorIds.SaiouniaHughley,
+    id: season48SurvivorIds.SaiouniaHughley,
     seasonId: 48,
     originalTribeId: season48TribeIds.Vula,
     age: 30,
@@ -115,7 +115,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Marketing Professional',
   },
   {
-    survivorId: season48SurvivorIds.ShauhinDavari,
+    id: season48SurvivorIds.ShauhinDavari,
     seasonId: 48,
     originalTribeId: season48TribeIds.Lagi,
     age: 38,
@@ -123,7 +123,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Debate Professor',
   },
   {
-    survivorId: season48SurvivorIds.StarToomey,
+    id: season48SurvivorIds.StarToomey,
     seasonId: 48,
     originalTribeId: season48TribeIds.Lagi,
     age: 28,
@@ -131,7 +131,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Sales Expert',
   },
   {
-    survivorId: season48SurvivorIds.StephanieBerger,
+    id: season48SurvivorIds.StephanieBerger,
     seasonId: 48,
     originalTribeId: season48TribeIds.Vula,
     age: 38,
@@ -139,7 +139,7 @@ const season48SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Tech Product Lead',
   },
   {
-    survivorId: season48SurvivorIds.ThomasKrottinger,
+    id: season48SurvivorIds.ThomasKrottinger,
     seasonId: 48,
     originalTribeId: season48TribeIds.Lagi,
     age: 34,

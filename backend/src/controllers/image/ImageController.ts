@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import s3Service from '../../services/image/s3Service';
+import imageService from '../../services/image/imageService';
 
 async function getLeagueImage(
   req: Request,
@@ -8,7 +8,7 @@ async function getLeagueImage(
 ): Promise<void> {
   try {
     const leagueId = req.params.leagueId;
-    const { buffer, contentType } = await s3Service.getLeagueImage(leagueId);
+    const { buffer, contentType } = await imageService.getLeagueImage(leagueId);
     setResHeaders(res, contentType);
     res.send(buffer);
     return;
@@ -25,7 +25,9 @@ async function getProfileImage(
 ): Promise<void> {
   try {
     const profileId = req.params.profileId;
-    const { buffer, contentType } = await s3Service.getProfileImage(profileId);
+    const { buffer, contentType } = await imageService.getProfileImage(
+      profileId
+    );
 
     setResHeaders(res, contentType);
     res.send(buffer);
@@ -49,7 +51,7 @@ async function getSeasonLogoImage(
 ): Promise<void> {
   try {
     const seasonId = req.params.seasonId;
-    const { buffer, contentType } = await s3Service.getSeasonLogoImage(
+    const { buffer, contentType } = await imageService.getSeasonLogoImage(
       seasonId
     );
     setResHeaders(res, contentType);
@@ -68,7 +70,9 @@ async function getEpisodeImage(
 ): Promise<void> {
   try {
     const episodeId = req.params.episodeId;
-    const { buffer, contentType } = await s3Service.getEpisodeImage(episodeId);
+    const { buffer, contentType } = await imageService.getEpisodeImage(
+      episodeId
+    );
     setResHeaders(res, contentType);
     res.send(buffer);
     return;
@@ -85,7 +89,7 @@ async function getSurvivorImage(
 ): Promise<void> {
   try {
     const { seasonId, survivorId } = req.params;
-    const { buffer, contentType } = await s3Service.getSurvivorImage(
+    const { buffer, contentType } = await imageService.getSurvivorImage(
       seasonId,
       survivorId
     );

@@ -15,51 +15,75 @@ components:
           items:
             $ref: './pick.yaml#/components/schemas/Pick'
 
-    LeagueSurvey:
+    EpisodeSurvey:
       allOf:
         - $ref: '#/components/schemas/Survey'
         - type: object
           required:
-            - leagueSurveyId
             - episodeId
-            - availabilityStatus
+            - dueDate
+            - openDate
+            - episodeSurveyId
+            - SurveyAvailabilityStatus
+          properties:
+            episodeId:
+              type: string
+              format: uuid
+              description: The ID of the episode the survey is for
+            dueDate:
+              type: string
+              format: date-time
+              description: The date the survey is due
+            openDate:
+              type: string
+              format: date-time
+              description: The date the survey opens
+            episodeSurveyId:
+              type: string
+              format: uuid
+              description: The ID of the episode survey
+            surveyAvailabilityStatus:
+              $ref: '#/components/schemas/SurveyAvailabilityStatus'
+
+    LeagueSurvey:
+      allOf:
+        - $ref: '#/components/schemas/EpisodeSurvey'
+        - type: object
+          required:
+            - leagueSurveyId
             - leagueId
-            - submissionStatus
           properties:
             leagueSurveyId:
               type: string
               format: uuid
               description: The ID of the league survey
-            episodeId:
-              type: string
-              format: uuid
-              description: The ID of the episode the survey is for
-            availabilityStatus:
-              $ref: '#/components/schemas/SurveyAvailabilityStatus'
             leagueId:
               type: string
               format: uuid
               description: The ID of the league the survey is for
-            submissionStatus:
-              $ref: '#/components/schemas/SurveySubmissionStatus'
 
-    CompletedLeagueSurvey:
+    LeagueMemberSurvey:
       allOf:
         - $ref: '#/components/schemas/LeagueSurvey'
         - type: object
           required:
-            - picks
-            - profileId
             - leagueProfileId
+            - submissionStatus
           properties:
-            profileId:
-              type: string
-              format: uuid
-              description: The ID of the profile submitting the survey
             leagueProfileId:
               type: string
               format: uuid
-              description: The ID of the league profile submitting the survey
+              description: The ID of the league profile the survey is for
+            submissionStatus:
+              $ref: '#/components/schemas/SurveySubmissionStatus'
+
+    CompletedLeagueMemberSurvey:
+      allOf:
+        - $ref: '#/components/schemas/LeagueMemberSurvey'
+        - type: object
+          required:
+            - picks
+          properties:
             picks:
               type: array
               items:

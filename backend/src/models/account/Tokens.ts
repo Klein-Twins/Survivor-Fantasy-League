@@ -1,6 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { TokenType } from '../../types/auth/tokenTypes';
 import { UserAttributes } from './User';
+
+export type TokenType = 'access' | 'refresh';
 
 export interface TokenAttributes {
   token: string;

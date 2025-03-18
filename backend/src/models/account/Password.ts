@@ -2,14 +2,17 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { UserAttributes } from './User';
 
 export interface PasswordAttributes {
-  passwordSeq: number; // Primary key that auto-increments
-  userId: UserAttributes['userId']; // Composite primary key
-  password: string; // The hashed password
-  active: boolean; // The active password
+  passwordSeq: number;
+  userId: UserAttributes['userId'];
+  password: string;
+  active: boolean;
 }
 
 const PasswordModel = (sequelize: Sequelize) => {
-  class Password extends Model<PasswordAttributes> implements PasswordAttributes {
+  class Password
+    extends Model<PasswordAttributes>
+    implements PasswordAttributes
+  {
     public passwordSeq!: PasswordAttributes['passwordSeq'];
     public userId!: PasswordAttributes['userId'];
     public password!: PasswordAttributes['password'];

@@ -7,10 +7,12 @@ import {
   GetSeasonsResponse,
   GetSeasonsResponseData,
 } from '../../generated-api';
-import seasonService from '../../services/season/seasonService';
-import { BadRequestError } from '../../utils/errors/errors';
+import {
+  BadRequestError,
+  NotImplementedError,
+} from '../../utils/errors/errors';
 import seasonHelper from '../../helpers/season/seasonHelper';
-import s3Service from '../../services/image/s3Service';
+import seasonService from '../../services/season/seasonService';
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -21,6 +23,8 @@ const seasonController = {
 
 async function createSeason(req: Request, res: Response, next: NextFunction) {
   try {
+    throw new NotImplementedError('Not implemented');
+    /*
     const requestBody: CreateSeasonRequestBody = req.body;
     await seasonHelper.validateCreateSeasonRequest(requestBody);
     const seasonLogo = req.file;
@@ -44,6 +48,7 @@ async function createSeason(req: Request, res: Response, next: NextFunction) {
       statusCode: 200,
     };
     res.status(response.statusCode).json(response);
+    */
   } catch (error) {
     next(error);
   }
@@ -51,18 +56,10 @@ async function createSeason(req: Request, res: Response, next: NextFunction) {
 
 async function getSeasons(req: Request, res: Response, next: NextFunction) {
   try {
-    const seasonId = req.params.seasonId;
-    if (seasonId && Number.isNaN(Number(seasonId))) {
-      throw new BadRequestError('Invalid seasonId');
-    }
-    let responseData: GetSeasonsResponseData;
-    if (seasonId) {
-      responseData = {
-        seasons: [await seasonService.getSeasonBySeasonId(Number(seasonId))],
-      };
-    } else {
-      responseData = await seasonService.getAllSeasons();
-    }
+    const seasons = await seasonService.getAllSeasons();
+    const responseData: GetSeasonsResponseData = {
+      seasons,
+    };
     const response: GetSeasonsResponse = {
       responseData,
       success: true,

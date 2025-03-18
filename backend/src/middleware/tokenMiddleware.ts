@@ -14,37 +14,11 @@ const tokenMiddleware = {
     if (process.env.SKIP_AUTH === 'true') {
       logger.debug('Skipping authentication due to environment variable');
       res.locals.isAuthenticated = true;
-      return next();
+      next();
+      return;
     }
-
-    const accessToken: string = req.cookies.accessToken;
-    const refreshToken: string = req.cookies.refreshToken;
-
-    try {
-      const isAccessTokenAuthenticated = await tokenService.authenticateToken(
-        accessToken,
-        'access'
-      );
-      const isRefreshTokenAuthenticated = await tokenService.authenticateToken(
-        refreshToken,
-        'refresh'
-      );
-      if (isAccessTokenAuthenticated && isRefreshTokenAuthenticated) {
-        logger.debug('Tokens are valid. Proceeding with the request.');
-        next();
-        return;
-      }
-      if (!isAccessTokenAuthenticated && isRefreshTokenAuthenticated) {
-        logger.debug(
-          'Access token is invalid. Refresh token is valid. Generating new access token for user'
-        );
-        tokenService.createNewAccessTokenFromRefreshToken(refreshToken);
-      }
-    } catch (error) {
-      logger.error('Error in authenticateToken middleware:', error);
-      res.locals.isAuthenticated = false;
-      return next(error);
-    }
+    next();
+    return;
   },
 };
 

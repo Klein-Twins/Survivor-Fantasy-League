@@ -1,4 +1,5 @@
 import { models } from '../../config/db';
+import logger from '../../config/logger';
 import pickOptionsData from './pickData/pickOptionsData';
 import picksData from './pickData/picksData';
 import season47ChallengesData from './seasonData/47/challengeData';
@@ -71,23 +72,31 @@ const seedSeason47Data = async () => {
 };
 
 const seedPicksAndSurveys = async () => {
+  logger.debug('Seeding pick options...');
   await models.PickOptions.destroy({ where: {} });
   await models.PickOptions.bulkCreate(pickOptionsData, { validate: true });
 
+  logger.debug('Seeding picks...');
   await models.Picks.destroy({ where: {} });
   await models.Picks.bulkCreate(picksData, { validate: true });
 
+  logger.debug('Seeding surveys...');
   await models.Survey.destroy({ where: {} });
   await models.Survey.bulkCreate(defaultSurveysData, { validate: true });
 
+  logger.debug('Seeding survey picks');
   await models.SurveyPicks.destroy({ where: {} });
   await models.SurveyPicks.bulkCreate(surveyPicksData, { validate: true });
 };
 
 const seedFoundationData = async () => {
+  logger.debug('Seeding season data...');
   await seedSeasonData();
+  logger.debug('Seeding survivor data...');
   await seedSurvivorData();
+  logger.debug('Seeding season 47 data...');
   await seedSeason47Data();
+  logger.debug('Seeding picks and surveys...');
   await seedPicksAndSurveys();
 };
 

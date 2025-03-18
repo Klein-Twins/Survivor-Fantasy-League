@@ -1,43 +1,40 @@
 import { Transaction } from 'sequelize';
 import { ProfileAttributes } from '../../models/account/Profile';
-import { LeagueInvite, LeagueMemberRole } from '../../generated-api';
+import { LeagueAttributes } from '../../models/league/League';
 import {
-  InviteStatusEnum,
+  InviteStatus,
   LeagueProfileAttributes,
 } from '../../models/league/LeagueProfile';
 import { models } from '../../config/db';
 import { v4 as uuidv4 } from 'uuid';
-import { LeagueAttributes } from '../../models/league/League';
-import leagueInviteHelper from '../../helpers/league/leagueInviteHelper';
-import { InternalServerError } from '../../utils/errors/errors';
-import logger from '../../config/logger';
+import { LeagueMemberRole } from '../../generated-api';
 
 const leagueInviteRepository = {
-  getLeagueInvitesForProfileId,
   createLeagueInvite,
-  getLeagueInviteByProfileIdAndLeagueId,
   acceptLeagueInvite,
   declineLeagueInvite,
 };
 
 async function acceptLeagueInvite(
-  leagueInvite: LeagueInvite,
+  inviteId: LeagueProfileAttributes['id'],
   transaction?: Transaction
-) {
+): Promise<void> {
   let t = transaction;
   if (!transaction) {
     t = await models.sequelize.transaction();
   }
   try {
-    await models.LeagueProfile.update(
+    const affectedRows = await models.LeagueProfile.update(
       {
-        inviteStatus: InviteStatusEnum.Accepted,
+        inviteStatus: InviteStatus.Accepted,
+        role: LeagueMemberRole.Member,
       },
       {
         where: {
-          id: leagueInvite.inviteId,
+          id: inviteId,
         },
         transaction: t,
+        returning: true,
       }
     );
 
@@ -53,28 +50,20 @@ async function acceptLeagueInvite(
 }
 
 async function declineLeagueInvite(
-  leagueInvite: LeagueInvite,
+  inviteId: LeagueProfileAttributes['id'],
   transaction?: Transaction
-) {
+): Promise<void> {
   let t = transaction;
   if (!transaction) {
     t = await models.sequelize.transaction();
   }
   try {
-    const numDeleted = await models.LeagueProfile.destroy({
+    await models.LeagueProfile.destroy({
       where: {
-        id: leagueInvite.inviteId,
+        id: inviteId,
       },
       transaction: t,
     });
-
-    if (numDeleted !== 1) {
-      logger.error(`Error declining league invite: ${leagueInvite.inviteId}`);
-      logger.error(
-        `Expecting 1 row to be deleted, but deleted ${numDeleted} rows. Rolling back changes.`
-      );
-      throw new InternalServerError('Error declining league invite');
-    }
 
     if (!transaction && t) {
       await t.commit();
@@ -85,52 +74,6 @@ async function declineLeagueInvite(
     }
     throw error;
   }
-}
-
-async function getLeagueInviteByProfileIdAndLeagueId(
-  leagueId: LeagueAttributes['leagueId'],
-  profileId: ProfileAttributes['profileId'],
-  transaction?: Transaction
-): Promise<LeagueInvite | null> {
-  const inviteLeagueProfile: LeagueProfileAttributes | null =
-    await models.LeagueProfile.findOne({
-      where: {
-        leagueId,
-        profileId,
-      },
-      transaction,
-    });
-
-  if (!inviteLeagueProfile) {
-    return null;
-  }
-  return await leagueInviteHelper.buildLeagueInvite(inviteLeagueProfile);
-}
-
-async function getLeagueInvitesForProfileId(
-  profileId: ProfileAttributes['profileId'],
-  transaction?: Transaction
-): Promise<LeagueInvite[]> {
-  const inviteLeagueProfiles: LeagueProfileAttributes[] =
-    await models.LeagueProfile.findAll({
-      where: {
-        profileId: profileId,
-        inviteStatus: InviteStatusEnum.Pending,
-      },
-      transaction,
-    });
-
-  if (inviteLeagueProfiles.length === 0) {
-    return [];
-  }
-
-  const leagueInvites: Promise<LeagueInvite>[] = inviteLeagueProfiles.map(
-    async (inviteLeagueProfile) => {
-      return await leagueInviteHelper.buildLeagueInvite(inviteLeagueProfile);
-    }
-  );
-
-  return Promise.all(leagueInvites);
 }
 
 async function createLeagueInvite(
@@ -138,38 +81,38 @@ async function createLeagueInvite(
   inviterProfileId: ProfileAttributes['profileId'],
   invitedProfileId: ProfileAttributes['profileId'],
   transaction?: Transaction
-): Promise<LeagueInvite> {
-  let t = transaction;
-  if (!transaction) {
-    t = await models.sequelize.transaction();
-  }
-  try {
-    const inviteLeagueProfile: LeagueProfileAttributes =
-      await models.LeagueProfile.create(
-        {
-          id: uuidv4(),
-          leagueId,
-          profileId: invitedProfileId,
-          inviterProfileId,
-          role: LeagueMemberRole.Member,
-          inviteStatus: InviteStatusEnum.Pending,
-        },
-        { transaction: t }
-      );
-
-    const leagueInvite: LeagueInvite =
-      await leagueInviteHelper.buildLeagueInvite(inviteLeagueProfile);
-
-    if (!transaction && t) {
-      await t.commit();
+): Promise<LeagueProfileAttributes> {
+  {
+    let t = transaction;
+    if (!transaction) {
+      t = await models.sequelize.transaction();
     }
+    try {
+      const leagueProfileId = uuidv4();
+      const inviteLeagueProfile: LeagueProfileAttributes =
+        await models.LeagueProfile.create(
+          {
+            id: leagueProfileId,
+            leagueId,
+            profileId: invitedProfileId,
+            inviterProfileId,
+            role: LeagueMemberRole.Invited,
+            inviteStatus: InviteStatus.Pending,
+          },
+          { transaction: t }
+        );
 
-    return leagueInvite;
-  } catch (error) {
-    if (!transaction && t) {
-      await t.rollback();
+      if (!transaction && t) {
+        await t.commit();
+      }
+
+      return inviteLeagueProfile;
+    } catch (error) {
+      if (!transaction && t) {
+        await t.rollback();
+      }
+      throw error;
     }
-    throw error;
   }
 }
 

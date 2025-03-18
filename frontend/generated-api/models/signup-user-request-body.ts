@@ -45,7 +45,7 @@ export interface SignupUserRequestBody {
      * @memberof SignupUserRequestBody
      * @example SurvivorFan69
      */
-    username: string;
+    userName: string;
 
     /**
      * First name of the user

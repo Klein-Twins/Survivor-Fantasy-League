@@ -12,11 +12,10 @@ import TribeModel from './season/Tribes';
 import EpisodeModel from './season/Episodes';
 import SurveyModel from './surveyAndPick/Survey';
 import SurveyPicksModel from './surveyAndPick/SurveyPicks';
-import LeagueSurveyModel from './league/LeagueSurveys';
+import LeagueSurveyForEpisodeModel from './league/LeagueSurveysForEpisode';
 import ChallengeModel from './season/challenges/Challenges';
 import SeasonEliminationsModel from './season/SeasonEliminations';
 import ChallengeWinnersModel from './season/challenges/ChallengeWinners';
-import NotificationModel from './account/Notification';
 import PicksModel from './surveyAndPick/picks/Picks';
 import PickOptionsModel from './surveyAndPick/picks/PickOptions';
 import PickPointsModel from './surveyAndPick/picks/PickPoints';
@@ -26,6 +25,7 @@ import PickTypeModel from './surveyAndPick/picks/PickType';
 import logger from '../config/logger';
 import SurveySubmissionModel from './league/SurveySubmissions';
 import PickSubmissionModel from './league/PickSubmission';
+import EpisodeSurveyModel from './surveyAndPick/EpisodeSurvey';
 
 const initModels = (sequelize: Sequelize) => {
   logger.debug('Initializing models');
@@ -39,7 +39,6 @@ const initModels = (sequelize: Sequelize) => {
   const Profile = ProfileModel(sequelize);
   const Tokens = TokensModel(sequelize);
   const LeagueProfile = LeagueProfileModel(sequelize);
-  const Notification = NotificationModel(sequelize);
   const Picks = PicksModel(sequelize);
   const PickOptions = PickOptionsModel(sequelize);
   const PickPoints = PickPointsModel(sequelize);
@@ -49,8 +48,9 @@ const initModels = (sequelize: Sequelize) => {
   const Episode = EpisodeModel(sequelize);
   const Tribe = TribeModel(sequelize);
   const Survey = SurveyModel(sequelize);
+  const EpisodeSurvey = EpisodeSurveyModel(sequelize);
   const SurveyPicks = SurveyPicksModel(sequelize);
-  const LeagueSurveys = LeagueSurveyModel(sequelize);
+  const LeagueSurveyForEpisode = LeagueSurveyForEpisodeModel(sequelize);
   const Challenges = ChallengeModel(sequelize);
   const ChallengeWinners = ChallengeWinnersModel(sequelize);
   const SeasonEliminations = SeasonEliminationsModel(sequelize);
@@ -71,10 +71,9 @@ const initModels = (sequelize: Sequelize) => {
     Tribe,
   });
   SurvivorDetailsOnSeason.associate({ Survivors, Seasons, SeasonEliminations });
-  Profile.associate({ User, LeagueProfile, Notification });
+  Profile.associate({ User, LeagueProfile });
   Tokens.associate({ User });
   LeagueProfile.associate({ League, Profile });
-  Notification.associate({ Profile });
   Tribe.associate({ ChallengeWinners, Seasons, Episode });
   Episode.associate({ Seasons, SeasonEliminations, Challenges, Tribe });
   SeasonEliminations.associate({ Seasons, Episode, Survivors });
@@ -93,7 +92,6 @@ const initModels = (sequelize: Sequelize) => {
     Profile,
     Tokens,
     LeagueProfile,
-    Notification,
     Picks,
     PickOptions,
     PickPoints,
@@ -103,13 +101,14 @@ const initModels = (sequelize: Sequelize) => {
     Tribe,
     Episode,
     Survey,
-    LeagueSurveys,
+    LeagueSurveyForEpisode,
     SurveyPicks,
     Challenges,
     ChallengeWinners,
     SeasonEliminations,
     SurveySubmissions,
     PickSubmissions,
+    EpisodeSurvey,
   };
 };
 

@@ -12,17 +12,15 @@
  * Do not edit the class manually.
  */
 
-import { Pick } from './pick';
-import { Survey } from './survey';
+import { EpisodeSurvey } from './episode-survey';
 import { SurveyAvailabilityStatus } from './survey-availability-status';
-import { SurveySubmissionStatus } from './survey-submission-status';
  /**
  * 
  *
  * @export
  * @interface LeagueSurvey
  */
-export interface LeagueSurvey extends Survey {
+export interface LeagueSurvey extends EpisodeSurvey {
 
     /**
      * The ID of the league survey
@@ -33,30 +31,10 @@ export interface LeagueSurvey extends Survey {
     leagueSurveyId: string;
 
     /**
-     * The ID of the episode the survey is for
-     *
-     * @type {string}
-     * @memberof LeagueSurvey
-     */
-    episodeId: string;
-
-    /**
-     * @type {SurveyAvailabilityStatus}
-     * @memberof LeagueSurvey
-     */
-    availabilityStatus: SurveyAvailabilityStatus;
-
-    /**
      * The ID of the league the survey is for
      *
      * @type {string}
      * @memberof LeagueSurvey
      */
     leagueId: string;
-
-    /**
-     * @type {SurveySubmissionStatus}
-     * @memberof LeagueSurvey
-     */
-    submissionStatus: SurveySubmissionStatus;
 }

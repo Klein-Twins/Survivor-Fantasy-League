@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from 'express';
 import surveyHelper from '../../../helpers/league/surveys/surveyHelper';
-import surveyService from '../../../services/league/surveys/surveyService';
+import surveyService from '../../../servicesBackups/league/surveys/surveyService';
 import {
   CompletedLeagueSurvey,
   GetCurrentEpisodSurveysResponse,

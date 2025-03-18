@@ -17,7 +17,7 @@ import { Configuration } from '../configuration';
 // Some imports not used depending on template conditions
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
-import { GetLeagueSurveyResponse } from '../models';
+import { GetLeagueMemberSurveyResponse } from '../models';
 import { SubmitSurveyRequestBody } from '../models';
 import { SubmitSurveyResponse } from '../models';
 /**
@@ -139,7 +139,7 @@ export const SurveyServiceApiFp = function(configuration?: Configuration) {
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getLeagueSurvey(leagueId: string, profileId: string, episodeId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetLeagueSurveyResponse>>> {
+        async getLeagueSurvey(leagueId: string, profileId: string, episodeId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetLeagueMemberSurveyResponse>>> {
             const localVarAxiosArgs = await SurveyServiceApiAxiosParamCreator(configuration).getLeagueSurvey(leagueId, profileId, episodeId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -178,7 +178,7 @@ export const SurveyServiceApiFactory = function (configuration?: Configuration, 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getLeagueSurvey(leagueId: string, profileId: string, episodeId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<GetLeagueSurveyResponse>> {
+        async getLeagueSurvey(leagueId: string, profileId: string, episodeId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<GetLeagueMemberSurveyResponse>> {
             return SurveyServiceApiFp(configuration).getLeagueSurvey(leagueId, profileId, episodeId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -211,7 +211,7 @@ export class SurveyServiceApi extends BaseAPI {
      * @throws {RequiredError}
      * @memberof SurveyServiceApi
      */
-    public async getLeagueSurvey(leagueId: string, profileId: string, episodeId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeagueSurveyResponse>> {
+    public async getLeagueSurvey(leagueId: string, profileId: string, episodeId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeagueMemberSurveyResponse>> {
         return SurveyServiceApiFp(this.configuration).getLeagueSurvey(leagueId, profileId, episodeId, options).then((request) => request(this.axios, this.basePath));
     }
     /**

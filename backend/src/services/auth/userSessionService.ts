@@ -1,73 +1,126 @@
 import { Response } from 'express';
-import { Account, UserSession } from '../../generated-api';
+import { AccountRole, UserSession } from '../../generated-api';
+import { ProfileAttributes } from '../../models/account/Profile';
+import { UserAttributes } from '../../models/account/User';
 import tokenService from './tokenService';
-import logger from '../../config/logger';
+import { TokenAttributes, TokenType } from '../../models/account/Tokens';
 import { NODE_ENV } from '../../config/config';
-import { TokenType } from '../../types/auth/tokenTypes';
 import userSessionHelper from '../../helpers/auth/userSessionHelper';
+import { UnauthorizedError } from '../../utils/errors/errors';
 
 const userSessionService = {
   createUserSession,
-  endCurrentUserSession,
-  getCurrentUserSession,
+  endUserSession,
+  extendSession,
+  checkAuthSession,
 };
 
-async function getCurrentUserSession(
-  accessToken: string,
-  refreshToken: string
-): Promise<UserSession> {
-  if (!accessToken || !refreshToken) {
-    return { isAuthenticated: false, numSecondsRefreshTokenExpiresIn: 0 };
-  }
-
-  // //TODO: May not need this as authorization middleware should cover authenticity of tokens with database.
-  // const accessTokenPayload = await tokenService.decodeToken(accessToken);
-  // const refreshTokenPayload = await tokenService.decodeToken(refreshToken);
-
-  // const dbTokensFromAccessToken = await tokenService.getActiveTokens(
-  //   accessTokenPayload.userId
-  // );
-  // const dbTokensFromRefreshToken = await tokenService.getActiveTokens(
-  //   refreshTokenPayload.userId
-  // );
-
-  // if (
-  //   dbTokensFromAccessToken.dbAccessToken !==
-  //     dbTokensFromRefreshToken.dbAccessToken ||
-  //   dbTokensFromAccessToken.dbRefreshToken !==
-  //     dbTokensFromRefreshToken.dbRefreshToken
-  // ) {
-  //   throw new ForbiddenError('Invalid tokens');
-  // }
-
-  return await userSessionHelper.buildUserSession(refreshToken);
-}
-
 async function createUserSession(
-  account: Account,
+  {
+    userId,
+    profileId,
+    accountRole,
+  }: {
+    userId: UserAttributes['userId'];
+    profileId: ProfileAttributes['profileId'];
+    accountRole: AccountRole;
+  },
   response: Response
 ): Promise<UserSession> {
-  const tokens = await tokenService.createTokens(account);
-  attachTokensToResponse(tokens, response);
-  return await userSessionHelper.buildUserSession(tokens.refreshToken);
+  const tokens = await tokenService.createTokens({
+    userId,
+    profileId,
+    accountRole,
+  });
+
+  attachTokenToResponse(tokens.accessToken, 'access', response);
+  attachTokenToResponse(tokens.refreshToken, 'refresh', response);
+
+  return userSessionHelper.buildUserSession(tokens.refreshToken);
 }
 
-async function endCurrentUserSession(
+async function checkAuthSession(
+  userId: UserAttributes['userId'],
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  },
+  res: Response
+): Promise<UserSession> {
+  const decoded = await tokenService.validateTokens(tokens, {
+    checkAccessTokenHasExpired: false,
+    checkRefreshTokenHasExpired: true,
+    checkAccessTokenInDBAndMarkedActive: false,
+    checkRefreshTokenInDBAndMarkedActive: true,
+    checkTokensBelongToUser: userId || null,
+  });
+
+  if (!decoded) {
+    res.clearCookie('accessToken');
+    res.clearCookie('refreshToken');
+    return {
+      isAuthenticated: false,
+    };
+  } else {
+    return userSessionHelper.buildUserSession(tokens.refreshToken);
+  }
+}
+
+async function extendSession(
+  tokens: {
+    accessToken: TokenAttributes['token'];
+    refreshToken: TokenAttributes['token'];
+  },
   response: Response,
-  refreshToken: string,
-  accessToken: string
-): Promise<void> {
+  userId?: UserAttributes['userId']
+): Promise<UserSession> {
+  const tokenPayload = await tokenService.validateTokens(tokens, {
+    checkAccessTokenHasExpired: true,
+    checkRefreshTokenHasExpired: true,
+    checkAccessTokenInDBAndMarkedActive: true,
+    checkRefreshTokenInDBAndMarkedActive: true,
+    checkTokensBelongToUser: userId || null,
+  });
+
+  if (!tokenPayload) {
+    throw new UnauthorizedError('Unauthorized');
+  }
+
+  await tokenService.invalidateTokens(
+    tokens.accessToken,
+    tokens.refreshToken,
+    !!tokenPayload
+  );
+
+  return await createUserSession(
+    {
+      userId: tokenPayload.userId,
+      profileId: tokenPayload.profileId,
+      accountRole: tokenPayload.accountRole,
+    },
+    response
+  );
+}
+
+async function endUserSession(
+  {
+    accessToken,
+    refreshToken,
+  }: {
+    accessToken: TokenAttributes['token'];
+    refreshToken: TokenAttributes['token'];
+  },
+  wereTokensValidated: boolean,
+  response: Response
+) {
   response.clearCookie('accessToken');
   response.clearCookie('refreshToken');
-  await tokenService.setTokensToInactive(accessToken, refreshToken);
-}
 
-function attachTokensToResponse(
-  tokens: { accessToken: string; refreshToken: string },
-  res: Response
-): void {
-  attachTokenToResponse(tokens.accessToken, 'access', res);
-  attachTokenToResponse(tokens.refreshToken, 'refresh', res);
+  await tokenService.invalidateTokens(
+    accessToken,
+    refreshToken,
+    wereTokensValidated
+  );
 }
 
 function attachTokenToResponse(
@@ -76,7 +129,7 @@ function attachTokenToResponse(
   res: Response
 ): void {
   if (tokenType === 'access') {
-    logger.debug(`Setting access token as a cookie\n${token}`);
+    //logger.debug(`Setting access token as a cookie\n${token}`);
     res.cookie('accessToken', token, {
       httpOnly: true,
       secure: NODE_ENV === 'production',
@@ -84,7 +137,7 @@ function attachTokenToResponse(
     });
   }
   if (tokenType === 'refresh') {
-    logger.debug(`Setting refresh token as a cookie\n${token}`);
+    //logger.debug(`Setting refresh token as a cookie\n${token}`);
     res.cookie('refreshToken', token, {
       httpOnly: true,
       secure: NODE_ENV === 'production',

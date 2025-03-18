@@ -3,7 +3,7 @@ import { season47SurvivorIds, season47TribeIds } from '../../foundationIds';
 
 const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
   {
-    survivorId: season47SurvivorIds.AndyRueda,
+    id: season47SurvivorIds.AndyRueda,
     seasonId: 47,
     originalTribeId: season47TribeIds.Gata,
     age: 31,
@@ -11,7 +11,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'AI Research Assistant',
   },
   {
-    survivorId: season47SurvivorIds.AnikaDhar,
+    id: season47SurvivorIds.AnikaDhar,
     seasonId: 47,
     originalTribeId: season47TribeIds.Gata,
     age: 26,
@@ -19,7 +19,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Marketing Manager',
   },
   {
-    survivorId: season47SurvivorIds.AyshaWelch,
+    id: season47SurvivorIds.AyshaWelch,
     seasonId: 47,
     originalTribeId: season47TribeIds.Lavo,
     age: 32,
@@ -27,7 +27,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Dont know',
   },
   {
-    survivorId: season47SurvivorIds.CarolineVidmar,
+    id: season47SurvivorIds.CarolineVidmar,
     seasonId: 47,
     originalTribeId: season47TribeIds.Tuku,
     age: 27,
@@ -35,7 +35,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Strategy Consultant',
   },
   {
-    survivorId: season47SurvivorIds.GabeOrtis,
+    id: season47SurvivorIds.GabeOrtis,
     seasonId: 47,
     originalTribeId: season47TribeIds.Tuku,
     age: 26,
@@ -43,7 +43,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Radio Host',
   },
   {
-    survivorId: season47SurvivorIds.GenevieveMushaluk,
+    id: season47SurvivorIds.GenevieveMushaluk,
     seasonId: 47,
     originalTribeId: season47TribeIds.Lavo,
     age: 33,
@@ -51,7 +51,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Corporate Lawyer',
   },
   {
-    survivorId: season47SurvivorIds.RomeCooney,
+    id: season47SurvivorIds.RomeCooney,
     seasonId: 47,
     originalTribeId: season47TribeIds.Lavo,
     age: 30,
@@ -59,7 +59,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'E-Sports Commentator',
   },
   {
-    survivorId: season47SurvivorIds.JonLovett,
+    id: season47SurvivorIds.JonLovett,
     seasonId: 47,
     originalTribeId: season47TribeIds.Gata,
     age: 42,
@@ -67,7 +67,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Podcast Host',
   },
   {
-    survivorId: season47SurvivorIds.KishanPatel,
+    id: season47SurvivorIds.KishanPatel,
     seasonId: 47,
     originalTribeId: season47TribeIds.Lavo,
     age: 28,
@@ -75,7 +75,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Emergency Room Doctor',
   },
   {
-    survivorId: season47SurvivorIds.KyleOstwald,
+    id: season47SurvivorIds.KyleOstwald,
     seasonId: 47,
     originalTribeId: season47TribeIds.Tuku,
     age: 31,
@@ -83,7 +83,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Construction Worker',
   },
   {
-    survivorId: season47SurvivorIds.RachelLaMont,
+    id: season47SurvivorIds.RachelLaMont,
     seasonId: 47,
     originalTribeId: season47TribeIds.Gata,
     age: 34,
@@ -91,7 +91,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Graphic Designer',
   },
   {
-    survivorId: season47SurvivorIds.SamPhalen,
+    id: season47SurvivorIds.SamPhalen,
     seasonId: 47,
     originalTribeId: season47TribeIds.Gata,
     age: 24,
@@ -99,7 +99,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Sports Recruiter',
   },
   {
-    survivorId: season47SurvivorIds.SierraWright,
+    id: season47SurvivorIds.SierraWright,
     seasonId: 47,
     originalTribeId: season47TribeIds.Gata,
     age: 27,
@@ -107,7 +107,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Nurse',
   },
   {
-    survivorId: season47SurvivorIds.SolomonYi,
+    id: season47SurvivorIds.SolomonYi,
     seasonId: 47,
     originalTribeId: season47TribeIds.Lavo,
     age: 43,
@@ -115,7 +115,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Medical Device Sales',
   },
   {
-    survivorId: season47SurvivorIds.SueSmey,
+    id: season47SurvivorIds.SueSmey,
     seasonId: 47,
     originalTribeId: season47TribeIds.Tuku,
     age: 59,
@@ -123,7 +123,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Flight School Owner',
   },
   {
-    survivorId: season47SurvivorIds.TeenyChirichillo,
+    id: season47SurvivorIds.TeenyChirichillo,
     seasonId: 47,
     originalTribeId: season47TribeIds.Lavo,
     age: 23,
@@ -131,7 +131,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Freelance Writer',
   },
   {
-    survivorId: season47SurvivorIds.TerranFoster,
+    id: season47SurvivorIds.TerranFoster,
     seasonId: 47,
     originalTribeId: season47TribeIds.Tuku,
     age: 31,
@@ -139,7 +139,7 @@ const season47SurvivorData: SurvivorDetailsOnSeasonAttributes[] = [
     job: 'Athlete Marketing Manager',
   },
   {
-    survivorId: season47SurvivorIds.TiyanaHallums,
+    id: season47SurvivorIds.TiyanaHallums,
     seasonId: 47,
     originalTribeId: season47TribeIds.Tuku,
     age: 27,
