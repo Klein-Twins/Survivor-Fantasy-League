@@ -9,6 +9,7 @@ const season48EliminationData: SeasonEliminationAttributes[] = [
     day: 3,
     notes: '',
     seq: 1,
+    placement: 18,
   },
   {
     seasonId: 48,
@@ -17,6 +18,7 @@ const season48EliminationData: SeasonEliminationAttributes[] = [
     day: 5,
     notes: '',
     seq: 1,
+    placement: 17,
   },
   {
     seasonId: 48,
@@ -25,6 +27,7 @@ const season48EliminationData: SeasonEliminationAttributes[] = [
     survivorId: season48SurvivorIds.JustinPioppi,
     notes: '',
     seq: 1,
+    placement: 16,
   },
 ];
 

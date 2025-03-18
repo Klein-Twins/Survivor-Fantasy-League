@@ -10,6 +10,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 3,
     notes: '',
     seq: 1,
+    placement: 18,
   },
   {
     //TK
@@ -19,6 +20,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 5,
     notes: '',
     seq: 1,
+    placement: 17,
   },
   {
     //Aysha
@@ -28,7 +30,9 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 7,
     notes: '',
     seq: 1,
+    placement: 16,
   },
+
   {
     //Kishan
     seasonId: 47,
@@ -37,6 +41,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 8,
     notes: '',
     seq: 1,
+    placement: 15,
   },
   {
     //Anika
@@ -46,6 +51,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 10,
     notes: '',
     seq: 1,
+    placement: 14,
   },
   {
     //Rome
@@ -55,6 +61,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 12,
     notes: '',
     seq: 1,
+    placement: 13,
   },
   {
     //Tiyana
@@ -64,6 +71,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 13,
     notes: '',
     seq: 1,
+    placement: 12,
   },
   {
     //Sierra
@@ -73,6 +81,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 15,
     notes: '',
     seq: 1,
+    placement: 11,
   },
   {
     //Sol
@@ -82,6 +91,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 16,
     notes: '',
     seq: 1,
+    placement: 10,
   },
   {
     //Gabe
@@ -91,6 +101,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 18,
     notes: '',
     seq: 1,
+    placement: 9,
   },
   {
     //Kyle
@@ -100,6 +111,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 20,
     notes: '',
     seq: 1,
+    placement: 8,
   },
   {
     //Caroline
@@ -109,6 +121,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 22,
     notes: '',
     seq: 1,
+    placement: 7,
   },
   {
     //Andy
@@ -118,6 +131,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 23,
     notes: '',
     seq: 1,
+    placement: 6,
   },
   {
     //Genevieve
@@ -127,6 +141,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 24,
     notes: '',
     seq: 2,
+    placement: 5,
   },
   {
     seasonId: 47,
@@ -135,6 +150,7 @@ const season47EliminationData: SeasonEliminationAttributes[] = [
     day: 25,
     notes: '',
     seq: 1,
+    placement: 4,
   },
 ];
 

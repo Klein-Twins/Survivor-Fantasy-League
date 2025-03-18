@@ -51,4 +51,13 @@ export interface LeagueMember {
      * @example true
      */
     hasJoined: boolean;
+
+    /**
+     * The total points of the user in the league
+     *
+     * @type {number}
+     * @memberof LeagueMember
+     * @example 100
+     */
+    totalPoints: number;
 }

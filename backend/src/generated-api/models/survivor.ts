@@ -13,6 +13,7 @@
  */
 
 import { SurvivorBasic } from './survivor-basic';
+import { SurvivorEliminationInfo } from './survivor-elimination-info';
  /**
  * 
  *
@@ -109,4 +110,10 @@ export interface Survivor extends SurvivorBasic {
      * @example Doe
      */
     lastName: string;
+
+    /**
+     * @type {SurvivorEliminationInfo}
+     * @memberof Survivor
+     */
+    eliminationInfo: SurvivorEliminationInfo;
 }

@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '../../../../store/store';
 import { openModal } from '../../../../store/slices/modalSlice';
 import LoadingData from '../../../ui/LoadingData';
-import LeagueRows from '../../../league/leaguesPanel/LeagueRows';
+import LeagueRows from '../../../leagueBackup/leaguesPanel/LeagueRows';
 import Panel from '../../../ui/panels/Panel';
 
 const LeaguesPanel: React.FC = () => {

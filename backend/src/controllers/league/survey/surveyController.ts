@@ -1,21 +1,23 @@
 import { NextFunction, Request, Response } from 'express';
-import surveyHelper from '../../../helpers/league/surveys/surveyHelper';
-import surveyService from '../../../servicesBackups/league/surveys/surveyService';
 import {
-  CompletedLeagueSurvey,
-  GetCurrentEpisodSurveysResponse,
-  GetCurrentEpisodSurveysResponseData,
-  GetLeagueSurveyResponse,
-  GetLeagueSurveyResponseData,
+  CompletedLeagueMemberSurvey,
+  GetLeagueMemberSurveyResponse,
+  GetLeagueMemberSurveyResponseData,
   SubmitSurveyRequestBody,
+  SurveySubmissionStatus,
 } from '../../../generated-api';
 import { LeagueAttributes } from '../../../models/league/League';
 import { ProfileAttributes } from '../../../models/account/Profile';
 
+import validator from 'validator';
+import surveyService from '../../../services/league/survey/surveyService';
+import leagueMemberSurveyService from '../../../services/league/survey/leagueMemberSurveyService';
+import { BadRequestError } from '../../../utils/errors/errors';
+import { UUID } from 'crypto';
+
 const surveyController = {
   getSurveyForLeagueMember,
   submitSurvey,
-  getOutstandingSurveysForProfile,
 };
 
 export interface GetSurveyRequestParams {
@@ -29,54 +31,42 @@ export interface GetOustandingOpenSurveysRequestParams {
   leagueIds: LeagueAttributes['leagueId'][];
 }
 
-async function getOutstandingSurveysForProfile(
-  req: Request,
-  res: Response,
-  next: NextFunction
-) {
-  try {
-    const { profileId, leagueIds } =
-      surveyHelper.validateAndFormatGetOutstandingSurveyRequest(req);
-
-    const currentEpisodeLeagueSurveys =
-      await surveyService.getCurrentEpisodeSurveys(profileId, leagueIds);
-
-    const responseData: GetCurrentEpisodSurveysResponseData = {
-      leagueSurveys: currentEpisodeLeagueSurveys,
-    };
-
-    const response: GetCurrentEpisodSurveysResponse = {
-      success: true,
-      message: 'Successfully retrieved league surveys',
-      statusCode: 200,
-      responseData: responseData,
-    };
-
-    res.status(200).json(response);
-  } catch (error) {
-    next(error);
-  }
-}
-
 async function getSurveyForLeagueMember(
   req: Request,
   res: Response,
   next: NextFunction
 ) {
-  let response: GetLeagueSurveyResponse;
+  let response: GetLeagueMemberSurveyResponse;
   try {
-    const { leagueId, profileId, episodeId } =
-      await surveyHelper.validateAndFormatGetSurveyForLeagueMember(req.params);
+    const { leagueId, profileId, episodeId } = req.params;
+    if (!leagueId) {
+      throw new BadRequestError('LeagueId is required');
+    }
+    if (!validator.isUUID(leagueId)) {
+      throw new BadRequestError('Invalid leagueId');
+    }
+    if (!profileId) {
+      throw new BadRequestError('ProfileId is required');
+    }
+    if (!validator.isUUID(profileId)) {
+      throw new BadRequestError('Invalid profileId');
+    }
+    if (!episodeId) {
+      throw new BadRequestError('EpisodeId is required');
+    }
+    if (!validator.isUUID(episodeId)) {
+      throw new BadRequestError('Invalid episodeId');
+    }
 
-    const leagueSurvey = await surveyService.getLeagueSurvey(
-      leagueId,
-      profileId,
-      episodeId
+    const leagueSurvey = await leagueMemberSurveyService.getLeagueMemberSurvey(
+      leagueId as UUID,
+      profileId as UUID,
+      episodeId as UUID
     );
 
     const isCompleted: boolean =
-      (leagueSurvey as CompletedLeagueSurvey).pickSelections !== undefined;
-    const responseData: GetLeagueSurveyResponseData = {
+      leagueSurvey.submissionStatus === SurveySubmissionStatus.Submitted;
+    const responseData: GetLeagueMemberSurveyResponseData = {
       leagueSurvey: leagueSurvey,
       isCompleted: isCompleted,
     };
@@ -95,9 +85,7 @@ async function getSurveyForLeagueMember(
 async function submitSurvey(req: Request, res: Response, next: NextFunction) {
   try {
     const requestBody: any = req.body;
-    const submitSurveyRequest: SubmitSurveyRequestBody =
-      await surveyHelper.validateAndFormatSubmitSurveyRequest(requestBody);
-    await surveyService.submitSurvey(submitSurveyRequest);
+    //await leagueMemberSurveyService.submitSurvey(submitSurveyRequest);
     res.status(200).json({
       success: true,
       message: 'Successfully submitted survey',

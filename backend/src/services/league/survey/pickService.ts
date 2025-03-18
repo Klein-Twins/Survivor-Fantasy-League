@@ -27,7 +27,8 @@ async function getPick(
   }
 
   const pickOptions = await pickOptionService.getPickOptions(
-    pickAttributes.type
+    pickAttributes.type,
+    episodeId
   );
 
   return buildPick(pickAttributes, pickOptions);
@@ -55,11 +56,7 @@ async function getPicksForSurvey(
 
 function buildPick(
   pickAttributes: PicksAttributes,
-  pickOptions:
-    | SurvivorPickOptions
-    | ColorPickOptions
-    | TribePickOptions
-    | BinaryPickOptions
+  pickOptions: SurvivorPickOptions | ColorPickOptions | TribePickOptions
 ): Pick {
   return {
     id: pickAttributes.pickId,

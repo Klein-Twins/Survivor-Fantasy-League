@@ -60,7 +60,7 @@ async function getEpisode(
       episodeNumber: EpisodeAttributes['episodeNumber'];
     };
     episodeRepository.getEpisode(field, { seasonId, episodeNumber });
-  } else if ((field = 'seasonIdAndEpisodeId')) {
+  } else if (field === 'seasonIdAndEpisodeId') {
     const { seasonId, episodeId } = value as {
       seasonId: EpisodeAttributes['seasonId'];
       episodeId: EpisodeAttributes['episodeId'];

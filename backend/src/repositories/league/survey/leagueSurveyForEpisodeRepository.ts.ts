@@ -14,13 +14,24 @@ const leagueSurveyForEpisodeRepostiory = {
 async function getLeagueSurveyForEpisode(
   episodeSurveyId: EpisodeSurveyAttributes['episodeId'],
   leagueId: LeagueAttributes['leagueId']
-): Promise<LeagueSurveyForEpisodeAttributes | null> {
-  return await models.LeagueSurveyForEpisode.findOne({
-    where: {
-      episodeSurveyId,
-      leagueId,
-    },
-  });
+): Promise<LeagueSurveyForEpisodeAttributes> {
+  let leagueSurveyForEpisodeAttributes =
+    await models.LeagueSurveyForEpisode.findOne({
+      where: {
+        episodeSurveyId,
+        leagueId,
+      },
+    });
+  if (!leagueSurveyForEpisodeAttributes) {
+    const leagueSurveyId: UUID = uuidv4() as UUID;
+    leagueSurveyForEpisodeAttributes =
+      await models.LeagueSurveyForEpisode.create({
+        leagueSurveyId,
+        episodeSurveyId,
+        leagueId,
+      });
+  }
+  return leagueSurveyForEpisodeAttributes;
 }
 
 async function createLeagueSurveyForEpisode(

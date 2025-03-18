@@ -74,6 +74,7 @@ export * from './survey-availability-status';
 export * from './survey-submission-status';
 export * from './survivor';
 export * from './survivor-basic';
+export * from './survivor-elimination-info';
 export * from './survivor-pick-options';
 export * from './tribe';
 export * from './tribe-pick-options';

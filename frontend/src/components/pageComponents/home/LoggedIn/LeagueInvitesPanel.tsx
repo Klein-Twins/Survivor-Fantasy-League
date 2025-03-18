@@ -2,7 +2,7 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import LoadingData from '../../../ui/LoadingData';
 import { RootState } from '../../../../store/store';
-import LeagueInviteRows from '../../../league/leagueInvitesPanel/LeagueInviteRows';
+import LeagueInviteRows from '../../../leagueBackup/leagueInvitesPanel/LeagueInviteRows';
 import Panel from '../../../ui/panels/Panel';
 
 const LeagueInvitesPanel: React.FC = () => {

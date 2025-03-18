@@ -7,6 +7,7 @@ components:
         - role
         - leagueProfileId
         - hasJoined
+        - totalPoints
       properties:
         profile:
           $ref: '../user/profile.yaml#/components/schemas/Profile'
@@ -21,6 +22,10 @@ components:
           type: boolean
           description: Whether the user has joined the league
           example: true
+        totalPoints:
+          type: integer
+          description: The total points of the user in the league
+          example: 100
 
     LeagueMemberRole:
       type: string

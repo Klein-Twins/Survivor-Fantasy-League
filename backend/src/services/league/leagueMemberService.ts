@@ -102,6 +102,7 @@ function buildLeagueMember(
     profile,
     leagueProfileId: leagueProfile.id,
     hasJoined: leagueProfile.inviteStatus === InviteStatus.Accepted,
+    totalPoints: Math.floor(Math.random() * 1000),
   };
 }
 

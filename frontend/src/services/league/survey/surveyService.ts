@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 import {
   Episode,
-  GetLeagueSurveyResponse,
+  GetLeagueMemberSurveyResponse,
   League,
   Profile,
   SubmitSurveyRequestBody,
@@ -15,7 +15,7 @@ const surveyService = {
   submitLeagueSurvey,
 };
 
-interface GetLeagueSurveyRequestParams {
+export interface GetLeagueSurveyRequestParams {
   leagueId: League['id'];
   profileId: Profile['profileId'];
   episodeId: Episode['id'];
@@ -23,8 +23,8 @@ interface GetLeagueSurveyRequestParams {
 
 async function getLeagueSurvey(
   requestData: ApiRequestParams<void, GetLeagueSurveyRequestParams>
-): Promise<AxiosResponse<GetLeagueSurveyResponse>> {
-  const response: AxiosResponse<GetLeagueSurveyResponse> =
+): Promise<AxiosResponse<GetLeagueMemberSurveyResponse>> {
+  const response: AxiosResponse<GetLeagueMemberSurveyResponse> =
     await api.surveyService.getLeagueSurvey(
       requestData.queryParams.leagueId,
       requestData.queryParams.profileId,

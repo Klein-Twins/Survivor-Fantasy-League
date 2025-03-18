@@ -653,6 +653,7 @@ paths:
                                           - job
                                           - firstName
                                           - lastName
+                                          - eliminationInfo
                                         properties:
                                           seasonId:
                                             type: integer
@@ -696,6 +697,33 @@ paths:
                                             type: string
                                             description: The survivor's last name
                                             example: Doe
+                                          eliminationInfo:
+                                            type: object
+                                            required:
+                                              - isEliminated
+                                              - dayEliminated
+                                              - placement
+                                              - episodeEliminated
+                                            properties:
+                                              isEliminated:
+                                                type: boolean
+                                                description: Whether the survivor is eliminated or not
+                                                example: false
+                                              dayEliminated:
+                                                type: integer
+                                                description: The day the survivor was eliminated
+                                                example: 12
+                                                nullable: true
+                                              placement:
+                                                type: integer
+                                                description: The placement of the survivor in the season
+                                                example: 5
+                                                nullable: true
+                                              episodeEliminated:
+                                                type: string
+                                                description: The episode id the survivor was eliminated in
+                                                example: 5
+                                                nullable: true
                                   description: The survivors in the season.
                                 tribes:
                                   type: array
@@ -886,6 +914,7 @@ paths:
                                       - role
                                       - leagueProfileId
                                       - hasJoined
+                                      - totalPoints
                                     properties:
                                       profile:
                                         type: object
@@ -921,6 +950,10 @@ paths:
                                         type: boolean
                                         description: Whether the user has joined the league
                                         example: true
+                                      totalPoints:
+                                        type: integer
+                                        description: The total points of the user in the league
+                                        example: 100
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -1021,6 +1054,7 @@ paths:
                                     - role
                                     - leagueProfileId
                                     - hasJoined
+                                    - totalPoints
                                   properties:
                                     profile:
                                       type: object
@@ -1056,6 +1090,10 @@ paths:
                                       type: boolean
                                       description: Whether the user has joined the league
                                       example: true
+                                    totalPoints:
+                                      type: integer
+                                      description: The total points of the user in the league
+                                      example: 100
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -1155,6 +1193,7 @@ paths:
                                           - role
                                           - leagueProfileId
                                           - hasJoined
+                                          - totalPoints
                                         properties:
                                           profile:
                                             type: object
@@ -1190,6 +1229,10 @@ paths:
                                             type: boolean
                                             description: Whether the user has joined the league
                                             example: true
+                                          totalPoints:
+                                            type: integer
+                                            description: The total points of the user in the league
+                                            example: 100
                                 message:
                                   type: string
                                   description: A message indicating the success of the operation.
@@ -1302,6 +1345,7 @@ paths:
                               - role
                               - leagueProfileId
                               - hasJoined
+                              - totalPoints
                             properties:
                               profile:
                                 type: object
@@ -1337,6 +1381,10 @@ paths:
                                 type: boolean
                                 description: Whether the user has joined the league
                                 example: true
+                              totalPoints:
+                                type: integer
+                                description: The total points of the user in the league
+                                example: 100
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -1447,6 +1495,7 @@ paths:
                                     - role
                                     - leagueProfileId
                                     - hasJoined
+                                    - totalPoints
                                   properties:
                                     profile:
                                       type: object
@@ -1482,6 +1531,10 @@ paths:
                                       type: boolean
                                       description: Whether the user has joined the league
                                       example: true
+                                    totalPoints:
+                                      type: integer
+                                      description: The total points of the user in the league
+                                      example: 100
                           inviteId:
                             type: string
                             description: The unique ID of the league invite.
@@ -3010,6 +3063,7 @@ paths:
                                         - job
                                         - firstName
                                         - lastName
+                                        - eliminationInfo
                                       properties:
                                         seasonId:
                                           type: integer
@@ -3053,6 +3107,33 @@ paths:
                                           type: string
                                           description: The survivor's last name
                                           example: Doe
+                                        eliminationInfo:
+                                          type: object
+                                          required:
+                                            - isEliminated
+                                            - dayEliminated
+                                            - placement
+                                            - episodeEliminated
+                                          properties:
+                                            isEliminated:
+                                              type: boolean
+                                              description: Whether the survivor is eliminated or not
+                                              example: false
+                                            dayEliminated:
+                                              type: integer
+                                              description: The day the survivor was eliminated
+                                              example: 12
+                                              nullable: true
+                                            placement:
+                                              type: integer
+                                              description: The placement of the survivor in the season
+                                              example: 5
+                                              nullable: true
+                                            episodeEliminated:
+                                              type: string
+                                              description: The episode id the survivor was eliminated in
+                                              example: 5
+                                              nullable: true
                                 description: The survivors in the season.
                               tribes:
                                 type: array
@@ -3283,6 +3364,7 @@ paths:
                                   - job
                                   - firstName
                                   - lastName
+                                  - eliminationInfo
                                 properties:
                                   seasonId:
                                     type: integer
@@ -3326,6 +3408,33 @@ paths:
                                     type: string
                                     description: The survivor's last name
                                     example: Doe
+                                  eliminationInfo:
+                                    type: object
+                                    required:
+                                      - isEliminated
+                                      - dayEliminated
+                                      - placement
+                                      - episodeEliminated
+                                    properties:
+                                      isEliminated:
+                                        type: boolean
+                                        description: Whether the survivor is eliminated or not
+                                        example: false
+                                      dayEliminated:
+                                        type: integer
+                                        description: The day the survivor was eliminated
+                                        example: 12
+                                        nullable: true
+                                      placement:
+                                        type: integer
+                                        description: The placement of the survivor in the season
+                                        example: 5
+                                        nullable: true
+                                      episodeEliminated:
+                                        type: string
+                                        description: The episode id the survivor was eliminated in
+                                        example: 5
+                                        nullable: true
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []

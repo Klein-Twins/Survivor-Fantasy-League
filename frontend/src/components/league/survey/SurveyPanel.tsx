@@ -1,103 +1,117 @@
-import React, { useState } from 'react';
-import { Account, Episode, League } from '../../../../generated-api';
+import React, { useEffect, useState } from 'react';
+import {
+  Episode,
+  GetLeagueMemberSurveyResponse,
+  League,
+  Profile,
+} from '../../../../generated-api';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
+import { useApi } from '../../../hooks/useApi';
+import surveyService, {
+  GetLeagueSurveyRequestParams,
+} from '../../../services/league/survey/surveyService';
+import {
+  ButtonPrimaryColors,
+  ButtonSubtleColors,
+} from '../../../styles/CommonColorClassNames';
+import SurveyInfo from './SurveyInfo';
 
 interface SurveyPanelProps {
-  league: League;
-  account: Account;
+  leagueId: League['id'];
+  profileId: Profile['profileId'];
 }
 
-const SurveyPanel: React.FC<SurveyPanelProps> = ({ league, account }) => {
-  const season = useSelector((state: RootState) =>
-    state.season.seasons.find((s) => s.id === league.seasonId)
+const SurveyPanel: React.FC<SurveyPanelProps> = ({ leagueId, profileId }) => {
+  const currentSeason = useSelector(
+    (state: RootState) => state.season.selectedSeason
+  );
+  const activeEpisode = useSelector(
+    (state: RootState) => state.season.activeEpisode
   );
 
-  console.log(season?.id);
+  const [selectedEpisode, setSelectedEpisode] =
+    useState<Episode>(activeEpisode);
 
-  // const [activeEpisode, setActiveEpisode] = useState<Episode | undefined>(
-  //   nextEpisode
-  // );
+  const {
+    data: getSurveyResponse,
+    isLoading: getSurveyIsLoading,
+    error: getSurveyError,
+    execute: getSurvey,
+  } = useApi<void, GetLeagueSurveyRequestParams, GetLeagueMemberSurveyResponse>(
+    surveyService.getLeagueSurvey
+  );
+
+  useEffect(() => {
+    async function fetchSurvey() {
+      await getSurvey({
+        queryParams: {
+          leagueId: leagueId,
+          profileId: profileId,
+          episodeId: selectedEpisode.id,
+        },
+      });
+    }
+    fetchSurvey();
+  }, [leagueId, profileId, selectedEpisode]);
+
+  const panelBackgroundColor =
+    'dark:bg-surface-a5-dark bg-surface-a5-light dark:text-white text-black';
 
   return (
-    <div className='flex flex-col space-y-8 dark:bg-surface-a1-dark rounded-lg shadow-lg p-4'></div>
+    <div
+      className={`flex flex-col w-full justify-center ${panelBackgroundColor} p-2 rounded-md`}>
+      <h1 className='text-center text-4xl font-bold py-2'>Your Surveys</h1>
+      <EpisodeSelection
+        episodes={currentSeason.episodes}
+        selectedEpisode={selectedEpisode}
+        onSelect={setSelectedEpisode}
+      />
+      <SurveyInfo
+        survey={getSurveyResponse?.responseData.leagueSurvey}
+        surveyIsLoading={getSurveyIsLoading}
+        surveyError={getSurveyError}
+      />
+    </div>
   );
 };
 
 export default SurveyPanel;
 
-/* <div className='dark:bg-surface-a2-dark p-2'>
-        <EpisodePagination
-          activeEpisode={activeEpisode}
-          setActiveEpisode={setActiveEpisode}
-          episodes={league.season.episodes}
-        />
-      </div> */
-/* <div className='dark:bg-surface-a2-dark p-2'>
-        <Survey
-          episodeId={activeEpisode.id}
-          profileId={account.profileId}
-          leagueId={league.leagueId}
-        />
-      </div> */
-
-interface EpisodePaginationProps {
-  activeEpisode: Episode;
-  setActiveEpisode: (episode: Episode) => void;
+interface EpisodeSelectionProps {
   episodes: Episode[];
+  selectedEpisode: Episode;
+  onSelect: (episode: Episode) => void;
 }
-
-// const EpisodePagination: React.FC<EpisodePaginationProps> = ({
-//   activeEpisode,
-//   setActiveEpisode,
-//   episodes,
-// }) => {
-//   const currentIndex = episodes.findIndex(
-//     (episode) => episode.id === activeEpisode.id
-//   );
-
-//   const handlePrevious = () => {
-//     if (currentIndex > 0) {
-//       setActiveEpisode(episodes[currentIndex - 1]);
-//     }
-//   };
-
-//   const handleNext = () => {
-//     if (currentIndex < episodes.length - 1) {
-//       setActiveEpisode(episodes[currentIndex + 1]);
-//     }
-//   };
-
-//   return (
-//     <div className='flex justify-center items-center space-x-2 py-2'>
-//       <button
-//         onClick={handlePrevious}
-//         disabled={currentIndex === 0}
-//         className={`px-3 py-1 rounded-md mb-3 md:mb-0 ${ButtonSubtleColors}`}>
-//         &lt;
-//       </button>
-//       <div className='flex space-x-2 overflow-x-auto mb-3 md:mb-0'>
-//         {episodes.map((episode, index) => (
-//           <button
-//             key={episode.id}
-//             onClick={() => setActiveEpisode(episode)}
-//             className={`px-3 py-1 rounded-md ${
-//               index === currentIndex ? ButtonPrimaryColors : ButtonSubtleColors
-//             }`}>
-//             {index + 1}
-//           </button>
-//         ))}
-//       </div>
-//       <button
-//         onClick={handleNext}
-//         disabled={currentIndex === episodes.length - 1}
-//         className={`px-3 py-1 rounded-md mb-3 md:mb-0 ${
-//           currentIndex === episodes.length - 1
-//             ? ButtonPrimaryColors
-//             : ButtonSubtleColors
-//         }`}>
-//         &gt;
-//       </button>
-//     </div>
-//   );
-// };
+const EpisodeSelection: React.FC<EpisodeSelectionProps> = ({
+  episodes,
+  selectedEpisode,
+  onSelect,
+}) => {
+  return (
+    <div className='w-full overflow-x-auto flex space-x-4 items-center justify-center'>
+      {episodes.map((episode) => {
+        const buttonColors =
+          selectedEpisode.id === episode.id
+            ? ButtonPrimaryColors
+            : ButtonSubtleColors;
+        return (
+          <>
+            <div
+              key={episode.id}
+              onClick={() => onSelect(episode)}
+              className={`min-w-24 py-2 ${buttonColors} rounded-md text-xl text-center text-white hover:cursor-pointer`}>
+              Episode {episode.number}
+            </div>
+            <div
+              key={episode.id}
+              onClick={() => onSelect(episode)}
+              className={`min-w-24 py-2 ${buttonColors} rounded-md text-xl text-center text-white hover:cursor-pointer`}>
+              Episode {episode.number}
+            </div>
+          </>
+        );
+      })}
+    </div>
+  );
+};

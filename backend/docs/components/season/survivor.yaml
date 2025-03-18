@@ -29,6 +29,7 @@ components:
             - job
             - firstName
             - lastName
+            - eliminationInfo
           properties:
             seasonId:
               type: integer
@@ -72,3 +73,33 @@ components:
               type: string
               description: The survivor's last name
               example: 'Doe'
+            eliminationInfo:
+              $ref: '#/components/schemas/SurvivorEliminationInfo'
+
+    SurvivorEliminationInfo:
+      type: object
+      required:
+        - isEliminated
+        - dayEliminated
+        - placement
+        - episodeEliminated
+      properties:
+        isEliminated:
+          type: boolean
+          description: Whether the survivor is eliminated or not
+          example: false
+        dayEliminated:
+          type: integer
+          description: The day the survivor was eliminated
+          example: 12
+          nullable: true
+        placement:
+          type: integer
+          description: The placement of the survivor in the season
+          example: 5
+          nullable: true
+        episodeEliminated:
+          type: string
+          description: The episode id the survivor was eliminated in
+          example: 5
+          nullable: true

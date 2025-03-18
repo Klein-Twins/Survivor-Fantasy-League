@@ -9,7 +9,6 @@ import { models } from '../../config/db';
 
 const survivorHelper = {
   validateAndFormatGetSurvivorsRequest,
-  buildSurvivor,
   validateName,
   validateJob,
   validateDescription,
@@ -19,25 +18,6 @@ const survivorHelper = {
   validateAndFormatCreateSurvivorRequest,
   doesSurvivorExist,
 };
-
-function buildSurvivor(
-  survivorAttributes: SurvivorsAttributes,
-  survivorDetailAttributes: SurvivorDetailsOnSeasonAttributes
-): Survivor {
-  return {
-    id: survivorAttributes.id,
-    firstName: survivorAttributes.firstName,
-    lastName: survivorAttributes.lastName,
-    fromCity: survivorAttributes.fromCity,
-    fromState: survivorAttributes.fromState,
-    fromCountry: survivorAttributes.fromCountry,
-    nickName: survivorAttributes.nickName,
-    seasonId: survivorDetailAttributes.seasonId,
-    age: survivorDetailAttributes.age,
-    description: survivorDetailAttributes.description,
-    job: survivorDetailAttributes.job,
-  };
-}
 
 async function doesSurvivorExist(
   firstName: string,

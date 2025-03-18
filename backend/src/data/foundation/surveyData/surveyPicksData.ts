@@ -37,10 +37,10 @@ const surveyPicksData: SurveyPicksAttributes[] = [
     surveyId: defaultSurveyIds.DefaultPremierSurvey,
     pickId: 'f47ac10b-58cc-4372-a567-0e02b2c3d479',
   },
-  {
-    surveyId: defaultSurveyIds.DefaultPremierSurvey,
-    pickId: 'd9b2d63d-a233-4d4b-8f3e-3c2b2b2b2b2b',
-  },
+  // {
+  //   surveyId: defaultSurveyIds.DefaultPremierSurvey,
+  //   pickId: 'd9b2d63d-a233-4d4b-8f3e-3c2b2b2b2b2b',
+  // },
 ];
 
 export default surveyPicksData;

@@ -1,14 +1,17 @@
 import { models } from '../../config/db';
 import { Episode, Season, Survivor, Tribe } from '../../generated-api';
+import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import seasonRepository from '../../repositories/season/seasonRepository';
-import { NotFoundError } from '../../utils/errors/errors';
+import { InternalServerError, NotFoundError } from '../../utils/errors/errors';
 import episodeService from './episodeService';
 import survivorService from './survivorService';
 import tribeService from './tribeService';
+import validator from 'validator';
 
 const seasonService = {
   getAllSeasons,
+  getSeason,
   doesSeasonExist,
 };
 
@@ -25,6 +28,41 @@ async function getAllSeasons(): Promise<Season[]> {
   }
 
   return seasons;
+}
+
+async function getSeason(
+  field: 'episodeId' | 'seasonId',
+  value: EpisodeAttributes['episodeId'] | SeasonsAttributes['seasonId']
+): Promise<Season> {
+  let seasonId: SeasonsAttributes['seasonId'];
+
+  if (field === 'episodeId') {
+    if (typeof value !== 'string' || !validator.isUUID(value)) {
+      throw new InternalServerError(
+        `seasonService.getSeason(): Invalid value for episodeId: ${value} when field is ${field}`
+      );
+    }
+    const episode = await episodeService.getEpisode(field, value);
+    seasonId = episode.seasonId;
+  } else if (field === 'seasonId') {
+    if (typeof value !== 'number') {
+      throw new InternalServerError(
+        `seasonService.getSeason(): Invalid value for seasonId: ${value} when field is ${field}`
+      );
+    }
+    seasonId = value;
+  } else {
+    throw new InternalServerError(
+      `seasonService.getSeason(): Invalid field: ${field}`
+    );
+  }
+  const seasonAttributes: SeasonsAttributes | null =
+    await seasonRepository.getSeasonById(seasonId);
+  if (!seasonAttributes) {
+    throw new NotFoundError(`No season found for ${field}: ${value}`);
+  }
+
+  return await buildSeason(seasonAttributes);
 }
 
 async function doesSeasonExist(seasonId: number): Promise<boolean> {

@@ -14,17 +14,12 @@ async function getLeagueSurvey(
   leagueId: LeagueAttributes['leagueId'],
   episodeId: EpisodeAttributes['episodeId']
 ): Promise<LeagueSurvey> {
+  const episodeSurvey = await episodeSurveyService.getEpisodeSurvey(episodeId);
   const leagueSurveyAttributes =
     await leagueSurveyForEpisodeRepostiory.getLeagueSurveyForEpisode(
       episodeId,
       leagueId
     );
-  if (!leagueSurveyAttributes) {
-    throw new NotFoundError(
-      `League survey not found for episodeId: ${episodeId} and leagueId: ${leagueId}`
-    );
-  }
-  const episodeSurvey = await episodeSurveyService.getEpisodeSurvey(episodeId);
 
   return buildLeagueSurvey(
     episodeSurvey,

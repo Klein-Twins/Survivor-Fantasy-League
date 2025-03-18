@@ -6,6 +6,7 @@ import { SurvivorsAttributes } from '../survivors/Survivors';
 export interface SeasonEliminationAttributes {
   seasonId: SeasonsAttributes['seasonId'];
   episodeId: EpisodeAttributes['episodeId'];
+  placement: number;
   survivorId: SurvivorsAttributes['id'];
   notes: string | null;
   day: number;
@@ -23,6 +24,7 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
     public survivorId!: SeasonEliminationAttributes['survivorId'];
     public notes!: SeasonEliminationAttributes['notes'];
     public seq!: SeasonEliminationAttributes['seq'];
+    public placement!: SeasonEliminationAttributes['placement'];
 
     static associate(models: any) {
       //TODO - Add associations
@@ -88,6 +90,11 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'SEQ',
       },
+      placement: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'PLACEMENT',
+      },
     },
     {
       sequelize,
@@ -98,6 +105,11 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
           fields: ['SEASON_ID', 'EPISODE_ID', 'SURVIVOR_ID'],
           unique: true,
           name: 'ssn_eliminations_pk',
+        },
+        {
+          fields: ['SEASON_ID', 'PLACEMENT'],
+          unique: true,
+          name: 'ssn_eliminations_season_placement_uk',
         },
       ],
     }

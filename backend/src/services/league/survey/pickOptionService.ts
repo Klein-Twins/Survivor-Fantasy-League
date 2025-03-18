@@ -5,27 +5,23 @@ import {
   SurvivorPickOptions,
   TribePickOptions,
 } from '../../../generated-api';
-import {
-  InternalServerError,
-  NotImplementedError,
-} from '../../../utils/errors/errors';
+import { EpisodeAttributes } from '../../../models/season/Episodes';
+import { InternalServerError } from '../../../utils/errors/errors';
+import survivorService from '../../season/survivorService';
 
 const pickOptionService = {
   getPickOptions,
 };
 
 async function getPickOptions(
-  pickOptionType: PickOptionTypeEnum
-): Promise<
-  ColorPickOptions | TribePickOptions | SurvivorPickOptions | BinaryPickOptions
-> {
+  pickOptionType: PickOptionTypeEnum,
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<ColorPickOptions | TribePickOptions | SurvivorPickOptions> {
   switch (pickOptionType) {
-    case PickOptionTypeEnum.Binary:
-      return await getSurvivorPickOptions();
     case PickOptionTypeEnum.Color:
       return await getColorPickOptions();
     case PickOptionTypeEnum.Survivor:
-      return await getSurvivorPickOptions();
+      return await getSurvivorPickOptions(episodeId);
     case PickOptionTypeEnum.Tribe:
       return await getTribePickOptions();
     default:
@@ -35,20 +31,26 @@ async function getPickOptions(
   }
 }
 
-async function getSurvivorPickOptions(): Promise<SurvivorPickOptions> {
-  throw new NotImplementedError('getSurvivorPickOptions not implemented');
+async function getSurvivorPickOptions(
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<SurvivorPickOptions> {
+  const survivorsWithEliminationStatusOnEpisode =
+    await survivorService.getSurvivorsAtStartOfEpisode(episodeId);
+  return survivorsWithEliminationStatusOnEpisode.filter(
+    (survivor) => !survivor.eliminationInfo.isEliminated
+  );
 }
 
 async function getColorPickOptions(): Promise<ColorPickOptions> {
-  throw new NotImplementedError('getColorPickOptions not implemented');
+  return [];
 }
 
 async function getTribePickOptions(): Promise<TribePickOptions> {
-  throw new NotImplementedError('getTribePickOptions not implemented');
+  return [];
 }
 
-async function getBinaryPickOptions(): Promise<BinaryPickOptions> {
-  throw new NotImplementedError('getBinaryPickOptions not implemented');
+function getBinaryPickOptions(): BinaryPickOptions[] {
+  return [BinaryPickOptions.True, BinaryPickOptions.False];
 }
 
 export default pickOptionService;
