@@ -799,7 +799,7 @@ paths:
                                 - survivors
                                 - tribes
                                 - episodes
-  '/api/league/{profileId}':
+  '/api/league/{profileId}/{seasonId}':
     get:
       summary: Get leagues for a profile
       description: Gets profile's enrolled leagues
@@ -813,6 +813,12 @@ paths:
           schema:
             type: string
           description: Profile Id for the getLeaguesQuery
+        - in: path
+          name: seasonId
+          required: true
+          schema:
+            type: integer
+          description: Season Id for the getLeaguesQuery
       responses:
         '200':
           description: A list of leagues for the profile
@@ -924,6 +930,19 @@ paths:
       tags:
         - LeagueService
       operationId: createLeague
+      parameters:
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: string
+          description: Profile Id for the getLeaguesQuery
+        - in: path
+          name: seasonId
+          required: true
+          schema:
+            type: integer
+          description: Season Id for the getLeaguesQuery
       requestBody:
         required: true
         content:
@@ -932,21 +951,11 @@ paths:
               type: object
               required:
                 - name
-                - seasonId
-                - profileId
               properties:
                 name:
                   type: string
                   description: The name of the league
                   example: Corner By The Bookshelf
-                seasonId:
-                  type: integer
-                  description: The ID of the season the league belongs to
-                  example: 47
-                profileId:
-                  type: string
-                  description: The profileId of the user creating the league
-                  example: 49e27bd8-dc24-4159-9630-e989025bf8fd
       responses:
         '201':
           description: League created successfully
@@ -1050,7 +1059,7 @@ paths:
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
-  '/api/league/invite/{profileId}':
+  '/api/league/invite/{profileId}/{seasonId}':
     get:
       summary: Retrieve league invites for a player
       description: This endpoint will retrieve all pending league invitations for a player.
@@ -1059,11 +1068,17 @@ paths:
         - LeagueInviteService
       parameters:
         - name: profileId
-          in: path
+          in: query
           required: true
           description: The ID of the profile.
           schema:
             type: string
+        - name: seasonId
+          in: query
+          required: true
+          description: The ID of the season.
+          schema:
+            type: integer
       responses:
         '200':
           description: A list of league invites for the profile
@@ -1214,6 +1229,19 @@ paths:
       operationId: createAndSendLeagueInvite
       tags:
         - LeagueInviteService
+      parameters:
+        - name: profileId
+          in: query
+          required: false
+          description: The ID of the profile.
+          schema:
+            type: string
+        - name: seasonId
+          in: query
+          required: false
+          description: The ID of the season.
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -1318,6 +1346,19 @@ paths:
       operationId: respondToLeagueInvite
       tags:
         - LeagueInviteService
+      parameters:
+        - name: profileId
+          in: query
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+        - name: seasonId
+          in: query
+          required: true
+          description: The ID of the season.
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -1327,15 +1368,11 @@ paths:
               required:
                 - leagueId
                 - inviteResponse
-                - profileId
                 - inviteId
               properties:
                 leagueId:
                   type: string
                   description: The unique ID of the league the user is being invited to.
-                profileId:
-                  type: string
-                  description: THe unique ID of the profile that is responding to the invite
                 inviteId:
                   type: string
                   description: The unique ID of the league invite.

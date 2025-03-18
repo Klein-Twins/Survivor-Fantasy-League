@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../servicesBackup/apiContainer';
 import axios from 'axios';
+import api from '../../../services/apiContainer';
 
 type ImageSize = 'small' | 'medium' | 'large';
 type ImageShape = 'circle' | 'square';
@@ -41,7 +41,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
         console.log('Fetching image for profileId:', profileId);
         //Debug response
-        const response = await api.ImageServiceApi.getProfileImage(profileId, {
+        const response = await api.imageServiceApi.getProfileImage(profileId, {
           withCredentials: true,
           responseType: 'arraybuffer', // Enable this
           headers: {

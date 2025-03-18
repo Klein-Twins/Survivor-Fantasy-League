@@ -12,6 +12,7 @@ import Form, { FormClassName } from '../../ui/forms/Form';
 import FormInput from '../../ui/forms/FormInput';
 import Select from '../../ui/forms/Select';
 import { closeModal } from '../../../store/slices/modalSlice';
+import { CreateLeagueRequestParams } from '../../../services/league/leagueService';
 
 const seasonOptions = [
   { label: 'Season 47', value: '47' },
@@ -25,7 +26,12 @@ interface CreateLeagueFormProps {
 
 const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({ className }) => {
   const dispatch = useDispatch<AppDispatch>();
-  const account = useSelector((state: RootState) => state.auth.account);
+  const profileId = useSelector(
+    (state: RootState) => state.auth.account.profileId
+  );
+  const selectedSeason = useSelector(
+    (state: RootState) => state.season.selectedSeason
+  );
   const createLeagueLoading = useSelector(
     (state: RootState) => state.league.loading
   );
@@ -46,12 +52,14 @@ const CreateLeagueForm: React.FC<CreateLeagueFormProps> = ({ className }) => {
       try {
         const requestData: ApiRequestParams<
           CreateLeagueRequestBody,
-          undefined
+          CreateLeagueRequestParams
         > = {
           body: {
             name: values.name,
-            seasonId: values.seasonId,
-            profileId: account!.profileId || '',
+          },
+          queryParams: {
+            seasonId: selectedSeason.id,
+            profileId: profileId,
           },
         };
         dispatch(createLeague(requestData));

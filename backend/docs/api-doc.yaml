@@ -28,9 +28,9 @@ paths:
   /api/season:
     $ref: './paths/season/season.yaml#/paths/season'
 
-  /api/league/{profileId}:
+  /api/league/{profileId}/{seasonId}:
     $ref: './paths/league/league.yaml#/paths/league'
-  /api/league/invite/{profileId}:
+  /api/league/invite/{profileId}/{seasonId}:
     $ref: './paths/league/invite/invite.yaml#/paths/leagueInvite'
   /api/league/invite/search:
     $ref: './paths/league/invite/search/search.yaml#/paths/search'

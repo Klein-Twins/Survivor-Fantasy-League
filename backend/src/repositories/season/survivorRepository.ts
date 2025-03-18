@@ -13,23 +13,34 @@ async function getSurvivor(
 ): Promise<
   SurvivorDetailsOnSeasonAttributes & { survivor: SurvivorsAttributes }
 > {
-  const survivorData = (await models.SurvivorDetailsOnSeason.findOne({
+  const survivorDetailsOnSeasonAttributes =
+    await models.SurvivorDetailsOnSeason.findOne({
+      where: {
+        id: survivorId,
+        seasonId: seasonId,
+      },
+    });
+
+  if (!survivorDetailsOnSeasonAttributes) {
+    throw new Error(
+      `Survivor with id ${survivorId} not found on season${seasonId}`
+    );
+  }
+
+  const survivorAttributes = await models.Survivors.findOne({
     where: {
       id: survivorId,
-      seasonId: seasonId,
     },
-    include: [
-      {
-        model: models.Survivors, // Include the Survivors model
-        as: 'Survivor', // Alias the model as 'Survivor'
-        required: true, // Ensures only matching Survivors are returned
-      },
-    ],
-  })) as unknown as SurvivorDetailsOnSeasonAttributes & {
-    survivor: SurvivorsAttributes;
-  };
+  });
 
-  return survivorData;
+  if (!survivorAttributes) {
+    throw new Error(`Survivor with id ${survivorId} not found`);
+  }
+
+  return {
+    ...survivorDetailsOnSeasonAttributes,
+    survivor: survivorAttributes,
+  };
 }
 
 async function getSurvivorsBySeasonId(

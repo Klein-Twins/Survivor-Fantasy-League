@@ -15,7 +15,7 @@ async function getActivePassword(
       userId,
       active: true,
     },
-    order: [['passwordSed', 'DESC']],
+    order: [['PASSWORD_SEQ', 'DESC']],
   });
 
   if (activePassword.length === 0) {

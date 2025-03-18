@@ -10,12 +10,15 @@ import {
   MainBackgroundColor,
   TextPrimaryColor,
 } from '../styles/CommonColorClassNames';
+import SeasonBanner from '../components/dashboard/SeasonBanner';
 
 const RootLayout: React.FC = () => {
   const isOpen = useSelector((state: RootState) => state.modal.isOpen);
   const isAuthenticated = useSelector(
     (state: RootState) => state.auth.isAuthenticated
   );
+
+  const season = useSelector((state: RootState) => state.season.selectedSeason);
 
   return (
     <>

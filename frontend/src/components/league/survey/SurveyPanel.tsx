@@ -9,14 +9,15 @@ interface SurveyPanelProps {
 }
 
 const SurveyPanel: React.FC<SurveyPanelProps> = ({ league, account }) => {
-  const nextEpisode = useSelector((state: RootState) =>
-    state.season.seasons
-      .find((s) => s.id === league.seasonId)
-      .episodes.sort((a, b) => a.number - b.number)
-      .find((e) => new Date(e.airDate) < new Date(Date.now()))
+  const season = useSelector((state: RootState) =>
+    state.season.seasons.find((s) => s.id === league.seasonId)
   );
 
-  const [activeEpisode, setActiveEpisode] = useState<Episode>(nextEpisode);
+  console.log(season?.id);
+
+  // const [activeEpisode, setActiveEpisode] = useState<Episode | undefined>(
+  //   nextEpisode
+  // );
 
   return (
     <div className='flex flex-col space-y-8 dark:bg-surface-a1-dark rounded-lg shadow-lg p-4'></div>

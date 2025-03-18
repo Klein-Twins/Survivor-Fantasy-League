@@ -28,22 +28,4 @@ export interface CreateLeagueRequestBody {
      * @example Corner By The Bookshelf
      */
     name: string;
-
-    /**
-     * The ID of the season the league belongs to
-     *
-     * @type {number}
-     * @memberof CreateLeagueRequestBody
-     * @example 47
-     */
-    seasonId: number;
-
-    /**
-     * The profileId of the user creating the league
-     *
-     * @type {string}
-     * @memberof CreateLeagueRequestBody
-     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
-     */
-    profileId: string;
 }

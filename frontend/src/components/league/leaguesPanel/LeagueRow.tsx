@@ -35,15 +35,15 @@ const LeagueRow: React.FC<LeagueRowProps> = ({ league }) => {
       break;
   }
 
-  function handleViewLeagueClick(leagueId: League['leagueId']) {
-    navigate(`/league/${league.leagueId}`);
+  function handleViewLeagueClick(leagueId: League['id']) {
+    navigate(`/league/${league.id}`);
   }
 
   return (
     <div className='flex items-center justify-between p-4 bg-surface-a2-light dark:bg-surface-a2-dark shadow-md'>
       <div className='flex items-center'>
         <LeagueImage
-          leagueId={league.leagueId}
+          leagueId={league.id}
           className='w-16 h-16 object-cover rounded-md mr-4'
         />
         <div>
@@ -57,7 +57,7 @@ const LeagueRow: React.FC<LeagueRowProps> = ({ league }) => {
         </div>
       </div>
       <button
-        onClick={() => handleViewLeagueClick(league.leagueId)}
+        onClick={() => handleViewLeagueClick(league.id)}
         className={`px-4 py-2 ${ButtonPrimaryColors} rounded-md transition-colors`}>
         View League
       </button>

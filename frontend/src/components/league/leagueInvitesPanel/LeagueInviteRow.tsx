@@ -22,9 +22,13 @@ const LeagueInviteRow: React.FC<LeagueInviteRowProps> = ({ leagueInvite }) => {
     dispatch(
       respondToLeagueInvite({
         body: {
+          inviteId: leagueInvite.inviteId,
           leagueId: leagueInvite.league.id,
-          profileId: profileId,
           inviteResponse: InviteResponse.Accept,
+        },
+        queryParams: {
+          profileId: profileId,
+          seasonId: leagueInvite.league.seasonId,
         },
       })
     );
@@ -34,9 +38,13 @@ const LeagueInviteRow: React.FC<LeagueInviteRowProps> = ({ leagueInvite }) => {
     dispatch(
       respondToLeagueInvite({
         body: {
+          inviteId: leagueInvite.inviteId,
           leagueId: leagueInvite.league.id,
-          profileId: profileId,
           inviteResponse: InviteResponse.Decline,
+        },
+        queryParams: {
+          profileId: profileId,
+          seasonId: leagueInvite.league.seasonId,
         },
       })
     );

@@ -9,6 +9,7 @@ import {
 } from '../../../generated-api';
 import { ApiRequestParams } from '../../hooks/useApi';
 import seasonService from '../../services/season/seasonService';
+import { getLeagues } from './leagueSlice';
 
 enum SeasonActionTypes {
   GetSeasons = 'season/getSeasons',
@@ -20,6 +21,7 @@ interface SeasonState {
   activeSeason: Season | null;
   activeEpisode: Episode | null;
   nextSeason: Season | null;
+  selectedSeason: Season | null;
   loading: boolean;
   error: ApiError | null;
 }
@@ -28,6 +30,7 @@ const initialState: SeasonState = {
   seasons: [],
   activeSeason: null,
   nextSeason: null,
+  selectedSeason: null,
   activeEpisode: null,
   loading: false,
   error: null,
@@ -68,6 +71,9 @@ const seasonSlice = createSlice({
     setActiveSeason: (state, action: PayloadAction<Season>) => {
       state.activeSeason = action.payload;
     },
+    setSelectedSeason: (state, action: PayloadAction<Season>) => {
+      state.selectedSeason = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -91,6 +97,9 @@ const seasonSlice = createSlice({
         } else {
           state.activeEpisode = null;
         }
+        state.selectedSeason = state.activeSeason
+          ? state.activeSeason
+          : state.seasons[state.seasons.length - 1];
       })
       .addCase(getSeasons.rejected, (state, action) => {
         state.loading = false;
@@ -110,5 +119,7 @@ const seasonSlice = createSlice({
       });
   },
 });
+
+export const { setSelectedSeason } = seasonSlice.actions;
 
 export default seasonSlice.reducer;

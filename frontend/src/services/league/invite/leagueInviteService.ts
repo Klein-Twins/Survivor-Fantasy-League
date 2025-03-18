@@ -12,7 +12,11 @@ import api from '../../apiContainer';
 
 export interface GetLeagueInvitesRequestParams {
   profileId: Profile['profileId'];
+  seasonId: number;
 }
+
+export interface RespondToLeagueInviteRequestParams
+  extends GetLeagueInvitesRequestParams {}
 
 const leagueInviteService = {
   respondToLeagueInvite,
@@ -21,10 +25,15 @@ const leagueInviteService = {
 };
 
 async function respondToLeagueInvite(
-  requestData: ApiRequestParams<RespondToLeagueInviteRequestBody, void>
+  requestData: ApiRequestParams<
+    RespondToLeagueInviteRequestBody,
+    RespondToLeagueInviteRequestParams
+  >
 ): Promise<AxiosResponse<RespondToLeagueInviteResponse>> {
   const response = await api.leagueInviteService.respondToLeagueInvite(
     requestData.body,
+    requestData.queryParams.profileId,
+    requestData.queryParams.seasonId,
     { withCredentials: true }
   );
   return response;
@@ -35,6 +44,7 @@ async function getLeagueInvites(
 ): Promise<AxiosResponse<GetLeagueInvitesResponse>> {
   const response = await api.leagueInviteService.getLeagueInvitesForPlayer(
     requestData.queryParams.profileId,
+    requestData.queryParams.seasonId,
     { withCredentials: true }
   );
   return response;
@@ -45,6 +55,8 @@ async function sendLeagueInvite(
 ): Promise<AxiosResponse<CreateAndSendLeagueInviteResponse>> {
   const response = await api.leagueInviteService.createAndSendLeagueInvite(
     requestData.body,
+    undefined,
+    undefined,
     { withCredentials: true }
   );
   return response;

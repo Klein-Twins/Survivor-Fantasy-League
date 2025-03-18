@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import api from '../servicesBackup/apiContainer';
+import api from '../services/apiContainer';
 
 interface useImageState {
   imageUrl: string | null;
@@ -98,9 +98,9 @@ function getCacheInfo(imageType: ImageType, parameters: ImageParameters) {
 
 function getImageFetchFunction(imageType: ImageType) {
   if (imageType === 'survivor') {
-    return api.ImageServiceApi.getSurvivorImage;
+    return api.imageServiceApi.getSurvivorImage;
   } else if (imageType === 'tribe') {
-    return api.ImageServiceApi.getTribeImage;
+    return api.imageServiceApi.getTribeImage;
   }
 
   throw new Error('No fetch function for image type');

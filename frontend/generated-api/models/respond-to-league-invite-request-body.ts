@@ -30,14 +30,6 @@ export interface RespondToLeagueInviteRequestBody {
     leagueId: string;
 
     /**
-     * THe unique ID of the profile that is responding to the invite
-     *
-     * @type {string}
-     * @memberof RespondToLeagueInviteRequestBody
-     */
-    profileId: string;
-
-    /**
      * The unique ID of the league invite.
      *
      * @type {string}

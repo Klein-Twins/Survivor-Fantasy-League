@@ -7,9 +7,11 @@ import {
   InviteStatus,
   LeagueProfileAttributes,
 } from '../../models/league/LeagueProfile';
+import { SeasonsAttributes } from '../../models/season/Seasons';
 import leagueMemberRepository from '../../repositories/league/leagueMemberRepository';
 import leagueRepository from '../../repositories/league/leagueRepository';
 import { NotFoundError } from '../../utils/errors/errors';
+import seasonService from '../season/seasonService';
 import leagueMemberService from './leagueMemberService';
 
 const leagueService = {
@@ -61,9 +63,16 @@ async function createLeague({
   }
 }
 
-async function getLeaguesForProfile(profileId: ProfileAttributes['profileId']) {
+async function getLeaguesForProfile(
+  profileId: ProfileAttributes['profileId'],
+  seasonId: SeasonsAttributes['seasonId']
+) {
   const leagueProfilesAttributes: LeagueProfileAttributes[] =
-    await leagueMemberRepository.getLeagueProfiles('profileId', profileId);
+    await leagueMemberRepository.getLeagueProfiles(
+      'profileId',
+      profileId,
+      seasonId
+    );
 
   const enrolledProfilesAttributes = leagueProfilesAttributes.filter(
     (leagueProfile) => leagueProfile.inviteStatus === InviteStatus.Accepted

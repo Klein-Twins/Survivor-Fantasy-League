@@ -30,15 +30,27 @@ export const LeagueServiceApiAxiosParamCreator = function (configuration?: Confi
          * Creates a new league for a given season.
          * @summary Create a new League
          * @param {CreateLeagueRequestBody} body 
+         * @param {string} profileId Profile Id for the getLeaguesQuery
+         * @param {number} seasonId Season Id for the getLeaguesQuery
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createLeague: async (body: CreateLeagueRequestBody, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createLeague: async (body: CreateLeagueRequestBody, profileId: string, seasonId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createLeague.');
             }
-            const localVarPath = `/api/league/{profileId}`;
+            // verify required parameter 'profileId' is not null or undefined
+            if (profileId === null || profileId === undefined) {
+                throw new RequiredError('profileId','Required parameter profileId was null or undefined when calling createLeague.');
+            }
+            // verify required parameter 'seasonId' is not null or undefined
+            if (seasonId === null || seasonId === undefined) {
+                throw new RequiredError('seasonId','Required parameter seasonId was null or undefined when calling createLeague.');
+            }
+            const localVarPath = `/api/league/{profileId}/{seasonId}`
+                .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)))
+                .replace(`{${"seasonId"}}`, encodeURIComponent(String(seasonId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -89,16 +101,22 @@ export const LeagueServiceApiAxiosParamCreator = function (configuration?: Confi
          * Gets profile's enrolled leagues
          * @summary Get leagues for a profile
          * @param {string} profileId Profile Id for the getLeaguesQuery
+         * @param {number} seasonId Season Id for the getLeaguesQuery
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        getLeagues: async (profileId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        getLeagues: async (profileId: string, seasonId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'profileId' is not null or undefined
             if (profileId === null || profileId === undefined) {
                 throw new RequiredError('profileId','Required parameter profileId was null or undefined when calling getLeagues.');
             }
-            const localVarPath = `/api/league/{profileId}`
-                .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)));
+            // verify required parameter 'seasonId' is not null or undefined
+            if (seasonId === null || seasonId === undefined) {
+                throw new RequiredError('seasonId','Required parameter seasonId was null or undefined when calling getLeagues.');
+            }
+            const localVarPath = `/api/league/{profileId}/{seasonId}`
+                .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)))
+                .replace(`{${"seasonId"}}`, encodeURIComponent(String(seasonId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -154,11 +172,13 @@ export const LeagueServiceApiFp = function(configuration?: Configuration) {
          * Creates a new league for a given season.
          * @summary Create a new League
          * @param {CreateLeagueRequestBody} body 
+         * @param {string} profileId Profile Id for the getLeaguesQuery
+         * @param {number} seasonId Season Id for the getLeaguesQuery
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createLeague(body: CreateLeagueRequestBody, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CreateLeagueResponse>>> {
-            const localVarAxiosArgs = await LeagueServiceApiAxiosParamCreator(configuration).createLeague(body, options);
+        async createLeague(body: CreateLeagueRequestBody, profileId: string, seasonId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CreateLeagueResponse>>> {
+            const localVarAxiosArgs = await LeagueServiceApiAxiosParamCreator(configuration).createLeague(body, profileId, seasonId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -168,11 +188,12 @@ export const LeagueServiceApiFp = function(configuration?: Configuration) {
          * Gets profile's enrolled leagues
          * @summary Get leagues for a profile
          * @param {string} profileId Profile Id for the getLeaguesQuery
+         * @param {number} seasonId Season Id for the getLeaguesQuery
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getLeagues(profileId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetLeaguesResponse>>> {
-            const localVarAxiosArgs = await LeagueServiceApiAxiosParamCreator(configuration).getLeagues(profileId, options);
+        async getLeagues(profileId: string, seasonId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetLeaguesResponse>>> {
+            const localVarAxiosArgs = await LeagueServiceApiAxiosParamCreator(configuration).getLeagues(profileId, seasonId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
                 return axios.request(axiosRequestArgs);
@@ -191,21 +212,24 @@ export const LeagueServiceApiFactory = function (configuration?: Configuration, 
          * Creates a new league for a given season.
          * @summary Create a new League
          * @param {CreateLeagueRequestBody} body 
+         * @param {string} profileId Profile Id for the getLeaguesQuery
+         * @param {number} seasonId Season Id for the getLeaguesQuery
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createLeague(body: CreateLeagueRequestBody, options?: AxiosRequestConfig): Promise<AxiosResponse<CreateLeagueResponse>> {
-            return LeagueServiceApiFp(configuration).createLeague(body, options).then((request) => request(axios, basePath));
+        async createLeague(body: CreateLeagueRequestBody, profileId: string, seasonId: number, options?: AxiosRequestConfig): Promise<AxiosResponse<CreateLeagueResponse>> {
+            return LeagueServiceApiFp(configuration).createLeague(body, profileId, seasonId, options).then((request) => request(axios, basePath));
         },
         /**
          * Gets profile's enrolled leagues
          * @summary Get leagues for a profile
          * @param {string} profileId Profile Id for the getLeaguesQuery
+         * @param {number} seasonId Season Id for the getLeaguesQuery
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async getLeagues(profileId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<GetLeaguesResponse>> {
-            return LeagueServiceApiFp(configuration).getLeagues(profileId, options).then((request) => request(axios, basePath));
+        async getLeagues(profileId: string, seasonId: number, options?: AxiosRequestConfig): Promise<AxiosResponse<GetLeaguesResponse>> {
+            return LeagueServiceApiFp(configuration).getLeagues(profileId, seasonId, options).then((request) => request(axios, basePath));
         },
     };
 };
@@ -221,22 +245,25 @@ export class LeagueServiceApi extends BaseAPI {
      * Creates a new league for a given season.
      * @summary Create a new League
      * @param {CreateLeagueRequestBody} body 
+     * @param {string} profileId Profile Id for the getLeaguesQuery
+     * @param {number} seasonId Season Id for the getLeaguesQuery
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LeagueServiceApi
      */
-    public async createLeague(body: CreateLeagueRequestBody, options?: AxiosRequestConfig) : Promise<AxiosResponse<CreateLeagueResponse>> {
-        return LeagueServiceApiFp(this.configuration).createLeague(body, options).then((request) => request(this.axios, this.basePath));
+    public async createLeague(body: CreateLeagueRequestBody, profileId: string, seasonId: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<CreateLeagueResponse>> {
+        return LeagueServiceApiFp(this.configuration).createLeague(body, profileId, seasonId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * Gets profile's enrolled leagues
      * @summary Get leagues for a profile
      * @param {string} profileId Profile Id for the getLeaguesQuery
+     * @param {number} seasonId Season Id for the getLeaguesQuery
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LeagueServiceApi
      */
-    public async getLeagues(profileId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeaguesResponse>> {
-        return LeagueServiceApiFp(this.configuration).getLeagues(profileId, options).then((request) => request(this.axios, this.basePath));
+    public async getLeagues(profileId: string, seasonId: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeaguesResponse>> {
+        return LeagueServiceApiFp(this.configuration).getLeagues(profileId, seasonId, options).then((request) => request(this.axios, this.basePath));
     }
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../servicesBackup/apiContainer';
+import api from '../../../services/apiContainer';
 
 interface LeagueImageProps {
   leagueId: string;

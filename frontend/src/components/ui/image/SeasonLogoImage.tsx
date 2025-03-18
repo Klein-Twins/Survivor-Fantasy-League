@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../servicesBackup/apiContainer';
+import api from '../../../services/apiContainer';
 
 interface SeasonLogoImageProps {
   seasonId: number;
@@ -19,7 +19,7 @@ const SeasonLogoImage: React.FC<SeasonLogoImageProps> = ({
       try {
         setIsLoading(true);
         setError(false);
-        const response = await api.ImageServiceApi.getSeasonLogoImage(
+        const response = await api.imageServiceApi.getSeasonLogoImage(
           seasonId.toString(),
           {
             withCredentials: true,

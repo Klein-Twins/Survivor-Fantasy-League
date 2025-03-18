@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from '../../../servicesBackup/apiContainer';
+import api from '../../../services/apiContainer';
 
 interface EpisodeImageProps {
   episodeId: string;
@@ -19,7 +19,7 @@ const EpisodeImage: React.FC<EpisodeImageProps> = ({
       try {
         setIsLoading(true);
         setError(false);
-        const response = await api.ImageServiceApi.getEpisodeImage(episodeId, {
+        const response = await api.imageServiceApi.getEpisodeImage(episodeId, {
           withCredentials: true,
           responseType: 'arraybuffer',
           headers: {

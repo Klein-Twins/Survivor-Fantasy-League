@@ -25,15 +25,25 @@ async function getLeagueInvitesForProfileId(
 ): Promise<void> {
   try {
     const profileId = req.query.profileId as string;
+    const seasonId = req.query.seasonId as string;
     if (!profileId) {
       throw new BadRequestError('Missing profile ID');
     }
     if (!validator.isUUID(profileId)) {
       throw new BadRequestError('Invalid Profile ID');
     }
+    if (!seasonId) {
+      throw new BadRequestError('Missing season ID');
+    }
+    if (!validator.isNumeric(seasonId)) {
+      throw new BadRequestError('Invalid Season ID');
+    }
 
     const leagueInvites =
-      await leagueInviteService.getLeagueInvitesForProfileId(profileId as UUID);
+      await leagueInviteService.getLeagueInvitesForProfileId(
+        profileId as UUID,
+        parseInt(seasonId)
+      );
 
     const responseData: GetLeagueInvitesResponseData = {
       numLeagueInvites: leagueInvites.length,
@@ -99,10 +109,11 @@ async function respondToLeagueInvite(
   try {
     const {
       leagueId,
-      profileId,
       inviteResponse,
       inviteId,
     }: RespondToLeagueInviteRequestBody = req.body;
+    const profileId = req.query.profileId as string;
+    const seasonId = req.query.seasonId as string;
     if (!leagueId) {
       throw new BadRequestError('Missing league ID');
     }

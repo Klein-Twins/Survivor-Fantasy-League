@@ -13,7 +13,7 @@ import {
   SignupUserResponse,
   SignupUserResponseData,
 } from '../../generated-api';
-import { CustomError } from '../../utils/errors/errors';
+import { CustomError, UnauthorizedError } from '../../utils/errors/errors';
 import userService from '../../services/account/userService';
 import userSessionService from '../../services/auth/userSessionService';
 import { UUID } from 'crypto';
@@ -79,11 +79,18 @@ async function login(
   try {
     const reqBody: LoginUserRequestBody = req.body;
 
-    //Call Auth Service to create response
-    const account = await userService.login({
-      email: reqBody.email,
-      password: reqBody.password,
-    });
+    let account: Account;
+    try {
+      account = await userService.login({
+        email: reqBody.email,
+        password: reqBody.password,
+      });
+    } catch (error) {
+      if (error instanceof CustomError) {
+        throw new UnauthorizedError('Invalid email or password');
+      }
+      throw error;
+    }
 
     const userSession = await userSessionService.createUserSession(
       {

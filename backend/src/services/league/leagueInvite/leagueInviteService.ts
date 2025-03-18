@@ -12,6 +12,7 @@ import {
   InviteStatus,
   LeagueProfileAttributes,
 } from '../../../models/league/LeagueProfile';
+import { SeasonsAttributes } from '../../../models/season/Seasons';
 import leagueInviteRepository from '../../../repositories/league/leagueInviteRepository';
 import leagueMemberRepository from '../../../repositories/league/leagueMemberRepository';
 import { ConflictError, ForbiddenError } from '../../../utils/errors/errors';
@@ -69,10 +70,15 @@ async function respondToLeagueInvite({
 }
 
 async function getLeagueInvitesForProfileId(
-  profileId: ProfileAttributes['profileId']
+  profileId: ProfileAttributes['profileId'],
+  seasonId: SeasonsAttributes['seasonId']
 ): Promise<LeagueInvite[]> {
   const leagueProfilesAttributes: LeagueProfileAttributes[] =
-    await leagueMemberRepository.getLeagueProfiles('profileId', profileId);
+    await leagueMemberRepository.getLeagueProfiles(
+      'profileId',
+      profileId,
+      seasonId
+    );
 
   const invitedLeagueProfilesAttributes = leagueProfilesAttributes.filter(
     (leagueProfile) => {

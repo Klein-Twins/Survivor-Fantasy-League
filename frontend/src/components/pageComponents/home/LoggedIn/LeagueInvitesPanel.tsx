@@ -13,6 +13,8 @@ const LeagueInvitesPanel: React.FC = () => {
 
   const leagueInvitesPanelContent = leagueInviteState.loading ? (
     <LoadingData text='Loading League Invites' />
+  ) : leagueInviteState.error ? (
+    <div className='text-red-500'>Failed to retrieve league invites</div>
   ) : leagueInvites.length === 0 ? (
     <NoLeagueInvitesMessage />
   ) : (

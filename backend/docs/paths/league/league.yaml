@@ -13,6 +13,12 @@ paths:
           schema:
             type: string
           description: Profile Id for the getLeaguesQuery
+        - in: path
+          name: seasonId
+          required: true
+          schema:
+            type: integer
+          description: Season Id for the getLeaguesQuery
       responses:
         '200':
           description: A list of leagues for the profile
@@ -30,6 +36,19 @@ paths:
       tags:
         - LeagueService
       operationId: createLeague
+      parameters:
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: string
+          description: Profile Id for the getLeaguesQuery
+        - in: path
+          name: seasonId
+          required: true
+          schema:
+            type: integer
+          description: Season Id for the getLeaguesQuery
       requestBody:
         required: true
         content:
@@ -79,21 +98,11 @@ components:
       type: object
       required:
         - name
-        - seasonId
-        - profileId
       properties:
         name:
           type: string
           description: The name of the league
           example: 'Corner By The Bookshelf'
-        seasonId:
-          type: integer
-          description: The ID of the season the league belongs to
-          example: 47
-        profileId:
-          type: string
-          description: The profileId of the user creating the league
-          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
   responses:
     CreateLeagueResponse:
       type: object

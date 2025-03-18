@@ -5,6 +5,7 @@ import { LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 import sequelize, { models } from '../../config/db';
 
 import { v4 as uuidv4 } from 'uuid';
+import { SeasonsAttributes } from '../../models/season/Seasons';
 
 const leagueMemberRepository = {
   createLeagueMember,
@@ -60,13 +61,34 @@ async function getLeagueProfiles(
   field: keyof Pick<LeagueProfileAttributes, 'leagueId' | 'profileId'>,
   value:
     | LeagueProfileAttributes['leagueId']
-    | LeagueProfileAttributes['profileId']
+    | LeagueProfileAttributes['profileId'],
+  seasonId?: SeasonsAttributes['seasonId']
 ): Promise<LeagueProfileAttributes[]> {
-  return await models.LeagueProfile.findAll({
-    where: {
-      [field]: value,
-    },
-  });
+  if (!seasonId) {
+    const leagueProfilesAttributes = await models.LeagueProfile.findAll({
+      where: {
+        [field]: value,
+      },
+    });
+    return leagueProfilesAttributes;
+  } else {
+    const leagueProfilesAttributes = await models.LeagueProfile.findAll({
+      where: {
+        [field]: value, // Filter by the provided field and value
+      },
+      include: [
+        {
+          model: models.League, // Join with the League model
+          as: 'league', // Ensure this matches the alias in your model association
+          where: {
+            seasonId, // Filter by seasonId
+          },
+        },
+      ],
+    });
+
+    return leagueProfilesAttributes;
+  }
 }
 
 export default leagueMemberRepository;

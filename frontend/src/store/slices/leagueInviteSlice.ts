@@ -12,6 +12,7 @@ import { ApiRequestParams } from '../../hooks/useApi';
 import { addLeague } from './leagueSlice';
 import leagueInviteService, {
   GetLeagueInvitesRequestParams,
+  RespondToLeagueInviteRequestParams,
 } from '../../services/league/invite/leagueInviteService';
 
 interface LeagueInviteState {
@@ -41,7 +42,10 @@ export const getLeagueInvites = createAsyncThunk<
 
 export const respondToLeagueInvite = createAsyncThunk<
   RespondToLeagueInviteResponse,
-  ApiRequestParams<RespondToLeagueInviteRequestBody, void>,
+  ApiRequestParams<
+    RespondToLeagueInviteRequestBody,
+    RespondToLeagueInviteRequestParams
+  >,
   { rejectValue: ApiError }
 >(
   'leagueInvite/respondToLeagueInvite',

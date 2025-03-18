@@ -9,11 +9,17 @@ paths:
         - LeagueInviteService
       parameters:
         - name: profileId
-          in: path
+          in: query
           required: true
           description: The ID of the profile.
           schema:
             type: string
+        - name: seasonId
+          in: query
+          required: true
+          description: The ID of the season.
+          schema:
+            type: integer
       responses:
         '200':
           description: A list of league invites for the profile
@@ -33,6 +39,19 @@ paths:
       operationId: createAndSendLeagueInvite
       tags:
         - LeagueInviteService
+      parameters:
+        - name: profileId
+          in: query
+          required: false
+          description: The ID of the profile.
+          schema:
+            type: string
+        - name: seasonId
+          in: query
+          required: false
+          description: The ID of the season.
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -57,6 +76,19 @@ paths:
       operationId: respondToLeagueInvite
       tags:
         - LeagueInviteService
+      parameters:
+        - name: profileId
+          in: query
+          required: true
+          description: The ID of the profile.
+          schema:
+            type: string
+        - name: seasonId
+          in: query
+          required: true
+          description: The ID of the season.
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -134,16 +166,11 @@ components:
       required:
         - leagueId
         - inviteResponse
-        - profileId
         - inviteId
       properties:
         leagueId:
           type: string
           description: The unique ID of the league the user is being invited to.
-        profileId:
-          type: string
-          description:
-            THe unique ID of the profile that is responding to the invite
         inviteId:
           type: string
           description: The unique ID of the league invite.

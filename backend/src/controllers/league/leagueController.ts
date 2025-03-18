@@ -24,6 +24,7 @@ async function getLeague(
 ): Promise<void> {
   try {
     const profileId = req.params.profileId;
+    const seasonIdParam = req.params.seasonId;
     if (!profileId) {
       throw new BadRequestError('Profile ID is required');
     }
@@ -31,8 +32,20 @@ async function getLeague(
       throw new BadRequestError('Invalid profile ID');
     }
 
+    if (!seasonIdParam) {
+      throw new BadRequestError('Season ID is required');
+    }
+    if (
+      validator.isNumeric(seasonIdParam) === false ||
+      parseInt(seasonIdParam) < 1
+    ) {
+      throw new BadRequestError('Invalid season ID');
+    }
+    const seasonId = parseInt(seasonIdParam);
+
     const leagues: League[] = await leagueService.getLeaguesForProfile(
-      profileId as UUID
+      profileId as UUID,
+      seasonId
     );
 
     const responseData: GetLeaguesResponseData = {
@@ -63,11 +76,12 @@ async function createLeague(
 ): Promise<void> {
   try {
     const reqBody = req.body;
+    const reqParams = req.params;
     const { name, seasonId, profileId } = leagueHelper.validateCreateLeagueData(
       {
         name: reqBody.name,
-        seasonId: reqBody.seasonId,
-        profileId: reqBody.profileId,
+        seasonId: reqParams.seasonId,
+        profileId: reqParams.profileId,
       }
     );
 

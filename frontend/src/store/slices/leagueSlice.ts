@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   ApiError,
-  CompletedLeagueSurvey,
+  CompletedLeagueMemberSurvey,
   CreateLeagueRequestBody,
   CreateLeagueResponse,
   GetLeaguesResponse,
@@ -11,6 +11,7 @@ import {
 
 import { ApiRequestParams } from '../../hooks/useApi';
 import leagueService, {
+  CreateLeagueRequestParams,
   GetLeaguesRequestParams,
 } from '../../services/league/leagueService';
 
@@ -21,7 +22,7 @@ enum AuthActionTypes {
 
 type LeagueAndLeagueSurvey = {
   league: League;
-  survey: LeagueSurvey | CompletedLeagueSurvey;
+  survey: LeagueSurvey | CompletedLeagueMemberSurvey;
 };
 
 interface LeagueState {
@@ -40,7 +41,7 @@ const initialState: LeagueState = {
 
 export const createLeague = createAsyncThunk<
   CreateLeagueResponse,
-  ApiRequestParams<CreateLeagueRequestBody, void>,
+  ApiRequestParams<CreateLeagueRequestBody, CreateLeagueRequestParams>,
   { rejectValue: ApiError }
 >('league/createLeague', async (leagueData, { rejectWithValue }) => {
   try {

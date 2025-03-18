@@ -9,7 +9,7 @@ import tribeService from './tribeService';
 
 const seasonService = {
   getAllSeasons,
-  buildSeason,
+  doesSeasonExist,
 };
 
 async function getAllSeasons(): Promise<Season[]> {
@@ -25,6 +25,11 @@ async function getAllSeasons(): Promise<Season[]> {
   }
 
   return seasons;
+}
+
+async function doesSeasonExist(seasonId: number): Promise<boolean> {
+  const seasonAttributes = await seasonRepository.getSeasonById(seasonId);
+  return seasonAttributes !== null;
 }
 
 async function buildSeason(seasonInfo: SeasonsAttributes): Promise<Season> {

@@ -11,6 +11,7 @@ const tribeService = {
 };
 
 async function createTribe(
+  seasonId: number,
   requestData: ApiRequestParams<CreateTribeRequestBody, void>
 ): Promise<AxiosResponse<CreateTribeResponse>> {
   return await api.tribeService.createTribe(requestData.body, {

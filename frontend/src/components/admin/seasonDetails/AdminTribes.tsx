@@ -13,13 +13,13 @@ import {
   validateTribeFormData,
 } from '../../../utils/admin/TribeFormData';
 import useForm from '../../../hooks/useForm';
-import tribeService from '../../../servicesBackup/season/tribeService';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
 import { useParams } from 'react-router-dom';
 import { FaPlus } from 'react-icons/fa';
 import { openModal } from '../../../store/slices/modalSlice';
 import { SketchPicker } from 'react-color';
+import tribeService from '../../../services/season/tribe/tribeService';
 
 interface AdminTribesProps {
   tribes: Tribe[];
