@@ -19,13 +19,7 @@ const TokensModel = (sequelize: Sequelize) => {
     public tokenExpiresTime!: TokenAttributes['tokenExpiresTime'];
     public isActive!: TokenAttributes['isActive'];
 
-    static associate(models: any) {
-      this.belongsTo(models.User, {
-        foreignKey: 'userId',
-        targetKey: 'userId',
-        as: 'user',
-      });
-    }
+    static associate(models: any) {}
   }
 
   Tokens.init(

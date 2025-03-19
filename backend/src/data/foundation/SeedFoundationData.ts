@@ -73,8 +73,8 @@ const seedSeason47Data = async () => {
 
 const seedPicksAndSurveys = async () => {
   logger.debug('Seeding pick options...');
-  await models.PickOptions.destroy({ where: {} });
-  await models.PickOptions.bulkCreate(pickOptionsData, { validate: true });
+  //await models.PickOptions.destroy({ where: {} });
+  //await models.PickOptions.bulkCreate(pickOptionsData, { validate: true });
 
   logger.debug('Seeding picks...');
   await models.Picks.destroy({ where: {} });

@@ -2,6 +2,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { AccountRole } from '../../generated-api';
 import { ProfileAttributes } from './Profile';
 import { UUID } from 'crypto';
+import logger from '../../config/logger';
 
 export interface UserAttributes {
   userId: UUID;
@@ -20,12 +21,24 @@ const UserModel = (sequelize: Sequelize) => {
     public userRole!: UserAttributes['userRole'];
 
     static associate(models: any) {
-      this.hasMany(models.Password, { foreignKey: 'userId', as: 'Password' });
-      this.belongsTo(models.Profile, {
-        foreignKey: 'profileId',
-        as: 'profile',
-      });
-      this.hasOne(models.Tokens, { foreignKey: 'userId', as: 'tokens' });
+      if (models.Password) {
+        this.hasMany(models.Password, {
+          foreignKey: 'userId',
+          sourceKey: 'userId',
+          as: 'Password',
+        });
+      } else {
+        logger.error('Error associating User with Password');
+      }
+      if (models.Profile) {
+        this.belongsTo(models.Profile, {
+          foreignKey: 'profileId',
+          targetKey: 'profileId',
+          as: 'profile',
+        });
+      } else {
+        logger.error('Error associating User with Profile');
+      }
     }
   }
 

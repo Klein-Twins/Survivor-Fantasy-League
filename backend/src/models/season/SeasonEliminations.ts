@@ -2,6 +2,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SeasonsAttributes } from './Seasons';
 import { EpisodeAttributes } from './Episodes';
 import { SurvivorsAttributes } from '../survivors/Survivors';
+import logger from '../../config/logger';
 
 export interface SeasonEliminationAttributes {
   seasonId: SeasonsAttributes['seasonId'];
@@ -28,21 +29,35 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       //TODO - Add associations
-      this.belongsTo(models.Seasons, {
-        foreignKey: 'seasonId',
-        targetKey: 'seasonId',
-        as: 'season',
-      });
-      this.belongsTo(models.Episode, {
-        foreignKey: 'episodeId',
-        targetKey: 'episodeId',
-        as: 'episode',
-      });
-      this.belongsTo(models.Survivors, {
-        foreignKey: 'survivorId',
-        targetKey: 'id',
-        as: 'survivor',
-      });
+      if (models.Seasons) {
+        this.belongsTo(models.Seasons, {
+          foreignKey: 'seasonId',
+          targetKey: 'seasonId',
+          as: 'season',
+        });
+      } else {
+        logger.error('Error associating SeasonEliminations with Seasons');
+      }
+      if (models.Episode) {
+        this.belongsTo(models.Episode, {
+          foreignKey: 'episodeId',
+          targetKey: 'episodeId',
+          as: 'episode',
+        });
+      } else {
+        logger.error('Error associating SeasonEliminations with Episode');
+      }
+      if (models.SurvivorDetailsOnSeason) {
+        this.belongsTo(models.SurvivorDetailsOnSeason, {
+          foreignKey: 'survivorId',
+          targetKey: 'id',
+          as: 'survivor',
+        });
+      } else {
+        logger.error(
+          'Error associating SeasonEliminations with SurvivorDetailsOnSeason'
+        );
+      }
     }
   }
 

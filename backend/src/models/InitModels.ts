@@ -26,6 +26,7 @@ import logger from '../config/logger';
 import SurveySubmissionModel from './league/SurveySubmissions';
 import PickSubmissionModel from './league/PickSubmission';
 import EpisodeSurveyModel from './surveyAndPick/EpisodeSurvey';
+import TribeMembersModel from './season/TribeMembers';
 
 const initModels = (sequelize: Sequelize) => {
   logger.debug('Initializing models');
@@ -40,11 +41,11 @@ const initModels = (sequelize: Sequelize) => {
   const Tokens = TokensModel(sequelize);
   const LeagueProfile = LeagueProfileModel(sequelize);
   const Picks = PicksModel(sequelize);
-  const PickOptions = PickOptionsModel(sequelize);
+  //const PickOptions = PickOptionsModel(sequelize);
   const PickPoints = PickPointsModel(sequelize);
-  const PickType = PickTypeModel(sequelize);
-  const ProfilePick = ProfilePickModel(sequelize);
-  const PickSolution = PickSolutionModel(sequelize);
+  //const PickType = PickTypeModel(sequelize);
+  //const ProfilePick = ProfilePickModel(sequelize);
+  //const PickSolution = PickSolutionModel(sequelize);
   const Episode = EpisodeModel(sequelize);
   const Tribe = TribeModel(sequelize);
   const Survey = SurveyModel(sequelize);
@@ -56,13 +57,17 @@ const initModels = (sequelize: Sequelize) => {
   const SeasonEliminations = SeasonEliminationsModel(sequelize);
   const SurveySubmissions = SurveySubmissionModel(sequelize);
   const PickSubmissions = PickSubmissionModel(sequelize);
+  const TribeMembers = TribeMembersModel(sequelize);
 
   logger.debug('Models initialized');
 
-  User.associate({ Password, Profile, Tokens });
+  User.associate({ Password, Profile });
+  Profile.associate({ User, LeagueProfile });
   Password.associate({ User });
-  League.associate({ Seasons, LeagueProfile });
-  Survivors.associate({ SurvivorDetailsOnSeason, ChallengeWinners });
+  League.associate({ Seasons, LeagueProfile, LeagueSurveyForEpisode });
+  Survivors.associate({
+    SurvivorDetailsOnSeason,
+  });
   Seasons.associate({
     SurvivorDetailsOnSeason,
     League,
@@ -70,14 +75,50 @@ const initModels = (sequelize: Sequelize) => {
     SeasonEliminations,
     Tribe,
   });
-  SurvivorDetailsOnSeason.associate({ Survivors, Seasons, SeasonEliminations });
-  Profile.associate({ User, LeagueProfile });
-  Tokens.associate({ User });
-  LeagueProfile.associate({ League, Profile });
-  Tribe.associate({ ChallengeWinners, Seasons, Episode });
-  Episode.associate({ Seasons, SeasonEliminations, Challenges, Tribe });
-  SeasonEliminations.associate({ Seasons, Episode, Survivors });
-  ChallengeWinners.associate({ Survivors, Tribe, Episode });
+  SurvivorDetailsOnSeason.associate({
+    Survivors,
+    Seasons,
+    SeasonEliminations,
+    ChallengeWinners,
+    TribeMembers,
+  });
+
+  LeagueProfile.associate({ League, Profile, SurveySubmissions });
+  Tribe.associate({ ChallengeWinners, Seasons, Episode, TribeMembers });
+  Episode.associate({
+    Seasons,
+    SeasonEliminations,
+    Challenges,
+    Tribe,
+    TribeMembers,
+    EpisodeSurvey,
+  });
+  SeasonEliminations.associate({ Seasons, Episode, SurvivorDetailsOnSeason });
+  ChallengeWinners.associate({
+    Tribe,
+    Challenges,
+    SurvivorDetailsOnSeason,
+  });
+  TribeMembers.associate({ Tribe, Episode, SurvivorDetailsOnSeason });
+  EpisodeSurvey.associate({ Survey, Episode, LeagueSurveyForEpisode });
+  Survey.associate({ EpisodeSurvey, SurveyPicks });
+  SurveyPicks.associate({ Survey, Picks });
+  LeagueSurveyForEpisode.associate({
+    EpisodeSurvey,
+    League,
+    SurveySubmissions,
+  });
+  Picks.associate({ SurveyPicks, PickSubmissions, PickPoints });
+  //Todo add associations with tokens
+  Tokens.associate({});
+  PickPoints.associate({ Picks });
+  SurveySubmissions.associate({
+    PickSubmissions,
+    LeagueProfile,
+    LeagueSurveyForEpisode,
+  });
+  PickSubmissions.associate({ SurveySubmissions, Picks });
+  Challenges.associate({ Episode, ChallengeWinners });
 
   logger.debug('Models associated');
 
@@ -93,11 +134,11 @@ const initModels = (sequelize: Sequelize) => {
     Tokens,
     LeagueProfile,
     Picks,
-    PickOptions,
+    //PickOptions,
     PickPoints,
-    PickType,
-    ProfilePick,
-    PickSolution,
+    //PickType,
+    //ProfilePick,
+    //PickSolution,
     Tribe,
     Episode,
     Survey,
@@ -109,6 +150,7 @@ const initModels = (sequelize: Sequelize) => {
     SurveySubmissions,
     PickSubmissions,
     EpisodeSurvey,
+    TribeMembers,
   };
 };
 

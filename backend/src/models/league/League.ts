@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SeasonsAttributes } from '../season/Seasons';
+import logger from '../../config/logger';
 
 export interface LeagueAttributes {
   leagueId: string;
@@ -15,16 +16,33 @@ const LeagueModel = (sequelize: Sequelize) => {
     public name!: LeagueAttributes['name'];
 
     static associate(models: any) {
-      this.belongsTo(models.Seasons, {
-        foreignKey: 'seasonId',
-        targetKey: 'seasonId',
-        as: 'season',
-      });
-      this.hasMany(models.LeagueProfile, {
-        foreignKey: 'leagueId',
-        sourceKey: 'leagueId',
-        as: 'leagueProfiles',
-      });
+      if (models.Seasons) {
+        League.belongsTo(models.Seasons, {
+          foreignKey: 'seasonId',
+          targetKey: 'seasonId',
+          as: 'season',
+        });
+      } else {
+        logger.error('Error associating League with Seasons');
+      }
+      if (models.LeagueProfile) {
+        this.hasMany(models.LeagueProfile, {
+          foreignKey: 'leagueId',
+          sourceKey: 'leagueId',
+          as: 'leagueProfiles',
+        });
+      } else {
+        logger.error('Error associating League with LeagueProfile');
+      }
+      if (models.LeagueSurveyForEpisode) {
+        this.hasMany(models.LeagueSurveyForEpisode, {
+          foreignKey: 'leagueId',
+          sourceKey: 'leagueId',
+          as: 'leagueSurveys',
+        });
+      } else {
+        logger.error('Error associating League with LeagueSurveyForEpisode');
+      }
     }
   }
 

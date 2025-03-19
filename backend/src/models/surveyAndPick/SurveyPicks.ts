@@ -1,7 +1,7 @@
-import { UUID } from 'crypto';
 import { DataTypes, Model } from 'sequelize';
 import { PicksAttributes } from './picks/Picks';
 import { SurveyAttributes } from './Survey';
+import logger from '../../config/logger';
 
 export interface SurveyPicksAttributes {
   surveyId: SurveyAttributes['surveyId'];
@@ -17,8 +17,25 @@ const SurveyPicksModel = (sequelize: any) => {
     public pickId!: SurveyPicksAttributes['pickId'];
 
     static associate(models: any) {
-      //TODO: Add association to LGE_LEAGUE_SURVEYS
-      //TODO: Add association to PCK_PICKS
+      if (models.Survey) {
+        this.belongsTo(models.Survey, {
+          foreignKey: 'surveyId',
+          targetKey: 'surveyId',
+          as: 'survey',
+        });
+      } else {
+        logger.error('Error associating SurveyPicks with Survey');
+      }
+
+      if (models.Picks) {
+        this.belongsTo(models.Picks, {
+          foreignKey: 'pickId',
+          targetKey: 'pickId',
+          as: 'pick',
+        });
+      } else {
+        logger.error('Error associating SurveyPicks with Picks');
+      }
     }
   }
   SurveyPicks.init(

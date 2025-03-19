@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { UUID } from 'crypto';
+import logger from '../../config/logger';
 
 export interface ProfileAttributes {
   profileId: UUID;
@@ -14,21 +15,29 @@ const ProfileModel = (sequelize: Sequelize) => {
     public lastName?: ProfileAttributes['lastName'];
 
     static associate(models: any) {
-      this.hasOne(models.User, {
-        foreignKey: 'profileId',
-        sourceKey: 'profileId',
-        as: 'User',
-      });
-      this.hasMany(models.LeagueProfile, {
-        foreignKey: 'profileId',
-        sourceKey: 'profileId',
-        as: 'leagueProfiles',
-      });
-      this.hasMany(models.LeagueProfile, {
-        foreignKey: 'inviterProfileId',
-        sourceKey: 'profileId',
-        as: 'inviterProfile',
-      });
+      if (models.User) {
+        this.hasOne(models.User, {
+          foreignKey: 'profileId',
+          sourceKey: 'profileId',
+          as: 'User',
+        });
+      } else {
+        logger.error('Error associating Profile with User');
+      }
+      if (models.LeagueProfile) {
+        this.hasMany(models.LeagueProfile, {
+          foreignKey: 'profileId',
+          sourceKey: 'profileId',
+          as: 'leagueProfiles',
+        });
+        this.hasMany(models.LeagueProfile, {
+          foreignKey: 'inviterProfileId',
+          sourceKey: 'profileId',
+          as: 'inviterProfile',
+        });
+      } else {
+        logger.error('Error associating Profile with LeagueProfile');
+      }
     }
   }
 

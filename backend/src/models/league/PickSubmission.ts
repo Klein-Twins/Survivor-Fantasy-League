@@ -5,6 +5,7 @@ import { SurvivorsAttributes } from '../survivors/Survivors';
 import { TribeAttributes } from '../season/Tribes';
 import { PickOptionTypeEnum } from '../../generated-api';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import logger from '../../config/logger';
 
 export interface PickSubmissionAttributes {
   surveySubmissionId: UUID;
@@ -27,7 +28,26 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
     public pickId!: PickSubmissionAttributes['pickId'];
     public pointsEarned!: PickSubmissionAttributes['pointsEarned'];
 
-    static associate(models: any) {}
+    static associate(models: any) {
+      if (models.SurveySubmissions) {
+        this.belongsTo(models.SurveySubmissions, {
+          foreignKey: 'surveySubmissionId',
+          targetKey: 'surveySubmissionId',
+          as: 'surveySubmission',
+        });
+      } else {
+        logger.error('Error associating PickSubmission with SurveySubmissions');
+      }
+      if (models.Picks) {
+        this.belongsTo(models.Picks, {
+          foreignKey: 'pickId',
+          targetKey: 'pickId',
+          as: 'pick',
+        });
+      } else {
+        logger.error('Error associating PickSubmission with Picks');
+      }
+    }
   }
   PickSubmission.init(
     {

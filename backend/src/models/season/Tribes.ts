@@ -2,6 +2,7 @@ import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SeasonsAttributes } from './Seasons';
 import { EpisodeAttributes } from './Episodes';
+import logger from '../../config/logger';
 
 export interface TribeAttributes {
   id: UUID | string;
@@ -24,27 +25,43 @@ const TribeModel = (sequelize: Sequelize) => {
     public episodeStarted!: EpisodeAttributes['episodeId'];
 
     static associate(models: any) {
-      this.belongsTo(models.Seasons, {
-        foreignKey: 'seasonId',
-        targetKey: 'seasonId',
-        as: 'season',
-      });
-      // this.hasMany(models.ProfilePick, {
-      //   foreignKey: 'pickAnswerTribeId',
-      //   sourceKey: 'id',
-      //   as: 'profilePicks',
-      // });
+      if (models.Seasons) {
+        this.belongsTo(models.Seasons, {
+          foreignKey: 'seasonId',
+          targetKey: 'seasonId',
+          as: 'season',
+        });
+      } else {
+        logger.error('Error associating Tribe with Seasons');
+      }
+      if (models.ChallengeWinners) {
+        this.hasMany(models.ChallengeWinners, {
+          foreignKey: 'winnerTribeId',
+          sourceKey: 'id',
+          as: 'challengeWinners',
+        });
+      } else {
+        logger.error('Error associating Tribe with ChallengeWinners');
+      }
+      if (models.Episode) {
+        this.belongsTo(models.Episode, {
+          foreignKey: 'episodeStarted',
+          targetKey: 'episodeId',
+          as: 'episode',
+        });
+      } else {
+        logger.error('Error associating Tribe with Episode');
+      }
 
-      this.hasMany(models.ChallengeWinners, {
-        foreignKey: 'winnerTribeId',
-        sourceKey: 'id',
-        as: 'challengeWinners',
-      });
-      this.belongsTo(models.Episode, {
-        foreignKey: 'episodeStarted',
-        targetKey: 'episodeId',
-        as: 'episode',
-      });
+      if (models.TribeMembers) {
+        this.hasMany(models.TribeMembers, {
+          foreignKey: 'tribeId',
+          sourceKey: 'id',
+          as: 'tribeMembers',
+        });
+      } else {
+        logger.error('Error associating Tribe with TribeMembers');
+      }
     }
   }
 

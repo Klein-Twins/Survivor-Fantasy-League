@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { PickOptionTypeEnum } from '../../../generated-api';
+import logger from '../../../config/logger';
 
 export interface PicksAttributes {
   pickId: string;
@@ -17,10 +18,32 @@ const PicksModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       // this.hasOne(models.PickOptions, { foreignKey: 'pickId', as: 'pickOptions' });
-      this.belongsToMany(models.PickOptions, {
-        through: 'PCK_PICK_OPTIONS_PICKS',
-      });
-      // this.hasMany(models.ProfilePick, { foreignKey: 'pickId', as: 'profilePicks' });
+
+      if (models.SurveyPicks) {
+        this.hasMany(models.SurveyPicks, {
+          foreignKey: 'pickId',
+          sourceKey: 'pickId',
+          as: 'surveyPicks',
+        });
+      } else {
+        logger.error('Error associating Picks with SurveyPicks');
+      }
+      if (models.PickSubmissions) {
+        this.hasMany(models.PickSubmissions, {
+          foreignKey: 'pickId',
+          sourceKey: 'pickId',
+          as: 'pickSubmissions',
+        });
+      } else {
+        logger.error('Error associating Picks with PickSubmissions');
+      }
+      if (models.PickPoints) {
+        this.hasOne(models.PickPoints, {
+          foreignKey: 'pickId',
+          sourceKey: 'pickId',
+          as: 'points',
+        });
+      }
     }
   }
 

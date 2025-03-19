@@ -1,6 +1,7 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { EpisodeAttributes } from '../Episodes';
+import logger from '../../../config/logger';
 
 /**
  * Notes about the Challenge model:
@@ -38,11 +39,24 @@ const ChallengeModel = (sequelize: Sequelize) => {
     public type!: ChallengeAttributes['type'];
 
     static associate(models: any) {
-      this.belongsTo(models.Episode, {
-        foreignKey: 'episodeId',
-        targetKey: 'episodeId',
-        as: 'episode',
-      });
+      if (models.Episode) {
+        this.belongsTo(models.Episode, {
+          foreignKey: 'episodeId',
+          targetKey: 'episodeId',
+          as: 'episode',
+        });
+      } else {
+        logger.error('Error associating Challenge with Episode');
+      }
+      if (models.ChallengeWinners) {
+        this.hasMany(models.ChallengeWinners, {
+          foreignKey: 'challengeId',
+          sourceKey: 'challengeId',
+          as: 'challengeWinners',
+        });
+      } else {
+        logger.error('Error associating Challenge with ChallengeWinners');
+      }
     }
   }
 

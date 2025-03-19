@@ -1,5 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import logger from '../../config/logger';
 
 export interface SurveyAttributes {
   surveyId: UUID;
@@ -12,7 +13,25 @@ const SurveyModel = (sequelize: Sequelize) => {
     public name!: string;
 
     static associate(models: any) {
-      //TODO: Add association to LGE_LEAGUE_SURVEYS
+      if (models.EpisodeSurvey) {
+        this.hasMany(models.EpisodeSurvey, {
+          foreignKey: 'surveyDefinition',
+          sourceKey: 'surveyId',
+          as: 'episodeSurvey',
+        });
+      } else {
+        logger.error('Error associating Survey with EpisodeSurvey');
+      }
+
+      if (models.SurveyPicks) {
+        this.hasMany(models.SurveyPicks, {
+          foreignKey: 'surveyId',
+          sourceKey: 'surveyId',
+          as: 'surveyPicks',
+        });
+      } else {
+        logger.error('Error associating Survey with SurveyPicks');
+      }
     }
   }
 

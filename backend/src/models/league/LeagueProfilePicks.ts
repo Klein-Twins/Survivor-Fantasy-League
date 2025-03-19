@@ -1,7 +1,7 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { PickTypeEnum } from '../surveyAndPick/picks/PickType';
 import { SurvivorsAttributes } from '../survivors/Survivors';
+import { PickOptionTypeEnum } from '../../generated-api';
 
 export enum ProfilePickAnswerStatus {
   correct = 'correct',
@@ -15,7 +15,7 @@ export interface ProfilePickAttributes {
   leagueProfileId: string;
   leagueId: UUID;
   episodeId: UUID;
-  pickOptionType: PickTypeEnum;
+  pickOptionType: PickOptionTypeEnum;
   pickAnswerSurvivorId?: SurvivorsAttributes['id'] | null;
   pickAnswerTribeId: UUID | null;
   pickAnswerBinary: boolean | null;
@@ -36,7 +36,7 @@ const ProfilePickModel = (sequelize: Sequelize) => {
     public pickAnswerTribeId!: UUID | null;
     public pickAnswerBinary!: boolean | null;
     public pickAnswerCustom!: string | null;
-    public pickOptionType!: PickTypeEnum;
+    public pickOptionType!: PickOptionTypeEnum;
     public pickAnswerStatus!: ProfilePickAnswerStatus;
 
     static associate(models: any) {
@@ -89,7 +89,7 @@ const ProfilePickModel = (sequelize: Sequelize) => {
         field: 'EPISODE_ID',
       },
       pickOptionType: {
-        type: DataTypes.ENUM(...Object.values(PickTypeEnum)),
+        type: DataTypes.ENUM(...Object.values(PickOptionTypeEnum)),
         allowNull: false,
         field: 'PICK_OPTION_TYPE',
       },

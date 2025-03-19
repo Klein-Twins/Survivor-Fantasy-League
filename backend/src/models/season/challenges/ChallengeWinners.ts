@@ -4,6 +4,7 @@ import { DataTypes, Model, Op, Sequelize } from 'sequelize';
 import { SurvivorsAttributes } from '../../survivors/Survivors';
 import { TribeAttributes } from '../Tribes';
 import { ChallengeAttributes } from './Challenges';
+import logger from '../../../config/logger';
 
 export enum ChallengeWinnerType {
   Survivor = 'Survivor',
@@ -35,17 +36,35 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
     public winnerNotes!: ChallengeWinnersAttributes['winnerNotes'];
 
     static associate(models: any) {
-      this.belongsTo(models.Survivors, {
-        foreignKey: 'winnerSurvivorId',
-        targetKey: 'id',
-        as: 'survivorWinner',
-      });
-
-      this.belongsTo(models.Tribe, {
-        foreignKey: 'winnerTribeId',
-        targetKey: 'id',
-        as: 'tribeWinner',
-      });
+      if (models.SurvivorDetailsOnSeason) {
+        this.belongsTo(models.SurvivorDetailsOnSeason, {
+          foreignKey: 'winnerSurvivorId',
+          targetKey: 'id',
+          as: 'survivorWinner',
+        });
+      } else {
+        logger.error(
+          'Error associating ChallengeWinners with SurvivorDetailsOnSeason'
+        );
+      }
+      if (models.Tribe) {
+        this.belongsTo(models.Tribe, {
+          foreignKey: 'winnerTribeId',
+          targetKey: 'id',
+          as: 'tribeWinner',
+        });
+      } else {
+        logger.error('Error associating ChallengeWinners with Tribe');
+      }
+      if (models.Challenges) {
+        this.belongsTo(models.Challenges, {
+          foreignKey: 'challengeId',
+          targetKey: 'challengeId',
+          as: 'challenge',
+        });
+      } else {
+        logger.error('Error associating ChallengeWinners with Challenge');
+      }
     }
   }
 

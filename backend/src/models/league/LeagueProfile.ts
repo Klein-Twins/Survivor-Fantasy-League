@@ -3,6 +3,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { ProfileAttributes } from '../account/Profile';
 import { LeagueAttributes } from './League';
 import { LeagueMemberRole } from '../../generated-api';
+import logger from '../../config/logger';
 
 export enum InviteStatus {
   Pending = 'pending',
@@ -31,21 +32,38 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     public inviteStatus!: LeagueProfileAttributes['inviteStatus'];
 
     static associate(models: any) {
-      this.belongsTo(models.League, {
-        foreignKey: 'leagueId',
-        targetKey: 'leagueId',
-        as: 'league',
-      });
-      this.belongsTo(models.Profile, {
-        foreignKey: 'profileId',
-        targetKey: 'profileId',
-        as: 'profile',
-      });
-      this.belongsTo(models.Profile, {
-        foreignKey: 'inviterProfileId',
-        targetKey: 'profileId',
-        as: 'inviterProfile',
-      });
+      if (models.League) {
+        this.belongsTo(models.League, {
+          foreignKey: 'leagueId',
+          targetKey: 'leagueId',
+          as: 'league',
+        });
+      } else {
+        logger.error('Error associating LeagueProfile with Profile');
+      }
+      if (models.Profile) {
+        this.belongsTo(models.Profile, {
+          foreignKey: 'profileId',
+          targetKey: 'profileId',
+          as: 'profile',
+        });
+        this.belongsTo(models.Profile, {
+          foreignKey: 'inviterProfileId',
+          targetKey: 'profileId',
+          as: 'inviterProfile',
+        });
+      } else {
+        logger.error('Error associating LeagueProfile with Profile');
+      }
+      if (models.SurveySubmissions) {
+        this.hasMany(models.SurveySubmissions, {
+          foreignKey: 'leagueProfileId',
+          sourceKey: 'id',
+          as: 'surveySubmissions',
+        });
+      } else {
+        logger.error('Error associating LeagueProfile with SurveySubmissions');
+      }
     }
   }
 

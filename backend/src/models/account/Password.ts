@@ -1,5 +1,6 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { UserAttributes } from './User';
+import logger from '../../config/logger';
 
 export interface PasswordAttributes {
   passwordSeq: number;
@@ -19,11 +20,15 @@ const PasswordModel = (sequelize: Sequelize) => {
     public active!: PasswordAttributes['active'];
 
     static associate(models: any) {
-      this.belongsTo(models.User, {
-        foreignKey: 'userId',
-        targetKey: 'userId',
-        as: 'User',
-      });
+      if (models.User) {
+        Password.belongsTo(models.User, {
+          foreignKey: 'userId',
+          targetKey: 'userId',
+          as: 'User',
+        });
+      } else {
+        logger.error('Error associatiing Password with User');
+      }
     }
   }
 

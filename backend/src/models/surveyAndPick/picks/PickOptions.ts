@@ -1,6 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { PickOptionTypeEnum } from '../../../generated-api';
-import { PickTypeEnum } from './PickType';
 import { InternalServerError } from '../../../utils/errors/errors';
 
 export interface PickOptionsAttributes {
@@ -39,7 +38,7 @@ const PickOptionsModel = (sequelize: Sequelize) => {
     {
       type: {
         type: DataTypes.ENUM,
-        values: Object.values(PickTypeEnum),
+        values: Object.values(PickOptionTypeEnum),
         field: 'PICK_OPTION_TYPE',
         allowNull: false,
       },

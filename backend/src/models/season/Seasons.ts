@@ -1,4 +1,5 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import logger from '../../config/logger';
 
 export interface SeasonsAttributes {
   seasonId: number; // Primary key of type INTEGER
@@ -21,34 +22,51 @@ const SeasonsModel = (sequelize: Sequelize) => {
     public isActive!: boolean;
 
     static associate(models: any) {
-      this.hasMany(models.League, {
-        foreignKey: 'seasonId',
-        sourceKey: 'seasonId',
-        as: 'leagues',
-      });
-      this.hasMany(models.SurvivorDetailsOnSeason, {
-        foreignKey: 'seasonId',
-        sourceKey: 'seasonId',
-        as: 'seasonDetails',
-      });
-
-      this.hasMany(models.Episode, {
-        foreignKey: 'seasonId',
-        sourceKey: 'seasonId',
-        as: 'episode',
-      });
-
-      this.hasMany(models.Tribe, {
-        foreignKey: 'seasonId',
-        sourceKey: 'seasonId',
-        as: 'tribes',
-      });
-
-      this.hasMany(models.SeasonEliminations, {
-        foreignKey: 'seasonId',
-        sourceKey: 'seasonId',
-        as: 'eliminations',
-      });
+      if (models.League) {
+        this.hasMany(models.League, {
+          foreignKey: 'seasonId',
+          sourceKey: 'seasonId',
+          as: 'leagues',
+        });
+      } else {
+        logger.error('Error associating Seasons with League');
+      }
+      if (models.SurvivorDetailsOnSeason) {
+        this.hasMany(models.SurvivorDetailsOnSeason, {
+          foreignKey: 'seasonId',
+          sourceKey: 'seasonId',
+          as: 'seasonDetails',
+        });
+      } else {
+        logger.error('Error associating Seasons with SurvivorDetailsOnSeason');
+      }
+      if (models.Episode) {
+        this.hasMany(models.Episode, {
+          foreignKey: 'seasonId',
+          sourceKey: 'seasonId',
+          as: 'episode',
+        });
+      } else {
+        logger.error('Error associating Seasons with Episode');
+      }
+      if (models.Tribe) {
+        this.hasMany(models.Tribe, {
+          foreignKey: 'seasonId',
+          sourceKey: 'seasonId',
+          as: 'tribes',
+        });
+      } else {
+        logger.error('Error associating Seasons with Tribe');
+      }
+      if (models.SeasonEliminations) {
+        this.hasMany(models.SeasonEliminations, {
+          foreignKey: 'seasonId',
+          sourceKey: 'seasonId',
+          as: 'eliminations',
+        });
+      } else {
+        logger.error('Error associating Seasons with SeasonEliminations');
+      }
     }
   }
 

@@ -1,5 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import logger from '../../config/logger';
 
 export interface SurvivorsAttributes {
   id: UUID;
@@ -25,16 +26,13 @@ const SurvivorsModel = (sequelize: Sequelize) => {
     public fromCity?: SurvivorsAttributes['fromCity'];
 
     static associate(models: any) {
-      this.hasMany(models.SurvivorDetailsOnSeason, {
-        foreignKey: 'id',
-        sourceKey: 'id',
-        as: 'SurvivorDetailsOnSeason',
-      });
-      this.hasMany(models.ChallengeWinners, {
-        foreignKey: 'winnerSurvivorId',
-        sourceKey: 'id',
-        as: 'challengeWins',
-      });
+      if (models.SurvivorDetailsOnSeason) {
+        this.hasMany(models.SurvivorDetailsOnSeason, {
+          foreignKey: 'id',
+          sourceKey: 'id',
+          as: 'SurvivorDetailsOnSeason',
+        });
+      }
     }
   }
 

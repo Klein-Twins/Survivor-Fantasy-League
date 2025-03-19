@@ -1,5 +1,6 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
+import logger from '../../../config/logger';
 
 export interface PickPointsAttributes {
   pickId: UUID;
@@ -7,12 +8,23 @@ export interface PickPointsAttributes {
 }
 
 const PickPointsModel = (sequelize: Sequelize) => {
-  class PickPoints extends Model<PickPointsAttributes> implements PickPointsAttributes {
+  class PickPoints
+    extends Model<PickPointsAttributes>
+    implements PickPointsAttributes
+  {
     public pickId!: UUID;
     public points!: number;
 
     static associate(models: any) {
-      // this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
+      if (models.Picks) {
+        PickPoints.belongsTo(models.Picks, {
+          foreignKey: 'pickId',
+          targetKey: 'pickId',
+          as: 'pick',
+        });
+      } else {
+        logger.error('Error associating PickPoints with Picks');
+      }
     }
   }
 

@@ -2,6 +2,7 @@ import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SurveyAttributes } from './Survey';
 import { EpisodeAttributes } from '../season/Episodes';
+import logger from '../../config/logger';
 
 export interface EpisodeSurveyAttributes {
   surveyDefinition: SurveyAttributes['surveyId'];
@@ -22,7 +23,35 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
     public dueDate!: EpisodeSurveyAttributes['dueDate'];
     public openDate!: EpisodeSurveyAttributes['openDate'];
 
-    static associate(models: any) {}
+    static associate(models: any) {
+      if (models.Survey) {
+        this.belongsTo(models.Survey, {
+          foreignKey: 'surveyDefinition',
+          targetKey: 'surveyId',
+          as: 'survey',
+        });
+      } else {
+        logger.error('Error associating EpisodeSurvey with Survey');
+      }
+
+      if (models.Episode) {
+        this.belongsTo(models.Episode, {
+          foreignKey: 'episodeId',
+          targetKey: 'episodeId',
+          as: 'episode',
+        });
+      } else {
+        logger.error('Error associating EpisodeSurvey with Episode');
+      }
+
+      if (models.LeagueSurveyForEpisode) {
+        this.hasMany(models.LeagueSurveyForEpisode, {
+          foreignKey: 'episodeSurveyId',
+          sourceKey: 'episodeSurveyId',
+          as: 'leagueSurveys',
+        });
+      }
+    }
   }
 
   EpisodeSurvey.init(
@@ -34,13 +63,13 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
       },
       episodeSurveyId: {
         type: DataTypes.UUID,
+        primaryKey: true,
         defaultValue: DataTypes.UUID,
         field: 'EPISODE_SURVEY_ID',
       },
       episodeId: {
         type: DataTypes.UUID,
         allowNull: false,
-        primaryKey: true,
         field: 'EPISODE_ID',
       },
       dueDate: {
@@ -58,6 +87,12 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'SUR_EPISODE_SURVEY',
       timestamps: true,
+      indexes: [
+        {
+          unique: true,
+          fields: ['EPISODE_ID'],
+        },
+      ],
     }
   );
 

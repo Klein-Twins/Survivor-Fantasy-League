@@ -2,6 +2,7 @@ import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { LeagueAttributes } from './League';
 import { EpisodeSurveyAttributes } from '../surveyAndPick/EpisodeSurvey';
+import logger from '../../config/logger';
 
 export interface LeagueSurveyForEpisodeAttributes {
   leagueSurveyId: UUID;
@@ -19,10 +20,37 @@ const LeagueSurveyForEpisodeModel = (sequelize: Sequelize) => {
     public leagueId!: LeagueSurveyForEpisodeAttributes['leagueId'];
 
     static associate(models: any) {
-      //TODO: Add associations
-      // this.belongsTo(models.Survey, { foreignKey: 'surveyId', as: 'survey' });
-      // this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
-      // this.belongsTo(models.Episode, { foreignKey: 'episodeId', as: 'episode' });
+      if (models.EpisodeSurvey) {
+        this.belongsTo(models.EpisodeSurvey, {
+          foreignKey: 'episodeSurveyId',
+          targetKey: 'episodeId',
+          as: 'episodeSurvey',
+        });
+      } else {
+        logger.error(
+          'Error associating LeagueSurveyForEpisode with EpisodeSurvey'
+        );
+      }
+      if (models.League) {
+        this.belongsTo(models.League, {
+          foreignKey: 'leagueId',
+          targetKey: 'leagueId',
+          as: 'league',
+        });
+      } else {
+        logger.error('Error associating LeagueSurveyForEpisode with League');
+      }
+      if (models.SurveySubmissions) {
+        this.hasMany(models.SurveySubmissions, {
+          foreignKey: 'leagueSurveyId',
+          sourceKey: 'leagueSurveyId',
+          as: 'surveySubmissions',
+        });
+      } else {
+        logger.error(
+          'Error associating LeagueSurveyForEpisode with SurveySubmissions'
+        );
+      }
     }
   }
 

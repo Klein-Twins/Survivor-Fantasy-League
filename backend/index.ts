@@ -9,7 +9,6 @@ const IP: string = APP_HOST;
 
 const startServer = async (): Promise<void> => {
   try {
-    // Drop all tables in the database
     logger.info('Dropping all tables...');
     await sequelize.getQueryInterface().dropAllTables();
     logger.info('All tables dropped successfully');

@@ -2,6 +2,7 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SurvivorsAttributes } from './Survivors';
 import { SeasonsAttributes } from '../season/Seasons';
 import { TribeAttributes } from '../season/Tribes';
+import logger from '../../config/logger';
 
 export interface SurvivorDetailsOnSeasonAttributes {
   id: SurvivorsAttributes['id'];
@@ -25,21 +26,59 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
     public job!: SurvivorDetailsOnSeasonAttributes['job'];
 
     static associate(models: any) {
-      this.belongsTo(models.Survivors, {
-        foreignKey: 'id',
-        targetKey: 'id',
-        as: 'Survivor',
-      });
-      this.belongsTo(models.Seasons, {
-        foreignKey: 'seasonId',
-        targetKey: 'seasonId',
-        as: 'Season',
-      });
-      this.hasMany(models.SeasonEliminations, {
-        foreignKey: 'survivorId',
-        sourceKey: 'id',
-        as: 'eliminations',
-      });
+      if (models.Survivors) {
+        this.belongsTo(models.Survivors, {
+          foreignKey: 'id',
+          targetKey: 'id',
+          as: 'Survivor',
+        });
+      } else {
+        logger.error(
+          'Error associating SurvivorDetailsOnSeason with Survivors'
+        );
+      }
+      if (models.Seasons) {
+        this.belongsTo(models.Seasons, {
+          foreignKey: 'seasonId',
+          targetKey: 'seasonId',
+          as: 'Season',
+        });
+      } else {
+        logger.error('Error associating SurvivorDetailsOnSeason with Seasons');
+      }
+      if (models.SeasonEliminations) {
+        this.hasMany(models.SeasonEliminations, {
+          foreignKey: 'survivorId',
+          sourceKey: 'id',
+          as: 'eliminations',
+        });
+      } else {
+        logger.error(
+          'Error associating SurvivorDetailsOnSeason with SeasonEliminations'
+        );
+      }
+      if (models.ChallengeWinners) {
+        this.hasMany(models.ChallengeWinners, {
+          foreignKey: 'winnerSurvivorId',
+          sourceKey: 'id',
+          as: 'challengeWins',
+        });
+      } else {
+        logger.error(
+          'Error associating SurvivorDetailsOnSeason with ChallengeWinners'
+        );
+      }
+      if (models.TribeMembers) {
+        this.hasMany(models.TribeMembers, {
+          foreignKey: 'survivorId',
+          sourceKey: 'id',
+          as: 'tribe',
+        });
+      } else {
+        logger.error(
+          'Error associating SurvivorDetailsOnSeason with TribeMembers'
+        );
+      }
     }
   }
 

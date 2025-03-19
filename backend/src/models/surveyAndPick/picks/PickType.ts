@@ -1,25 +1,31 @@
 import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
-
-export enum PickTypeEnum {
-  color = 'color',
-  survivor = 'survivor',
-  tribe = 'tribe',
-  binary = 'binary',
-}
+import { PickOptionTypeEnum } from '../../../generated-api';
+import logger from '../../../config/logger';
 
 interface PickTypeAttributes {
   pickId: UUID;
-  type: PickTypeEnum;
+  type: PickOptionTypeEnum;
 }
 
 const PickTypeModel = (sequelize: Sequelize) => {
-  class PickType extends Model<PickTypeAttributes> implements PickTypeAttributes {
+  class PickType
+    extends Model<PickTypeAttributes>
+    implements PickTypeAttributes
+  {
     public pickId!: UUID;
-    public type!: PickTypeEnum;
+    public type!: PickOptionTypeEnum;
 
     static associate(models: any) {
-      this.belongsTo(models.Picks, { foreignKey: 'pickId', as: 'pick' });
+      if (models.Picks) {
+        this.belongsTo(models.Picks, {
+          foreignKey: 'pickId',
+          targetKey: 'pickId',
+          as: 'pick',
+        });
+      } else {
+        logger.error('Error associating PickType with Picks');
+      }
     }
   }
 
@@ -33,7 +39,7 @@ const PickTypeModel = (sequelize: Sequelize) => {
       },
       type: {
         type: DataTypes.ENUM,
-        values: Object.values(PickTypeEnum),
+        values: Object.values(PickOptionTypeEnum),
         allowNull: false,
         field: 'TYPE',
       },
