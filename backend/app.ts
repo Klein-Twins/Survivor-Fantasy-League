@@ -1,9 +1,7 @@
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
-import http from 'http';
 import path from 'path';
-import { Server } from 'socket.io';
 import { swaggerSpec, swaggerUi } from './src/config/swagger.ts';
 import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
 import routes from './src/routes/index.ts';
@@ -40,27 +38,4 @@ app.get('/', (req, res) => {
   res.send('Backend is running');
 });
 
-const server = http.createServer(app);
-export const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:5173',
-    methods: ['GET', 'POST'],
-    credentials: true,
-  },
-});
-
-export const userSockets: Map<string, string> = new Map();
-
-io.on('connection', (socket) => {
-  const profileId = socket.handshake.query.profileId;
-  console.log('The following profileId connected to socket: ' + profileId);
-
-  userSockets.set(profileId as string, socket.id);
-
-  socket.on('disconnect', () => {
-    console.log('The following profileId disconnected to socket: ' + profileId);
-    userSockets.delete(profileId as string);
-  });
-});
-
-export default server;
+export default app;

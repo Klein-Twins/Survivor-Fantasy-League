@@ -64,15 +64,6 @@ const sequelize = new Sequelize(
   }
 );
 
-console.log('Sequelize config:', {
-  database: currentConfig.database,
-  username: currentConfig.username,
-  password: currentConfig.password,
-  host: currentConfig.host,
-  port: currentConfig.port,
-  dialect: currentConfig.dialect,
-});
-
 // Testing the connection
 const testConnection = async (): Promise<void> => {
   try {

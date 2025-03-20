@@ -9,9 +9,9 @@ const IP: string = APP_HOST;
 
 const startServer = async (): Promise<void> => {
   try {
-    logger.info('Dropping all tables...');
-    await sequelize.getQueryInterface().dropAllTables();
-    logger.info('All tables dropped successfully');
+    // logger.info('Dropping all tables...');
+    // await sequelize.getQueryInterface().dropAllTables();
+    // logger.info('All tables dropped successfully');
     await sequelize.sync({ force: true });
     logger.info('Database synced successfully');
 

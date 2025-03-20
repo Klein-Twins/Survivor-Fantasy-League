@@ -33,7 +33,7 @@ async function signup(
   next: NextFunction
 ): Promise<void> {
   try {
-    const reqBody: SignupUserRequestBody = req.body;
+    const reqBody = req.body;
 
     const account = await userService.signup({
       email: reqBody.email,
