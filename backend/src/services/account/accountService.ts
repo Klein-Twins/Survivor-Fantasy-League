@@ -6,7 +6,7 @@ import { UserAttributes } from '../../models/account/User';
 import profileRepository from '../../repositories/account/profileRepository';
 import userRepository from '../../repositories/account/userRepository';
 import passwordService from '../auth/passwordService';
-import { NotFoundError } from '../../utils/errors/errors';
+import { ConflictError, NotFoundError } from '../../utils/errors/errors';
 import logger from '../../config/logger';
 import { ProfileAttributes } from '../../models/account/Profile';
 import { PasswordAttributes } from '../../models/account/Password';
@@ -27,9 +27,17 @@ async function createAccount(signupData: {
   const isEmailAvailable = await accountHelper.isEmailAvailable(
     formattedSignupData.email
   );
+  logger.debug(`isEmailAvailable: ${isEmailAvailable}`);
+  if (!isEmailAvailable) {
+    throw new ConflictError('Email is already taken');
+  }
   const isUserNameAvailable = await accountHelper.isUserNameAvailable(
     formattedSignupData.userName
   );
+  logger.debug(`isUserNameAvailable: ${isUserNameAvailable}`);
+  if (!isUserNameAvailable) {
+    throw new ConflictError('UserName is already taken');
+  }
 
   const transaction = await sequelize.transaction();
   try {

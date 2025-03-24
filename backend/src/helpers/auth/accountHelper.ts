@@ -5,19 +5,20 @@ import userRepository from '../../repositories/account/userRepository';
 import { BadRequestError } from '../../utils/errors/errors';
 import validator from 'validator';
 import passwordHelper from './passwordHelper';
+import logger from '../../config/logger';
 
 async function isUserNameAvailable(
   userName: UserAttributes['userName']
 ): Promise<boolean> {
   const foundUser = await userRepository.getUserByField('userName', userName);
-  return foundUser === null;
+  return foundUser === null ? true : false;
 }
 
 async function isEmailAvailable(
   email: UserAttributes['email']
 ): Promise<boolean> {
   const foundUser = await userRepository.getUserByField('email', email);
-  return foundUser === null;
+  return foundUser === null ? true : false;
 }
 
 const validate = {

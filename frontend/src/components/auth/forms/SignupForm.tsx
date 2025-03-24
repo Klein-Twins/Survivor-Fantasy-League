@@ -28,7 +28,7 @@ const SignupForm: React.FC = () => {
     const signupUserRequestData: ApiRequestParams<SignupUserRequestBody, void> =
       {
         body: {
-          username: values.username,
+          userName: values.username,
           email: values.email,
           password: values.password,
           firstName: values.firstName,

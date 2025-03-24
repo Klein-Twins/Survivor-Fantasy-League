@@ -1,150 +1,198 @@
 import request from 'supertest';
 import app from '../../../app';
 import {
-  Account,
-  AccountRole,
-  ApiResponse,
-  SignupUserRequestBody,
-  UserSession,
-} from '../../../src/generated-api';
-import { isUUID } from 'validator';
+  validateErrorApiResponse,
+  validateSuccessApiResponse,
+} from './testHelper';
+import { validateReturnedAccount, validateUserSession } from './authTestHelper';
+
+const testCases = [
+  {
+    description: 'Typical Signup request',
+    requestData: {
+      email: 'test@example2.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser2',
+      firstName: 'Test',
+      lastName: 'User',
+    },
+  },
+  {
+    description: 'Signup without first or last name provided',
+    requestData: {
+      email: 'test@example3.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser3',
+    },
+  },
+  {
+    description: 'Signup without first name provided',
+    requestData: {
+      email: 'test@example4.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser4',
+      lastName: 'User',
+    },
+  },
+  {
+    description: 'Signup without last name provided',
+    requestData: {
+      email: 'test@example5.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser5',
+      firstName: 'Test',
+    },
+  },
+];
+
+const badRequestTestCases = [
+  {
+    description: 'Missing Email',
+    requestData: {
+      password: 'StrongPassword123!',
+      userName: 'testuser2',
+      firstName: 'Test',
+      lastName: 'User',
+    },
+  },
+  {
+    description: 'Invalid Email',
+    requestData: {
+      email: 'testtttt@@maillll.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser2',
+      firstName: 'Test',
+      lastName: 'User',
+    },
+  },
+
+  {
+    description: 'Missing Username',
+    requestData: {
+      email: 'test@example2.com',
+      password: 'StrongPassword123!',
+      firstName: 'Test',
+      lastName: 'User',
+    },
+  },
+  {
+    description: 'Invalid Username',
+    requestData: {
+      email: 'test@example2.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser2@@@',
+      firstName: 'Test',
+      lastName: 'User',
+    },
+  },
+  {
+    description: 'Invalid First Name',
+    requestData: {
+      email: 'test@example2.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser2',
+      firstName: 'Test-123',
+      lastName: 'User',
+    },
+  },
+  {
+    description: 'Invalid Last Name',
+    requestData: {
+      email: 'test@example2.com',
+      password: 'StrongPassword123!',
+      userName: 'testuser2',
+      firstName: 'Test',
+      lastName: 'User@UrMom*',
+    },
+  },
+  {
+    description: 'Weak Password',
+    requestData: {
+      email: 'test@example2.com',
+      password: 'StrongPassword123',
+      userName: 'testuser2',
+      firstName: 'Test',
+      lastName: 'User',
+    },
+  },
+];
+
+const conflictTestCases = [
+  {
+    description: 'UserName Already Exists',
+    requestData1: {
+      email: 'test@email1.com',
+      password: 'StrongPassword123!',
+      userName: 'thisisauniqueusername',
+      firstName: 'Test',
+      lastName: 'User',
+    },
+    requestData2: {
+      email: 'bobCarl@example2.com',
+      password: 'StrongPassword123!',
+      userName: 'thisisauniqueusername',
+      firstName: 'Tesssssst',
+      lastName: 'Userssss',
+    },
+  },
+  {
+    description: 'Email Already Exists',
+    requestData1: {
+      email: 'test@mail.com',
+      password: 'StrongPassword123!',
+      userName: 'BillyBob123',
+      firstName: 'Billllly',
+      lastName: 'Hickster',
+    },
+    requestData2: {
+      email: 'test@mail.com',
+      password: 'TrulyAbominableSnowmans1234!',
+      userName: 'userName2',
+      firstName: 'Jon',
+      lastName: 'Adams',
+    },
+  },
+];
 
 describe('api/auth/signup', () => {
-  const validateSuccessApiResponse = (responseBody: ApiResponse) => {
-    expect(responseBody).toHaveProperty('statusCode');
-
-    expect(responseBody).not.toHaveProperty('error');
-
-    expect(responseBody).toHaveProperty('success');
-    expect(responseBody.success).toBe(true);
-  };
-
-  const validateUserSession = (userSession: UserSession) => {
-    expect(userSession).toHaveProperty('numSecondsRefreshTokenExpiresIn');
-    expect(typeof userSession.numSecondsRefreshTokenExpiresIn).toBe('number');
-    expect(userSession.numSecondsRefreshTokenExpiresIn).toBeGreaterThan(0);
-    expect(userSession).toHaveProperty('isAuthenticated');
-    expect(userSession.isAuthenticated).toBe(true);
-  };
-
-  const validateReturnedAccount = (
-    signupRequestData: SignupUserRequestBody,
-    accountInResponse: Account
-  ) => {
-    const expectedAccount: Omit<
-      Account,
-      'profileId' | 'userId' | 'accountRole'
-    > = {
-      email: signupRequestData.email.trim(),
-      firstName: signupRequestData.firstName?.trim() || null,
-      lastName: signupRequestData.lastName?.trim() || null,
-      userName: signupRequestData.userName.trim(),
-    };
-
-    // Validate that all keys in expectedAccountData match the corresponding values in account
-    for (const key of Object.keys(expectedAccount) as (keyof Omit<
-      Account,
-      'profileId' | 'userId' | 'accountRole'
-    >)[]) {
-      expect(accountInResponse[key]).toBe(expectedAccount[key]);
-    }
-
-    // Validate that profileId exists and is a valid UUID
-    expect(accountInResponse).toHaveProperty('profileId');
-    expect(isUUID(accountInResponse.profileId)).toBe(true);
-
-    // Validate that userId exists and is a valid UUID
-    expect(accountInResponse).toHaveProperty('userId');
-    expect(isUUID(accountInResponse.userId)).toBe(true);
-
-    expect(accountInResponse).toHaveProperty('accountRole');
-    expect([AccountRole.User, AccountRole.Admin]).toContain(
-      accountInResponse.accountRole
-    );
-  };
-
-  describe('Successful expected signup requests', () => {
-    it('Typical Signup request', async () => {
-      const testRequestData: SignupUserRequestBody = {
-        email: 'test@example2.com',
-        password: 'StrongPassword123!',
-        userName: 'testuser2',
-        firstName: 'Test',
-        lastName: 'User',
-      };
-
+  describe.each(testCases)('$description', ({ requestData }) => {
+    it('should successfully create an account', async () => {
       const { body: responseBody, status } = await request(app)
         .post('/api/auth/signup')
-        .send(testRequestData);
+        .send(requestData);
+
       expect(status).toBe(200);
       expect(responseBody).toHaveProperty('responseData');
 
       validateSuccessApiResponse(responseBody);
-      validateReturnedAccount(
-        testRequestData,
-        responseBody.responseData.account
-      );
-      validateUserSession(responseBody.responseData.userSession);
-    });
-    it('Should successfully create account without first or last name provided', async () => {
-      const testRequestData: SignupUserRequestBody = {
-        email: 'test@example2.com',
-        password: 'StrongPassword123!',
-        userName: 'testuser2',
-      };
-
-      const { body: responseBody, status } = await request(app)
-        .post('/api/auth/signup')
-        .send(testRequestData);
-      expect(status).toBe(200);
-      expect(responseBody).toHaveProperty('responseData');
-
-      validateSuccessApiResponse(responseBody);
-      validateReturnedAccount(
-        testRequestData,
-        responseBody.responseData.account
-      );
-      validateUserSession(responseBody.responseData.userSession);
-    });
-    it('Should successfully create account without first name provided', async () => {
-      const testRequestData: SignupUserRequestBody = {
-        email: 'test@example2.com',
-        password: 'StrongPassword123!',
-        userName: 'testuser2',
-      };
-
-      const { body: responseBody, status } = await request(app)
-        .post('/api/auth/signup')
-        .send(testRequestData);
-      expect(status).toBe(200);
-      expect(responseBody).toHaveProperty('responseData');
-
-      validateSuccessApiResponse(responseBody);
-      validateReturnedAccount(
-        testRequestData,
-        responseBody.responseData.account
-      );
-      validateUserSession(responseBody.responseData.userSession);
-    });
-    it('Should successfully create account without last name provided', async () => {
-      const testRequestData: SignupUserRequestBody = {
-        email: 'test@example2.com',
-        password: 'StrongPassword123!',
-        userName: 'testuser2',
-      };
-
-      const { body: responseBody, status } = await request(app)
-        .post('/api/auth/signup')
-        .send(testRequestData);
-      expect(status).toBe(200);
-      expect(responseBody).toHaveProperty('responseData');
-
-      validateSuccessApiResponse(responseBody);
-      validateReturnedAccount(
-        testRequestData,
-        responseBody.responseData.account
-      );
+      validateReturnedAccount(requestData, responseBody.responseData.account);
       validateUserSession(responseBody.responseData.userSession);
     });
   });
+
+  describe.each(badRequestTestCases)('$description', ({ requestData }) => {
+    it('Bad Requests', async () => {
+      const { body: responseBody, status } = await request(app)
+        .post('/api/auth/signup')
+        .send(requestData);
+
+      expect(status).toBe(400);
+      validateErrorApiResponse(responseBody);
+    });
+  });
+
+  describe.each(conflictTestCases)(
+    '$description',
+    ({ requestData1, requestData2 }) => {
+      it('Conflict Requests', async () => {
+        await request(app).post('/api/auth/signup').send(requestData1);
+        const { body: responseBody, status } = await request(app)
+          .post('/api/auth/signup')
+          .send(requestData2);
+
+        expect(status).toBe(409);
+        validateErrorApiResponse(responseBody);
+      });
+    }
+  );
 });

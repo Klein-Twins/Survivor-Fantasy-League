@@ -78,6 +78,16 @@ const UserModel = (sequelize: Sequelize) => {
       timestamps: true,
       createdAt: 'CREATED_AT',
       updatedAt: 'UPDATED_AT',
+      indexes: [
+        {
+          unique: true,
+          fields: ['USER_NAME'],
+        },
+        {
+          unique: true,
+          fields: ['USER_EMAIL'],
+        },
+      ],
     }
   );
 
