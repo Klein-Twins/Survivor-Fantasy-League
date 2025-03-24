@@ -1,3 +1,4 @@
+import { UUID } from 'crypto';
 import { EpisodeSurvey, LeagueSurvey } from '../../../generated-api';
 import { LeagueAttributes } from '../../../models/league/League';
 import { LeagueSurveyForEpisodeAttributes } from '../../../models/league/LeagueSurveysForEpisode';
@@ -17,7 +18,7 @@ async function getLeagueSurvey(
   const episodeSurvey = await episodeSurveyService.getEpisodeSurvey(episodeId);
   const leagueSurveyAttributes =
     await leagueSurveyForEpisodeRepostiory.getLeagueSurveyForEpisode(
-      episodeId,
+      episodeSurvey.episodeSurveyId as UUID,
       leagueId
     );
 

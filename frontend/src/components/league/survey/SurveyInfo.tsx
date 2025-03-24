@@ -8,6 +8,7 @@ import {
 import LoadingData from '../../ui/LoadingData';
 import { Button } from '@headlessui/react';
 import { ButtonPrimaryColors } from '../../../styles/CommonColorClassNames';
+import Survey from './Survey';
 
 interface SurveyInfoProps {
   survey: CompletedLeagueMemberSurvey | LeagueMemberSurvey;
@@ -20,6 +21,7 @@ const SurveyInfo: React.FC<SurveyInfoProps> = ({
   surveyIsLoading,
   surveyError,
 }) => {
+  const [isSurveyOpen, setIsSurveyOpen] = React.useState(false);
   if (surveyIsLoading) {
     return <LoadingData text='Loading Survey' />;
   }
@@ -28,7 +30,7 @@ const SurveyInfo: React.FC<SurveyInfoProps> = ({
   }
 
   function handleOpenSurvey() {
-    console.log('Opening Survey');
+    setIsSurveyOpen(!isSurveyOpen);
   }
 
   console.log('openDate: ', survey.openDate);
@@ -41,7 +43,11 @@ const SurveyInfo: React.FC<SurveyInfoProps> = ({
         submissionStatus={survey.submissionStatus}
         availabilityStatus={survey.surveyAvailabilityStatus}
       />
-      <OpenSurveyButton onClick={handleOpenSurvey} />
+      <OpenSurveyButton
+        onClick={handleOpenSurvey}
+        isSurveyOpen={isSurveyOpen}
+      />
+      {isSurveyOpen && <Survey survey={survey} />}
     </>
   );
 };
@@ -50,12 +56,18 @@ export default SurveyInfo;
 
 interface OpenSurveyButton {
   onClick: () => void;
+  isSurveyOpen: boolean;
 }
 
-const OpenSurveyButton: React.FC<OpenSurveyButton> = ({ onClick }) => {
+const OpenSurveyButton: React.FC<OpenSurveyButton> = ({
+  onClick,
+  isSurveyOpen,
+}) => {
   return (
-    <Button className={`${ButtonPrimaryColors} py-2 rounded-md`}>
-      Open Survey
+    <Button
+      className={`${ButtonPrimaryColors} py-2 rounded-md`}
+      onClick={onClick}>
+      {isSurveyOpen ? 'Hide Survey' : 'Show Survey'}
     </Button>
   );
 };
