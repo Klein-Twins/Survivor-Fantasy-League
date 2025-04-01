@@ -7,7 +7,7 @@ import logger from '../../config/logger';
 export interface TribeMemberAttributes {
   tribeId: TribeAttributes['id'];
   episodeIdStart: EpisodeAttributes['episodeId']; //Episode the survivor started on the tribe.
-  episodeIdEnd: UUID; //Episode the survivor was no longer part of the tribe
+  episodeIdEnd: UUID | null; //Episode the survivor was no longer part of the tribe
   survivorId: UUID;
   notes: string;
 }

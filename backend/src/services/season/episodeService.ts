@@ -83,6 +83,8 @@ async function getEpisode(
 }
 
 function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
+  const hasAired = new Date(episodeAttributes.episodeAirDate) < new Date();
+
   return {
     id: episodeAttributes.episodeId,
     number: episodeAttributes.episodeNumber,
@@ -90,6 +92,8 @@ function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
     airDate: episodeAttributes.episodeAirDate.toString(),
     description: episodeAttributes.episodeDescription,
     title: episodeAttributes.episodeTitle,
+    episodeType: episodeAttributes.episodeType,
+    hasAired,
   };
 }
 

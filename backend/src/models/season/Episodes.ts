@@ -2,6 +2,7 @@ import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SeasonsAttributes } from './Seasons';
 import logger from '../../config/logger';
+import { EpisodeType } from '../../generated-api';
 
 export interface EpisodeAttributes {
   episodeId: UUID;
@@ -10,6 +11,7 @@ export interface EpisodeAttributes {
   episodeTitle: string | null;
   episodeAirDate: Date;
   episodeDescription: string | null;
+  episodeType: EpisodeType;
 }
 
 const EpisodeModel = (sequelize: Sequelize) => {
@@ -20,6 +22,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
     public episodeTitle!: EpisodeAttributes['episodeTitle'] | null;
     public episodeAirDate!: EpisodeAttributes['episodeAirDate'];
     public episodeDescription!: EpisodeAttributes['episodeDescription'] | null;
+    public episodeType!: EpisodeAttributes['episodeType'];
 
     static associate(models: any) {
       if (models.Seasons) {
@@ -116,11 +119,23 @@ const EpisodeModel = (sequelize: Sequelize) => {
         type: DataTypes.DATE,
         allowNull: false,
         field: 'EPISODE_AIR_DATE',
+        // get() {
+        //   const rawValue = this.getDataValue('episodeAirDate');
+        //   return rawValue ? new Date(rawValue) : null;
+        // },
+        // set(value: Date | string) {
+        //   this.setDataValue('episodeAirDate', new Date(value));
+        // },
       },
       episodeDescription: {
         type: DataTypes.STRING(500),
         allowNull: true,
         field: 'EPISODE_DESCRIPTION',
+      },
+      episodeType: {
+        type: DataTypes.ENUM(...Object.values(EpisodeType)),
+        allowNull: false,
+        field: 'EPISODE_TYPE',
       },
     },
     {

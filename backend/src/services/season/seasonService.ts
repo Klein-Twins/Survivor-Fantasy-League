@@ -91,6 +91,17 @@ async function buildSeason(seasonInfo: SeasonsAttributes): Promise<Season> {
     seasonInfo.seasonId
   );
 
+  const sortedEpisodes = episodes.sort((a, b) => {
+    return a.number - b.number;
+  });
+
+  const nextEpisodeId =
+    sortedEpisodes.find((episode) => {
+      if (!episode.hasAired) {
+        return episode.id;
+      }
+    })?.id || null;
+
   return {
     id: seasonAttributes.seasonId,
     name: seasonAttributes.name,
@@ -102,6 +113,7 @@ async function buildSeason(seasonInfo: SeasonsAttributes): Promise<Season> {
     survivors: survivors,
     tribes: tribes,
     episodes: episodes,
+    nextEpisode: nextEpisodeId,
   };
 }
 

@@ -634,6 +634,7 @@ paths:
                                           - id
                                           - firstName
                                           - lastName
+                                          - name
                                         properties:
                                           id:
                                             type: string
@@ -643,6 +644,14 @@ paths:
                                             type: string
                                             description: The survivor's full name
                                             example: John Doe
+                                          firstName:
+                                            type: string
+                                            description: The survivor's first name
+                                            example: John
+                                          lastName:
+                                            type: string
+                                            description: The survivor's last name
+                                            example: Doe
                                       - type: object
                                         required:
                                           - seasonId
@@ -734,13 +743,34 @@ paths:
                                       - name
                                       - color
                                       - seasonId
-                                      - currentSurvivorIds
+                                      - survivors
                                     properties:
-                                      currentSurvivorIds:
+                                      survivors:
                                         type: array
                                         items:
-                                          type: string
-                                          format: uuid
+                                          type: object
+                                          required:
+                                            - id
+                                            - firstName
+                                            - lastName
+                                            - name
+                                          properties:
+                                            id:
+                                              type: string
+                                              description: The survivor's unique identifier
+                                              example: 1
+                                            name:
+                                              type: string
+                                              description: The survivor's full name
+                                              example: John Doe
+                                            firstName:
+                                              type: string
+                                              description: The survivor's first name
+                                              example: John
+                                            lastName:
+                                              type: string
+                                              description: The survivor's last name
+                                              example: Doe
                                       seasonId:
                                         type: string
                                         description: The season's unique identifier
@@ -787,6 +817,8 @@ paths:
                                       - airDate
                                       - title
                                       - description
+                                      - episodeType
+                                      - hasAired
                                     properties:
                                       id:
                                         type: string
@@ -815,7 +847,28 @@ paths:
                                         description: The description of the episode
                                         example: The first episode of the season
                                         nullable: true
+                                      hasAired:
+                                        type: boolean
+                                        description: Whether the episode has aired
+                                        example: true
+                                      episodeType:
+                                        type: string
+                                        enum:
+                                          - PREMIERE
+                                          - PRE-MERGE
+                                          - TRIBELESS
+                                          - POST_MERGE
+                                          - FINALE
+                                          - FINALE_1
+                                          - FINALE_2
+                                        description: The type of the episode
+                                        example: REWARD
                                   description: The episodes in the season.
+                                nextEpisode:
+                                  type: string
+                                  format: uuid
+                                  description: The unique identifier of the next episode.
+                                  nullable: true
                               required:
                                 - id
                                 - name
@@ -827,6 +880,7 @@ paths:
                                 - survivors
                                 - tribes
                                 - episodes
+                                - nextEpisode
   '/api/league/{profileId}/{seasonId}':
     get:
       summary: Get leagues for a profile
@@ -1826,6 +1880,7 @@ paths:
                                                               - id
                                                               - firstName
                                                               - lastName
+                                                              - name
                                                             properties:
                                                               id:
                                                                 type: string
@@ -1835,6 +1890,14 @@ paths:
                                                                 type: string
                                                                 description: The survivor's full name
                                                                 example: John Doe
+                                                              firstName:
+                                                                type: string
+                                                                description: The survivor's first name
+                                                                example: John
+                                                              lastName:
+                                                                type: string
+                                                                description: The survivor's last name
+                                                                example: Doe
                                                         - type: array
                                                           items:
                                                             type: object
@@ -1858,13 +1921,34 @@ paths:
                                                               - name
                                                               - color
                                                               - seasonId
-                                                              - currentSurvivorIds
+                                                              - survivors
                                                             properties:
-                                                              currentSurvivorIds:
+                                                              survivors:
                                                                 type: array
                                                                 items:
-                                                                  type: string
-                                                                  format: uuid
+                                                                  type: object
+                                                                  required:
+                                                                    - id
+                                                                    - firstName
+                                                                    - lastName
+                                                                    - name
+                                                                  properties:
+                                                                    id:
+                                                                      type: string
+                                                                      description: The survivor's unique identifier
+                                                                      example: 1
+                                                                    name:
+                                                                      type: string
+                                                                      description: The survivor's full name
+                                                                      example: John Doe
+                                                                    firstName:
+                                                                      type: string
+                                                                      description: The survivor's first name
+                                                                      example: John
+                                                                    lastName:
+                                                                      type: string
+                                                                      description: The survivor's last name
+                                                                      example: Doe
                                                               seasonId:
                                                                 type: string
                                                                 description: The season's unique identifier
@@ -2021,6 +2105,7 @@ paths:
                                                                   - id
                                                                   - firstName
                                                                   - lastName
+                                                                  - name
                                                                 properties:
                                                                   id:
                                                                     type: string
@@ -2030,6 +2115,14 @@ paths:
                                                                     type: string
                                                                     description: The survivor's full name
                                                                     example: John Doe
+                                                                  firstName:
+                                                                    type: string
+                                                                    description: The survivor's first name
+                                                                    example: John
+                                                                  lastName:
+                                                                    type: string
+                                                                    description: The survivor's last name
+                                                                    example: Doe
                                                             - type: array
                                                               items:
                                                                 type: object
@@ -2053,13 +2146,34 @@ paths:
                                                                   - name
                                                                   - color
                                                                   - seasonId
-                                                                  - currentSurvivorIds
+                                                                  - survivors
                                                                 properties:
-                                                                  currentSurvivorIds:
+                                                                  survivors:
                                                                     type: array
                                                                     items:
-                                                                      type: string
-                                                                      format: uuid
+                                                                      type: object
+                                                                      required:
+                                                                        - id
+                                                                        - firstName
+                                                                        - lastName
+                                                                        - name
+                                                                      properties:
+                                                                        id:
+                                                                          type: string
+                                                                          description: The survivor's unique identifier
+                                                                          example: 1
+                                                                        name:
+                                                                          type: string
+                                                                          description: The survivor's full name
+                                                                          example: John Doe
+                                                                        firstName:
+                                                                          type: string
+                                                                          description: The survivor's first name
+                                                                          example: John
+                                                                        lastName:
+                                                                          type: string
+                                                                          description: The survivor's last name
+                                                                          example: Doe
                                                                   seasonId:
                                                                     type: string
                                                                     description: The season's unique identifier
@@ -2209,6 +2323,7 @@ paths:
                                                           - id
                                                           - firstName
                                                           - lastName
+                                                          - name
                                                         properties:
                                                           id:
                                                             type: string
@@ -2218,6 +2333,14 @@ paths:
                                                             type: string
                                                             description: The survivor's full name
                                                             example: John Doe
+                                                          firstName:
+                                                            type: string
+                                                            description: The survivor's first name
+                                                            example: John
+                                                          lastName:
+                                                            type: string
+                                                            description: The survivor's last name
+                                                            example: Doe
                                                     - type: array
                                                       items:
                                                         type: object
@@ -2241,13 +2364,34 @@ paths:
                                                           - name
                                                           - color
                                                           - seasonId
-                                                          - currentSurvivorIds
+                                                          - survivors
                                                         properties:
-                                                          currentSurvivorIds:
+                                                          survivors:
                                                             type: array
                                                             items:
-                                                              type: string
-                                                              format: uuid
+                                                              type: object
+                                                              required:
+                                                                - id
+                                                                - firstName
+                                                                - lastName
+                                                                - name
+                                                              properties:
+                                                                id:
+                                                                  type: string
+                                                                  description: The survivor's unique identifier
+                                                                  example: 1
+                                                                name:
+                                                                  type: string
+                                                                  description: The survivor's full name
+                                                                  example: John Doe
+                                                                firstName:
+                                                                  type: string
+                                                                  description: The survivor's first name
+                                                                  example: John
+                                                                lastName:
+                                                                  type: string
+                                                                  description: The survivor's last name
+                                                                  example: Doe
                                                           seasonId:
                                                             type: string
                                                             description: The season's unique identifier
@@ -2472,6 +2616,7 @@ paths:
                                                               - id
                                                               - firstName
                                                               - lastName
+                                                              - name
                                                             properties:
                                                               id:
                                                                 type: string
@@ -2481,6 +2626,14 @@ paths:
                                                                 type: string
                                                                 description: The survivor's full name
                                                                 example: John Doe
+                                                              firstName:
+                                                                type: string
+                                                                description: The survivor's first name
+                                                                example: John
+                                                              lastName:
+                                                                type: string
+                                                                description: The survivor's last name
+                                                                example: Doe
                                                         - type: array
                                                           items:
                                                             type: object
@@ -2504,13 +2657,34 @@ paths:
                                                               - name
                                                               - color
                                                               - seasonId
-                                                              - currentSurvivorIds
+                                                              - survivors
                                                             properties:
-                                                              currentSurvivorIds:
+                                                              survivors:
                                                                 type: array
                                                                 items:
-                                                                  type: string
-                                                                  format: uuid
+                                                                  type: object
+                                                                  required:
+                                                                    - id
+                                                                    - firstName
+                                                                    - lastName
+                                                                    - name
+                                                                  properties:
+                                                                    id:
+                                                                      type: string
+                                                                      description: The survivor's unique identifier
+                                                                      example: 1
+                                                                    name:
+                                                                      type: string
+                                                                      description: The survivor's full name
+                                                                      example: John Doe
+                                                                    firstName:
+                                                                      type: string
+                                                                      description: The survivor's first name
+                                                                      example: John
+                                                                    lastName:
+                                                                      type: string
+                                                                      description: The survivor's last name
+                                                                      example: Doe
                                                               seasonId:
                                                                 type: string
                                                                 description: The season's unique identifier
@@ -2660,6 +2834,7 @@ paths:
                                                       - id
                                                       - firstName
                                                       - lastName
+                                                      - name
                                                     properties:
                                                       id:
                                                         type: string
@@ -2669,6 +2844,14 @@ paths:
                                                         type: string
                                                         description: The survivor's full name
                                                         example: John Doe
+                                                      firstName:
+                                                        type: string
+                                                        description: The survivor's first name
+                                                        example: John
+                                                      lastName:
+                                                        type: string
+                                                        description: The survivor's last name
+                                                        example: Doe
                                                 - type: array
                                                   items:
                                                     type: object
@@ -2692,13 +2875,34 @@ paths:
                                                       - name
                                                       - color
                                                       - seasonId
-                                                      - currentSurvivorIds
+                                                      - survivors
                                                     properties:
-                                                      currentSurvivorIds:
+                                                      survivors:
                                                         type: array
                                                         items:
-                                                          type: string
-                                                          format: uuid
+                                                          type: object
+                                                          required:
+                                                            - id
+                                                            - firstName
+                                                            - lastName
+                                                            - name
+                                                          properties:
+                                                            id:
+                                                              type: string
+                                                              description: The survivor's unique identifier
+                                                              example: 1
+                                                            name:
+                                                              type: string
+                                                              description: The survivor's full name
+                                                              example: John Doe
+                                                            firstName:
+                                                              type: string
+                                                              description: The survivor's first name
+                                                              example: John
+                                                            lastName:
+                                                              type: string
+                                                              description: The survivor's last name
+                                                              example: Doe
                                                       seasonId:
                                                         type: string
                                                         description: The season's unique identifier
@@ -3044,6 +3248,7 @@ paths:
                                         - id
                                         - firstName
                                         - lastName
+                                        - name
                                       properties:
                                         id:
                                           type: string
@@ -3053,6 +3258,14 @@ paths:
                                           type: string
                                           description: The survivor's full name
                                           example: John Doe
+                                        firstName:
+                                          type: string
+                                          description: The survivor's first name
+                                          example: John
+                                        lastName:
+                                          type: string
+                                          description: The survivor's last name
+                                          example: Doe
                                     - type: object
                                       required:
                                         - seasonId
@@ -3144,13 +3357,34 @@ paths:
                                     - name
                                     - color
                                     - seasonId
-                                    - currentSurvivorIds
+                                    - survivors
                                   properties:
-                                    currentSurvivorIds:
+                                    survivors:
                                       type: array
                                       items:
-                                        type: string
-                                        format: uuid
+                                        type: object
+                                        required:
+                                          - id
+                                          - firstName
+                                          - lastName
+                                          - name
+                                        properties:
+                                          id:
+                                            type: string
+                                            description: The survivor's unique identifier
+                                            example: 1
+                                          name:
+                                            type: string
+                                            description: The survivor's full name
+                                            example: John Doe
+                                          firstName:
+                                            type: string
+                                            description: The survivor's first name
+                                            example: John
+                                          lastName:
+                                            type: string
+                                            description: The survivor's last name
+                                            example: Doe
                                     seasonId:
                                       type: string
                                       description: The season's unique identifier
@@ -3197,6 +3431,8 @@ paths:
                                     - airDate
                                     - title
                                     - description
+                                    - episodeType
+                                    - hasAired
                                   properties:
                                     id:
                                       type: string
@@ -3225,7 +3461,28 @@ paths:
                                       description: The description of the episode
                                       example: The first episode of the season
                                       nullable: true
+                                    hasAired:
+                                      type: boolean
+                                      description: Whether the episode has aired
+                                      example: true
+                                    episodeType:
+                                      type: string
+                                      enum:
+                                        - PREMIERE
+                                        - PRE-MERGE
+                                        - TRIBELESS
+                                        - POST_MERGE
+                                        - FINALE
+                                        - FINALE_1
+                                        - FINALE_2
+                                      description: The type of the episode
+                                      example: REWARD
                                 description: The episodes in the season.
+                              nextEpisode:
+                                type: string
+                                format: uuid
+                                description: The unique identifier of the next episode.
+                                nullable: true
                             required:
                               - id
                               - name
@@ -3237,6 +3494,7 @@ paths:
                               - survivors
                               - tribes
                               - episodes
+                              - nextEpisode
   /api/admin/season/survivor:
     post:
       summary: Create a new survivor
@@ -3345,6 +3603,7 @@ paths:
                                   - id
                                   - firstName
                                   - lastName
+                                  - name
                                 properties:
                                   id:
                                     type: string
@@ -3354,6 +3613,14 @@ paths:
                                     type: string
                                     description: The survivor's full name
                                     example: John Doe
+                                  firstName:
+                                    type: string
+                                    description: The survivor's first name
+                                    example: John
+                                  lastName:
+                                    type: string
+                                    description: The survivor's last name
+                                    example: Doe
                               - type: object
                                 required:
                                   - seasonId
@@ -3531,13 +3798,34 @@ paths:
                               - name
                               - color
                               - seasonId
-                              - currentSurvivorIds
+                              - survivors
                             properties:
-                              currentSurvivorIds:
+                              survivors:
                                 type: array
                                 items:
-                                  type: string
-                                  format: uuid
+                                  type: object
+                                  required:
+                                    - id
+                                    - firstName
+                                    - lastName
+                                    - name
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: The survivor's unique identifier
+                                      example: 1
+                                    name:
+                                      type: string
+                                      description: The survivor's full name
+                                      example: John Doe
+                                    firstName:
+                                      type: string
+                                      description: The survivor's first name
+                                      example: John
+                                    lastName:
+                                      type: string
+                                      description: The survivor's last name
+                                      example: Doe
                               seasonId:
                                 type: string
                                 description: The season's unique identifier

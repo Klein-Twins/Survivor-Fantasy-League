@@ -102,4 +102,12 @@ export interface Season {
      * @memberof Season
      */
     episodes: Array<Episode>;
+
+    /**
+     * The unique identifier of the next episode.
+     *
+     * @type {string}
+     * @memberof Season
+     */
+    nextEpisode: string | null;
 }

@@ -42,6 +42,11 @@ components:
           items:
             $ref: './episode.yaml#/components/schemas/Episode'
           description: The episodes in the season.
+        nextEpisode:
+          type: string
+          format: uuid
+          description: The unique identifier of the next episode.
+          nullable: true
       required:
         - id
         - name
@@ -53,3 +58,4 @@ components:
         - survivors
         - tribes
         - episodes
+        - nextEpisode

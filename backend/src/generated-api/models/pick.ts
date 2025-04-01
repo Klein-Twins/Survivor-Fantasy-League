@@ -17,48 +17,49 @@ import { ColorPickOptions } from './color-pick-options';
 import { PickOptionTypeEnum } from './pick-option-type-enum';
 import { SurvivorPickOptions } from './survivor-pick-options';
 import { TribePickOptions } from './tribe-pick-options';
-/**
- *
+ /**
+ * 
  *
  * @export
  * @interface Pick
  */
 export interface Pick {
-  /**
-   * The ID of the pick
-   *
-   * @type {string}
-   * @memberof Pick
-   */
-  id: string;
 
-  /**
-   * The description of the pick
-   *
-   * @type {string}
-   * @memberof Pick
-   * @example Who will be voted out this week?
-   */
-  description: string;
+    /**
+     * The ID of the pick
+     *
+     * @type {string}
+     * @memberof Pick
+     */
+    id: string;
 
-  /**
-   * @type {PickOptionTypeEnum}
-   * @memberof Pick
-   */
-  optionType: PickOptionTypeEnum;
+    /**
+     * The description of the pick
+     *
+     * @type {string}
+     * @memberof Pick
+     * @example Who will be voted out this week?
+     */
+    description: string;
 
-  /**
-   * The number of points the pick is worth
-   *
-   * @type {number}
-   * @memberof Pick
-   * @example 10
-   */
-  pointValue: number;
+    /**
+     * @type {PickOptionTypeEnum}
+     * @memberof Pick
+     */
+    optionType: PickOptionTypeEnum;
 
-  /**
-   * @type {SurvivorPickOptions | ColorPickOptions | TribePickOptions}
-   * @memberof Pick
-   */
-  options: SurvivorPickOptions | ColorPickOptions | TribePickOptions;
+    /**
+     * The number of points the pick is worth
+     *
+     * @type {number}
+     * @memberof Pick
+     * @example 10
+     */
+    pointValue: number;
+
+    /**
+     * @type {SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions}
+     * @memberof Pick
+     */
+    options: SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions;
 }

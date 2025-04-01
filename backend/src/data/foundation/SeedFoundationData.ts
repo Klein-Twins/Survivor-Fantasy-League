@@ -18,6 +18,7 @@ import seasonData from './seasonData/seasonData';
 import defaultSurveysData from './surveyData/defaultSurveysData';
 import surveyPicksData from './surveyData/surveyPicksData';
 import survivorsData from './survivorData/survivorsData';
+import { season48TribeMembers } from './survivorData/tribeMembersData';
 
 const seedSeasonData = async () => {
   await models.Seasons.destroy({ where: {} });
@@ -51,6 +52,11 @@ const seedSeason47Data = async () => {
     validate: true,
   });
   await models.SeasonEliminations.bulkCreate(season48EliminationData, {
+    validate: true,
+  });
+
+  await models.TribeMembers.destroy({ where: {} });
+  await models.TribeMembers.bulkCreate(season48TribeMembers, {
     validate: true,
   });
 

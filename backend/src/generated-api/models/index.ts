@@ -25,6 +25,7 @@ export * from './create-tribe-response';
 export * from './create-tribe-response-data';
 export * from './episode';
 export * from './episode-survey';
+export * from './episode-type';
 export * from './extend-session-response';
 export * from './extend-session-response-data';
 export * from './get-league-invites-response';

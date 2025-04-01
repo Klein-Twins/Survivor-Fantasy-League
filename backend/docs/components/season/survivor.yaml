@@ -6,6 +6,7 @@ components:
         - id
         - firstName
         - lastName
+        - name
       properties:
         id:
           type: string
@@ -15,6 +16,14 @@ components:
           type: string
           description: The survivor's full name
           example: 'John Doe'
+        firstName:
+          type: string
+          description: The survivor's first name
+          example: 'John'
+        lastName:
+          type: string
+          description: The survivor's last name
+          example: 'Doe'
     Survivor:
       type: object
       allOf:

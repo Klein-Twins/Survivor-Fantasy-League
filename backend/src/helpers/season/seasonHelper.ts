@@ -11,30 +11,30 @@ import { BadRequestError, NotFoundError } from '../../utils/errors/errors';
 
 const seasonHelper = {
   validateSeasonId,
-  buildSeason,
+  //buildSeason,
   formatSeasonId,
   validateCreateSeasonRequest,
 };
 
-function buildSeason(
-  seasonAttributes: SeasonsAttributes,
-  survivors: Survivor[],
-  tribes: Tribe[],
-  episodes: Episode[]
-): Season {
-  return {
-    id: seasonAttributes.seasonId,
-    name: seasonAttributes.name,
-    startDate: seasonAttributes.startDate.toString(),
-    endDate: seasonAttributes.endDate.toString(),
-    location: seasonAttributes.location,
-    theme: seasonAttributes.theme,
-    isActive: seasonAttributes.isActive,
-    survivors: survivors,
-    tribes: tribes,
-    episodes: episodes,
-  };
-}
+// function buildSeason(
+//   seasonAttributes: SeasonsAttributes,
+//   survivors: Survivor[],
+//   tribes: Tribe[],
+//   episodes: Episode[]
+// ): Season {
+//   return {
+//     id: seasonAttributes.seasonId,
+//     name: seasonAttributes.name,
+//     startDate: seasonAttributes.startDate.toString(),
+//     endDate: seasonAttributes.endDate.toString(),
+//     location: seasonAttributes.location,
+//     theme: seasonAttributes.theme,
+//     isActive: seasonAttributes.isActive,
+//     survivors: survivors,
+//     tribes: tribes,
+//     episodes: episodes,
+//   };
+// }
 
 async function validateCreateSeasonRequest(reqBody: CreateSeasonRequestBody) {
   if (!reqBody.seasonNumber) {

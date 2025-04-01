@@ -1,13 +1,26 @@
-import { CreateTribeRequestBody, Tribe } from '../../generated-api';
+import { UUID } from 'crypto';
+import {
+  CreateTribeRequestBody,
+  SurvivorBasic,
+  Tribe,
+} from '../../generated-api';
+import { EpisodeAttributes } from '../../models/season/Episodes';
 import { TribeAttributes } from '../../models/season/Tribes';
+import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import tribeRepository from '../../repositories/season/tribeRepository';
 import { NotImplementedError } from '../../utils/errors/errors';
+import tribeMemberService from './tribeMemberService';
+import survivorService from './survivorService';
+import { NODE_ENV } from '../../config/config';
+import logger from '../../config/logger';
+import episodeService from './episodeService';
 
 const tribeService = {
   getTribesBySeasonId,
   createTribe,
+  getTribesOnEpisode,
 };
-
+``;
 async function getTribesBySeasonId(
   seasonId: TribeAttributes['seasonId']
 ): Promise<Tribe[]> {
@@ -21,7 +34,54 @@ async function getTribesBySeasonId(
   );
 }
 
-async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
+async function getTribesOnEpisode(
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<Tribe[]> {
+  const tribesAttributes = await tribeRepository.getTribesOnEpisode(episodeId);
+  return await Promise.all(
+    tribesAttributes.map(
+      async (tribeAttribute) => await buildTribe(tribeAttribute, episodeId)
+    )
+  );
+}
+
+async function buildTribe(
+  tribeAttributes: TribeAttributes,
+
+  episodeId?: EpisodeAttributes['episodeId']
+): Promise<Tribe> {
+  let survivorIds: SurvivorsAttributes['id'][] = [];
+  let survivorBasic: SurvivorBasic[] = [];
+  if (!episodeId) {
+    survivorIds = await tribeRepository.getStartingSurvivorsByTribeIds(
+      tribeAttributes.id
+    );
+  } else {
+    const survivors = await tribeMemberService.getTribeMembers(
+      tribeAttributes.id,
+      episodeId
+    );
+    survivorIds = survivors.map((survivor) => survivor.id as UUID);
+  }
+  survivorBasic = await Promise.all(
+    survivorIds.map(
+      async (id) => await survivorService.getBasicSurvivorDetails(id)
+    )
+  );
+
+  if (NODE_ENV === 'development') {
+    if (episodeId) {
+      const episode = await episodeService.getEpisode('episodeId', episodeId);
+      logger.debug('In Episode: ' + episode.number);
+    }
+
+    logger.debug(
+      `Tribe ${tribeAttributes.name} has survivors: ${survivorBasic.map(
+        (survivor) => survivor.name
+      )}`
+    );
+  }
+
   return {
     seasonId: tribeAttributes.seasonId.toString(),
     id: tribeAttributes.id,
@@ -32,8 +92,7 @@ async function buildTribe(tribeAttributes: TribeAttributes): Promise<Tribe> {
     },
     isMergeTribe: tribeAttributes.mergeTribe,
     episodeStarted: tribeAttributes.episodeStarted.toString(),
-    //TODO: Implement this for tribe history
-    currentSurvivorIds: [],
+    survivors: survivorBasic,
   };
 }
 

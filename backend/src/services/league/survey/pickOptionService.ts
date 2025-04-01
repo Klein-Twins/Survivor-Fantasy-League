@@ -6,8 +6,12 @@ import {
   TribePickOptions,
 } from '../../../generated-api';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
-import { InternalServerError } from '../../../utils/errors/errors';
+import {
+  InternalServerError,
+  NotImplementedError,
+} from '../../../utils/errors/errors';
 import survivorService from '../../season/survivorService';
+import tribeService from '../../season/tribeService';
 
 const pickOptionService = {
   getPickOptions,
@@ -23,7 +27,7 @@ async function getPickOptions(
     case PickOptionTypeEnum.Survivor:
       return await getSurvivorPickOptions(episodeId);
     case PickOptionTypeEnum.Tribe:
-      return await getTribePickOptions();
+      return await getTribePickOptions(episodeId);
     default:
       throw new InternalServerError(
         `Invalid pick option type: ${pickOptionType}`
@@ -45,8 +49,11 @@ async function getColorPickOptions(): Promise<ColorPickOptions> {
   return [];
 }
 
-async function getTribePickOptions(): Promise<TribePickOptions> {
-  return [];
+async function getTribePickOptions(
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<TribePickOptions> {
+  const tribeOptions = await tribeService.getTribesOnEpisode(episodeId);
+  return tribeOptions;
 }
 
 function getBinaryPickOptions(): BinaryPickOptions[] {

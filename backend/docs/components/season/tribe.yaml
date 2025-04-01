@@ -7,13 +7,12 @@ components:
         - name
         - color
         - seasonId
-        - currentSurvivorIds
+        - survivors
       properties:
-        currentSurvivorIds:
+        survivors:
           type: array
           items:
-            type: string
-            format: uuid
+            $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
         seasonId:
           type: string
           description: The season's unique identifier

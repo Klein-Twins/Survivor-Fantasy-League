@@ -13,6 +13,7 @@
  */
 
 import { Color } from './color';
+import { SurvivorBasic } from './survivor-basic';
  /**
  * 
  *
@@ -22,10 +23,10 @@ import { Color } from './color';
 export interface Tribe {
 
     /**
-     * @type {Array<string>}
+     * @type {Array<SurvivorBasic>}
      * @memberof Tribe
      */
-    currentSurvivorIds: Array<string>;
+    survivors: Array<SurvivorBasic>;
 
     /**
      * The season's unique identifier

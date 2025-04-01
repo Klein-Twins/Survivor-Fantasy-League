@@ -98,13 +98,7 @@ const EpisodeSelection: React.FC<EpisodeSelectionProps> = ({
         return (
           <>
             <div
-              key={episode.id}
-              onClick={() => onSelect(episode)}
-              className={`min-w-24 py-2 ${buttonColors} rounded-md text-xl text-center text-white hover:cursor-pointer`}>
-              Episode {episode.number}
-            </div>
-            <div
-              key={episode.id}
+              key={episode.id + Math.random()}
               onClick={() => onSelect(episode)}
               className={`min-w-24 py-2 ${buttonColors} rounded-md text-xl text-center text-white hover:cursor-pointer`}>
               Episode {episode.number}

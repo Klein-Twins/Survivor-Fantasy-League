@@ -9,6 +9,8 @@ components:
         - airDate
         - title
         - description
+        - episodeType
+        - hasAired
       properties:
         id:
           type: string
@@ -37,3 +39,22 @@ components:
           description: The description of the episode
           example: 'The first episode of the season'
           nullable: true
+        hasAired:
+          type: boolean
+          description: Whether the episode has aired
+          example: true
+        episodeType:
+          $ref: '#/components/schemas/EpisodeType'
+
+    EpisodeType:
+      type: string
+      enum:
+        - PREMIERE
+        - PRE-MERGE
+        - TRIBELESS
+        - POST_MERGE
+        - FINALE
+        - FINALE_1
+        - FINALE_2
+      description: The type of the episode
+      example: 'REWARD'

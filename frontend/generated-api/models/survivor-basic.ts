@@ -36,5 +36,23 @@ export interface SurvivorBasic {
      * @memberof SurvivorBasic
      * @example John Doe
      */
-    name?: string;
+    name: string;
+
+    /**
+     * The survivor's first name
+     *
+     * @type {string}
+     * @memberof SurvivorBasic
+     * @example John
+     */
+    firstName: string;
+
+    /**
+     * The survivor's last name
+     *
+     * @type {string}
+     * @memberof SurvivorBasic
+     * @example Doe
+     */
+    lastName: string;
 }

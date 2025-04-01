@@ -12,6 +12,7 @@
  * Do not edit the class manually.
  */
 
+import { EpisodeType } from './episode-type';
  /**
  * 
  *
@@ -73,4 +74,19 @@ export interface Episode {
      * @example The first episode of the season
      */
     description: string | null;
+
+    /**
+     * Whether the episode has aired
+     *
+     * @type {boolean}
+     * @memberof Episode
+     * @example true
+     */
+    hasAired: boolean;
+
+    /**
+     * @type {EpisodeType}
+     * @memberof Episode
+     */
+    episodeType: EpisodeType;
 }

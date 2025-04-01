@@ -2,6 +2,7 @@ import { UUID } from 'crypto';
 import {
   CreateSurvivorRequestBody,
   Survivor,
+  SurvivorBasic,
   SurvivorEliminationInfo,
 } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
@@ -9,15 +10,64 @@ import { SeasonsAttributes } from '../../models/season/Seasons';
 import { SurvivorDetailsOnSeasonAttributes } from '../../models/survivors/SurvivorDetailsOnSeason';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import survivorRepository from '../../repositories/season/survivorRepository';
-import { NotImplementedError } from '../../utils/errors/errors';
+import { NotFoundError, NotImplementedError } from '../../utils/errors/errors';
 import episodeService from './episodeService';
 import seasonEliminationService from './seasonEliminationService';
+import { models } from '../../config/db';
 
 const survivorService = {
   getSurvivorsAtStartOfEpisode,
   getSurvivorsBySeason,
   createSurvivor,
+  getSurvivorById,
+  getBasicSurvivorDetails,
 };
+
+async function getBasicSurvivorDetails(
+  survivorId: SurvivorsAttributes['id']
+): Promise<SurvivorBasic> {
+  const survivorAttributes = await models.Survivors.findOne({
+    where: {
+      id: survivorId,
+    },
+  });
+  if (!survivorAttributes) {
+    throw new NotFoundError('No Survivor found for id: ' + survivorId);
+  }
+  const survivorInfo: SurvivorBasic = {
+    id: survivorId,
+    firstName: survivorAttributes.firstName,
+    lastName: survivorAttributes.lastName,
+    name: survivorAttributes.firstName + ' ' + survivorAttributes.lastName,
+  };
+  return survivorInfo;
+}
+
+async function getSurvivorById(
+  survivorId: SurvivorDetailsOnSeasonAttributes['id'],
+  seasonId: SeasonsAttributes['seasonId']
+): Promise<Survivor> {
+  const survivorData = await survivorRepository.getSurvivor(
+    survivorId,
+    seasonId
+  );
+
+  if (!survivorData) {
+    throw new Error(`Survivor with ID ${survivorId} not found`);
+  }
+
+  const survivorEliminationInfo =
+    await seasonEliminationService.getSurvivorEliminationInfo(
+      survivorId,
+      seasonId
+    );
+
+  return buildSurvivor(
+    survivorData.survivor,
+    survivorData,
+    survivorEliminationInfo
+  );
+}
 
 async function getSurvivorsAtStartOfEpisode(
   episodeId: EpisodeAttributes['episodeId']
@@ -83,6 +133,7 @@ function buildSurvivor(
     id: survivorAttributes.id,
     firstName: survivorAttributes.firstName,
     lastName: survivorAttributes.lastName,
+    name: survivorAttributes.firstName + ' ' + survivorAttributes.lastName,
     fromCity: survivorAttributes.fromCity,
     fromState: survivorAttributes.fromState,
     fromCountry: survivorAttributes.fromCountry,
