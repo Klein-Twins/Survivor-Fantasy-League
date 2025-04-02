@@ -819,6 +819,7 @@ paths:
                                       - description
                                       - episodeType
                                       - hasAired
+                                      - isTribeSwitch
                                     properties:
                                       id:
                                         type: string
@@ -863,6 +864,10 @@ paths:
                                           - FINALE_2
                                         description: The type of the episode
                                         example: REWARD
+                                      isTribeSwitch:
+                                        type: boolean
+                                        description: Whether the episode is a tribe switch episode
+                                        example: false
                                   description: The episodes in the season.
                                 nextEpisode:
                                   type: string
@@ -3433,6 +3438,7 @@ paths:
                                     - description
                                     - episodeType
                                     - hasAired
+                                    - isTribeSwitch
                                   properties:
                                     id:
                                       type: string
@@ -3477,6 +3483,10 @@ paths:
                                         - FINALE_2
                                       description: The type of the episode
                                       example: REWARD
+                                    isTribeSwitch:
+                                      type: boolean
+                                      description: Whether the episode is a tribe switch episode
+                                      example: false
                                 description: The episodes in the season.
                               nextEpisode:
                                 type: string

@@ -6,7 +6,33 @@ import { InternalServerError } from '../../../utils/errors/errors';
 const episodeRepository = {
   getEpisodesBySeasonId,
   getEpisode,
+  getAllEpisodesInSeason,
+  getPremierEpisodeInSeason,
 };
+
+async function getPremierEpisodeInSeason(
+  seasonId: SeasonsAttributes['seasonId']
+): Promise<EpisodeAttributes | null> {
+  const episodeAttributes: EpisodeAttributes | null =
+    await models.Episode.findOne({
+      where: {
+        seasonId: seasonId,
+        episodeType: 'PREMIERE',
+      },
+    });
+  return episodeAttributes;
+}
+
+async function getAllEpisodesInSeason(
+  seasonId: SeasonsAttributes['seasonId']
+): Promise<EpisodeAttributes[]> {
+  const episodeAttributes: EpisodeAttributes[] = await models.Episode.findAll({
+    where: {
+      seasonId: seasonId,
+    },
+  });
+  return episodeAttributes;
+}
 
 async function getEpisodesBySeasonId(
   seasonId: SeasonsAttributes['seasonId']

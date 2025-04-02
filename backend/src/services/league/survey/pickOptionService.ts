@@ -10,7 +10,9 @@ import {
   InternalServerError,
   NotImplementedError,
 } from '../../../utils/errors/errors';
+import episodeService from '../../season/episodeService';
 import survivorService from '../../season/survivorService';
+import tribeMemberService from '../../season/tribeMemberService';
 import tribeService from '../../season/tribeService';
 
 const pickOptionService = {
@@ -52,8 +54,9 @@ async function getColorPickOptions(): Promise<ColorPickOptions> {
 async function getTribePickOptions(
   episodeId: EpisodeAttributes['episodeId']
 ): Promise<TribePickOptions> {
-  const tribeOptions = await tribeService.getTribesOnEpisode(episodeId);
-  return tribeOptions;
+  const episode = await episodeService.getEpisode('episodeId', episodeId);
+  const tribes = await tribeService.getTribesOnEpisode(episodeId);
+  return tribes;
 }
 
 function getBinaryPickOptions(): BinaryPickOptions[] {

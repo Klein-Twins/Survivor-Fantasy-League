@@ -29,6 +29,24 @@ const season48EliminationData: SeasonEliminationAttributes[] = [
     seq: 1,
     placement: 16,
   },
+  {
+    seasonId: 48,
+    episodeId: season48EpisodeIds.episode4,
+    day: 9,
+    survivorId: season48SurvivorIds.ThomasKrottinger,
+    notes: '',
+    seq: 1,
+    placement: 15,
+  },
+  {
+    seasonId: 48,
+    episodeId: season48EpisodeIds.episode5,
+    day: 11,
+    survivorId: season48SurvivorIds.BiancaRoses,
+    notes: '',
+    seq: 1,
+    placement: 14,
+  },
 ];
 
 export default season48EliminationData;

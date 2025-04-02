@@ -12,6 +12,7 @@ export interface EpisodeAttributes {
   episodeAirDate: Date;
   episodeDescription: string | null;
   episodeType: EpisodeType;
+  isTribeSwitch?: boolean;
 }
 
 const EpisodeModel = (sequelize: Sequelize) => {
@@ -23,6 +24,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
     public episodeAirDate!: EpisodeAttributes['episodeAirDate'];
     public episodeDescription!: EpisodeAttributes['episodeDescription'] | null;
     public episodeType!: EpisodeAttributes['episodeType'];
+    public isTribeSwitch!: EpisodeAttributes['isTribeSwitch'];
 
     static associate(models: any) {
       if (models.Seasons) {
@@ -67,14 +69,9 @@ const EpisodeModel = (sequelize: Sequelize) => {
 
       if (models.TribeMembers) {
         this.hasMany(models.TribeMembers, {
-          foreignKey: 'episodeIdStart',
+          foreignKey: 'episodeId',
           sourceKey: 'episodeId',
-          as: 'tribeMembersStarted',
-        });
-        this.hasMany(models.TribeMembers, {
-          foreignKey: 'episodeIdEnd',
-          sourceKey: 'episodeId',
-          as: 'tribeMembersEnded',
+          as: 'tribeMembersOnEpisode',
         });
       } else {
         logger.error('Error associating Episode with TribeMembers');
@@ -136,6 +133,12 @@ const EpisodeModel = (sequelize: Sequelize) => {
         type: DataTypes.ENUM(...Object.values(EpisodeType)),
         allowNull: false,
         field: 'EPISODE_TYPE',
+      },
+      isTribeSwitch: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        defaultValue: false,
+        field: 'IS_TRIBE_SWITCH',
       },
     },
     {

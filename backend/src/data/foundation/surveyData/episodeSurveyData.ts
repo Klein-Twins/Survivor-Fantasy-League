@@ -146,18 +146,28 @@ export const season48episodeSurveyData: EpisodeSurveyAttributes[] = [
     dueDate: season48EpisodeData[4].episodeAirDate,
     openDate: season48EpisodeData[3].episodeAirDate,
   },
-  // {
-  //   surveyDefinition: defaultSurveyIds.DefaultWeeklySurvey,
-  //   episodeSurveyId: season48EpisodeSurveyIds.episode6,
-  //   episodeId: season48EpisodeIds.episode6,
-  //   dueDate: season48EpisodeData[5].episodeAirDate,
-  //   openDate: season48EpisodeData[4].episodeAirDate,
-  // },
+  {
+    surveyDefinition: defaultSurveyIds.DefaultWeeklySurvey,
+    episodeSurveyId: season48EpisodeSurveyIds.episode6,
+    episodeId: season48EpisodeIds.episode6,
+    dueDate:
+      season48EpisodeData[5].episodeAirDate ||
+      new Date(
+        new Date(season48EpisodeData[5].episodeAirDate).getTime() +
+          7 * 24 * 60 * 60 * 1000
+      ),
+    openDate: season48EpisodeData[4].episodeAirDate,
+  },
   // {
   //   surveyDefinition: defaultSurveyIds.DefaultWeeklySurvey,
   //   episodeSurveyId: season48EpisodeSurveyIds.episode7,
   //   episodeId: season48EpisodeIds.episode7,
-  //   dueDate: season48EpisodeData[6].episodeAirDate,
+  //   dueDate:
+  //     season48EpisodeData[6]?.episodeAirDate ||
+  //     new Date(
+  //       new Date(season48EpisodeData[5].episodeAirDate).getTime() +
+  //         7 * 24 * 60 * 60 * 1000
+  //     ),
   //   openDate: season48EpisodeData[5].episodeAirDate,
   // },
   // {

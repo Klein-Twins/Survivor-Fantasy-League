@@ -38,6 +38,7 @@ const season48EpisodeData: EpisodeAttributes[] = [
     episodeAirDate: new Date('2025-03-19T19:00:00-06:00'),
     episodeDescription: '',
     episodeType: EpisodeType.PREMERGE,
+    isTribeSwitch: true,
   },
   {
     episodeId: season48EpisodeIds.episode5,

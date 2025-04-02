@@ -6,11 +6,12 @@ import { TribeAttributes } from '../../models/season/Tribes';
 import episodeService from '../../services/season/episodeService';
 import { NotImplementedError } from '../../utils/errors/errors';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
+import { EpisodeType } from '../../generated-api';
 
 const tribeRepository = {
   getTribesBySeasonId,
-  getTribesOnEpisode,
   getStartingSurvivorsByTribeIds,
+  getTribesOnEpisode,
 };
 
 async function getStartingSurvivorsByTribeIds(
@@ -40,68 +41,30 @@ async function getTribesOnEpisode(
 ): Promise<TribeAttributes[]> {
   // Fetch the episode to get its episode number
   const episode = await episodeService.getEpisode('episodeId', episodeId);
-
-  if (!episode) {
-    throw new Error(`Episode with ID ${episodeId} not found`);
-  }
-
   const episodeNumber = episode.number;
+  const episodeType = episode.episodeType;
 
-  // Fetch tribes and their members for the given episode
-  const tribes = await models.Tribe.findAll({
-    include: [
-      {
-        model: models.TribeMembers,
-        as: 'tribeMembers',
-        required: true,
-        include: [
-          {
-            model: models.SurvivorDetailsOnSeason,
-            as: 'survivor',
-            required: true,
-            include: [
-              {
-                model: models.Survivors,
-                as: 'Survivor',
-                attributes: ['firstName', 'lastName'], // Survivor details
-              },
-            ],
-          },
-          {
-            model: models.Episode,
-            as: 'episodeStarted',
-            attributes: ['episodeNumber'], // Start episode details
-            where: {
-              episodeNumber: {
-                [Op.lte]: episodeNumber, // Started on or before the given episode
-              },
-            },
-          },
-          {
-            model: models.Episode,
-            as: 'episodeEnded',
-            attributes: ['episodeNumber'], // End episode details
-            where: {
-              [Op.or]: [
-                { episodeNumber: { [Op.gte]: episodeNumber } }, // Ended after the given episode
-                { episodeNumber: null }, // Still active
-              ],
-            },
-          },
-        ],
-        where: {
-          episodeIdEnd: {
-            [Op.or]: [null, { [Op.ne]: null }], // Include members still in the tribe or with a valid end episode
-          },
-        },
+  if (
+    episodeType === EpisodeType.PREMIERE ||
+    episodeType === EpisodeType.PREMERGE
+  ) {
+    const premierEpisode = await episodeService.getPremierEpisodeInSeason(
+      episode.seasonId
+    );
+    const startingTribeAttributes = await models.Tribe.findAll({
+      where: {
+        seasonId: episode.seasonId,
+        episodeStarted: premierEpisode.id,
       },
-    ],
-    where: {
-      seasonId: '48', // Replace with dynamic seasonId if needed
-    },
-  });
-
-  return tribes;
+    });
+    return startingTribeAttributes;
+  } else if (episodeType === EpisodeType.TRIBELESS) {
+    return [];
+  } else {
+    throw new NotImplementedError(
+      'tribeRepository.getTribesOnEpisode not implemented for Post-Merge episodes'
+    );
+  }
 }
 
 export default tribeRepository;

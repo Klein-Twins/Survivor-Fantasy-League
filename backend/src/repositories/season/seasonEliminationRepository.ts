@@ -1,7 +1,9 @@
 import { models } from '../../config/db';
+import { SurvivorBasic } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonEliminationAttributes } from '../../models/season/SeasonEliminations';
 import { SeasonsAttributes } from '../../models/season/Seasons';
+import { SurvivorDetailsOnSeasonAttributes } from '../../models/survivors/SurvivorDetailsOnSeason';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 
 const seasonEliminationRepository = {
@@ -68,6 +70,37 @@ async function getSeasonEliminationForSurvivorOnSeason(
     },
   });
   return seasonEliminationAttributes;
+}
+
+async function getSurvivorEliminatedOnEpisode(
+  episodeId: EpisodeAttributes['episodeId']
+): Promise<
+  (SurvivorDetailsOnSeasonAttributes & { Survivor: SurvivorsAttributes }) | null
+> {
+  const eliminatedSurvivor = (await models.SeasonEliminations.findOne({
+    where: {
+      episodeId, // Match the given episode
+    },
+    include: [
+      {
+        model: models.SurvivorDetailsOnSeason,
+        as: 'survivor',
+        include: [
+          {
+            required: true,
+            model: models.Survivors,
+            as: 'Survivor',
+          },
+        ],
+      },
+    ],
+  })) as unknown as
+    | (SurvivorDetailsOnSeasonAttributes & {
+        Survivor: SurvivorsAttributes;
+      })
+    | null;
+
+  return eliminatedSurvivor;
 }
 
 export default seasonEliminationRepository;

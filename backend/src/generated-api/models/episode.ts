@@ -89,4 +89,13 @@ export interface Episode {
      * @memberof Episode
      */
     episodeType: EpisodeType;
+
+    /**
+     * Whether the episode is a tribe switch episode
+     *
+     * @type {boolean}
+     * @memberof Episode
+     * @example false
+     */
+    isTribeSwitch: boolean;
 }

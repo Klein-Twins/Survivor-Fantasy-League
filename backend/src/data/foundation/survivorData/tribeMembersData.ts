@@ -186,7 +186,7 @@ export const season48TribeMembers: TribeMemberAttributes[] = [
   {
     tribeId: season48TribeIds.Civa,
     episodeIdStart: season48EpisodeIds.episode4,
-    episodeIdEnd: null,
+    episodeIdEnd: season48EpisodeIds.episode5,
     survivorId: season48SurvivorIds.BiancaRoses,
     notes: 'Swapped to Civa from Lagi',
   },

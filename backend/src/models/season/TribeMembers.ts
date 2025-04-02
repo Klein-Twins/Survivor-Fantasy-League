@@ -6,11 +6,13 @@ import logger from '../../config/logger';
 
 export interface TribeMemberAttributes {
   tribeId: TribeAttributes['id'];
-  episodeIdStart: EpisodeAttributes['episodeId']; //Episode the survivor started on the tribe.
-  episodeIdEnd: UUID | null; //Episode the survivor was no longer part of the tribe
+  episodeIdStart: EpisodeAttributes['episodeId'];
+  episodeIdEnd: EpisodeAttributes['episodeId'] | null;
   survivorId: UUID;
-  notes: string;
+  notes: string | null;
 }
+
+type MembershipType = 'START' | 'CHANGE';
 
 const TribeMembersModel = (sequelize: Sequelize) => {
   class TribeMember
@@ -21,7 +23,7 @@ const TribeMembersModel = (sequelize: Sequelize) => {
     public episodeIdStart!: TribeMemberAttributes['episodeIdStart'];
     public episodeIdEnd!: TribeMemberAttributes['episodeIdEnd'];
     public survivorId!: TribeMemberAttributes['survivorId'];
-    public notes!: TribeMemberAttributes['notes'];
+    public notes!: string | null;
 
     static associate(models: any) {
       if (models.Tribe) {
@@ -72,12 +74,12 @@ const TribeMembersModel = (sequelize: Sequelize) => {
       episodeIdStart: {
         type: DataTypes.UUID,
         allowNull: false,
-        field: 'START_EPISODE_ID',
+        field: 'EPISODE_ID_START',
       },
       episodeIdEnd: {
         type: DataTypes.UUID,
         allowNull: true,
-        field: 'END_EPISODE_ID',
+        field: 'EPISODE_ID_END',
       },
       survivorId: {
         type: DataTypes.UUID,
@@ -85,13 +87,19 @@ const TribeMembersModel = (sequelize: Sequelize) => {
         field: 'SURVIVOR_ID',
       },
       notes: {
-        type: DataTypes.STRING(1000),
+        type: DataTypes.STRING,
         allowNull: true,
         field: 'NOTES',
       },
     },
     {
       sequelize,
+      indexes: [
+        {
+          unique: true,
+          fields: ['TRIBE_ID', 'EPISODE_ID_START', 'SURVIVOR_ID'],
+        },
+      ],
       modelName: 'TribeMembers',
       tableName: 'TRIBE_MEMBERS',
       timestamps: false,

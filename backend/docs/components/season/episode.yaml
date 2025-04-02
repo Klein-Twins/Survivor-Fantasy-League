@@ -11,6 +11,7 @@ components:
         - description
         - episodeType
         - hasAired
+        - isTribeSwitch
       properties:
         id:
           type: string
@@ -45,6 +46,10 @@ components:
           example: true
         episodeType:
           $ref: '#/components/schemas/EpisodeType'
+        isTribeSwitch:
+          type: boolean
+          description: Whether the episode is a tribe switch episode
+          example: false
 
     EpisodeType:
       type: string

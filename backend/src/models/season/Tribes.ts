@@ -5,7 +5,7 @@ import { EpisodeAttributes } from './Episodes';
 import logger from '../../config/logger';
 
 export interface TribeAttributes {
-  id: UUID | string;
+  id: UUID;
   name: string;
   seasonId: SeasonsAttributes['seasonId'];
   tribeColor: string;

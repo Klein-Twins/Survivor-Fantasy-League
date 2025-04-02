@@ -6,7 +6,36 @@ import { InternalServerError, NotFoundError } from '../../utils/errors/errors';
 const episodeService = {
   getEpisodesBySeasonId,
   getEpisode,
+  getAllEpisodesInSeason,
+  getPremierEpisodeInSeason,
 };
+
+async function getPremierEpisodeInSeason(
+  seasonId: EpisodeAttributes['seasonId']
+): Promise<Episode> {
+  const episodeAttributes: EpisodeAttributes | null =
+    await episodeRepository.getPremierEpisodeInSeason(seasonId);
+  if (!episodeAttributes) {
+    throw new NotFoundError('Premier Episode not found for season');
+  }
+  return buildEpisode(episodeAttributes);
+}
+
+async function getAllEpisodesInSeason(
+  seasonId: EpisodeAttributes['seasonId']
+): Promise<Map<EpisodeAttributes['episodeId'], Episode>> {
+  const episodesAttributes: EpisodeAttributes[] =
+    await episodeRepository.getAllEpisodesInSeason(seasonId);
+
+  const episodeMap = new Map<EpisodeAttributes['episodeId'], Episode>();
+  for (const episodeAttributes of episodesAttributes) {
+    episodeMap.set(
+      episodeAttributes.episodeId,
+      buildEpisode(episodeAttributes)
+    );
+  }
+  return episodeMap;
+}
 
 async function getEpisodesBySeasonId(
   seasonId: EpisodeAttributes['seasonId']
@@ -94,6 +123,7 @@ function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
     title: episodeAttributes.episodeTitle,
     episodeType: episodeAttributes.episodeType,
     hasAired,
+    isTribeSwitch: episodeAttributes.isTribeSwitch || false,
   };
 }
 
