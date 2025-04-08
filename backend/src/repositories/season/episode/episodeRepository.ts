@@ -1,4 +1,5 @@
 import { models } from '../../../config/db';
+import { EpisodeType } from '../../../generated-api';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { InternalServerError } from '../../../utils/errors/errors';
@@ -17,7 +18,7 @@ async function getPremierEpisodeInSeason(
     await models.Episode.findOne({
       where: {
         seasonId: seasonId,
-        episodeType: 'PREMIERE',
+        type: EpisodeType.PREMIERE,
       },
     });
   return episodeAttributes;
@@ -47,33 +48,33 @@ async function getEpisodesBySeasonId(
 
 async function getEpisode(
   field: 'episodeId',
-  value: EpisodeAttributes['episodeId']
+  value: EpisodeAttributes['id']
 ): Promise<EpisodeAttributes | null>;
 async function getEpisode(
   field: 'seasonIdAndEpisodeNumber',
   value: {
     seasonId: EpisodeAttributes['seasonId'];
-    episodeNumber: EpisodeAttributes['episodeNumber'];
+    episodeNumber: EpisodeAttributes['number'];
   }
 ): Promise<EpisodeAttributes | null>;
 async function getEpisode(
   field: 'seasonIdAndEpisodeId',
   value: {
     seasonId: EpisodeAttributes['seasonId'];
-    episodeId: EpisodeAttributes['episodeId'];
+    episodeId: EpisodeAttributes['id'];
   }
 ): Promise<EpisodeAttributes | null>;
 async function getEpisode(
   field: 'episodeId' | 'seasonIdAndEpisodeNumber' | 'seasonIdAndEpisodeId',
   value:
-    | EpisodeAttributes['episodeId']
+    | EpisodeAttributes['id']
     | {
         seasonId: EpisodeAttributes['seasonId'];
-        episodeNumber: EpisodeAttributes['episodeNumber'];
+        episodeNumber: EpisodeAttributes['number'];
       }
     | {
         seasonId: EpisodeAttributes['seasonId'];
-        episodeId: EpisodeAttributes['episodeId'];
+        episodeId: EpisodeAttributes['id'];
       }
 ): Promise<EpisodeAttributes | null> {
   let episodeAttributes: EpisodeAttributes | null = null;
@@ -81,29 +82,29 @@ async function getEpisode(
   if (field === 'seasonIdAndEpisodeNumber') {
     const { seasonId, episodeNumber } = value as {
       seasonId: EpisodeAttributes['seasonId'];
-      episodeNumber: EpisodeAttributes['episodeNumber'];
+      episodeNumber: EpisodeAttributes['number'];
     };
     episodeAttributes = await models.Episode.findOne({
       where: {
         seasonId: seasonId,
-        episodeNumber: episodeNumber,
+        number: episodeNumber,
       },
     });
   } else if (field === 'seasonIdAndEpisodeId') {
     const { seasonId, episodeId } = value as {
       seasonId: EpisodeAttributes['seasonId'];
-      episodeId: EpisodeAttributes['episodeId'];
+      episodeId: EpisodeAttributes['id'];
     };
     episodeAttributes = await models.Episode.findOne({
       where: {
         seasonId: seasonId,
-        episodeId: episodeId,
+        id: episodeId,
       },
     });
   } else if (field === 'episodeId') {
     episodeAttributes = await models.Episode.findOne({
       where: {
-        episodeId: value as EpisodeAttributes['episodeId'],
+        id: value as EpisodeAttributes['id'],
       },
     });
   } else {

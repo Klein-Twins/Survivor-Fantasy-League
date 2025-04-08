@@ -6,8 +6,8 @@ import logger from '../../config/logger';
 
 export interface TribeMemberAttributes {
   tribeId: TribeAttributes['id'];
-  episodeIdStart: EpisodeAttributes['episodeId'];
-  episodeIdEnd: EpisodeAttributes['episodeId'] | null;
+  episodeIdStart: EpisodeAttributes['id'];
+  episodeIdEnd: EpisodeAttributes['id'] | null;
   survivorId: UUID;
   notes: string | null;
 }
@@ -39,12 +39,12 @@ const TribeMembersModel = (sequelize: Sequelize) => {
       if (models.Episode) {
         this.belongsTo(models.Episode, {
           foreignKey: 'episodeIdStart',
-          targetKey: 'episodeId',
+          targetKey: 'id',
           as: 'episodeStarted',
         });
         this.belongsTo(models.Episode, {
           foreignKey: 'episodeIdEnd',
-          targetKey: 'episodeId',
+          targetKey: 'id',
           as: 'episodeEnded',
         });
       } else {

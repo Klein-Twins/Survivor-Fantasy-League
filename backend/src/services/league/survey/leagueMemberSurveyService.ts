@@ -21,7 +21,7 @@ const leagueMemberSurveyService = {
 async function getLeagueMemberSurvey(
   leagueId: LeagueAttributes['leagueId'],
   profileId: ProfileAttributes['profileId'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<LeagueMemberSurvey | CompletedLeagueMemberSurvey> {
   //Validate leagueId exists
   const league = await leagueService.getLeague(leagueId);

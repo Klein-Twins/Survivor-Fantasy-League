@@ -12,7 +12,7 @@ const tribeMemberService = {
 
 async function getTribeMembers(
   tribeId: TribeAttributes['id'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<SurvivorBasic[]> {
   const tribeMemberHistory = await tribeMemberRepository.fetchTribeHistory(
     tribeId
@@ -26,7 +26,7 @@ async function getTribeMembers(
 
 async function getTribeMembersOnEpisode(
   tribeMemberHistory: TribeMemberQueryResult[],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<SurvivorBasic[]> {
   const episode = await episodeService.getEpisode('episodeId', episodeId);
   const episodeNumber = episode.number;

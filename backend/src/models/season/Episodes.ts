@@ -5,25 +5,25 @@ import logger from '../../config/logger';
 import { EpisodeType } from '../../generated-api';
 
 export interface EpisodeAttributes {
-  episodeId: UUID;
+  id: UUID;
   seasonId: SeasonsAttributes['seasonId'];
-  episodeNumber: number;
-  episodeTitle: string | null;
-  episodeAirDate: Date;
-  episodeDescription: string | null;
-  episodeType: EpisodeType;
+  number: number;
+  title: string | null;
+  airDate: Date;
+  description: string | null;
+  type: EpisodeType;
   isTribeSwitch?: boolean;
 }
 
 const EpisodeModel = (sequelize: Sequelize) => {
   class Episode extends Model<EpisodeAttributes> implements EpisodeAttributes {
-    public episodeId!: EpisodeAttributes['episodeId'];
+    public id!: EpisodeAttributes['id'];
     public seasonId!: EpisodeAttributes['seasonId'];
-    public episodeNumber!: EpisodeAttributes['episodeNumber'];
-    public episodeTitle!: EpisodeAttributes['episodeTitle'] | null;
-    public episodeAirDate!: EpisodeAttributes['episodeAirDate'];
-    public episodeDescription!: EpisodeAttributes['episodeDescription'] | null;
-    public episodeType!: EpisodeAttributes['episodeType'];
+    public number!: EpisodeAttributes['number'];
+    public title!: EpisodeAttributes['title'] | null;
+    public airDate!: EpisodeAttributes['airDate'];
+    public description!: EpisodeAttributes['description'] | null;
+    public type!: EpisodeAttributes['type'];
     public isTribeSwitch!: EpisodeAttributes['isTribeSwitch'];
 
     static associate(models: any) {
@@ -40,7 +40,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
       if (models.SeasonEliminations) {
         this.hasMany(models.SeasonEliminations, {
           foreignKey: 'episodeId',
-          sourceKey: 'episodeId',
+          sourceKey: 'id',
           as: 'eliminations',
         });
       } else {
@@ -50,7 +50,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
       if (models.Challenges) {
         this.hasMany(models.Challenges, {
           foreignKey: 'episodeId',
-          sourceKey: 'episodeId',
+          sourceKey: 'id',
           as: 'challenges',
         });
       } else {
@@ -59,9 +59,14 @@ const EpisodeModel = (sequelize: Sequelize) => {
 
       if (models.Tribe) {
         this.hasMany(models.Tribe, {
-          foreignKey: 'episodeStarted',
-          sourceKey: 'episodeNumber',
-          as: 'tribe',
+          foreignKey: 'episodeIdStart',
+          sourceKey: 'id',
+          as: 'tribeStarted',
+        });
+        this.hasMany(models.Tribe, {
+          foreignKey: 'episodeIdEnd',
+          sourceKey: 'id',
+          as: 'tribeEnded',
         });
       } else {
         logger.error('Error associating Episode with Tribe');
@@ -70,7 +75,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
       if (models.TribeMembers) {
         this.hasMany(models.TribeMembers, {
           foreignKey: 'episodeId',
-          sourceKey: 'episodeId',
+          sourceKey: 'id',
           as: 'tribeMembersOnEpisode',
         });
       } else {
@@ -80,7 +85,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
       if (models.EpisodeSurvey) {
         this.hasMany(models.EpisodeSurvey, {
           foreignKey: 'episodeId',
-          sourceKey: 'episodeId',
+          sourceKey: 'id',
           as: 'episodeSurvey',
         });
       } else {
@@ -90,7 +95,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
   }
   Episode.init(
     {
-      episodeId: {
+      id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
@@ -102,17 +107,17 @@ const EpisodeModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'SEASON_ID',
       },
-      episodeNumber: {
+      number: {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: 'EPISODE_NUMBER',
       },
-      episodeTitle: {
+      title: {
         type: DataTypes.STRING(150),
         allowNull: true,
         field: 'EPISODE_TITLE',
       },
-      episodeAirDate: {
+      airDate: {
         type: DataTypes.DATE,
         allowNull: false,
         field: 'EPISODE_AIR_DATE',
@@ -124,12 +129,12 @@ const EpisodeModel = (sequelize: Sequelize) => {
         //   this.setDataValue('episodeAirDate', new Date(value));
         // },
       },
-      episodeDescription: {
+      description: {
         type: DataTypes.STRING(500),
         allowNull: true,
         field: 'EPISODE_DESCRIPTION',
       },
-      episodeType: {
+      type: {
         type: DataTypes.ENUM(...Object.values(EpisodeType)),
         allowNull: false,
         field: 'EPISODE_TYPE',

@@ -14,7 +14,7 @@ const seasonEliminationRepository = {
 async function getEliminationStatusForSurvivorsByStartOfEpisode(
   survivorIds: SurvivorsAttributes['id'][],
   seasonId: SeasonsAttributes['seasonId'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<
   Record<SurvivorsAttributes['id'], SeasonEliminationAttributes | null>
 > {
@@ -73,7 +73,7 @@ async function getSeasonEliminationForSurvivorOnSeason(
 }
 
 async function getSurvivorEliminatedOnEpisode(
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<
   (SurvivorDetailsOnSeasonAttributes & { Survivor: SurvivorsAttributes }) | null
 > {

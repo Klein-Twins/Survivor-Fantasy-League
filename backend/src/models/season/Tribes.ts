@@ -8,10 +8,11 @@ export interface TribeAttributes {
   id: UUID;
   name: string;
   seasonId: SeasonsAttributes['seasonId'];
-  tribeColor: string;
+  color: string;
+  hexColor: string;
   mergeTribe: boolean;
-  episodeStarted: EpisodeAttributes['episodeId'];
-  tribeHexColor: string;
+  episodeIdStart: EpisodeAttributes['id'];
+  episodeIdEnd: EpisodeAttributes['id'] | null;
 }
 
 const TribeModel = (sequelize: Sequelize) => {
@@ -19,10 +20,11 @@ const TribeModel = (sequelize: Sequelize) => {
     public id!: TribeAttributes['id'];
     public name!: TribeAttributes['name'];
     public seasonId!: TribeAttributes['seasonId'];
-    public tribeColor!: TribeAttributes['tribeColor'];
-    public tribeHexColor!: TribeAttributes['tribeHexColor'];
+    public color!: TribeAttributes['color'];
+    public hexColor!: TribeAttributes['hexColor'];
     public mergeTribe!: TribeAttributes['mergeTribe'];
-    public episodeStarted!: EpisodeAttributes['episodeId'];
+    public episodeIdStart!: TribeAttributes['episodeIdStart'];
+    public episodeIdEnd!: TribeAttributes['episodeIdEnd'];
 
     static associate(models: any) {
       if (models.Seasons) {
@@ -45,9 +47,14 @@ const TribeModel = (sequelize: Sequelize) => {
       }
       if (models.Episode) {
         this.belongsTo(models.Episode, {
-          foreignKey: 'episodeStarted',
-          targetKey: 'episodeId',
-          as: 'episode',
+          foreignKey: 'episodeIdStart',
+          targetKey: 'id',
+          as: 'episodeStarted',
+        });
+        this.belongsTo(models.Episode, {
+          foreignKey: 'episodeIdEnd',
+          targetKey: 'id',
+          as: 'episodeEnded',
         });
       } else {
         logger.error('Error associating Tribe with Episode');
@@ -88,17 +95,23 @@ const TribeModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'MERGE_TRIBE',
       },
-      tribeColor: {
+      color: {
         type: DataTypes.STRING(20),
         allowNull: false,
         field: 'TRIBE_COLOR',
       },
-      episodeStarted: {
+      episodeIdStart: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: true,
         field: 'EPISODE_STARTED',
       },
-      tribeHexColor: {
+      episodeIdEnd: {
+        type: DataTypes.UUID,
+        allowNull: true,
+        field: 'EPISODE_ENDED',
+        defaultValue: null,
+      },
+      hexColor: {
         type: DataTypes.STRING(20),
         allowNull: false,
         field: 'TRIBE_HEX_COLOR',

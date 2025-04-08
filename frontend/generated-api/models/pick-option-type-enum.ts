@@ -19,6 +19,7 @@
  */
 export enum PickOptionTypeEnum {
     Survivor = 'survivor',
+    SurvivorInTribe = 'survivorInTribe',
     Color = 'color',
     Tribe = 'tribe',
     Binary = 'binary'

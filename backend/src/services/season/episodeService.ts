@@ -23,16 +23,13 @@ async function getPremierEpisodeInSeason(
 
 async function getAllEpisodesInSeason(
   seasonId: EpisodeAttributes['seasonId']
-): Promise<Map<EpisodeAttributes['episodeId'], Episode>> {
+): Promise<Map<EpisodeAttributes['id'], Episode>> {
   const episodesAttributes: EpisodeAttributes[] =
     await episodeRepository.getAllEpisodesInSeason(seasonId);
 
-  const episodeMap = new Map<EpisodeAttributes['episodeId'], Episode>();
+  const episodeMap = new Map<EpisodeAttributes['id'], Episode>();
   for (const episodeAttributes of episodesAttributes) {
-    episodeMap.set(
-      episodeAttributes.episodeId,
-      buildEpisode(episodeAttributes)
-    );
+    episodeMap.set(episodeAttributes.id, buildEpisode(episodeAttributes));
   }
   return episodeMap;
 }
@@ -51,34 +48,34 @@ async function getEpisodesBySeasonId(
 
 async function getEpisode(
   field: 'episodeId',
-  value: EpisodeAttributes['episodeId']
+  value: EpisodeAttributes['id']
 ): Promise<Episode>;
 async function getEpisode(
   field: 'seasonIdAndEpisodeNumber',
   value: {
     seasonId: EpisodeAttributes['seasonId'];
-    episodeNumber: EpisodeAttributes['episodeNumber'];
+    episodeNumber: EpisodeAttributes['number'];
   }
 ): Promise<Episode>;
 async function getEpisode(
   field: 'seasonIdAndEpisodeId',
   value: {
     seasonId: EpisodeAttributes['seasonId'];
-    episodeId: EpisodeAttributes['episodeId'];
+    episodeId: EpisodeAttributes['id'];
   }
 ): Promise<Episode>;
 
 async function getEpisode(
   field: 'episodeId' | 'seasonIdAndEpisodeNumber' | 'seasonIdAndEpisodeId',
   value:
-    | EpisodeAttributes['episodeId']
+    | EpisodeAttributes['id']
     | {
         seasonId: EpisodeAttributes['seasonId'];
-        episodeNumber: EpisodeAttributes['episodeNumber'];
+        episodeNumber: EpisodeAttributes['number'];
       }
     | {
         seasonId: EpisodeAttributes['seasonId'];
-        episodeId: EpisodeAttributes['episodeId'];
+        episodeId: EpisodeAttributes['id'];
       }
 ): Promise<Episode> {
   let episodeAttributes: EpisodeAttributes | null = null;
@@ -86,20 +83,20 @@ async function getEpisode(
   if (field === 'seasonIdAndEpisodeNumber') {
     const { seasonId, episodeNumber } = value as {
       seasonId: EpisodeAttributes['seasonId'];
-      episodeNumber: EpisodeAttributes['episodeNumber'];
+      episodeNumber: EpisodeAttributes['number'];
     };
     episodeRepository.getEpisode(field, { seasonId, episodeNumber });
   } else if (field === 'seasonIdAndEpisodeId') {
     const { seasonId, episodeId } = value as {
       seasonId: EpisodeAttributes['seasonId'];
-      episodeId: EpisodeAttributes['episodeId'];
+      episodeId: EpisodeAttributes['id'];
     };
     episodeAttributes = await episodeRepository.getEpisode(field, {
       seasonId,
       episodeId,
     });
   } else if (field === 'episodeId') {
-    const episodeId = value as EpisodeAttributes['episodeId'];
+    const episodeId = value as EpisodeAttributes['id'];
     episodeAttributes = await episodeRepository.getEpisode(field, episodeId);
   } else {
     throw new InternalServerError('Invalid field to get episode');
@@ -112,16 +109,16 @@ async function getEpisode(
 }
 
 function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
-  const hasAired = new Date(episodeAttributes.episodeAirDate) < new Date();
+  const hasAired = new Date(episodeAttributes.airDate) < new Date();
 
   return {
-    id: episodeAttributes.episodeId,
-    number: episodeAttributes.episodeNumber,
+    id: episodeAttributes.id,
+    number: episodeAttributes.number,
     seasonId: episodeAttributes.seasonId,
-    airDate: episodeAttributes.episodeAirDate.toString(),
-    description: episodeAttributes.episodeDescription,
-    title: episodeAttributes.episodeTitle,
-    episodeType: episodeAttributes.episodeType,
+    airDate: episodeAttributes.airDate.toString(),
+    description: episodeAttributes.description,
+    title: episodeAttributes.title,
+    episodeType: episodeAttributes.type,
     hasAired,
     isTribeSwitch: episodeAttributes.isTribeSwitch || false,
   };

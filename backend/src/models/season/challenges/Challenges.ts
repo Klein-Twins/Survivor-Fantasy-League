@@ -20,8 +20,9 @@ export enum ChallengeType {
   REWARD_AND_IMMUNITY = 'Reward and Immunity',
 }
 export interface ChallengeAttributes {
-  challengeId: UUID;
-  episodeId: EpisodeAttributes['episodeId'];
+  rank: number;
+  id: UUID;
+  episodeId: EpisodeAttributes['id'];
   description: string | null;
   notes: string | null;
   type: ChallengeType;
@@ -32,7 +33,8 @@ const ChallengeModel = (sequelize: Sequelize) => {
     extends Model<ChallengeAttributes>
     implements ChallengeAttributes
   {
-    public challengeId!: ChallengeAttributes['challengeId'];
+    public rank!: ChallengeAttributes['rank'];
+    public id!: ChallengeAttributes['id'];
     public episodeId!: ChallengeAttributes['episodeId'];
     public description!: ChallengeAttributes['description'];
     public notes!: ChallengeAttributes['notes'];
@@ -42,7 +44,7 @@ const ChallengeModel = (sequelize: Sequelize) => {
       if (models.Episode) {
         this.belongsTo(models.Episode, {
           foreignKey: 'episodeId',
-          targetKey: 'episodeId',
+          targetKey: 'id',
           as: 'episode',
         });
       } else {
@@ -51,7 +53,7 @@ const ChallengeModel = (sequelize: Sequelize) => {
       if (models.ChallengeWinners) {
         this.hasMany(models.ChallengeWinners, {
           foreignKey: 'challengeId',
-          sourceKey: 'challengeId',
+          sourceKey: 'id',
           as: 'challengeWinners',
         });
       } else {
@@ -62,7 +64,7 @@ const ChallengeModel = (sequelize: Sequelize) => {
 
   Challenge.init(
     {
-      challengeId: {
+      id: {
         type: DataTypes.UUID,
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
@@ -88,6 +90,11 @@ const ChallengeModel = (sequelize: Sequelize) => {
         type: DataTypes.UUID,
         allowNull: false,
         field: 'EPISODE_ID',
+      },
+      rank: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'RANK',
       },
     },
     {

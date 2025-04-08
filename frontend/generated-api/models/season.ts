@@ -45,7 +45,7 @@ export interface Season {
      * @type {string}
      * @memberof Season
      */
-    startDate: string;
+    startDate: string | null;
 
     /**
      * The end date of the season.
@@ -53,7 +53,7 @@ export interface Season {
      * @type {string}
      * @memberof Season
      */
-    endDate: string;
+    endDate: string | null;
 
     /**
      * The location of the season.

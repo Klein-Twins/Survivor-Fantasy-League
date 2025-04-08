@@ -6,7 +6,7 @@ import logger from '../../config/logger';
 
 export interface SeasonEliminationAttributes {
   seasonId: SeasonsAttributes['seasonId'];
-  episodeId: EpisodeAttributes['episodeId'];
+  episodeId: EpisodeAttributes['id'];
   placement: number;
   survivorId: SurvivorsAttributes['id'];
   notes: string | null;
@@ -41,7 +41,7 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
       if (models.Episode) {
         this.belongsTo(models.Episode, {
           foreignKey: 'episodeId',
-          targetKey: 'episodeId',
+          targetKey: 'id',
           as: 'episode',
         });
       } else {

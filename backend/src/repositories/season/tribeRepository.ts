@@ -17,12 +17,34 @@ const tribeRepository = {
 async function getStartingSurvivorsByTribeIds(
   tribeId: TribeAttributes['id']
 ): Promise<SurvivorsAttributes['id'][]> {
-  const survivorIds = await models.SurvivorDetailsOnSeason.findAll({
+  const tribeAttributes = await models.Tribe.findOne({
     where: {
-      originalTribeId: tribeId,
+      id: tribeId,
     },
   });
-  return survivorIds.map((survivor) => survivor.id);
+  if (!tribeAttributes) {
+    throw new Error(`Tribe with ID ${tribeId} not found`);
+  }
+  const seasonId = tribeAttributes.seasonId;
+
+  const survivorIds = await models.TribeMembers.findAll({
+    include: [
+      {
+        attributes: ['id'],
+        model: models.Episode,
+        as: 'episodeStarted',
+        required: true,
+        where: {
+          type: EpisodeType.PREMIERE,
+          seasonId: seasonId,
+        },
+      },
+    ],
+    where: {
+      tribeId: tribeId,
+    },
+  });
+  return survivorIds.map((survivor) => survivor.survivorId);
 }
 
 async function getTribesBySeasonId(
@@ -37,7 +59,7 @@ async function getTribesBySeasonId(
 }
 
 async function getTribesOnEpisode(
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<TribeAttributes[]> {
   // Fetch the episode to get its episode number
   const episode = await episodeService.getEpisode('episodeId', episodeId);
@@ -54,7 +76,7 @@ async function getTribesOnEpisode(
     const startingTribeAttributes = await models.Tribe.findAll({
       where: {
         seasonId: episode.seasonId,
-        episodeStarted: premierEpisode.id,
+        episodeIdStart: premierEpisode.id,
       },
     });
     return startingTribeAttributes;

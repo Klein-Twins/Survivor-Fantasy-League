@@ -35,7 +35,7 @@ async function getTribesBySeasonId(
 }
 
 async function getTribesOnEpisode(
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<Tribe[]> {
   const tribesAttributes = await tribeRepository.getTribesOnEpisode(episodeId);
   return await Promise.all(
@@ -48,7 +48,7 @@ async function getTribesOnEpisode(
 async function buildTribe(
   tribeAttributes: TribeAttributes,
 
-  episodeId?: EpisodeAttributes['episodeId']
+  episodeId?: EpisodeAttributes['id']
 ): Promise<Tribe> {
   let survivorIds: SurvivorsAttributes['id'][] = [];
   let survivorBasic: SurvivorBasic[] = [];
@@ -87,11 +87,11 @@ async function buildTribe(
     id: tribeAttributes.id,
     name: tribeAttributes.name,
     color: {
-      name: tribeAttributes.tribeColor,
-      hex: tribeAttributes.tribeHexColor,
+      name: tribeAttributes.color,
+      hex: tribeAttributes.hexColor,
     },
     isMergeTribe: tribeAttributes.mergeTribe,
-    episodeStarted: tribeAttributes.episodeStarted.toString(),
+    episodeStarted: tribeAttributes.episodeIdStart.toString(),
     survivors: survivorBasic,
   };
 }

@@ -13,7 +13,7 @@ export enum ChallengeWinnerType {
 }
 
 export interface ChallengeWinnersAttributes {
-  challengeId: ChallengeAttributes['challengeId'];
+  challengeId: ChallengeAttributes['id'];
   winnerSurvivorId: SurvivorsAttributes['id'] | null;
   winnerTribeId: TribeAttributes['id'] | null;
   rank: number;
@@ -59,7 +59,7 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
       if (models.Challenges) {
         this.belongsTo(models.Challenges, {
           foreignKey: 'challengeId',
-          targetKey: 'challengeId',
+          targetKey: 'id',
           as: 'challenge',
         });
       } else {
@@ -138,7 +138,7 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
         {
           name: 'challenge_winner_tribe_unique',
           unique: true,
-          fields: ['CHALLENGE_ID', 'WINNER_SURVIVOR_ID'],
+          fields: ['RANK', 'CHALLENGE_ID', 'WINNER_SURVIVOR_ID'],
           where: {
             WINNER_SURVIVOR_ID: {
               [Op.ne]: null,
@@ -148,7 +148,7 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
         {
           name: 'challenge_winner_survivor_unique',
           unique: true,
-          fields: ['CHALLENGE_ID', 'WINNER_TRIBE_ID'],
+          fields: ['RANK', 'CHALLENGE_ID', 'WINNER_TRIBE_ID'],
           where: {
             WINNER_TRIBE_ID: {
               [Op.ne]: null,

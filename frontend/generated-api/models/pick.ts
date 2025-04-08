@@ -12,11 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { BinaryPickOptions } from './binary-pick-options';
-import { ColorPickOptions } from './color-pick-options';
-import { PickOptionTypeEnum } from './pick-option-type-enum';
-import { SurvivorPickOptions } from './survivor-pick-options';
-import { TribePickOptions } from './tribe-pick-options';
+import { PickOptions } from './pick-options';
  /**
  * 
  *
@@ -43,12 +39,6 @@ export interface Pick {
     description: string;
 
     /**
-     * @type {PickOptionTypeEnum}
-     * @memberof Pick
-     */
-    optionType: PickOptionTypeEnum;
-
-    /**
      * The number of points the pick is worth
      *
      * @type {number}
@@ -58,8 +48,8 @@ export interface Pick {
     pointValue: number;
 
     /**
-     * @type {SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions}
+     * @type {PickOptions}
      * @memberof Pick
      */
-    options: SurvivorPickOptions | ColorPickOptions | TribePickOptions | BinaryPickOptions;
+    options: PickOptions;
 }

@@ -13,9 +13,11 @@ components:
         start_date:
           type: string
           format: date
+          nullable: true
           description: The start date of the season.
         end_date:
           type: string
+          nullable: true
           format: date
           description: The end date of the season.
         location:

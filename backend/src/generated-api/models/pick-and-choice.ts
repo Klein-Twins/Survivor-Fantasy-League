@@ -12,13 +12,9 @@
  * Do not edit the class manually.
  */
 
-import { BinaryPickOptions } from './binary-pick-options';
-import { ColorPickOptions } from './color-pick-options';
 import { Pick } from './pick';
 import { PickChoice } from './pick-choice';
-import { PickOptionTypeEnum } from './pick-option-type-enum';
-import { SurvivorPickOptions } from './survivor-pick-options';
-import { TribePickOptions } from './tribe-pick-options';
+import { PickOptions } from './pick-options';
  /**
  * 
  *

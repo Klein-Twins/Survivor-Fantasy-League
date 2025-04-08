@@ -7,7 +7,6 @@ import logger from '../../config/logger';
 export interface SurvivorDetailsOnSeasonAttributes {
   id: SurvivorsAttributes['id'];
   seasonId: SeasonsAttributes['seasonId'];
-  originalTribeId: TribeAttributes['id'];
   age: number;
   description: string;
   job: string;
@@ -20,7 +19,6 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
   {
     public id!: SurvivorDetailsOnSeasonAttributes['id'];
     public seasonId!: SurvivorDetailsOnSeasonAttributes['seasonId'];
-    public originalTribeId!: SurvivorDetailsOnSeasonAttributes['originalTribeId'];
     public age!: SurvivorDetailsOnSeasonAttributes['age'];
     public description!: SurvivorDetailsOnSeasonAttributes['description'];
     public job!: SurvivorDetailsOnSeasonAttributes['job'];
@@ -95,11 +93,6 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
         primaryKey: true,
         allowNull: false,
         field: 'SEASON_ID',
-      },
-      originalTribeId: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        field: 'ORIGINAL_TRIBE_ID',
       },
       age: {
         type: DataTypes.INTEGER,

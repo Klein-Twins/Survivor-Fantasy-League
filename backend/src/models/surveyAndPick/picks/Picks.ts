@@ -1,20 +1,18 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
-import { PickOptionTypeEnum } from '../../../generated-api';
 import logger from '../../../config/logger';
+import { UUID } from 'crypto';
 
 export interface PicksAttributes {
-  pickId: string;
+  pickId: UUID;
   description: string;
-  isCustom: boolean;
-  type: PickOptionTypeEnum;
+  notes?: string;
 }
 
 const PicksModel = (sequelize: Sequelize) => {
   class Picks extends Model<PicksAttributes> implements PicksAttributes {
-    public pickId!: string;
+    public pickId!: UUID;
     public description!: string;
-    public isCustom!: boolean;
-    public type!: PickOptionTypeEnum;
+    public notes?: string;
 
     static associate(models: any) {
       // this.hasOne(models.PickOptions, { foreignKey: 'pickId', as: 'pickOptions' });
@@ -43,6 +41,17 @@ const PicksModel = (sequelize: Sequelize) => {
           sourceKey: 'pickId',
           as: 'points',
         });
+      } else {
+        logger.error('Error associating Picks with PickPoints');
+      }
+      if (models.PickOptions) {
+        this.hasOne(models.PickOptions, {
+          foreignKey: 'pickId',
+          sourceKey: 'pickId',
+          as: 'pickOptions',
+        });
+      } else {
+        logger.error('Error associating Picks with PickOptions');
       }
     }
   }
@@ -60,16 +69,10 @@ const PicksModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'DESCRIPTION',
       },
-      isCustom: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        field: 'IS_CUSTOM',
-        defaultValue: true,
-      },
-      type: {
-        type: DataTypes.ENUM(...Object.values(PickOptionTypeEnum)),
-        allowNull: false,
-        field: 'TYPE',
+      notes: {
+        type: DataTypes.STRING(300),
+        allowNull: true,
+        field: 'NOTES',
       },
     },
     {

@@ -1,11 +1,14 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { PickOptionTypeEnum } from '../../../generated-api';
-import { InternalServerError } from '../../../utils/errors/errors';
+import { PicksAttributes } from './Picks';
+import logger from '../../../config/logger';
 
 export interface PickOptionsAttributes {
   type: PickOptionTypeEnum;
-  choice: string;
-  choiceDescription: string;
+  minNumSelections: number;
+  maxNumSelections: number;
+  noneOptionAllowed: boolean;
+  pickId: PicksAttributes['pickId'];
 }
 
 const PickOptionsModel = (sequelize: Sequelize) => {
@@ -13,24 +16,22 @@ const PickOptionsModel = (sequelize: Sequelize) => {
     extends Model<PickOptionsAttributes>
     implements PickOptionsAttributes
   {
-    public type!: PickOptionTypeEnum;
-    public choice!: string;
-    public choiceDescription!: string;
+    public type!: PickOptionsAttributes['type'];
+    public minNumSelections!: PickOptionsAttributes['minNumSelections'];
+    public maxNumSelections!: PickOptionsAttributes['maxNumSelections'];
+    public noneOptionAllowed!: PickOptionsAttributes['noneOptionAllowed'];
+    public pickId!: PickOptionsAttributes['pickId'];
 
     static associate(models: any) {
-      //   this.hasMany(models.ProfilePicks, {
-      //     foreignKey: {
-      //       name: 'pickAnswerSurvivorId',
-      //       allowNull: true,
-      //     },
-      //     scope: {
-      //       type: 'survivor',
-      //     },
-      //     as: 'survivorPicks',
-      //     constraints: true,
-      //   });
-
-      this.belongsToMany(models.Picks, { through: 'PCK_PICK_OPTIONS_PICKS' });
+      if (models.Picks) {
+        this.belongsTo(models.Picks, {
+          foreignKey: 'pickId',
+          targetKey: 'pickId',
+          as: 'pick',
+        });
+      } else {
+        logger.error('Error associating PickOptions with Picks');
+      }
     }
   }
 
@@ -39,37 +40,51 @@ const PickOptionsModel = (sequelize: Sequelize) => {
       type: {
         type: DataTypes.ENUM,
         values: Object.values(PickOptionTypeEnum),
-        field: 'PICK_OPTION_TYPE',
         allowNull: false,
-      },
-      choiceDescription: {
-        type: DataTypes.STRING(50),
-        allowNull: true,
-        field: 'CHOICE_DESCRIPTION',
-
         validate: {
-          isValidChoiceDescription(value: string) {
-            if (this.type === 'color' && !value) {
-              throw new InternalServerError(
-                'Choice Description must be provided when type is color'
-              );
-            }
+          notEmpty: true,
+          isIn: {
+            args: [Object.values(PickOptionTypeEnum)],
+            msg: `type must be one of the following values: ${Object.values(
+              PickOptionTypeEnum
+            ).join(', ')}`,
           },
         },
       },
-      choice: {
-        type: DataTypes.STRING(100),
+      minNumSelections: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'CHOICE',
         validate: {
-          isValidChoice(value: string) {
-            if (this.type === 'color' && !value.match(/^#([A-Fa-f0-9]{6})$/)) {
+          notEmpty: true,
+          min: {
+            args: [1],
+            msg: 'minNumSelections must be greater than or equal to 1',
+          },
+        },
+      },
+      maxNumSelections: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+          isGreaterThanMin(value: number) {
+            const instance = this as unknown as PickOptions;
+            if (value < instance.minNumSelections) {
               throw new Error(
-                'Choice must be a hexadecimal value when type is color'
+                'maxNumSelections must be greater than or equal to minNumSelections'
               );
             }
           },
         },
+      },
+      noneOptionAllowed: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+      },
+      pickId: {
+        type: DataTypes.UUID,
+        allowNull: false,
+        primaryKey: true,
       },
     },
     {

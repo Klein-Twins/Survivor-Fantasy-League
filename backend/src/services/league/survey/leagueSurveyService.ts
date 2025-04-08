@@ -13,7 +13,7 @@ const leagueSurveyService = {
 
 async function getLeagueSurvey(
   leagueId: LeagueAttributes['leagueId'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<LeagueSurvey> {
   const episodeSurvey = await episodeSurveyService.getEpisodeSurvey(episodeId);
   const leagueSurveyAttributes =

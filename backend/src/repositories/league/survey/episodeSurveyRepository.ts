@@ -11,7 +11,7 @@ const episodeSurveyRepository = {
 };
 
 async function getEpisodeSurvey(
-  episodeId: EpisodeAttributes['episodeId'],
+  episodeId: EpisodeAttributes['id'],
   transaction?: Transaction
 ): Promise<EpisodeSurveyAttributes | null> {
   const episodeSurveyAttributes = await models.EpisodeSurvey.findOne({
@@ -31,7 +31,7 @@ async function createEpisodeSurvey(
     openDate,
   }: {
     surveyDefinitionId: EpisodeSurveyAttributes['surveyDefinition'];
-    episodeId: EpisodeAttributes['episodeId'];
+    episodeId: EpisodeAttributes['id'];
     dueDate: EpisodeSurveyAttributes['dueDate'];
     openDate: EpisodeSurveyAttributes['openDate'];
   },

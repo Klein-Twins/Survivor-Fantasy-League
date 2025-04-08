@@ -70,7 +70,7 @@ async function getSurvivorById(
 }
 
 async function getSurvivorsAtStartOfEpisode(
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<Survivor[]> {
   const episode = await episodeService.getEpisode('episodeId', episodeId);
   const survivorsOnSeason = await getSurvivorsBySeason(episode.seasonId);

@@ -6,8 +6,8 @@ export interface SeasonsAttributes {
   theme: string; // Theme of the season (optional)
   location: string; // Location where the season takes place (optional)
   name: string; // Name of the season (optional)
-  startDate: Date; // Start date of the season
-  endDate: Date; // End date of the season
+  startDate: Date | null; // Start date of the season
+  endDate: Date | null; // End date of the season
   isActive: boolean;
 }
 
@@ -95,12 +95,12 @@ const SeasonsModel = (sequelize: Sequelize) => {
       },
       startDate: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
         field: 'START_DATE',
       },
       endDate: {
         type: DataTypes.DATE,
-        allowNull: false,
+        allowNull: true,
         field: 'END_DATE',
       },
       isActive: {

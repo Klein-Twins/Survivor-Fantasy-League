@@ -7,7 +7,7 @@ import logger from '../../config/logger';
 export interface EpisodeSurveyAttributes {
   surveyDefinition: SurveyAttributes['surveyId'];
   episodeSurveyId: UUID;
-  episodeId: EpisodeAttributes['episodeId'];
+  episodeId: EpisodeAttributes['id'];
   dueDate: Date;
   openDate: Date;
 }
@@ -37,7 +37,7 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
       if (models.Episode) {
         this.belongsTo(models.Episode, {
           foreignKey: 'episodeId',
-          targetKey: 'episodeId',
+          targetKey: 'id',
           as: 'episode',
         });
       } else {

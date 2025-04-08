@@ -32,7 +32,7 @@ async function getAllSeasons(): Promise<Season[]> {
 
 async function getSeason(
   field: 'episodeId' | 'seasonId',
-  value: EpisodeAttributes['episodeId'] | SeasonsAttributes['seasonId']
+  value: EpisodeAttributes['id'] | SeasonsAttributes['seasonId']
 ): Promise<Season> {
   let seasonId: SeasonsAttributes['seasonId'];
 
@@ -74,8 +74,8 @@ async function buildSeason(seasonInfo: SeasonsAttributes): Promise<Season> {
   const seasonAttributes: SeasonsAttributes = {
     seasonId: Number(seasonInfo.seasonId),
     name: seasonInfo.name,
-    startDate: new Date(seasonInfo.startDate),
-    endDate: new Date(seasonInfo.endDate),
+    startDate: seasonInfo.startDate ? new Date(seasonInfo.startDate) : null,
+    endDate: seasonInfo.endDate ? new Date(seasonInfo.endDate) : null,
     location: seasonInfo.location,
     theme: seasonInfo.theme,
     isActive: seasonInfo.isActive,
@@ -105,8 +105,8 @@ async function buildSeason(seasonInfo: SeasonsAttributes): Promise<Season> {
   return {
     id: seasonAttributes.seasonId,
     name: seasonAttributes.name,
-    startDate: seasonAttributes.startDate.toString(),
-    endDate: seasonAttributes.endDate.toString(),
+    startDate: seasonAttributes.startDate?.toString() || null,
+    endDate: seasonAttributes.endDate?.toString() || null,
     location: seasonAttributes.location,
     theme: seasonAttributes.theme,
     isActive: seasonAttributes.isActive,

@@ -2,6 +2,7 @@ import {
   BinaryPickOptions,
   ColorPickOptions,
   Pick,
+  PickOptions,
   SurvivorPickOptions,
   TribePickOptions,
 } from '../../../generated-api';
@@ -19,24 +20,21 @@ const pickService = {
 
 async function getPick(
   pickId: PicksAttributes['pickId'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<Pick> {
   const pickAttributes = await pickRepository.getPick(pickId);
   if (!pickAttributes) {
     throw new NotFoundError(`Pick not found for pickId: ${pickId}`);
   }
 
-  const pickOptions = await pickOptionService.getPickOptions(
-    pickAttributes.type,
-    episodeId
-  );
+  const pickOptions = await pickOptionService.getPickOptions(pickId, episodeId);
 
   return buildPick(pickAttributes, pickOptions);
 }
 
 async function getPicksForSurvey(
   surveyId: SurveyAttributes['surveyId'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<Pick[]> {
   const surveyPicksAttributes = await surveyPicksRepository.getSurveyPicks(
     surveyId
@@ -56,12 +54,11 @@ async function getPicksForSurvey(
 
 function buildPick(
   pickAttributes: PicksAttributes,
-  pickOptions: SurvivorPickOptions | ColorPickOptions | TribePickOptions
+  pickOptions: PickOptions
 ): Pick {
   return {
     id: pickAttributes.pickId,
     description: pickAttributes.description,
-    optionType: pickAttributes.type,
     pointValue: 5,
     options: pickOptions,
   };

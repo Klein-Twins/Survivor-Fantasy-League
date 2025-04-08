@@ -41,7 +41,7 @@ const initModels = (sequelize: Sequelize) => {
   const Tokens = TokensModel(sequelize);
   const LeagueProfile = LeagueProfileModel(sequelize);
   const Picks = PicksModel(sequelize);
-  //const PickOptions = PickOptionsModel(sequelize);
+  const PickOptions = PickOptionsModel(sequelize);
   const PickPoints = PickPointsModel(sequelize);
   //const PickType = PickTypeModel(sequelize);
   //const ProfilePick = ProfilePickModel(sequelize);
@@ -108,7 +108,7 @@ const initModels = (sequelize: Sequelize) => {
     League,
     SurveySubmissions,
   });
-  Picks.associate({ SurveyPicks, PickSubmissions, PickPoints });
+  Picks.associate({ SurveyPicks, PickSubmissions, PickPoints, PickOptions });
   //Todo add associations with tokens
   Tokens.associate({});
   PickPoints.associate({ Picks });
@@ -119,6 +119,7 @@ const initModels = (sequelize: Sequelize) => {
   });
   PickSubmissions.associate({ SurveySubmissions, Picks });
   Challenges.associate({ Episode, ChallengeWinners });
+  PickOptions.associate({ Picks });
 
   logger.debug('Models associated');
 
@@ -151,6 +152,7 @@ const initModels = (sequelize: Sequelize) => {
     PickSubmissions,
     EpisodeSurvey,
     TribeMembers,
+    PickOptions,
   };
 };
 

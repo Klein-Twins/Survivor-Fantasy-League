@@ -14,7 +14,7 @@ const seasonEliminationService = {
 
 async function getAllSurvivorsEliminationStatusAtStartOfEpisode(
   seasonId: SeasonsAttributes['seasonId'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<Record<SurvivorsAttributes['id'], SurvivorEliminationInfo>> {
   const survivors = await survivorService.getSurvivorsBySeason(seasonId);
   const survivorIds = survivors.map((survivor) => survivor.id as UUID);

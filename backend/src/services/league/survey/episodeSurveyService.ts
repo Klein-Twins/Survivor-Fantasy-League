@@ -15,7 +15,7 @@ const episodeSurveyService = {
 };
 
 async function getEpisodeSurvey(
-  episodeId: EpisodeAttributes['episodeId'],
+  episodeId: EpisodeAttributes['id'],
   transaction?: Transaction
 ): Promise<EpisodeSurvey> {
   const episodeSurveyAttributes =

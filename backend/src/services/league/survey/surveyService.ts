@@ -22,7 +22,7 @@ const surveyService = {
 
 async function getSurveyDefinition(
   surveyId: SurveyAttributes['surveyId'],
-  episodeId: EpisodeAttributes['episodeId']
+  episodeId: EpisodeAttributes['id']
 ): Promise<Survey> {
   const surveyAttributes = await surveyRepository.getSurvey(surveyId);
   if (!surveyAttributes) {
