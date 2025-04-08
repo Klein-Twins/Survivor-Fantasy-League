@@ -507,6 +507,7 @@ export enum Season48Tribes {
   Civa = 'Civa',
   Lagi = 'Lagi',
   Vula = 'Vula',
+  Merge = 'Merge',
 }
 
 export const season48: SeasonData<Season48Tribes> = {
@@ -538,7 +539,7 @@ export const season48: SeasonData<Season48Tribes> = {
           season48SurvivorIds.DavidKinne,
           season48SurvivorIds.KyleFraser,
           season48SurvivorIds.MitchGuerra,
-          season48SurvivorIds.KyleFraser,
+          season48SurvivorIds.KamillaKarthigesu,
         ],
       },
     ],
@@ -551,7 +552,7 @@ export const season48: SeasonData<Season48Tribes> = {
         hexColor: '#0000FF',
         mergeTribe: false,
         episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: null,
+        episodeIdEnd: season48Episodes.get(6)?.episodeInfo.id || null,
         startingSurvivors: [
           season48SurvivorIds.EvaErickson,
           season48SurvivorIds.JoeHunter,
@@ -571,7 +572,7 @@ export const season48: SeasonData<Season48Tribes> = {
         hexColor: '#FFA500',
         mergeTribe: false,
         episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: null,
+        episodeIdEnd: season48Episodes.get(6)?.episodeInfo.id || null,
         startingSurvivors: [
           season48SurvivorIds.CedrekMcFadden,
           season48SurvivorIds.JustinPioppi,
@@ -579,6 +580,32 @@ export const season48: SeasonData<Season48Tribes> = {
           season48SurvivorIds.MaryZheng,
           season48SurvivorIds.SaiouniaHughley,
           season48SurvivorIds.StephanieBerger,
+        ],
+      },
+    ],
+    [
+      Season48Tribes.Merge,
+      {
+        id: season48TribeIds.Merge,
+        name: 'TBD Merge Tribe',
+        color: 'Purple',
+        hexColor: '#800080',
+        mergeTribe: true,
+        episodeIdStart: season48Episodes.get(6)?.episodeInfo.id || null,
+        episodeIdEnd: null,
+        startingSurvivors: [
+          season48SurvivorIds.CedrekMcFadden,
+          season48SurvivorIds.ChrissySarnowsky,
+          season48SurvivorIds.DavidKinne,
+          season48SurvivorIds.EvaErickson,
+          season48SurvivorIds.JoeHunter,
+          season48SurvivorIds.KamillaKarthigesu,
+          season48SurvivorIds.KyleFraser,
+          season48SurvivorIds.MaryZheng,
+          season48SurvivorIds.MitchGuerra,
+          season48SurvivorIds.SaiouniaHughley,
+          season48SurvivorIds.ShauhinDavari,
+          season48SurvivorIds.StarToomey,
         ],
       },
     ],

@@ -708,33 +708,49 @@ paths:
                                             type: string
                                             description: The survivor's last name
                                             example: Doe
-                                          eliminationInfo:
+                                          survivorStatus:
                                             type: object
                                             required:
-                                              - isEliminated
-                                              - dayEliminated
-                                              - placement
-                                              - episodeEliminated
+                                              - episodeId
+                                              - eliminationStatus
+                                              - currentTribeId
                                             properties:
-                                              isEliminated:
-                                                type: boolean
-                                                description: Whether the survivor is eliminated or not
-                                                example: false
-                                              dayEliminated:
-                                                type: integer
-                                                description: The day the survivor was eliminated
-                                                example: 12
-                                                nullable: true
-                                              placement:
-                                                type: integer
-                                                description: The placement of the survivor in the season
-                                                example: 5
-                                                nullable: true
-                                              episodeEliminated:
+                                              episodeId:
                                                 type: string
-                                                description: The episode id the survivor was eliminated in
+                                                description: Survivor status as of start of the episodeId.
                                                 example: 5
+                                              eliminationStatus:
+                                                type: object
+                                                properties:
+                                                  isEliminated:
+                                                    type: boolean
+                                                    description: Whether the survivor is eliminated or not
+                                                    example: false
+                                                  dayEliminated:
+                                                    type: integer
+                                                    description: The day the survivor was eliminated
+                                                    example: 12
+                                                    nullable: true
+                                                  placement:
+                                                    type: integer
+                                                    description: The placement of the survivor in the season
+                                                    example: 5
+                                                    nullable: true
+                                                  episodeEliminated:
+                                                    type: string
+                                                    description: The episode id the survivor was eliminated in
+                                                    example: 5
+                                                    nullable: true
+                                                required:
+                                                  - isEliminated
+                                                  - dayEliminated
+                                                  - placement
+                                                  - episodeEliminated
+                                              currentTribeId:
+                                                type: string
                                                 nullable: true
+                                                description: The id of the tribe the survivor is currently in
+                                                example: tribeId
                                   description: The survivors in the season.
                                 tribes:
                                   type: array
@@ -805,6 +821,7 @@ paths:
                                         example: false
                                       episodeStarted:
                                         type: string
+                                        nullable: true
                                         description: The id of the episode the tribe started in
                                         format: uuid
                                   description: The tribes in the season.
@@ -2010,6 +2027,7 @@ paths:
                                                                     example: false
                                                                   episodeStarted:
                                                                     type: string
+                                                                    nullable: true
                                                                     description: The id of the episode the tribe started in
                                                                     format: uuid
                                                             - type: array
@@ -2266,6 +2284,7 @@ paths:
                                                                         example: false
                                                                       episodeStarted:
                                                                         type: string
+                                                                        nullable: true
                                                                         description: The id of the episode the tribe started in
                                                                         format: uuid
                                                                 - type: array
@@ -2515,6 +2534,7 @@ paths:
                                                                 example: false
                                                               episodeStarted:
                                                                 type: string
+                                                                nullable: true
                                                                 description: The id of the episode the tribe started in
                                                                 format: uuid
                                                         - type: array
@@ -2855,6 +2875,7 @@ paths:
                                                                     example: false
                                                                   episodeStarted:
                                                                     type: string
+                                                                    nullable: true
                                                                     description: The id of the episode the tribe started in
                                                                     format: uuid
                                                             - type: array
@@ -3104,6 +3125,7 @@ paths:
                                                             example: false
                                                           episodeStarted:
                                                             type: string
+                                                            nullable: true
                                                             description: The id of the episode the tribe started in
                                                             format: uuid
                                                     - type: array
@@ -3508,33 +3530,49 @@ paths:
                                           type: string
                                           description: The survivor's last name
                                           example: Doe
-                                        eliminationInfo:
+                                        survivorStatus:
                                           type: object
                                           required:
-                                            - isEliminated
-                                            - dayEliminated
-                                            - placement
-                                            - episodeEliminated
+                                            - episodeId
+                                            - eliminationStatus
+                                            - currentTribeId
                                           properties:
-                                            isEliminated:
-                                              type: boolean
-                                              description: Whether the survivor is eliminated or not
-                                              example: false
-                                            dayEliminated:
-                                              type: integer
-                                              description: The day the survivor was eliminated
-                                              example: 12
-                                              nullable: true
-                                            placement:
-                                              type: integer
-                                              description: The placement of the survivor in the season
-                                              example: 5
-                                              nullable: true
-                                            episodeEliminated:
+                                            episodeId:
                                               type: string
-                                              description: The episode id the survivor was eliminated in
+                                              description: Survivor status as of start of the episodeId.
                                               example: 5
+                                            eliminationStatus:
+                                              type: object
+                                              properties:
+                                                isEliminated:
+                                                  type: boolean
+                                                  description: Whether the survivor is eliminated or not
+                                                  example: false
+                                                dayEliminated:
+                                                  type: integer
+                                                  description: The day the survivor was eliminated
+                                                  example: 12
+                                                  nullable: true
+                                                placement:
+                                                  type: integer
+                                                  description: The placement of the survivor in the season
+                                                  example: 5
+                                                  nullable: true
+                                                episodeEliminated:
+                                                  type: string
+                                                  description: The episode id the survivor was eliminated in
+                                                  example: 5
+                                                  nullable: true
+                                              required:
+                                                - isEliminated
+                                                - dayEliminated
+                                                - placement
+                                                - episodeEliminated
+                                            currentTribeId:
+                                              type: string
                                               nullable: true
+                                              description: The id of the tribe the survivor is currently in
+                                              example: tribeId
                                 description: The survivors in the season.
                               tribes:
                                 type: array
@@ -3605,6 +3643,7 @@ paths:
                                       example: false
                                     episodeStarted:
                                       type: string
+                                      nullable: true
                                       description: The id of the episode the tribe started in
                                       format: uuid
                                 description: The tribes in the season.
@@ -3868,33 +3907,49 @@ paths:
                                     type: string
                                     description: The survivor's last name
                                     example: Doe
-                                  eliminationInfo:
+                                  survivorStatus:
                                     type: object
                                     required:
-                                      - isEliminated
-                                      - dayEliminated
-                                      - placement
-                                      - episodeEliminated
+                                      - episodeId
+                                      - eliminationStatus
+                                      - currentTribeId
                                     properties:
-                                      isEliminated:
-                                        type: boolean
-                                        description: Whether the survivor is eliminated or not
-                                        example: false
-                                      dayEliminated:
-                                        type: integer
-                                        description: The day the survivor was eliminated
-                                        example: 12
-                                        nullable: true
-                                      placement:
-                                        type: integer
-                                        description: The placement of the survivor in the season
-                                        example: 5
-                                        nullable: true
-                                      episodeEliminated:
+                                      episodeId:
                                         type: string
-                                        description: The episode id the survivor was eliminated in
+                                        description: Survivor status as of start of the episodeId.
                                         example: 5
+                                      eliminationStatus:
+                                        type: object
+                                        properties:
+                                          isEliminated:
+                                            type: boolean
+                                            description: Whether the survivor is eliminated or not
+                                            example: false
+                                          dayEliminated:
+                                            type: integer
+                                            description: The day the survivor was eliminated
+                                            example: 12
+                                            nullable: true
+                                          placement:
+                                            type: integer
+                                            description: The placement of the survivor in the season
+                                            example: 5
+                                            nullable: true
+                                          episodeEliminated:
+                                            type: string
+                                            description: The episode id the survivor was eliminated in
+                                            example: 5
+                                            nullable: true
+                                        required:
+                                          - isEliminated
+                                          - dayEliminated
+                                          - placement
+                                          - episodeEliminated
+                                      currentTribeId:
+                                        type: string
                                         nullable: true
+                                        description: The id of the tribe the survivor is currently in
+                                        example: tribeId
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -4051,6 +4106,7 @@ paths:
                                 example: false
                               episodeStarted:
                                 type: string
+                                nullable: true
                                 description: The id of the episode the tribe started in
                                 format: uuid
       security:

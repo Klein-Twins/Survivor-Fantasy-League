@@ -21,7 +21,9 @@ async function processStartingTribes(
 ) {
   logger.debug(`Processing starting tribes for season ${seasonId}`);
 
-  for (const tribe of tribes) {
+  const startingTribes = tribes.filter((tribe) => tribe.mergeTribe === false);
+
+  for (const tribe of startingTribes) {
     await processStartingTribe(tribe, seasonId);
   }
 

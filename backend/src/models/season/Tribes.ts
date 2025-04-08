@@ -11,7 +11,7 @@ export interface TribeAttributes {
   color: string;
   hexColor: string;
   mergeTribe: boolean;
-  episodeIdStart: EpisodeAttributes['id'];
+  episodeIdStart: EpisodeAttributes['id'] | null;
   episodeIdEnd: EpisodeAttributes['id'] | null;
 }
 

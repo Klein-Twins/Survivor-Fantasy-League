@@ -1,3 +1,4 @@
+import { get } from 'http';
 import { models } from '../../config/db';
 import logger from '../../config/logger';
 import { SurvivorBasic } from '../../generated-api';
@@ -8,6 +9,10 @@ import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import episodeService from '../../services/season/episodeService';
 import tribeService from '../../services/season/tribeService';
 import tribeRepository from './tribeRepository';
+import seasonEliminationService from '../../services/season/seasonEliminationService';
+import { InternalServerError } from '../../utils/errors/errors';
+import episodeRepository from './episode/episodeRepository';
+import { Op } from 'sequelize';
 
 export type TribeMemberQueryResult = Pick<
   TribeMemberAttributes,
@@ -36,7 +41,77 @@ type TribeWithMembers = {
 
 const tribeMemberRepository = {
   fetchTribeHistory,
+  getTribeIdSurvivorBelongsToAtStartOfEpisode,
 };
+
+async function getTribeIdSurvivorBelongsToAtStartOfEpisode(
+  survivorId: SurvivorsAttributes['id'],
+  episodeId: EpisodeAttributes['id']
+): Promise<TribeAttributes['id'] | null> {
+  if (
+    await seasonEliminationService
+      .getSurvivorEliminationStatusAtStartOfEpisode(survivorId, episodeId)
+      .then((eliminationStatus) => eliminationStatus.isEliminated)
+  ) {
+    return null;
+  }
+
+  const episodeAttributes = await episodeRepository.getEpisode(
+    'episodeId',
+    episodeId
+  );
+  if (!episodeAttributes) {
+    throw new InternalServerError('Episode not found');
+  }
+
+  const tribesInSeason = (
+    await tribeRepository.getTribesBySeasonId(episodeAttributes.seasonId)
+  ).map((tribeAttributes) => tribeAttributes.id);
+
+  const survivorsCompleteTribeHistory = await models.TribeMembers.findAll({
+    where: {
+      survivorId: survivorId,
+      tribeId: { [Op.in]: tribesInSeason },
+    },
+  });
+
+  async function filterTribeHistory(
+    episodeNumber: EpisodeAttributes['number'],
+    survivorsCompleteTribeHistory: TribeMemberAttributes[]
+  ): Promise<TribeMemberAttributes> {
+    for (const survivorTribeHistory of survivorsCompleteTribeHistory) {
+      const startEpisodeNumber = await episodeRepository
+        .getEpisode('episodeId', survivorTribeHistory.episodeIdStart)
+        .then((episode) => episode!.number);
+      const endEpisodeNumber = survivorTribeHistory.episodeIdEnd
+        ? await episodeRepository
+            .getEpisode('episodeId', survivorTribeHistory.episodeIdEnd)
+            .then((episode) => episode!.number)
+        : null;
+
+      if (episodeNumber === 1 && startEpisodeNumber === 1) {
+        return survivorTribeHistory;
+      } else if (
+        episodeNumber > startEpisodeNumber &&
+        endEpisodeNumber &&
+        episodeNumber <= endEpisodeNumber!
+      ) {
+        return survivorTribeHistory;
+      } else if (episodeNumber > startEpisodeNumber && !endEpisodeNumber) {
+        return survivorTribeHistory;
+      } else {
+        throw new InternalServerError(`Encountered a weird condition`);
+      }
+    }
+    throw new InternalServerError('No tribe history found');
+  }
+
+  const currentTribe = await filterTribeHistory(
+    episodeAttributes.number,
+    survivorsCompleteTribeHistory
+  );
+  return currentTribe.tribeId;
+}
 
 //This function fetches all tribe members for a given tribe with switches throughout their season. Hence, it needs to be filtered
 async function fetchTribeHistory(

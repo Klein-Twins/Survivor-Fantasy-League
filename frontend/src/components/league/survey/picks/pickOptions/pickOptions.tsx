@@ -7,7 +7,7 @@ interface PickOptionsProps {
 }
 
 const PickOptions: React.FC<PickOptionsProps> = ({ pick }) => {
-  switch (pick.optionType) {
+  switch (pick.options.pickOptionType) {
     case PickOptionTypeEnum.Survivor:
       return <SurvivorPickOptions pick={pick} />;
     case PickOptionTypeEnum.Tribe:

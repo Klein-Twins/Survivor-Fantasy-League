@@ -16,15 +16,15 @@
  * 
  *
  * @export
- * @interface SurvivorEliminationInfo
+ * @interface EliminationStatus
  */
-export interface SurvivorEliminationInfo {
+export interface EliminationStatus {
 
     /**
      * Whether the survivor is eliminated or not
      *
      * @type {boolean}
-     * @memberof SurvivorEliminationInfo
+     * @memberof EliminationStatus
      * @example false
      */
     isEliminated: boolean;
@@ -33,7 +33,7 @@ export interface SurvivorEliminationInfo {
      * The day the survivor was eliminated
      *
      * @type {number}
-     * @memberof SurvivorEliminationInfo
+     * @memberof EliminationStatus
      * @example 12
      */
     dayEliminated: number | null;
@@ -42,7 +42,7 @@ export interface SurvivorEliminationInfo {
      * The placement of the survivor in the season
      *
      * @type {number}
-     * @memberof SurvivorEliminationInfo
+     * @memberof EliminationStatus
      * @example 5
      */
     placement: number | null;
@@ -51,7 +51,7 @@ export interface SurvivorEliminationInfo {
      * The episode id the survivor was eliminated in
      *
      * @type {string}
-     * @memberof SurvivorEliminationInfo
+     * @memberof EliminationStatus
      * @example 5
      */
     episodeEliminated: string | null;

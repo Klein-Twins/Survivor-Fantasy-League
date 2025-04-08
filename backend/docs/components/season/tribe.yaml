@@ -33,5 +33,6 @@ components:
           example: false
         episodeStarted:
           type: string
+          nullable: true
           description: The id of the episode the tribe started in
           format: uuid

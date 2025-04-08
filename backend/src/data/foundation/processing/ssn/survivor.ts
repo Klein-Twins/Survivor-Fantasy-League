@@ -306,7 +306,7 @@ async function processTribeMembersForStartingTribe(
   for (const survivorId of startingTribe.startingSurvivors) {
     await processSurvivorInStartingTribe(
       survivorId,
-      startingTribe.episodeIdStart,
+      startingTribe.episodeIdStart!,
       startingTribe.id
     );
   }

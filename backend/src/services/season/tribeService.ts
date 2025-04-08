@@ -91,7 +91,7 @@ async function buildTribe(
       hex: tribeAttributes.hexColor,
     },
     isMergeTribe: tribeAttributes.mergeTribe,
-    episodeStarted: tribeAttributes.episodeIdStart.toString(),
+    episodeStarted: tribeAttributes.episodeIdStart?.toString() || null,
     survivors: survivorBasic,
   };
 }

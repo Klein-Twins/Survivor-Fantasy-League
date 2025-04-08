@@ -82,16 +82,30 @@ components:
               type: string
               description: The survivor's last name
               example: 'Doe'
-            eliminationInfo:
-              $ref: '#/components/schemas/SurvivorEliminationInfo'
+            survivorStatus:
+              $ref: '#/components/schemas/SurvivorStatus'
 
-    SurvivorEliminationInfo:
+    SurvivorStatus:
       type: object
       required:
-        - isEliminated
-        - dayEliminated
-        - placement
-        - episodeEliminated
+        - episodeId
+        - eliminationStatus
+        - currentTribeId
+      properties:
+        episodeId:
+          type: string
+          description: Survivor status as of start of the episodeId.
+          example: 5
+        eliminationStatus:
+          $ref: '#/components/schemas/EliminationStatus'
+        currentTribeId:
+          type: string
+          nullable: true
+          description: The id of the tribe the survivor is currently in
+          example: 'tribeId'
+
+    EliminationStatus:
+      type: object
       properties:
         isEliminated:
           type: boolean
@@ -112,3 +126,8 @@ components:
           description: The episode id the survivor was eliminated in
           example: 5
           nullable: true
+      required:
+        - isEliminated
+        - dayEliminated
+        - placement
+        - episodeEliminated

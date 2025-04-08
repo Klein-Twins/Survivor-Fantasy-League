@@ -75,5 +75,5 @@ export interface Tribe {
      * @type {string}
      * @memberof Tribe
      */
-    episodeStarted?: string;
+    episodeStarted?: string | null;
 }

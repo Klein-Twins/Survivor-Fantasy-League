@@ -1,15 +1,65 @@
 import { models } from '../../config/db';
-import { SurvivorBasic } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonEliminationAttributes } from '../../models/season/SeasonEliminations';
 import { SeasonsAttributes } from '../../models/season/Seasons';
 import { SurvivorDetailsOnSeasonAttributes } from '../../models/survivors/SurvivorDetailsOnSeason';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
+import episodeRepository from './episode/episodeRepository';
+import { InternalServerError } from '../../utils/errors/errors';
 
 const seasonEliminationRepository = {
   getSeasonEliminationForSurvivorOnSeason,
   getEliminationStatusForSurvivorsByStartOfEpisode,
+  getEliminationStatus,
 };
+
+async function getEliminationStatus(
+  survivorId: SurvivorsAttributes['id'],
+  episodeId: EpisodeAttributes['id']
+): Promise<SeasonEliminationAttributes | null> {
+  const episodeAttributes = await episodeRepository.getEpisode(
+    'episodeId',
+    episodeId
+  );
+  if (!episodeAttributes) {
+    throw new Error(`Episode not found for episodeId: ${episodeId}`);
+  }
+  const seasonId = episodeAttributes.seasonId;
+
+  const seasonEliminationsAttributes = await models.SeasonEliminations.findAll({
+    where: {
+      seasonId,
+    },
+    order: [['day', 'ASC']],
+  });
+
+  const eliminationsSoFar: SeasonEliminationAttributes[] = [];
+
+  for (const seasonEliminationAttributes of seasonEliminationsAttributes) {
+    const seasonEliminationEpisodeAttributes =
+      await episodeRepository.getEpisode(
+        'episodeId',
+        seasonEliminationAttributes.episodeId
+      );
+    if (!seasonEliminationEpisodeAttributes) {
+      throw new InternalServerError(
+        `Episode not found for episodeId: ${seasonEliminationAttributes.episodeId}`
+      );
+    }
+    const episodeNumberOfElimination =
+      seasonEliminationEpisodeAttributes.number;
+
+    if (episodeAttributes.number > episodeNumberOfElimination) {
+      eliminationsSoFar.push(seasonEliminationAttributes);
+    }
+  }
+
+  const survivorElimination = eliminationsSoFar.find((elimination) => {
+    return elimination.survivorId === survivorId;
+  });
+
+  return survivorElimination || null;
+}
 
 async function getEliminationStatusForSurvivorsByStartOfEpisode(
   survivorIds: SurvivorsAttributes['id'][],

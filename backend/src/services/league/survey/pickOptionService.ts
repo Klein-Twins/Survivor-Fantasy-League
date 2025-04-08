@@ -59,7 +59,8 @@ async function getSurvivorPickOptions(
   const survivorsWithEliminationStatusOnEpisode =
     await survivorService.getSurvivorsAtStartOfEpisode(episodeId);
   return survivorsWithEliminationStatusOnEpisode.filter(
-    (survivor) => !survivor.eliminationInfo.isEliminated
+    (survivor) =>
+      survivor.survivorStatus?.eliminationStatus.isEliminated === false
   );
 }
 
