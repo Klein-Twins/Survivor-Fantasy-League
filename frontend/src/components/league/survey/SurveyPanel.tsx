@@ -1,21 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Episode,
-  GetLeagueMemberSurveyResponse,
-  League,
-  Profile,
-} from '../../../../generated-api';
+import React from 'react';
+import { Episode, League, Profile } from '../../../../generated-api';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../store/store';
-import { useApi } from '../../../hooks/useApi';
-import surveyService, {
-  GetLeagueSurveyRequestParams,
-} from '../../../services/league/survey/surveyService';
 import {
   ButtonPrimaryColors,
   ButtonSubtleColors,
 } from '../../../styles/CommonColorClassNames';
-import SurveyInfo from './SurveyInfo';
+import useSurvey from '../../../hooks/survey/useSurvey';
+import Survey from './Survey';
 
 interface SurveyPanelProps {
   leagueId: League['id'];
@@ -30,30 +22,13 @@ const SurveyPanel: React.FC<SurveyPanelProps> = ({ leagueId, profileId }) => {
     (state: RootState) => state.season.activeEpisode
   );
 
-  const [selectedEpisode, setSelectedEpisode] =
-    useState<Episode>(activeEpisode);
-
   const {
-    data: getSurveyResponse,
-    isLoading: getSurveyIsLoading,
-    error: getSurveyError,
-    execute: getSurvey,
-  } = useApi<void, GetLeagueSurveyRequestParams, GetLeagueMemberSurveyResponse>(
-    surveyService.getLeagueSurvey
-  );
-
-  useEffect(() => {
-    async function fetchSurvey() {
-      await getSurvey({
-        queryParams: {
-          leagueId: leagueId,
-          profileId: profileId,
-          episodeId: selectedEpisode.id,
-        },
-      });
-    }
-    fetchSurvey();
-  }, [leagueId, profileId, selectedEpisode]);
+    survey,
+    isLoading: surveyIsLoading,
+    error: surveyError,
+    selectedEpisode,
+    setSelectedEpisode,
+  } = useSurvey({ leagueId, profileId, activeEpisode });
 
   const panelBackgroundColor =
     'dark:bg-surface-a5-dark bg-surface-a5-light dark:text-white text-black';
@@ -67,10 +42,10 @@ const SurveyPanel: React.FC<SurveyPanelProps> = ({ leagueId, profileId }) => {
         selectedEpisode={selectedEpisode}
         onSelect={setSelectedEpisode}
       />
-      <SurveyInfo
-        survey={getSurveyResponse?.responseData.leagueSurvey}
-        surveyIsLoading={getSurveyIsLoading}
-        surveyError={getSurveyError}
+      <Survey
+        survey={survey}
+        surveyIsLoading={surveyIsLoading}
+        surveyError={surveyError}
       />
     </div>
   );
@@ -96,14 +71,12 @@ const EpisodeSelection: React.FC<EpisodeSelectionProps> = ({
             ? ButtonPrimaryColors
             : ButtonSubtleColors;
         return (
-          <>
-            <div
-              key={episode.id + Math.random()}
-              onClick={() => onSelect(episode)}
-              className={`min-w-24 py-2 ${buttonColors} rounded-md text-xl text-center text-white hover:cursor-pointer`}>
-              Episode {episode.number}
-            </div>
-          </>
+          <div
+            key={episode.id}
+            onClick={() => onSelect(episode)}
+            className={`min-w-24 py-2 ${buttonColors} rounded-md text-xl text-center text-white hover:cursor-pointer`}>
+            Episode {episode.number}
+          </div>
         );
       })}
     </div>

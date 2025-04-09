@@ -5,6 +5,7 @@ export function usePickOptions<T>(
   maxNumSelections: number
 ) {
   const [selectedItems, setSelectedItems] = useState<T[]>([]);
+  const [isCompleted, setIsCompleted] = useState<boolean>(false);
 
   function handleOptionClick(item: T, getItemId: (item: T) => string) {
     setSelectedItems((prevSelected) => {
@@ -20,7 +21,16 @@ export function usePickOptions<T>(
         return [...remaining, item];
       }
     });
+
+    if (
+      selectedItems.length >= minNumSelections &&
+      selectedItems.length <= maxNumSelections
+    ) {
+      setIsCompleted(true); // Set completed state to true
+    } else {
+      setIsCompleted(false); // Reset completed state
+    }
   }
 
-  return { selectedItems, handleOptionClick };
+  return { selectedItems, handleOptionClick, isCompleted };
 }
