@@ -17,7 +17,7 @@ function PickOption<T>({
 
   return (
     <div
-      className={`flex flex-col items-center space-y-1 rounded-md p-2 ${optionBackground}`}
+      className={`flex flex-col items-center space-y-1 rounded-r-md p-2 ${optionBackground}`}
       onClick={onClick}>
       {renderContent(item)}
     </div>

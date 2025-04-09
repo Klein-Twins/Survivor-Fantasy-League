@@ -24,26 +24,30 @@ const SurvivorPickOptions: React.FC<{ pick: Pick }> = ({ pick }) => {
       <div className='w-full'>
         <p className='text-center'>{selectableCountMessage}</p>
       </div>
-      <div className='grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-4'>
+      <div className='flex flex-wrap gap-2 justify-center'>
         {survivorOptions.map((survivor) => (
-          <PickOption
+          <div
             key={survivor.id}
-            item={survivor}
-            onClick={() => handleOptionClick(survivor, (s) => s.id)}
-            isSelected={selectedSurvivors.some((s) => s.id === survivor.id)}
-            renderContent={(s) => (
-              <>
-                <SurvivorImage
-                  survivorId={s.id}
-                  seasonId={48}
-                  survivorName=''
-                />
-                <p className='text-center'>
-                  {s.firstName} {s.lastName}
-                </p>
-              </>
-            )}
-          />
+            className='flex justify-center items-center w-1/2 sm:w-1/4 md:w-1/6 lg:w-1/8'>
+            <PickOption
+              item={survivor}
+              onClick={() => handleOptionClick(survivor, (s) => s.id)}
+              isSelected={selectedSurvivors.some((s) => s.id === survivor.id)}
+              renderContent={(s) => (
+                <div className='flex flex-col items-center space-y-1'>
+                  <SurvivorImage
+                    survivorId={s.id}
+                    seasonId={48}
+                    survivorName=''
+                    className='w-full h-auto'
+                  />
+                  <p className='text-center'>
+                    {s.firstName} {s.lastName}
+                  </p>
+                </div>
+              )}
+            />
+          </div>
         ))}
       </div>
     </>

@@ -21,16 +21,11 @@ const SurveyInfo: React.FC<SurveyInfoProps> = ({
   surveyIsLoading,
   surveyError,
 }) => {
-  const [isSurveyOpen, setIsSurveyOpen] = React.useState(false);
   if (surveyIsLoading) {
     return <LoadingData text='Loading Survey' />;
   }
   if (surveyError || !survey) {
     return <div className='text-red-500'>Error loading survey</div>;
-  }
-
-  function handleOpenSurvey() {
-    setIsSurveyOpen(!isSurveyOpen);
   }
 
   console.log('openDate: ', survey.openDate);
@@ -43,11 +38,7 @@ const SurveyInfo: React.FC<SurveyInfoProps> = ({
         submissionStatus={survey.submissionStatus}
         availabilityStatus={survey.surveyAvailabilityStatus}
       />
-      <OpenSurveyButton
-        onClick={handleOpenSurvey}
-        isSurveyOpen={isSurveyOpen}
-      />
-      {isSurveyOpen && <Survey survey={survey} />}
+      <Survey survey={survey} />
     </>
   );
 };

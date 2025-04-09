@@ -6,13 +6,16 @@ interface PickProps {
   pick: Pick;
 }
 
-const PickView: React.FC<PickProps> = ({ pick }) => {
+export const PickView: React.FC<PickProps> = ({ pick }) => {
   const [selectedPickOption, setSelectedPickOption] = useState<Pick | null>(
     null
   );
+  const backgroundColor =
+    'dark:bg-surface-a3-dark bg-surface-a3-light text-white p-4';
 
   return (
-    <div>
+    <div
+      className={`flex flex-col space-y-2 w-full h-full rounded-r-md ${backgroundColor}`}>
       <p className='text-xl text-center font-bold'>{pick.description}</p>
       <PickOptions pick={pick} />
     </div>
