@@ -35,7 +35,10 @@ async function processEpisodeEvents(episode: Episode) {
   );
 
   if (episode.episodeEvents?.tribeSwitch) {
-    //await tribeProcessor.processTribeSwitch
+    await survivorProcessor.processSurvivorTribeSwitch(
+      episode.episodeEvents.tribeSwitch,
+      episode.episodeInfo.id
+    );
   }
   if (episode.episodeEvents?.isMerge) {
     //await tribeProcessor.processTribeMerge

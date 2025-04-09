@@ -31,21 +31,24 @@ const SurvivorImage: React.FC<SurvivorImageProps> = ({
         <img
           src='/defaultSurvivorImage.jpeg'
           alt='Default Survivor Image'
-          className={`object-top object-cover w-full h-full ${imageClassName}`}
+          className={`object-cover object-top w-full h-full ${imageClassName}`}
         />
       </div>
     );
   }
 
   return (
-    <div className={`${className}`}>
+    <div className={`${className} relative overflow-hidden`}>
       <img
         src={imageUrl || '/defaultEpisodeImage.jpeg'}
         alt={survivorName}
-        className={`object-cover object-top w-full h-auto ${imageClassName}`}
-        style={{ maxWidth: '100%' }} // Ensure the image does not exceed the container width
+        className={`object-cover object-top w-full h-full ${imageClassName}`}
+        style={{
+          aspectRatio: '1 / 1', // Ensures the image is a square
+        }}
       />
     </div>
   );
 };
+
 export default SurvivorImage;

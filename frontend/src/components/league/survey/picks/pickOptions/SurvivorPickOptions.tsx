@@ -1,5 +1,4 @@
 import { Pick, Survivor } from '../../../../../../generated-api';
-import { usePickOptions } from '../../../../../hooks/survey/usePickOptions';
 import SurvivorImage from '../../../../ui/image/SurvivorImage';
 import PickOption from './pickOption';
 const SurvivorPickOptions: React.FC<{

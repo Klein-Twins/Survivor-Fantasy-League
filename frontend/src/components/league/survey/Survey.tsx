@@ -32,9 +32,14 @@ const Survey: React.FC<SurveyProps> = ({
   const [surveySelectedChoices, setSurveySelectedChoices] =
     useState<SurveyPickChoicesMap>(
       new Map<string, any[]>(
-        (survey?.picks || []).map((pick): [string, any[]] => [pick.id, []])
+        survey.picks.map((pick): [string, any[]] => [pick.id, []])
       )
     );
+
+  async function handleSubmit() {
+    // Handle submission logic here
+    console.log('Survey submitted with choices:', surveySelectedChoices);
+  }
 
   return (
     <>
@@ -48,6 +53,7 @@ const Survey: React.FC<SurveyProps> = ({
         survey={survey}
         selectedChoices={surveySelectedChoices}
         setSurveySelectedChoices={setSurveySelectedChoices}
+        onSubmit={handleSubmit}
       />
     </>
   );

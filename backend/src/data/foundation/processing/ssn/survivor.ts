@@ -12,6 +12,7 @@ import {
   EliminatedSurvivor,
   EliminatedSurvivors,
   StartingTribe,
+  TribeSwitch,
 } from '../../data/ssn/dataTypes';
 import survivorsData, {
   SurvivorData,
@@ -20,9 +21,36 @@ import survivorsData, {
 const survivorProcessor = {
   processSurvivors,
   processTribeMembersForStartingTribe,
-
+  processSurvivorTribeSwitch,
   processEliminatedSurvivors,
 };
+
+async function processSurvivorTribeSwitch(
+  tribeSwitch: TribeSwitch,
+  episodeId: EpisodeAttributes['id']
+) {
+  for (const survivorTribeSwitch of tribeSwitch) {
+    await models.TribeMembers.update(
+      {
+        episodeIdEnd: episodeId,
+      },
+      {
+        where: {
+          episodeIdEnd: null,
+          survivorId: survivorTribeSwitch.survivorId,
+        },
+      }
+    );
+
+    await models.TribeMembers.create({
+      survivorId: survivorTribeSwitch.survivorId,
+      tribeId: survivorTribeSwitch.tribeId,
+      episodeIdStart: episodeId,
+      episodeIdEnd: null,
+      notes: `Switched to tribe ${survivorTribeSwitch.tribeId}`,
+    });
+  }
+}
 
 async function processEliminatedSurvivors(
   eliminatedSurvivors: EliminatedSurvivors,

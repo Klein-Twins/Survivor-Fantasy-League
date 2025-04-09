@@ -99,6 +99,8 @@ async function getTribeIdSurvivorBelongsToAtStartOfEpisode(
         return survivorTribeHistory;
       } else if (episodeNumber > startEpisodeNumber && !endEpisodeNumber) {
         return survivorTribeHistory;
+      } else if (endEpisodeNumber && episodeNumber > endEpisodeNumber) {
+        continue;
       } else {
         throw new InternalServerError(`Encountered a weird condition`);
       }

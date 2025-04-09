@@ -4,6 +4,7 @@ import {
   GetLeagueMemberSurveyResponse,
   League,
   Profile,
+  Pick,
 } from '../../../generated-api';
 import { useApi } from '../useApi';
 import surveyService, {
@@ -16,9 +17,14 @@ interface UseSurveyProps {
   activeEpisode: Episode;
 }
 
+export type SurveyPickChoicesMap = Map<string, any[]>;
+
 const useSurvey = ({ leagueId, profileId, activeEpisode }: UseSurveyProps) => {
   const [selectedEpisode, setSelectedEpisode] =
     useState<Episode>(activeEpisode);
+
+  const [selectedChoices, setSurveySelectedChoices] =
+    useState<SurveyPickChoicesMap>(new Map<string, any[]>());
 
   const {
     data: getSurveyResponse,
@@ -31,13 +37,23 @@ const useSurvey = ({ leagueId, profileId, activeEpisode }: UseSurveyProps) => {
 
   useEffect(() => {
     async function fetchSurvey() {
-      await getSurvey({
+      const response = await getSurvey({
         queryParams: {
           leagueId: leagueId,
           profileId: profileId,
           episodeId: selectedEpisode.id,
         },
       });
+
+      if (response?.responseData?.leagueSurvey) {
+        // Initialize selectedChoices with empty arrays for each pick
+        const initialChoices: SurveyPickChoicesMap = new Map<string, any[]>(
+          response.responseData.leagueSurvey.picks.map(
+            (pick: Pick): [string, any[]] => [pick.id, []]
+          )
+        );
+        setSurveySelectedChoices(initialChoices);
+      }
     }
     fetchSurvey();
   }, [leagueId, profileId, selectedEpisode]);
@@ -48,6 +64,8 @@ const useSurvey = ({ leagueId, profileId, activeEpisode }: UseSurveyProps) => {
     error: getSurveyError,
     selectedEpisode,
     setSelectedEpisode,
+    selectedChoices,
+    setSurveySelectedChoices,
   };
 };
 

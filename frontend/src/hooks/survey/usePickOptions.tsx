@@ -1,36 +1,63 @@
-import { useState } from 'react';
+import { useMemo } from 'react';
 
-export function usePickOptions<T>(
-  minNumSelections: number,
-  maxNumSelections: number
-) {
-  const [selectedItems, setSelectedItems] = useState<T[]>([]);
-  const [isCompleted, setIsCompleted] = useState<boolean>(false);
-
-  function handleOptionClick(item: T, getItemId: (item: T) => string) {
-    setSelectedItems((prevSelected) => {
-      if (prevSelected.some((i) => getItemId(i) === getItemId(item))) {
-        // If already selected, remove it
-        return prevSelected.filter((i) => getItemId(i) !== getItemId(item));
-      } else if (prevSelected.length < maxNumSelections) {
-        // If not selected and within max limit, add it
-        return [...prevSelected, item];
-      } else {
-        // If max limit is exceeded, remove the oldest selection and add the new one
-        const [, ...remaining] = prevSelected; // Remove the first (oldest) selection
-        return [...remaining, item];
-      }
-    });
-
-    if (
-      selectedItems.length >= minNumSelections &&
-      selectedItems.length <= maxNumSelections
-    ) {
-      setIsCompleted(true); // Set completed state to true
-    } else {
-      setIsCompleted(false); // Reset completed state
-    }
-  }
-
-  return { selectedItems, handleOptionClick, isCompleted };
+interface UsePickOptionsProps<T> {
+  pickId: string;
+  minNumSelections: number;
+  maxNumSelections: number;
+  selectedChoices: Map<string, T[]>;
+  setSurveySelectedChoices: React.Dispatch<
+    React.SetStateAction<Map<string, T[]>>
+  >;
 }
+
+const usePickOptions = <T,>({
+  pickId,
+  minNumSelections,
+  maxNumSelections,
+  selectedChoices,
+  setSurveySelectedChoices,
+}: UsePickOptionsProps<T>) => {
+  const selectedItems = useMemo(
+    () => selectedChoices.get(pickId) || [],
+    [selectedChoices, pickId]
+  );
+
+  const handleOptionClick = (item: T, getId: (item: T) => string) => {
+    setSurveySelectedChoices((prev) => {
+      const updatedChoices = new Map(prev);
+      const currentChoices = updatedChoices.get(pickId) || [];
+      const itemId = getId(item);
+
+      if (currentChoices.some((choice) => getId(choice) === itemId)) {
+        // Remove the item if it is already selected
+        updatedChoices.set(
+          pickId,
+          currentChoices.filter((choice) => getId(choice) !== itemId)
+        );
+      } else {
+        // Add the item if it is not already selected
+        if (currentChoices.length < maxNumSelections) {
+          updatedChoices.set(pickId, [...currentChoices, item]);
+        } else {
+          // Remove the first item and add the new item
+          const updatedSelection = [...currentChoices.slice(1), item];
+          updatedChoices.set(pickId, updatedSelection);
+        }
+      }
+
+      return updatedChoices;
+    });
+  };
+
+  const isCompleted =
+    selectedItems.length >= minNumSelections &&
+    selectedItems.length <= maxNumSelections;
+
+  return {
+    selectedItems,
+    handleOptionClick,
+    isCompleted,
+  };
+};
+
+export default usePickOptions;
