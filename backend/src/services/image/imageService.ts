@@ -1,6 +1,6 @@
 import { GetObjectCommand, PutObjectCommand } from '@aws-sdk/client-s3';
 import { AWS_BUCKET_NAME } from '../../config/config';
-import { NotFoundError } from '../../utils/errors/errors';
+import { CustomError, NotFoundError } from '../../utils/errors/errors';
 import { s3Client } from '../../config/aws.config';
 
 const imageService = {
@@ -51,34 +51,43 @@ async function getSurvivorImage(
 }
 
 async function getImage(
-  key: string
+  key: string,
+  formats: string[] = ['jpeg', 'webp', 'png', 'jpg']
 ): Promise<{ buffer: any; contentType?: string }> {
-  try {
-    // 1. Request image from S3
-    const command = new GetObjectCommand({
-      Bucket: AWS_BUCKET_NAME,
-      Key: key,
-    });
+  let lastError: Error | null = null;
 
-    // 2. Get stream of data
-    const response = await s3Client.send(command);
-    if (!response.Body) {
-      throw new NotFoundError('Image not found');
+  for (const format of formats) {
+    try {
+      const formattedKey = key.replace(/\.\w+$/, `.${format}`); // Replace the extension dynamically
+      const command = new GetObjectCommand({
+        Bucket: AWS_BUCKET_NAME,
+        Key: formattedKey,
+      });
+
+      // Request the image from S3
+      const response = await s3Client.send(command);
+      if (!response.Body) {
+        throw new NotFoundError('Image not found');
+      }
+
+      // Collect chunks of binary data
+      const chunks: Uint8Array[] = [];
+      for await (const chunk of response.Body as any) {
+        chunks.push(chunk);
+      }
+
+      // Combine chunks into a single Buffer
+      const buffer = Buffer.concat(chunks);
+      return { buffer, contentType: response.ContentType };
+    } catch (error) {
+      // Log the error and continue to the next format
+      console.warn(`Image not found for format ${format}:`, error);
+      lastError = error as Error; // Store the last error
     }
-
-    // 3. Collect chunks of binary data
-    const chunks: Uint8Array[] = [];
-    for await (const chunk of response.Body as any) {
-      chunks.push(chunk);
-    }
-
-    // 4. Combine chunks into single Buffer
-    const buffer = Buffer.concat(chunks);
-    return { buffer, contentType: response.ContentType };
-  } catch (error) {
-    console.error('Error fetching profile image from S3:', error);
-    throw error;
   }
+
+  // If no formats are found, throw a NotFoundError
+  throw new NotFoundError('Image not found in any supported format');
 }
 
 async function getEpisodeImage(

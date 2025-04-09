@@ -31,7 +31,7 @@ const SurvivorImage: React.FC<SurvivorImageProps> = ({
         <img
           src='/defaultSurvivorImage.jpeg'
           alt='Default Survivor Image'
-          className={`object-cover w-full h-full ${imageClassName}`}
+          className={`object-cover object-top w-full h-full ${imageClassName}`}
         />
       </div>
     );
@@ -42,7 +42,7 @@ const SurvivorImage: React.FC<SurvivorImageProps> = ({
       <img
         src={imageUrl || '/defaultEpisodeImage.jpeg'}
         alt={survivorName}
-        className={`object-cover w-full h-full ${imageClassName}`}
+        className={`object-cover object-top w-full h-full ${imageClassName}`}
       />
     </div>
   );
