@@ -50,19 +50,17 @@ async function submitLeagueSurvey({
   profileId: ProfileAttributes['profileId'];
   picksWithChoice: PickIdAndPlayerChoice[];
 }): Promise<LeagueMemberSurvey> {
-  //TODO - fix the SubmitSurveyRequestBody to receive leagueProfileId
-  const leagueProfileId = profileId;
-
   const episode = await episodeService.getEpisode('episodeId', episodeId);
   const league = await leagueService.getLeague(leagueId);
-  const profileOfLeagueProfile = await profileService.getProfile(
-    'leagueProfileId',
-    leagueProfileId
+  const profile = await profileService.getProfile('profileId', profileId);
+  const leagueProfile = await leagueMemberService.getEnrolledLeagueMember(
+    leagueId,
+    profileId
   );
 
   const surveySubmission =
     await surveySubmissionService.getSurveySubmissionStatus(
-      leagueProfileId,
+      leagueProfile.leagueProfileId,
       leagueSurveyId
     );
 
@@ -86,8 +84,8 @@ async function submitLeagueSurvey({
   }
 
   await leagueMemberService.isInLeague(
-    'leagueProfileId',
-    leagueProfileId,
+    'profileId',
+    profileId,
     leagueId,
     true,
     true
@@ -111,7 +109,7 @@ async function submitLeagueSurvey({
     await models.SurveySubmissions.create(
       {
         surveySubmissionId,
-        leagueProfileId,
+        leagueProfileId: leagueProfile.leagueProfileId,
         leagueSurveyId,
       },
       { transaction: t }
@@ -145,7 +143,7 @@ async function submitLeagueSurvey({
 
   return await leagueMemberSurveyService.getLeagueMemberSurvey(
     leagueId,
-    profileOfLeagueProfile.profileId as UUID,
+    profileId,
     episodeId
   );
 }

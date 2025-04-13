@@ -11,19 +11,23 @@ interface SubmitButtonProps {
   loading?: boolean;
   disabled?: boolean;
   label: string;
-  className?: '';
+  className?: string;
+  onClick?: () => void;
 }
 
 const SubmitButton: React.FC<SubmitButtonProps> = ({
   loading,
   disabled,
   label,
+  className = 'w-full font-bold p-2 rounded',
+  onClick,
 }) => {
   return (
     <button
       type='submit'
       disabled={disabled || loading}
-      className={`${ButtonPrimaryColors} w-full font-bold p-2 rounded`}>
+      className={`${ButtonPrimaryColors} ${className}`}
+      onClick={onClick}>
       {loading ? 'Please Wait...' : label}
     </button>
   );

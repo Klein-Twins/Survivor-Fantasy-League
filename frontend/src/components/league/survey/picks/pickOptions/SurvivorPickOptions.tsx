@@ -8,7 +8,14 @@ const SurvivorPickOptions: React.FC<{
     handleOptionClick: (item: any, getId: (item: any) => string) => void;
     isCompleted: boolean;
   };
-}> = ({ pick, pickSelection }) => {
+  disabled?: boolean;
+  showPickInstructions?: boolean;
+}> = ({
+  pick,
+  pickSelection,
+  disabled = false,
+  showPickInstructions = true,
+}) => {
   const survivorOptions = pick.options.options as Survivor[];
 
   const selectableCountMessage =
@@ -18,18 +25,22 @@ const SurvivorPickOptions: React.FC<{
 
   return (
     <>
-      <div className='w-full'>
-        <p className='text-center'>{selectableCountMessage}</p>
-      </div>
+      {showPickInstructions && (
+        <div className='w-full'>
+          <p className='text-center'>{selectableCountMessage}</p>
+        </div>
+      )}
       <div className='flex flex-wrap gap-2 justify-center'>
         {survivorOptions.map((survivor) => (
           <div
-            key={survivor.id}
-            className='flex justify-center items-center w-1/2 sm:w-1/4 md:w-1/6 lg:w-1/8'>
+            key={pick.id + '|' + survivor.id}
+            className='flex justify-center items-center w-[calc(100%/3-8px)] sm:w-[calc(100%/4-8px)] md:w-[calc(100%/6-8px)] lg:w-[calc(100%/9-8px)]'>
             <PickOption
               item={survivor}
-              onClick={() =>
-                pickSelection.handleOptionClick(survivor, (s) => s.id)
+              onClick={
+                !disabled
+                  ? () => pickSelection.handleOptionClick(survivor, (s) => s.id)
+                  : undefined // Disable onClick if survey is submitted
               }
               isSelected={pickSelection.selectedItems.some(
                 (s) => s.id === survivor.id

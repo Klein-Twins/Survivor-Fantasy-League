@@ -39,36 +39,46 @@ async function getLeagueSurvey(
   return response;
 }
 
-async function submitLeagueSurvey(surveyData: {
-  episodeId: Episode['id'];
-  leagueSurveyId: LeagueSurvey['leagueSurveyId'];
-  leagueId: League['id'];
-  surveyId: LeagueSurvey['surveyDefinitionId'];
-  profileId: Profile['profileId'];
-  surveyChoicesMap: SurveyPickChoicesMap;
-}): Promise<AxiosResponse<SubmitSurveyResponse>> {
-  // For each pick, map the choices to an array of IDs
-  const picksWithChoices: PickIdAndPlayerChoice[] = Array.from(
-    surveyData.surveyChoicesMap.entries()
-  ).map(([pickId, playerChoices]) => ({
-    pickId,
-    choice: playerChoices.map((choice) => choice.id as string), // Extract the `id` as a string
-  }));
-
-  const requestBody: SubmitSurveyRequestBody = {
-    episodeId: surveyData.episodeId,
-    leagueSurveyId: surveyData.leagueSurveyId,
-    surveyId: surveyData.surveyId,
-    leagueId: surveyData.leagueId,
-    profileId: surveyData.profileId,
-    picksWithChoice: picksWithChoices, // Corrected property name
-  };
-
+async function submitLeagueSurvey(
+  requestData: ApiRequestParams<SubmitSurveyRequestBody, void>
+): Promise<AxiosResponse<SubmitSurveyResponse>> {
   const response: AxiosResponse<SubmitSurveyResponse> =
-    await api.surveyService.submitSurveyWithPickChoices(requestBody, {
+    await api.surveyService.submitSurveyWithPickChoices(requestData.body, {
       withCredentials: true,
     });
   return response;
 }
+
+// async function submitLeagueSurvey(surveyData: {
+//   episodeId: Episode['id'];
+//   leagueSurveyId: LeagueSurvey['leagueSurveyId'];
+//   leagueId: League['id'];
+//   surveyId: LeagueSurvey['surveyDefinitionId'];
+//   profileId: Profile['profileId'];
+//   surveyChoicesMap: SurveyPickChoicesMap;
+// }): Promise<AxiosResponse<SubmitSurveyResponse>> {
+//   // For each pick, map the choices to an array of IDs
+//   const picksWithChoices: PickIdAndPlayerChoice[] = Array.from(
+//     surveyData.surveyChoicesMap.entries()
+//   ).map(([pickId, playerChoices]) => ({
+//     pickId,
+//     choice: playerChoices.map((choice) => choice.id as string), // Extract the `id` as a string
+//   }));
+
+//   const requestBody: SubmitSurveyRequestBody = {
+//     episodeId: surveyData.episodeId,
+//     leagueSurveyId: surveyData.leagueSurveyId,
+//     surveyId: surveyData.surveyId,
+//     leagueId: surveyData.leagueId,
+//     profileId: surveyData.profileId,
+//     picksWithChoice: picksWithChoices, // Corrected property name
+//   };
+
+//   const response: AxiosResponse<SubmitSurveyResponse> =
+//     await api.surveyService.submitSurveyWithPickChoices(requestBody, {
+//       withCredentials: true,
+//     });
+//   return response;
+// }
 
 export default surveyService;

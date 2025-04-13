@@ -10,7 +10,8 @@ const TribePickOptions: React.FC<{
     handleOptionClick: (item: any, getId: (item: any) => string) => void;
     isCompleted: boolean;
   };
-}> = ({ pick, pickSelection }) => {
+  disabled?: boolean;
+}> = ({ pick, pickSelection, disabled = false }) => {
   const tribeOptions = pick.options.options as Tribe[];
 
   const selectableCountMessage =
@@ -23,12 +24,16 @@ const TribePickOptions: React.FC<{
       <div className='w-full'>
         <p className='text-center'>{selectableCountMessage}</p>
       </div>
-      <div className='flex flex-row justify-center items-stretch space-x-2'>
+      <div className='flex flex-col justify-center items-stretch space-y-2'>
         {tribeOptions.map((tribe) => (
           <PickOption
             key={tribe.id}
             item={tribe}
-            onClick={() => pickSelection.handleOptionClick(tribe, (t) => t.id)}
+            onClick={
+              !disabled
+                ? () => pickSelection.handleOptionClick(tribe, (t) => t.id)
+                : undefined // Disable onClick if survey is submitted
+            }
             isSelected={pickSelection.selectedItems.some(
               (t) => t.id === tribe.id
             )}
@@ -36,7 +41,9 @@ const TribePickOptions: React.FC<{
               <>
                 <TribeImage tribeId={t.id} seasonId={48} />
                 <p className='text-center'>{t.name}</p>
-                <div id='survivorsInTribe' className='grid grid-cols-3 gap-2'>
+                <div
+                  id='survivorsInTribe'
+                  className='flex space-x-1 items-center'>
                   {t.survivors.map((survivor) => (
                     <div
                       key={survivor.id}

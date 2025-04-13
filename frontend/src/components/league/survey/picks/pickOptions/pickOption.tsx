@@ -12,7 +12,7 @@ function PickOption<T>({
   renderContent,
 }: PickOptionProps<T>) {
   const optionBackground = isSelected
-    ? 'dark:bg-surface-a3-dark bg-surface-a3-light font-bold'
+    ? 'dark:bg-primary bg-surface-a3-light font-bold'
     : 'dark:bg-surface-a1-dark bg-surface-a1-light';
 
   return (

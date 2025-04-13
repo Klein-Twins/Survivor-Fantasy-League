@@ -4,26 +4,24 @@ interface UsePickOptionsProps<T> {
   pickId: string;
   minNumSelections: number;
   maxNumSelections: number;
-  selectedChoices: Map<string, T[]>;
-  setSurveySelectedChoices: React.Dispatch<
-    React.SetStateAction<Map<string, T[]>>
-  >;
+  playerChoices: Map<string, T[]>;
+  setPlayerChoices: React.Dispatch<React.SetStateAction<Map<string, T[]>>>;
 }
 
 const usePickOptions = <T,>({
   pickId,
   minNumSelections,
   maxNumSelections,
-  selectedChoices,
-  setSurveySelectedChoices,
+  playerChoices,
+  setPlayerChoices,
 }: UsePickOptionsProps<T>) => {
   const selectedItems = useMemo(
-    () => selectedChoices.get(pickId) || [],
-    [selectedChoices, pickId]
+    () => playerChoices.get(pickId) || [],
+    [playerChoices, pickId]
   );
 
   const handleOptionClick = (item: T, getId: (item: T) => string) => {
-    setSurveySelectedChoices((prev) => {
+    setPlayerChoices((prev) => {
       const updatedChoices = new Map(prev);
       const currentChoices = updatedChoices.get(pickId) || [];
       const itemId = getId(item);

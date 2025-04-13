@@ -44,7 +44,33 @@ async function isInLeague(
     }
     return foundLeagueId === leagueId;
   } else {
-    throw new NotImplementedError('isInLeague not implemented for profileId');
+    const foundLeagueProfilesAttributes =
+      await leagueMemberRepository.getLeagueProfiles('profileId', value);
+    const foundLeagueProfilesEnrolled = foundLeagueProfilesAttributes.filter(
+      (foundLeagueProfileAttributes) => {
+        return (
+          foundLeagueProfileAttributes.inviteStatus === InviteStatus.Accepted
+        );
+      }
+    );
+    const foundLeagueProfileOfLeague = foundLeagueProfilesEnrolled.filter(
+      (foundLeagueProfileAttributes) => {
+        return foundLeagueProfileAttributes.leagueId === leagueId;
+      }
+    );
+    if (foundLeagueProfileOfLeague.length !== 1) {
+      if (throwsIfNotFound) {
+        throw new NotFoundError('Profile not found');
+      }
+      return false;
+    }
+    if (
+      throwsIfNotInLeague &&
+      foundLeagueProfileOfLeague[0].inviteStatus !== InviteStatus.Accepted
+    ) {
+      throw new UnauthorizedError('Profile is not in league');
+    }
+    return foundLeagueProfileOfLeague[0].inviteStatus === InviteStatus.Accepted;
   }
 }
 
