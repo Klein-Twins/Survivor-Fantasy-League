@@ -1,20 +1,9 @@
-import React, { useState } from 'react';
-import {
-  Episode,
-  League,
-  LeagueMemberSurvey,
-  Profile,
-  SurveyAvailabilityStatus,
-  SurveySubmissionStatus,
-} from '../../../../generated-api';
+import React from 'react';
+import { Episode, League, Profile } from '../../../../generated-api';
 import LoadingData from '../../ui/LoadingData';
-import SurveyPicks from './SurveyPicks';
-import surveyService from '../../../services/league/survey/surveyService';
 import useSurvey from '../../../hooks/survey/useSurvey';
 import PickSwiper from './picks/PickSwiper';
 import SurveyStatusView from './SurveyStatusInfo';
-import SubmitButton from '../../ui/forms/SubmitButton';
-import usePickOptions from '../../../hooks/survey/usePickOptions';
 
 interface SurveyProps {
   leagueId: League['id'];
