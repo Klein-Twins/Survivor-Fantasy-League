@@ -46,17 +46,37 @@ async function createUser(
 }
 
 async function getUserByField(
-  field: keyof Pick<
-    UserAttributes,
-    'userId' | 'userName' | 'email' | 'profileId'
-  >,
+  field:
+    | keyof Pick<UserAttributes, 'userId' | 'userName' | 'email' | 'profileId'>
+    | 'leagueProfileId',
   value: string,
   transaction?: Transaction
 ): Promise<UserAttributes | null> {
-  return await models.User.findOne({
-    where: { [field]: value },
-    transaction,
-  });
+  if (field === 'leagueProfileId') {
+    return await models.User.findOne({
+      transaction,
+      include: [
+        {
+          model: models.Profile,
+          required: true,
+          as: 'profile',
+          include: [
+            {
+              model: models.LeagueProfile,
+              required: true,
+              as: 'leagueProfiles',
+              where: { id: value },
+            },
+          ],
+        },
+      ],
+    });
+  } else {
+    return await models.User.findOne({
+      where: { [field]: value },
+      transaction,
+    });
+  }
 }
 
 export default userRepository;

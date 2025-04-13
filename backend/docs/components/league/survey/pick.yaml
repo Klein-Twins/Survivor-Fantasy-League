@@ -22,6 +22,8 @@ components:
           type: integer
           description: The number of points the pick is worth
           example: 10
+        playerChoices:
+          $ref: '#/components/schemas/PlayerChoices'
         options:
           type: object
           required:
@@ -88,6 +90,26 @@ components:
         - yes
         - no
 
+    PlayerChoices:
+      type: array
+      items:
+        $ref: '#/components/schemas/PlayerChoice'
+
+    PlayerChoice:
+      type: object
+      required:
+        - playerChoice
+        - rank
+      properties:
+        playerChoice:
+          type: string
+          description: The choice made by the player
+          example: 'UUID of survivor'
+        rank:
+          type: integer
+          description: The rank of the choice
+          example: 1
+
     BinaryOptionEnum:
       type: string
       enum:
@@ -96,35 +118,61 @@ components:
       description: The binary options for the pick
       example: 'yes'
 
-    PickAndChoice:
+    PicksWithPlayerChoices:
+      type: array
+      items:
+        $ref: '#/components/schemas/PickWithPlayerChoices'
+
+    PickWithPlayerChoices:
       type: object
       allOf:
         - $ref: '#/components/schemas/Pick'
         - type: object
           required:
-            - choice
+            - playerChoices
           properties:
-            choice:
-              $ref: '#/components/schemas/PickChoice'
+            type: array
+            items:
+              type: string
+              description: The choice made by the player
+              example:
+                - 'Survivor 1'
+                - 'Survivor 2'
 
     PickChoice:
-      oneOf:
-        - type: string
-          format: uuid
-          description: The ID of the tribe or survivor
-        - type: string
-          description: The hex string of the color
-        - $ref: '#/components/schemas/BinaryPickOptions'
+      type: object
+      required:
+        - allChoices
+        - playerChoice
+      properties:
+        allChoices:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/SurvivorPickOptions'
+              - $ref: '#/components/schemas/ColorPickOptions'
+              - $ref: '#/components/schemas/TribePickOptions'
+              - $ref: '#/components/schemas/BinaryPickOptions'
+        playerChoice:
+          type: string
+          description: Survivor Id, Tribe id, Color Id, or Binary option
+          example: 'UUID of survivor'
 
     PickIdAndPlayerChoice:
       type: object
       required:
         - pickId
-        - playerChoice
+        - choice
       properties:
         pickId:
           type: string
           format: uuid
           description: The ID of the pick
         choice:
-          $ref: '#/components/schemas/PickChoice'
+          type: array
+          items:
+            type: string
+            description: The choice made by the player
+            example:
+              - 'Survivor 1'
+              - 'Survivor 2'

@@ -77,18 +77,6 @@ components:
             submissionStatus:
               $ref: '#/components/schemas/SurveySubmissionStatus'
 
-    CompletedLeagueMemberSurvey:
-      allOf:
-        - $ref: '#/components/schemas/LeagueMemberSurvey'
-        - type: object
-          required:
-            - picks
-          properties:
-            picks:
-              type: array
-              items:
-                $ref: './pick.yaml#/components/schemas/PickAndChoice'
-
     SurveyAvailabilityStatus:
       type: string
       enum:

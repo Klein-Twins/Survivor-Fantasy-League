@@ -48,7 +48,7 @@ const LeaguePageMainContent: React.FC<LeaguePageMainContentProps> = ({
   account,
 }) => {
   const currentEpisodeId = useSelector(
-    (state: RootState) => state.season.activeEpisode.id
+    (state: RootState) => state.season.activeEpisode?.id || null
   );
 
   const {
@@ -62,13 +62,15 @@ const LeaguePageMainContent: React.FC<LeaguePageMainContentProps> = ({
 
   useEffect(() => {
     async function fetchSurvey() {
-      await execute({
-        queryParams: {
-          leagueId: league.id,
-          profileId: account.profileId,
-          episodeId: currentEpisodeId,
-        },
-      });
+      if (currentEpisodeId) {
+        await execute({
+          queryParams: {
+            leagueId: league.id,
+            profileId: account.profileId,
+            episodeId: currentEpisodeId,
+          },
+        });
+      }
     }
     fetchSurvey();
   }, [league.id, account.profileId, currentEpisodeId]);

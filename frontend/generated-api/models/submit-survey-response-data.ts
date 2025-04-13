@@ -12,7 +12,7 @@
  * Do not edit the class manually.
  */
 
-import { CompletedLeagueMemberSurvey } from './completed-league-member-survey';
+import { LeagueMemberSurvey } from './league-member-survey';
  /**
  * 
  *
@@ -22,8 +22,8 @@ import { CompletedLeagueMemberSurvey } from './completed-league-member-survey';
 export interface SubmitSurveyResponseData {
 
     /**
-     * @type {CompletedLeagueMemberSurvey}
+     * @type {LeagueMemberSurvey}
      * @memberof SubmitSurveyResponseData
      */
-    leagueSurvey: CompletedLeagueMemberSurvey;
+    leagueSurvey: LeagueMemberSurvey;
 }

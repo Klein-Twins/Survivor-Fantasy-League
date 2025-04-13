@@ -1,44 +1,41 @@
 import React, { useState } from 'react';
 import {
-  CompletedLeagueMemberSurvey,
+  Episode,
+  League,
   LeagueMemberSurvey,
-  PickOptionTypeEnum,
+  Profile,
   SurveyAvailabilityStatus,
   SurveySubmissionStatus,
 } from '../../../../generated-api';
 import LoadingData from '../../ui/LoadingData';
 import SurveyPicks from './SurveyPicks';
+import surveyService from '../../../services/league/survey/surveyService';
+import useSurvey from '../../../hooks/survey/useSurvey';
 
 interface SurveyProps {
-  survey: CompletedLeagueMemberSurvey | LeagueMemberSurvey | undefined;
-  surveyIsLoading: boolean;
-  surveyError: any;
+  leagueId: League['id'];
+  profileId: Profile['profileId'];
+  activeEpisode: Episode;
 }
 
 export type SurveyPickChoicesMap = Map<string, any[]>;
 
 const Survey: React.FC<SurveyProps> = ({
-  survey,
-  surveyIsLoading,
-  surveyError,
+  leagueId,
+  profileId,
+  activeEpisode,
 }) => {
+  const {
+    survey,
+    isLoading: surveyIsLoading,
+    error: surveyError,
+  } = useSurvey({ leagueId, profileId, episode: activeEpisode });
+
   if (surveyIsLoading) {
     return <LoadingData text='Loading Survey' />;
   }
   if (surveyError || !survey) {
     return <div className='text-red-500'>Error loading survey</div>;
-  }
-
-  const [surveySelectedChoices, setSurveySelectedChoices] =
-    useState<SurveyPickChoicesMap>(
-      new Map<string, any[]>(
-        survey.picks.map((pick): [string, any[]] => [pick.id, []])
-      )
-    );
-
-  async function handleSubmit() {
-    // Handle submission logic here
-    console.log('Survey submitted with choices:', surveySelectedChoices);
   }
 
   return (
@@ -49,6 +46,59 @@ const Survey: React.FC<SurveyProps> = ({
         submissionStatus={survey.submissionStatus}
         availabilityStatus={survey.surveyAvailabilityStatus}
       />
+      {survey.submissionStatus === SurveySubmissionStatus.NotSubmitted && (
+        <IncompleteSurvey survey={survey} />
+      )}
+      {survey.submissionStatus === SurveySubmissionStatus.Submitted && (
+        <p>Survey Is submitted</p>
+      )}
+    </>
+  );
+};
+
+export default Survey;
+
+const IncompleteSurvey: React.FC<{
+  survey: LeagueMemberSurvey;
+}> = ({ survey }) => {
+  const [surveySubmissionError, setSurveySubmissionError] = useState<
+    string | null
+  >(null);
+
+  const [surveySelectedChoices, setSurveySelectedChoices] =
+    useState<SurveyPickChoicesMap>(
+      new Map<string, string[]>(
+        survey.picks.map((pick): [string, any[]] => [pick.id, []])
+      )
+    );
+
+  async function handleSubmit() {
+    // Handle submission logic here
+    console.log('Survey submitted with choices:', surveySelectedChoices);
+
+    try {
+      setSurveySubmissionError(null);
+      const response = await surveyService.submitLeagueSurvey({
+        profileId: survey.leagueProfileId,
+        leagueSurveyId: survey.leagueSurveyId,
+        surveyId: survey.surveyDefinitionId,
+        episodeId: survey.episodeId,
+        leagueId: survey.leagueId,
+        surveyChoicesMap: surveySelectedChoices,
+      });
+    } catch (error: any) {
+      const errorMessage =
+        error.response?.data?.message || 'An unexpected error occurred';
+      setSurveySubmissionError(errorMessage);
+    }
+  }
+  return (
+    <>
+      {surveySubmissionError && (
+        <div className='text-red-500 text-center mt-4'>
+          {surveySubmissionError}
+        </div>
+      )}
       <SurveyPicks
         survey={survey}
         selectedChoices={surveySelectedChoices}
@@ -58,8 +108,6 @@ const Survey: React.FC<SurveyProps> = ({
     </>
   );
 };
-
-export default Survey;
 
 interface SurveyStatusViewProps {
   openDate: Date;

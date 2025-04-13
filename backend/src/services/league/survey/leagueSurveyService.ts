@@ -4,7 +4,6 @@ import { LeagueAttributes } from '../../../models/league/League';
 import { LeagueSurveyForEpisodeAttributes } from '../../../models/league/LeagueSurveysForEpisode';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
 import leagueSurveyForEpisodeRepostiory from '../../../repositories/league/survey/leagueSurveyForEpisodeRepository.ts';
-import { NotFoundError } from '../../../utils/errors/errors.ts';
 import episodeSurveyService from './episodeSurveyService';
 
 const leagueSurveyService = {

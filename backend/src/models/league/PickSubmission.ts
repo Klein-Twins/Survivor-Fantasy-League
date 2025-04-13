@@ -16,6 +16,7 @@ export interface PickSubmissionAttributes {
     | PickOptionTypeEnum
     | string;
   pointsEarned: PickPointsAttributes['points'] | null;
+  rank: number;
 }
 
 const PickSubmissionModel = (sequelize: Sequelize) => {
@@ -27,6 +28,7 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
     public playerChoice!: PickSubmissionAttributes['playerChoice'];
     public pickId!: PickSubmissionAttributes['pickId'];
     public pointsEarned!: PickSubmissionAttributes['pointsEarned'];
+    public rank!: number;
 
     static associate(models: any) {
       if (models.SurveySubmissions) {
@@ -85,6 +87,11 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: true,
         field: 'POINTS_EARNED',
+      },
+      rank: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'RANK',
       },
     },
     {

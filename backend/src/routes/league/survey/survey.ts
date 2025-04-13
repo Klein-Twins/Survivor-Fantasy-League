@@ -7,5 +7,6 @@ router.get(
   '/:leagueId/:profileId/:episodeId',
   surveyController.getSurveyForLeagueMember
 );
+router.post('/submit', surveyController.submitSurvey);
 
 export default router;

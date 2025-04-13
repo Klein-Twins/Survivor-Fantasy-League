@@ -1,21 +1,17 @@
-import {
-  BinaryPickOptions,
-  ColorPickOptions,
-  Pick,
-  PickOptions,
-  SurvivorPickOptions,
-  TribePickOptions,
-} from '../../../generated-api';
+import { Pick, PickOptions } from '../../../generated-api';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
 import { PicksAttributes } from '../../../models/surveyAndPick/picks/Picks';
 import { SurveyAttributes } from '../../../models/surveyAndPick/Survey';
 import pickRepository from '../../../repositories/league/survey/pick/pickRepository';
 import surveyPicksRepository from '../../../repositories/league/survey/pick/surveyPicksRepository';
+import surveyRepository from '../../../repositories/league/survey/surveyRepository';
 import { NotFoundError } from '../../../utils/errors/errors';
 import pickOptionService from './pickOptionService';
 
 const pickService = {
+  getPick,
   getPicksForSurvey,
+  validatePicksAreInSurvey,
 };
 
 async function getPick(
@@ -26,7 +22,6 @@ async function getPick(
   if (!pickAttributes) {
     throw new NotFoundError(`Pick not found for pickId: ${pickId}`);
   }
-
   const pickOptions = await pickOptionService.getPickOptions(pickId, episodeId);
 
   return buildPick(pickAttributes, pickOptions);
@@ -50,6 +45,64 @@ async function getPicksForSurvey(
   );
 
   return picks;
+}
+
+async function validatePicksAreInSurvey<Throws extends boolean = false>(
+  pickIds: PicksAttributes['pickId'][],
+  episodeId: EpisodeAttributes['id'],
+  throws: Throws
+): Promise<boolean> {
+  const surveyDefinitionId = await surveyRepository.getSurveyDefinitionId(
+    'episodeId',
+    episodeId,
+    throws
+  );
+
+  const pickIdsInSurvey = await pickRepository.getPickIdsInSurveyDefinition(
+    surveyDefinitionId!,
+    throws
+  );
+
+  const picksNotInSurvey: Pick['id'][] = [];
+  pickIds.forEach((pickId) => {
+    if (!pickIdsInSurvey.includes(pickId)) {
+      picksNotInSurvey.push(pickId);
+    }
+  });
+
+  const missingSurveyPicks: Pick['id'][] = [];
+  pickIdsInSurvey.forEach((pickId) => {
+    if (!pickIds.includes(pickId)) {
+      missingSurveyPicks.push(pickId);
+    }
+  });
+
+  if (picksNotInSurvey.length > 0 && missingSurveyPicks.length > 0) {
+    if (throws) {
+      throw new NotFoundError(
+        `Picks not found in survey: ${picksNotInSurvey.join(
+          ', '
+        )} and missing picks: ${missingSurveyPicks.join(', ')}`
+      );
+    }
+    return false;
+  } else if (picksNotInSurvey.length > 0) {
+    if (throws) {
+      throw new NotFoundError(
+        `Picks not found in survey: ${picksNotInSurvey.join(', ')}`
+      );
+    }
+    return false;
+  } else if (missingSurveyPicks.length > 0) {
+    if (throws) {
+      throw new NotFoundError(
+        `Picks not found in survey: ${missingSurveyPicks.join(', ')}`
+      );
+    }
+    return false;
+  } else {
+    return true;
+  }
 }
 
 function buildPick(

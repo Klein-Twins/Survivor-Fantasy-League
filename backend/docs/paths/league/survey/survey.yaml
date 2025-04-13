@@ -74,9 +74,7 @@ components:
         - isCompleted
       properties:
         leagueSurvey:
-          oneOf:
-            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueMemberSurvey'
-            - $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueMemberSurvey'
+          $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueMemberSurvey'
         isCompleted:
           type: boolean
           description:
@@ -89,7 +87,7 @@ components:
         - leagueSurvey
       properties:
         leagueSurvey:
-          $ref: '../../../components/league/survey/survey.yaml#/components/schemas/CompletedLeagueMemberSurvey'
+          $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueMemberSurvey'
   requestBodies:
     SubmitSurveyRequestBody:
       type: object

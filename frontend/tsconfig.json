@@ -6,6 +6,7 @@
   ],
   "compilerOptions": {
     "noUnusedLocals": false,
+    "typeRoots": ["./node_modules/@types", "./src/types"],
     "noUnusedParameters": false
   }
 }

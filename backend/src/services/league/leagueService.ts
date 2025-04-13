@@ -18,6 +18,7 @@ const leagueService = {
   createLeague,
   getLeague,
   getLeaguesForProfile,
+  getLeagueForLeagueProfileId,
 };
 
 async function getLeague(leagueId: LeagueAttributes['leagueId']) {
@@ -61,6 +62,19 @@ async function createLeague({
     await transaction.rollback();
     throw error;
   }
+}
+
+async function getLeagueForLeagueProfileId(
+  leagueProfileId: LeagueProfileAttributes['id']
+): Promise<League> {
+  const leagueId = await leagueMemberRepository.getLeagueIdByLeagueProfile(
+    leagueProfileId
+  );
+  if (!leagueId) {
+    throw new NotFoundError('League profile not found');
+  }
+
+  return await getLeague(leagueId);
 }
 
 async function getLeaguesForProfile(

@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
-import {
-  CompletedLeagueMemberSurvey,
-  LeagueMemberSurvey,
-} from '../../../../generated-api';
+import { LeagueMemberSurvey } from '../../../../generated-api';
 import { PickView } from './picks/Picks';
 import { SurveyPickChoicesMap } from './Survey';
 import usePickOptions from '../../../hooks/survey/usePickOptions';
@@ -10,7 +7,7 @@ import { Button } from '@headlessui/react';
 import { ButtonPrimaryColors } from '../../../styles/CommonColorClassNames';
 
 interface SurveyPicksProps {
-  survey: CompletedLeagueMemberSurvey | LeagueMemberSurvey;
+  survey: LeagueMemberSurvey;
   selectedChoices: Map<string, any[]>;
   setSurveySelectedChoices: React.Dispatch<
     React.SetStateAction<SurveyPickChoicesMap>

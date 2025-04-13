@@ -1,19 +1,21 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  CompletedLeagueMemberSurvey,
   GetLeagueMemberSurveyResponse,
   GetLeagueMemberSurveyResponseData,
+  PickIdAndPlayerChoice,
   SubmitSurveyRequestBody,
+  SubmitSurveyResponse,
   SurveySubmissionStatus,
 } from '../../../generated-api';
 import { LeagueAttributes } from '../../../models/league/League';
 import { ProfileAttributes } from '../../../models/account/Profile';
 
 import validator from 'validator';
-import surveyService from '../../../services/league/survey/surveyService';
 import leagueMemberSurveyService from '../../../services/league/survey/leagueMemberSurveyService';
 import { BadRequestError } from '../../../utils/errors/errors';
+
 import { UUID } from 'crypto';
+import pickService from '../../../services/league/survey/pickService';
 
 const surveyController = {
   getSurveyForLeagueMember,
@@ -66,6 +68,7 @@ async function getSurveyForLeagueMember(
 
     const isCompleted: boolean =
       leagueSurvey.submissionStatus === SurveySubmissionStatus.Submitted;
+
     const responseData: GetLeagueMemberSurveyResponseData = {
       leagueSurvey: leagueSurvey,
       isCompleted: isCompleted,
@@ -85,15 +88,105 @@ async function getSurveyForLeagueMember(
 async function submitSurvey(req: Request, res: Response, next: NextFunction) {
   try {
     const requestBody: any = req.body;
-    //await leagueMemberSurveyService.submitSurvey(submitSurveyRequest);
-    res.status(200).json({
+    const submitSurveyRequest = validateSubmitSurveyRequest(requestBody);
+
+    const completedLeagueMemberSurvey =
+      await leagueMemberSurveyService.submitLeagueSurvey({
+        surveyId: submitSurveyRequest.surveyId as UUID,
+        leagueId: submitSurveyRequest.leagueId,
+        profileId: submitSurveyRequest.profileId as UUID,
+        episodeId: submitSurveyRequest.episodeId as UUID,
+        leagueSurveyId: submitSurveyRequest.leagueSurveyId as UUID,
+        picksWithChoice: submitSurveyRequest.picksWithChoice,
+      });
+
+    const response: SubmitSurveyResponse = {
       success: true,
       message: 'Successfully submitted survey',
       statusCode: 200,
-    });
+      responseData: {
+        leagueSurvey: completedLeagueMemberSurvey,
+      },
+    };
+
+    res.status(200).json(response);
   } catch (error) {
     next(error);
   }
+}
+
+function validateSubmitSurveyRequest(reqBody: any): SubmitSurveyRequestBody {
+  //profileId is actually leagueSurveyId
+  const {
+    episodeId,
+    leagueId,
+    leagueSurveyId,
+    surveyId,
+    profileId,
+    picksWithChoice,
+  } = reqBody;
+
+  if (!leagueId) {
+    throw new BadRequestError('LeagueId is required');
+  }
+  if (!validator.isUUID(leagueId)) {
+    throw new BadRequestError('Invalid leagueId');
+  }
+  if (!validator.isUUID(episodeId)) {
+    throw new BadRequestError('Invalid episodeId');
+  }
+  if (!validator.isUUID(leagueSurveyId)) {
+    throw new BadRequestError('Invalid leagueSurveyId');
+  }
+  if (!validator.isUUID(surveyId)) {
+    throw new BadRequestError('Invalid surveyId');
+  }
+  if (!validator.isUUID(profileId)) {
+    throw new BadRequestError('Invalid profileId');
+  }
+  if (!Array.isArray(picksWithChoice)) {
+    throw new BadRequestError('Picks must be an array');
+  }
+  picksWithChoice.forEach((pick: PickIdAndPlayerChoice) => {
+    if (!pick.pickId) {
+      throw new BadRequestError('Pick ID is required');
+    }
+    if (!pick.choice) {
+      throw new BadRequestError('Pick choices are required');
+    }
+    if (!Array.isArray(pick.choice)) {
+      throw new BadRequestError('Pick choices must be an array');
+    }
+    if (pick.choice.length === 0) {
+      throw new BadRequestError('Pick choices cannot be empty');
+    }
+    pick.choice.forEach((choice: string) => {
+      if (!choice) {
+        throw new BadRequestError('Choice ID is required');
+      }
+      if (!validator.isUUID(choice)) {
+        throw new BadRequestError('Invalid choice ID');
+      }
+    });
+  });
+
+  const convertedTypePicks: PickIdAndPlayerChoice[] = picksWithChoice.map(
+    (pick: any) => {
+      return {
+        pickId: pick.pickId as UUID,
+        choice: pick.choice.map((choice: any) => choice as UUID) as UUID[],
+      };
+    }
+  );
+
+  return {
+    episodeId: episodeId as UUID,
+    leagueSurveyId: leagueSurveyId as UUID,
+    surveyId: surveyId as UUID,
+    profileId: profileId as UUID,
+    leagueId: leagueId as UUID,
+    picksWithChoice: convertedTypePicks,
+  };
 }
 
 export default surveyController;

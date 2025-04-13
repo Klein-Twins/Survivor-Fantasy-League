@@ -13,6 +13,7 @@
  */
 
 import { PickOptions } from './pick-options';
+import { PlayerChoices } from './player-choices';
  /**
  * 
  *
@@ -46,6 +47,12 @@ export interface Pick {
      * @example 10
      */
     pointValue: number;
+
+    /**
+     * @type {PlayerChoices}
+     * @memberof Pick
+     */
+    playerChoices?: PlayerChoices;
 
     /**
      * @type {PickOptions}

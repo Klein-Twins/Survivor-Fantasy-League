@@ -12,20 +12,12 @@
  * Do not edit the class manually.
  */
 
-import { Pick } from './pick';
-import { PickChoice } from './pick-choice';
-import { PickOptions } from './pick-options';
+import { PlayerChoice } from './player-choice';
  /**
  * 
  *
  * @export
- * @interface PickAndChoice
+ * @interface PlayerChoices
  */
-export interface PickAndChoice extends Pick {
-
-    /**
-     * @type {PickChoice}
-     * @memberof PickAndChoice
-     */
-    choice: PickChoice;
+export interface PlayerChoices extends Array<PlayerChoice> {
 }

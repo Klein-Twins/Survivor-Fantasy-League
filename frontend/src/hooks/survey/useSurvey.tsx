@@ -10,19 +10,20 @@ import { useApi } from '../useApi';
 import surveyService, {
   GetLeagueSurveyRequestParams,
 } from '../../services/league/survey/surveyService';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../store/store';
 
 interface UseSurveyProps {
   leagueId: League['id'];
   profileId: Profile['profileId'];
-  activeEpisode: Episode;
+  episode: Episode;
 }
 
 export type SurveyPickChoicesMap = Map<string, any[]>;
 
-const useSurvey = ({ leagueId, profileId, activeEpisode }: UseSurveyProps) => {
-  const [selectedEpisode, setSelectedEpisode] =
-    useState<Episode>(activeEpisode);
-
+const useSurvey = ({ leagueId, profileId, episode }: UseSurveyProps) => {
+  //season to work under
+  const season = useSelector((state: RootState) => state.season.selectedSeason);
   const [selectedChoices, setSurveySelectedChoices] =
     useState<SurveyPickChoicesMap>(new Map<string, any[]>());
 
@@ -34,36 +35,23 @@ const useSurvey = ({ leagueId, profileId, activeEpisode }: UseSurveyProps) => {
   } = useApi<void, GetLeagueSurveyRequestParams, GetLeagueMemberSurveyResponse>(
     surveyService.getLeagueSurvey
   );
-
   useEffect(() => {
     async function fetchSurvey() {
-      const response = await getSurvey({
+      const getSurveyResponse = await getSurvey({
         queryParams: {
           leagueId: leagueId,
           profileId: profileId,
-          episodeId: selectedEpisode.id,
+          episodeId: episode.id,
         },
       });
-
-      if (response?.responseData?.leagueSurvey) {
-        // Initialize selectedChoices with empty arrays for each pick
-        const initialChoices: SurveyPickChoicesMap = new Map<string, any[]>(
-          response.responseData.leagueSurvey.picks.map(
-            (pick: Pick): [string, any[]] => [pick.id, []]
-          )
-        );
-        setSurveySelectedChoices(initialChoices);
-      }
     }
     fetchSurvey();
-  }, [leagueId, profileId, selectedEpisode]);
+  }, [leagueId, profileId, episode]);
 
   return {
     survey: getSurveyResponse?.responseData.leagueSurvey,
     isLoading: getSurveyIsLoading,
     error: getSurveyError,
-    selectedEpisode,
-    setSelectedEpisode,
     selectedChoices,
     setSurveySelectedChoices,
   };

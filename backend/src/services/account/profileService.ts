@@ -3,16 +3,16 @@ import { Account, League, Profile } from '../../generated-api';
 import { UserAttributes } from '../../models/account/User';
 import accountService from './accountService';
 import { NotFoundError } from '../../utils/errors/errors';
+import { LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 
 const profileService = {
   getProfile,
 };
 
 async function getProfile(
-  field: keyof Pick<
-    UserAttributes,
-    'userId' | 'userName' | 'email' | 'profileId'
-  >,
+  field:
+    | keyof Pick<UserAttributes, 'userId' | 'userName' | 'email' | 'profileId'>
+    | 'leagueProfileId',
   value: string,
   t?: Transaction
 ): Promise<Profile> {

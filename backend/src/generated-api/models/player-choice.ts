@@ -12,20 +12,29 @@
  * Do not edit the class manually.
  */
 
-import { LeagueMemberSurvey } from './league-member-survey';
-import { PickAndChoice } from './pick-and-choice';
-import { SurveySubmissionStatus } from './survey-submission-status';
  /**
  * 
  *
  * @export
- * @interface CompletedLeagueMemberSurvey
+ * @interface PlayerChoice
  */
-export interface CompletedLeagueMemberSurvey extends LeagueMemberSurvey {
+export interface PlayerChoice {
 
     /**
-     * @type {Array<PickAndChoice>}
-     * @memberof CompletedLeagueMemberSurvey
+     * The choice made by the player
+     *
+     * @type {string}
+     * @memberof PlayerChoice
+     * @example UUID of survivor
      */
-    picks: Array<PickAndChoice>;
+    playerChoice: string;
+
+    /**
+     * The rank of the choice
+     *
+     * @type {number}
+     * @memberof PlayerChoice
+     * @example 1
+     */
+    rank: number;
 }

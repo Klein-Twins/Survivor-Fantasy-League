@@ -68,10 +68,9 @@ async function createAccount(signupData: {
   }
 }
 async function getAccount(
-  field: keyof Pick<
-    UserAttributes,
-    'userId' | 'userName' | 'email' | 'profileId'
-  >,
+  field:
+    | keyof Pick<UserAttributes, 'userId' | 'userName' | 'email' | 'profileId'>
+    | 'leagueProfileId',
   value: string,
   t?: Transaction
 ): Promise<Account> {

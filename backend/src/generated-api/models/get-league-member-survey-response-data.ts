@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { CompletedLeagueMemberSurvey } from './completed-league-member-survey';
 import { LeagueMemberSurvey } from './league-member-survey';
  /**
  * 
@@ -23,10 +22,10 @@ import { LeagueMemberSurvey } from './league-member-survey';
 export interface GetLeagueMemberSurveyResponseData {
 
     /**
-     * @type {LeagueMemberSurvey | CompletedLeagueMemberSurvey}
+     * @type {LeagueMemberSurvey}
      * @memberof GetLeagueMemberSurveyResponseData
      */
-    leagueSurvey: LeagueMemberSurvey | CompletedLeagueMemberSurvey;
+    leagueSurvey: LeagueMemberSurvey;
 
     /**
      * Indicates if the survey is completed. If true, then leagueSurvey should be CompletedLeagueSurvey and if not then LeagueSurvey

@@ -12,7 +12,6 @@
  * Do not edit the class manually.
  */
 
-import { PickChoice } from './pick-choice';
  /**
  * 
  *
@@ -30,8 +29,8 @@ export interface PickIdAndPlayerChoice {
     pickId: string;
 
     /**
-     * @type {PickChoice}
+     * @type {Array<string>}
      * @memberof PickIdAndPlayerChoice
      */
-    choice?: PickChoice;
+    choice: Array<string>;
 }

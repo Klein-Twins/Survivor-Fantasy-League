@@ -1,9 +1,12 @@
+import { SurveySubmissionStatus } from '../../../generated-api';
 import { LeagueProfileAttributes } from '../../../models/league/LeagueProfile';
 import { LeagueSurveyForEpisodeAttributes } from '../../../models/league/LeagueSurveysForEpisode';
+import { SurveySubmissionAttributes } from '../../../models/league/SurveySubmissions';
 import surveySubmissionRepository from '../../../repositories/league/survey/surveySubmissionRepository';
 
 const surveySubmissionService = {
   didLeagueMemberSubmitSurvey,
+  getSurveySubmissionStatus,
 };
 
 async function didLeagueMemberSubmitSurvey(
@@ -15,6 +18,27 @@ async function didLeagueMemberSubmitSurvey(
     leagueMemberSurveyId
   );
   return !!surveySubmission;
+}
+
+async function getSurveySubmissionStatus(
+  leagueProfileId: LeagueProfileAttributes['id'],
+  leagueSurveyId: LeagueSurveyForEpisodeAttributes['leagueSurveyId']
+): Promise<{
+  surveySubmissionStatus: SurveySubmissionStatus;
+  surveySubmissionAttributes: SurveySubmissionAttributes | null;
+}> {
+  const surveySubmissionAttributes =
+    await surveySubmissionRepository.getSurveySubmission(
+      leagueProfileId,
+      leagueSurveyId
+    );
+  const surveySubmissionStatus = surveySubmissionAttributes
+    ? SurveySubmissionStatus.Submitted
+    : SurveySubmissionStatus.NotSubmitted;
+  return {
+    surveySubmissionStatus: surveySubmissionStatus,
+    surveySubmissionAttributes: surveySubmissionAttributes,
+  };
 }
 
 export default surveySubmissionService;

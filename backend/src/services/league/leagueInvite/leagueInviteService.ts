@@ -174,8 +174,9 @@ async function createAndSendLeagueInvite({
     );
 
   return leagueMemberService.getInvitedOrEnrolledLeagueMember(
-    leagueId,
-    invitedProfileId
+    'profileId',
+    invitedProfileId,
+    leagueId
   );
 }
 

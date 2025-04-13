@@ -501,6 +501,19 @@ const season48Episodes = new Map<number, Episode>([
       },
     },
   ],
+  [
+    8,
+    {
+      episodeInfo: {
+        number: 8,
+        id: '6e63312f-c9fc-4e25-8e0a-6771e6c49d3f',
+        title: 'My made up episode',
+        airDate: new Date('2025-04-16T19:00:00-06:00'),
+        description: '',
+        type: EpisodeType.POSTMERGE,
+      },
+    },
+  ],
 ]);
 
 export enum Season48Tribes {

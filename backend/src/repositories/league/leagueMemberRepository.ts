@@ -10,6 +10,7 @@ import { SeasonsAttributes } from '../../models/season/Seasons';
 const leagueMemberRepository = {
   createLeagueMember,
   getLeagueProfiles,
+  getLeagueIdByLeagueProfile,
 };
 
 async function createLeagueMember({
@@ -55,6 +56,18 @@ async function createLeagueMember({
     }
     throw error;
   }
+}
+
+async function getLeagueIdByLeagueProfile(
+  leagueProfileId: LeagueProfileAttributes['id']
+): Promise<LeagueAttributes['leagueId'] | null> {
+  const leagueProfile = await models.LeagueProfile.findOne({
+    where: {
+      id: leagueProfileId,
+    },
+  });
+
+  return leagueProfile ? leagueProfile.leagueId : null;
 }
 
 async function getLeagueProfiles(

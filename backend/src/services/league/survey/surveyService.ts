@@ -1,18 +1,8 @@
-import {
-  CompletedLeagueMemberSurvey,
-  LeagueSurvey,
-  Pick,
-  Survey,
-} from '../../../generated-api';
-import { ProfileAttributes } from '../../../models/account/Profile';
-import { LeagueAttributes } from '../../../models/league/League';
+import { Pick, Survey } from '../../../generated-api';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
 import { SurveyAttributes } from '../../../models/surveyAndPick/Survey';
 import surveyRepository from '../../../repositories/league/survey/surveyRepository';
 import { NotFoundError } from '../../../utils/errors/errors';
-import episodeService from '../../season/episodeService';
-import leagueMemberService from '../leagueMemberService';
-import leagueService from '../leagueService';
 import pickService from './pickService';
 
 const surveyService = {
