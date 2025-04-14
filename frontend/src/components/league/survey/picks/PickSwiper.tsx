@@ -54,12 +54,14 @@ const PickSwiper: React.FC<PickSwiperProps> = ({
         <button
           className={`custom-next z-10 ml-1 rounded-md dark:bg-primary-a0-dark dark:hover:bg-primary-a1-dark transition-colors disabled:dark:bg-gray-700 text-white px-4 py-2`}
           disabled={
-            activeIndex === survey.picks.length - 1 && !allPicksCompleted
+            (activeIndex === survey.picks.length - 1 && !allPicksCompleted) ||
+            survey.submissionStatus === SurveySubmissionStatus.Submitted
           }
           onClick={() => swiperRef.current?.slideNext()}>
           {activeIndex !== survey.picks.length - 1 ? (
             <FaArrowRight />
-          ) : allPicksCompleted ? (
+          ) : allPicksCompleted &&
+            survey.submissionStatus !== SurveySubmissionStatus.Submitted ? (
             <FaCheckCircle onClick={handleSurveySubmit} />
           ) : (
             <div className='relative group'>
