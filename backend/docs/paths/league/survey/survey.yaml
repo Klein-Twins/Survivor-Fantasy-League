@@ -1,4 +1,38 @@
 paths:
+  surveys:
+    get:
+      summary: Get all Surveys for profiledId and leagueId,
+      description:
+        Gets all surveys for the specified profileId and leagueId (mainly used
+        to get all statuses of the leagueSurveys)
+      operationId: getLeagueSurveys
+      tags:
+        - SurveyService
+      parameters:
+        - in: path
+          name: leagueId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the league.
+            example: '1'
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the profile.
+            example: '1'
+      responses:
+        '200':
+          description:
+            Retrieves all surveys for the specified profileId in leagueId
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/GetLeagueMemberSurveysResponse'
   survey:
     get:
       summary: Get survey for profileId, and episodeId with optional leagueId
@@ -67,20 +101,19 @@ paths:
 
 components:
   schemas:
+    GetLeagueMemberSurveysResponseData:
+      type: array
+      items:
+        $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueMemberSurvey'
+
     GetLeagueMemberSurveyResponseData:
       type: object
       required:
         - leagueSurvey
-        - isCompleted
       properties:
         leagueSurvey:
           $ref: '../../../components/league/survey/survey.yaml#/components/schemas/LeagueMemberSurvey'
-        isCompleted:
-          type: boolean
-          description:
-            Indicates if the survey is completed. If true, then leagueSurvey
-            should be CompletedLeagueSurvey and if not then LeagueSurvey
-          example: true
+
     SubmitSurveyResponseData:
       type: object
       required:
@@ -96,7 +129,7 @@ components:
         - leagueSurveyId
         - surveyId
         - leagueId
-        - profileId
+        - leagueProfileId
         - picksWithChoice
       properties:
         episodeId:
@@ -119,7 +152,7 @@ components:
           format: uuid
           description: The ID of the league.
           example: 1
-        profileId:
+        leagueProfileId:
           type: string
           format: uuid
           description: The ID of the profile.
@@ -130,6 +163,17 @@ components:
             $ref: '../../../components/league/survey/pick.yaml#/components/schemas/PickIdAndPlayerChoice'
 
   responses:
+    GetLeagueMemberSurveysResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/GetLeagueMemberSurveysResponseData'
+
     GetLeagueMemberSurveyResponse:
       type: object
       allOf:

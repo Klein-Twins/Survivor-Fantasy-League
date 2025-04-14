@@ -10,47 +10,34 @@ import {
   SubmitSurveyRequestBody,
   SubmitSurveyResponse,
 } from '../../../generated-api';
-import { useApi } from '../useApi';
+import { ApiRequestParams, useApi } from '../useApi';
 import surveyService, {
   GetLeagueSurveyRequestParams,
 } from '../../services/league/survey/surveyService';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../store/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '../../store/store';
 import usePickOptions from './usePickOptions';
+import { submitSurvey } from '../../store/slices/surveySlice';
 
 interface UseSurveyProps {
-  leagueId: League['id'];
-  profileId: Profile['profileId'];
-  episode: Episode;
+  // leagueId: League['id'];
+  // profileId: Profile['profileId'];
+  // episode: Episode;
+  survey: LeagueMemberSurvey;
 }
 
 export type SurveyPickChoicesMap = Map<string, any[]>;
-const useSurvey = ({ leagueId, profileId, episode }: UseSurveyProps) => {
-  const [survey, setSurvey] = useState<LeagueMemberSurvey | null>(null);
+const useSurvey = ({ survey }: UseSurveyProps) => {
+  const dispatch = useDispatch<AppDispatch>();
+
+  const { submitSurveyError, submitSurveyLoading } = useSelector(
+    (state: RootState) => state.survey
+  );
+
   const [playerChoices, setPlayerChoices] = useState<SurveyPickChoicesMap>(
     new Map<string, any[]>()
   );
-  const [surveySubmitted, setSurveySubmitted] = useState(false);
 
-  const {
-    data: getSurveyResponse,
-    isLoading: getSurveyIsLoading,
-    error: getSurveyError,
-    execute: getSurvey,
-  } = useApi<void, GetLeagueSurveyRequestParams, GetLeagueMemberSurveyResponse>(
-    surveyService.getLeagueSurvey
-  );
-
-  const {
-    data: submitSurveyResponse,
-    isLoading: submitSurveyIsLoading,
-    error: submitSurveyError,
-    execute: submitSurvey,
-  } = useApi<SubmitSurveyRequestBody, void, SubmitSurveyResponse>(
-    surveyService.submitLeagueSurvey
-  );
-
-  // Handle option click logic
   const handleOptionClick = (
     pickId: string,
     item: any,
@@ -96,14 +83,16 @@ const useSurvey = ({ leagueId, profileId, episode }: UseSurveyProps) => {
   }, [survey, playerChoices]);
 
   async function handleSubmit() {
-    console.log('Survey submitted with choices:', playerChoices);
-    await submitSurvey({
+    const submitSurveyRequestData: ApiRequestParams<
+      SubmitSurveyRequestBody,
+      void
+    > = {
       body: {
-        episodeId: episode.id,
+        episodeId: survey.episodeId,
         surveyId: survey.surveyDefinitionId,
         leagueSurveyId: survey?.leagueSurveyId,
-        leagueId: leagueId,
-        profileId: profileId,
+        leagueId: survey.leagueId,
+        leagueProfileId: survey.leagueProfileId,
         picksWithChoice: Array.from(playerChoices.entries()).map(
           ([pickId, choices]) => ({
             pickId,
@@ -111,63 +100,39 @@ const useSurvey = ({ leagueId, profileId, episode }: UseSurveyProps) => {
           })
         ),
       },
-    });
+    };
+    dispatch(submitSurvey(submitSurveyRequestData));
   }
 
   useEffect(() => {
-    async function fetchSurvey() {
-      const getSurveyResponse = await getSurvey({
-        queryParams: {
-          leagueId: leagueId,
-          profileId: profileId,
-          episodeId: episode.id,
-        },
+    if (survey.submissionStatus === SurveySubmissionStatus.Submitted) {
+      const picks = survey.picks;
+      const choicesMap = new Map<string, any[]>();
+      picks.forEach((pick: Pick) => {
+        const pickId = pick.id;
+        const choices = pick.playerChoices.map((choice) => ({
+          id: choice.playerChoice,
+          rank: choice.rank,
+        }));
+        choicesMap.set(pickId, choices);
       });
-      if (getSurveyResponse) {
-        setSurvey(getSurveyResponse.responseData.leagueSurvey);
-        if (
-          getSurveyResponse.responseData.leagueSurvey.submissionStatus ===
-          SurveySubmissionStatus.Submitted
-        ) {
-          const picks = getSurveyResponse.responseData.leagueSurvey.picks;
-          const choicesMap = new Map<string, any[]>();
-          picks.forEach((pick: Pick) => {
-            const pickId = pick.id;
-            const choices = pick.playerChoices.map((choice) => ({
-              id: choice.playerChoice,
-              rank: choice.rank,
-            }));
-            choicesMap.set(pickId, choices);
-          });
-          setPlayerChoices(choicesMap);
-          setSurveySubmitted(true);
-        } else {
-          const choicesMap = new Map<string, any[]>(
-            getSurveyResponse.responseData.leagueSurvey.picks.map(
-              (pick): [string, any[]] => [pick.id, []]
-            )
-          );
-          setPlayerChoices(choicesMap);
-          setSurveySubmitted(false);
-        }
-      }
+      setPlayerChoices(choicesMap);
+    } else {
+      const choicesMap = new Map<string, any[]>(
+        survey.picks.map((pick): [string, any[]] => [pick.id, []])
+      );
+      setPlayerChoices(choicesMap);
     }
-    fetchSurvey();
-  }, [leagueId, profileId, episode]);
+  }, [survey]);
 
   return {
     survey,
-    getSurveyIsLoading,
-    getSurveyError,
+    //  getSurveyIsLoading,
+    //  getSurveyError,
     playerChoices, // Expose playerChoices
     setPlayerChoices,
     handleOptionClick, // Expose handleOptionClick
     handleSubmit,
-    surveySubmitted,
-    setSurveySubmitted,
-    submitSurveyIsLoading,
-    submitSurveyError,
-    submitSurveyResponse,
     allPicksCompleted, // Expose allPicksCompleted
   };
 };

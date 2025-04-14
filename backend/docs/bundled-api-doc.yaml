@@ -1781,6 +1781,336 @@ paths:
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
+  '/api/league/survey/{leagueId}/{profileId}':
+    get:
+      summary: 'Get all Surveys for profiledId and leagueId,'
+      description: Gets all surveys for the specified profileId and leagueId (mainly used to get all statuses of the leagueSurveys)
+      operationId: getLeagueSurveys
+      tags:
+        - SurveyService
+      parameters:
+        - in: path
+          name: leagueId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the league.
+            example: '1'
+        - in: path
+          name: profileId
+          required: true
+          schema:
+            type: string
+            format: uuid
+            description: The ID of the profile.
+            example: '1'
+      responses:
+        '200':
+          description: Retrieves all surveys for the specified profileId in leagueId
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - responseData
+                    properties:
+                      responseData:
+                        type: array
+                        items:
+                          allOf:
+                            - allOf:
+                                - allOf:
+                                    - type: object
+                                      required:
+                                        - surveyDefinitionId
+                                        - picks
+                                      properties:
+                                        surveyDefinitionId:
+                                          type: string
+                                          description: The ID of the survey
+                                          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                        picks:
+                                          type: array
+                                          items:
+                                            type: object
+                                            required:
+                                              - id
+                                              - optionType
+                                              - options
+                                              - pointValue
+                                              - description
+                                            properties:
+                                              id:
+                                                type: string
+                                                format: uuid
+                                                description: The ID of the pick
+                                              description:
+                                                type: string
+                                                description: The description of the pick
+                                                example: Who will be voted out this week?
+                                              pointValue:
+                                                type: integer
+                                                description: The number of points the pick is worth
+                                                example: 10
+                                              playerChoices:
+                                                type: array
+                                                items:
+                                                  type: object
+                                                  required:
+                                                    - playerChoice
+                                                    - rank
+                                                  properties:
+                                                    playerChoice:
+                                                      type: string
+                                                      description: The choice made by the player
+                                                      example: UUID of survivor
+                                                    rank:
+                                                      type: integer
+                                                      description: The rank of the choice
+                                                      example: 1
+                                              options:
+                                                type: object
+                                                required:
+                                                  - pickOptionType
+                                                  - minNumSelections
+                                                  - maxNumSelections
+                                                  - noneOptionAllowed
+                                                  - options
+                                                properties:
+                                                  pickOptionType:
+                                                    type: string
+                                                    enum:
+                                                      - survivor
+                                                      - survivorInTribe
+                                                      - color
+                                                      - tribe
+                                                      - binary
+                                                    description: The type of pick
+                                                    example: Survivor
+                                                  minNumSelections:
+                                                    type: integer
+                                                    description: The minimum number of selections required
+                                                    example: 1
+                                                  maxNumSelections:
+                                                    type: integer
+                                                    description: The maximum number of selections allowed
+                                                    example: 1
+                                                  noneOptionAllowed:
+                                                    type: boolean
+                                                    description: Whether the pick option allows for a "none" option
+                                                    example: false
+                                                  options:
+                                                    oneOf:
+                                                      - type: array
+                                                        items:
+                                                          type: object
+                                                          required:
+                                                            - id
+                                                            - firstName
+                                                            - lastName
+                                                            - name
+                                                          properties:
+                                                            id:
+                                                              type: string
+                                                              description: The survivor's unique identifier
+                                                              example: 1
+                                                            name:
+                                                              type: string
+                                                              description: The survivor's full name
+                                                              example: John Doe
+                                                            firstName:
+                                                              type: string
+                                                              description: The survivor's first name
+                                                              example: John
+                                                            lastName:
+                                                              type: string
+                                                              description: The survivor's last name
+                                                              example: Doe
+                                                      - type: array
+                                                        items:
+                                                          type: object
+                                                          required:
+                                                            - name
+                                                            - hex
+                                                          properties:
+                                                            name:
+                                                              type: string
+                                                              description: The name of the color
+                                                              example: Red
+                                                            hex:
+                                                              type: string
+                                                              description: The hex code of the color
+                                                              example: '#FF0000'
+                                                      - type: array
+                                                        items:
+                                                          type: object
+                                                          required:
+                                                            - id
+                                                            - name
+                                                            - color
+                                                            - seasonId
+                                                            - survivors
+                                                          properties:
+                                                            survivors:
+                                                              type: array
+                                                              items:
+                                                                type: object
+                                                                required:
+                                                                  - id
+                                                                  - firstName
+                                                                  - lastName
+                                                                  - name
+                                                                properties:
+                                                                  id:
+                                                                    type: string
+                                                                    description: The survivor's unique identifier
+                                                                    example: 1
+                                                                  name:
+                                                                    type: string
+                                                                    description: The survivor's full name
+                                                                    example: John Doe
+                                                                  firstName:
+                                                                    type: string
+                                                                    description: The survivor's first name
+                                                                    example: John
+                                                                  lastName:
+                                                                    type: string
+                                                                    description: The survivor's last name
+                                                                    example: Doe
+                                                            seasonId:
+                                                              type: string
+                                                              description: The season's unique identifier
+                                                              example: 47
+                                                            id:
+                                                              type: string
+                                                              description: The tribe's unique identifier
+                                                              format: uuid
+                                                            name:
+                                                              type: string
+                                                              description: The tribe's name
+                                                              example: Luzon
+                                                            color:
+                                                              type: object
+                                                              required:
+                                                                - name
+                                                                - hex
+                                                              properties:
+                                                                name:
+                                                                  type: string
+                                                                  description: The name of the color
+                                                                  example: Red
+                                                                hex:
+                                                                  type: string
+                                                                  description: The hex code of the color
+                                                                  example: '#FF0000'
+                                                            isMergeTribe:
+                                                              type: boolean
+                                                              description: Whether the tribe is a merge tribe
+                                                              example: false
+                                                            episodeStarted:
+                                                              type: string
+                                                              nullable: true
+                                                              description: The id of the episode the tribe started in
+                                                              format: uuid
+                                                      - type: array
+                                                        items:
+                                                          type: string
+                                                          enum:
+                                                            - 'yes'
+                                                            - 'no'
+                                                          description: The binary options for the pick
+                                                          example: 'yes'
+                                                        description: An array of binary options
+                                                        example:
+                                                          - 'yes'
+                                                          - 'no'
+                                            discriminator:
+                                              propertyName: pickOptionType
+                                              mapping:
+                                                survivor: '#/components/schemas/SurvivorPickOptions'
+                                                survivorInTribe: '#/components/schemas/SurvivorPickOptions'
+                                                color: '#/components/schemas/ColorPickOptions'
+                                                tribe: '#/components/schemas/TribePickOptions'
+                                                binary: '#/components/schemas/BinaryPickOptions'
+                                    - type: object
+                                      required:
+                                        - episodeId
+                                        - dueDate
+                                        - openDate
+                                        - episodeSurveyId
+                                        - SurveyAvailabilityStatus
+                                      properties:
+                                        episodeId:
+                                          type: string
+                                          format: uuid
+                                          description: The ID of the episode the survey is for
+                                        dueDate:
+                                          type: string
+                                          format: date-time
+                                          description: The date the survey is due
+                                        openDate:
+                                          type: string
+                                          format: date-time
+                                          description: The date the survey opens
+                                        episodeSurveyId:
+                                          type: string
+                                          format: uuid
+                                          description: The ID of the episode survey
+                                        surveyAvailabilityStatus:
+                                          type: string
+                                          enum:
+                                            - Available
+                                            - Closed
+                                            - Not Open Yet
+                                - type: object
+                                  required:
+                                    - leagueSurveyId
+                                    - leagueId
+                                  properties:
+                                    leagueSurveyId:
+                                      type: string
+                                      format: uuid
+                                      description: The ID of the league survey
+                                    leagueId:
+                                      type: string
+                                      format: uuid
+                                      description: The ID of the league the survey is for
+                            - type: object
+                              required:
+                                - leagueProfileId
+                                - submissionStatus
+                              properties:
+                                leagueProfileId:
+                                  type: string
+                                  format: uuid
+                                  description: The ID of the league profile the survey is for
+                                submissionStatus:
+                                  type: string
+                                  enum:
+                                    - Not Submitted
+                                    - Submitted
   '/api/league/survey/{leagueId}/{profileId}/{episodeId}':
     get:
       summary: 'Get survey for profileId, and episodeId with optional leagueId'
@@ -1847,7 +2177,6 @@ paths:
                         type: object
                         required:
                           - leagueSurvey
-                          - isCompleted
                         properties:
                           leagueSurvey:
                             allOf:
@@ -2122,10 +2451,6 @@ paths:
                                     enum:
                                       - Not Submitted
                                       - Submitted
-                          isCompleted:
-                            type: boolean
-                            description: 'Indicates if the survey is completed. If true, then leagueSurvey should be CompletedLeagueSurvey and if not then LeagueSurvey'
-                            example: true
   /api/league/survey/submit:
     post:
       summary: Submit survey for provided episodeId and profileId
@@ -2144,7 +2469,7 @@ paths:
                 - leagueSurveyId
                 - surveyId
                 - leagueId
-                - profileId
+                - leagueProfileId
                 - picksWithChoice
               properties:
                 episodeId:
@@ -2167,7 +2492,7 @@ paths:
                   format: uuid
                   description: The ID of the league.
                   example: 1
-                profileId:
+                leagueProfileId:
                   type: string
                   format: uuid
                   description: The ID of the profile.

@@ -20,10 +20,9 @@ const SurveyStatusView: React.FC<SurveyStatusViewProps> = ({
 
   return (
     <div className={`w-full p-6 space-y-4 ${colors}`}>
-      <h2 className='text-2xl font-bold text-center'>Status</h2>
-      <div className='flex justify-between'>
+      <div className='flex flex-col space-y-2 justify-between text-center'>
         <div id='open-and-due-date'>
-          <div id='open-date'>
+          <div id='open-date' className=''>
             <p className='text-sm'>Open Date</p>
             <p className='text-lg font-medium'>
               {openDate.toLocaleDateString('en-US', {

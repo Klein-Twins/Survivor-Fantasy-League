@@ -26,36 +26,64 @@ import sequelize, { models } from '../../../config/db.ts';
 import { Transaction } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../../../config/logger.ts';
-import { profile } from 'console';
 import pickChoiceService from './pickChoiceService.ts';
-import surveySubmissionRepository from '../../../repositories/league/survey/surveySubmissionRepository.ts';
 
 const leagueMemberSurveyService = {
   getLeagueMemberSurvey,
   submitLeagueSurvey,
+  getLeagueMemberSurveys,
 };
+
+async function getLeagueMemberSurveys(
+  leagueId: LeagueAttributes['leagueId'],
+  profileId: ProfileAttributes['profileId']
+) {
+  const league = await leagueService.getLeague(leagueId);
+  const profile = await profileService.getProfile('profileId', profileId);
+  const episodes = await episodeService.getEpisodesBySeasonId(league.seasonId);
+
+  const leagueMemberSurveys: LeagueMemberSurvey[] = [];
+  for (const episode of episodes) {
+    const leagueMemberSurvey = await getLeagueMemberSurvey(
+      leagueId,
+      profileId,
+      episode.id as UUID
+    );
+    if (leagueMemberSurvey) {
+      leagueMemberSurveys.push(leagueMemberSurvey);
+    } else {
+      throw new InternalServerError(
+        `League member survey not found for leagueId: ${leagueId}, profileId: ${profileId}, episodeId: ${episode.id}`
+      );
+    }
+  }
+  return leagueMemberSurveys;
+}
 
 async function submitLeagueSurvey({
   episodeId,
   leagueSurveyId,
   surveyId,
   leagueId,
-  profileId,
+  leagueProfileId,
   picksWithChoice,
 }: {
   episodeId: EpisodeAttributes['id'];
   leagueSurveyId: LeagueSurveyForEpisodeAttributes['leagueSurveyId'];
   surveyId: SurveyAttributes['surveyId'];
   leagueId: LeagueAttributes['leagueId'];
-  profileId: ProfileAttributes['profileId'];
+  leagueProfileId: ProfileAttributes['profileId'];
   picksWithChoice: PickIdAndPlayerChoice[];
 }): Promise<LeagueMemberSurvey> {
   const episode = await episodeService.getEpisode('episodeId', episodeId);
   const league = await leagueService.getLeague(leagueId);
-  const profile = await profileService.getProfile('profileId', profileId);
+  const profile = await profileService.getProfile(
+    'leagueProfileId',
+    leagueProfileId
+  );
   const leagueProfile = await leagueMemberService.getEnrolledLeagueMember(
     leagueId,
-    profileId
+    profile.profileId as UUID
   );
 
   const surveySubmission =
@@ -85,7 +113,7 @@ async function submitLeagueSurvey({
 
   await leagueMemberService.isInLeague(
     'profileId',
-    profileId,
+    profile.profileId,
     leagueId,
     true,
     true
@@ -143,7 +171,7 @@ async function submitLeagueSurvey({
 
   return await leagueMemberSurveyService.getLeagueMemberSurvey(
     leagueId,
-    profileId,
+    profile.profileId as UUID,
     episodeId
   );
 }

@@ -25,7 +25,9 @@ export const PickView: React.FC<PickProps> = ({
   return (
     <div
       className={`flex flex-col space-y-2 w-full h-full rounded-md ${backgroundColor}`}>
-      <p className='text-xl text-center font-bold'>{pick.description}</p>
+      <p className='text-xl text-center mx-auto font-bold w-10/12'>
+        {pick.description}
+      </p>
       <PickOptions
         pick={pick}
         pickSelection={pickSelection}

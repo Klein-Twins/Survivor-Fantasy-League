@@ -6,6 +6,7 @@ import leagueInviteReducer, {
 } from './slices/leagueInviteSlice.ts';
 import leagueReducer, { getLeagues } from './slices/leagueSlice.ts';
 import seasonReducer, { setSelectedSeason } from './slices/seasonSlice.ts';
+import surveyReducer from './slices/surveySlice.ts';
 
 // Create listener middleware
 const listenerMiddleware = createListenerMiddleware();
@@ -45,6 +46,7 @@ const store = configureStore({
     leagueInvite: leagueInviteReducer,
     league: leagueReducer,
     season: seasonReducer,
+    survey: surveyReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(listenerMiddleware.middleware),

@@ -18,6 +18,7 @@ import { Configuration } from '../configuration';
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS, RequestArgs, BaseAPI, RequiredError } from '../base';
 import { GetLeagueMemberSurveyResponse } from '../models';
+import { GetLeagueMemberSurveysResponse } from '../models';
 import { SubmitSurveyRequestBody } from '../models';
 import { SubmitSurveyResponse } from '../models';
 /**
@@ -52,6 +53,52 @@ export const SurveyServiceApiAxiosParamCreator = function (configuration?: Confi
                 .replace(`{${"leagueId"}}`, encodeURIComponent(String(leagueId)))
                 .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)))
                 .replace(`{${"episodeId"}}`, encodeURIComponent(String(episodeId)));
+            // use dummy base URL string because the URL constructor only accepts absolute URLs.
+            const localVarUrlObj = new URL(localVarPath, 'https://example.com');
+            let baseOptions;
+            if (configuration) {
+                baseOptions = configuration.baseOptions;
+            }
+            const localVarRequestOptions :AxiosRequestConfig = { method: 'GET', ...baseOptions, ...options};
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            const query = new URLSearchParams(localVarUrlObj.search);
+            for (const key in localVarQueryParameter) {
+                query.set(key, localVarQueryParameter[key]);
+            }
+            for (const key in options.params) {
+                query.set(key, options.params[key]);
+            }
+            localVarUrlObj.search = (new URLSearchParams(query)).toString();
+            let headersFromBaseOptions = baseOptions && baseOptions.headers ? baseOptions.headers : {};
+            localVarRequestOptions.headers = {...localVarHeaderParameter, ...headersFromBaseOptions, ...options.headers};
+
+            return {
+                url: localVarUrlObj.pathname + localVarUrlObj.search + localVarUrlObj.hash,
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * Gets all surveys for the specified profileId and leagueId (mainly used to get all statuses of the leagueSurveys)
+         * @summary Get all Surveys for profiledId and leagueId,
+         * @param {string} leagueId 
+         * @param {string} profileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        getLeagueSurveys: async (leagueId: string, profileId: string, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+            // verify required parameter 'leagueId' is not null or undefined
+            if (leagueId === null || leagueId === undefined) {
+                throw new RequiredError('leagueId','Required parameter leagueId was null or undefined when calling getLeagueSurveys.');
+            }
+            // verify required parameter 'profileId' is not null or undefined
+            if (profileId === null || profileId === undefined) {
+                throw new RequiredError('profileId','Required parameter profileId was null or undefined when calling getLeagueSurveys.');
+            }
+            const localVarPath = `/api/league/survey/{leagueId}/{profileId}`
+                .replace(`{${"leagueId"}}`, encodeURIComponent(String(leagueId)))
+                .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -147,6 +194,21 @@ export const SurveyServiceApiFp = function(configuration?: Configuration) {
             };
         },
         /**
+         * Gets all surveys for the specified profileId and leagueId (mainly used to get all statuses of the leagueSurveys)
+         * @summary Get all Surveys for profiledId and leagueId,
+         * @param {string} leagueId 
+         * @param {string} profileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getLeagueSurveys(leagueId: string, profileId: string, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<GetLeagueMemberSurveysResponse>>> {
+            const localVarAxiosArgs = await SurveyServiceApiAxiosParamCreator(configuration).getLeagueSurveys(leagueId, profileId, options);
+            return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
+                const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
+                return axios.request(axiosRequestArgs);
+            };
+        },
+        /**
          * Submits the survey for the specified profileId's in leagueId for episodeId's
          * @summary Submit survey for provided episodeId and profileId
          * @param {SubmitSurveyRequestBody} body 
@@ -182,6 +244,17 @@ export const SurveyServiceApiFactory = function (configuration?: Configuration, 
             return SurveyServiceApiFp(configuration).getLeagueSurvey(leagueId, profileId, episodeId, options).then((request) => request(axios, basePath));
         },
         /**
+         * Gets all surveys for the specified profileId and leagueId (mainly used to get all statuses of the leagueSurveys)
+         * @summary Get all Surveys for profiledId and leagueId,
+         * @param {string} leagueId 
+         * @param {string} profileId 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        async getLeagueSurveys(leagueId: string, profileId: string, options?: AxiosRequestConfig): Promise<AxiosResponse<GetLeagueMemberSurveysResponse>> {
+            return SurveyServiceApiFp(configuration).getLeagueSurveys(leagueId, profileId, options).then((request) => request(axios, basePath));
+        },
+        /**
          * Submits the survey for the specified profileId's in leagueId for episodeId's
          * @summary Submit survey for provided episodeId and profileId
          * @param {SubmitSurveyRequestBody} body 
@@ -213,6 +286,18 @@ export class SurveyServiceApi extends BaseAPI {
      */
     public async getLeagueSurvey(leagueId: string, profileId: string, episodeId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeagueMemberSurveyResponse>> {
         return SurveyServiceApiFp(this.configuration).getLeagueSurvey(leagueId, profileId, episodeId, options).then((request) => request(this.axios, this.basePath));
+    }
+    /**
+     * Gets all surveys for the specified profileId and leagueId (mainly used to get all statuses of the leagueSurveys)
+     * @summary Get all Surveys for profiledId and leagueId,
+     * @param {string} leagueId 
+     * @param {string} profileId 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof SurveyServiceApi
+     */
+    public async getLeagueSurveys(leagueId: string, profileId: string, options?: AxiosRequestConfig) : Promise<AxiosResponse<GetLeagueMemberSurveysResponse>> {
+        return SurveyServiceApiFp(this.configuration).getLeagueSurveys(leagueId, profileId, options).then((request) => request(this.axios, this.basePath));
     }
     /**
      * Submits the survey for the specified profileId's in leagueId for episodeId's

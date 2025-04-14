@@ -26,13 +26,4 @@ export interface GetLeagueMemberSurveyResponseData {
      * @memberof GetLeagueMemberSurveyResponseData
      */
     leagueSurvey: LeagueMemberSurvey;
-
-    /**
-     * Indicates if the survey is completed. If true, then leagueSurvey should be CompletedLeagueSurvey and if not then LeagueSurvey
-     *
-     * @type {boolean}
-     * @memberof GetLeagueMemberSurveyResponseData
-     * @example true
-     */
-    isCompleted: boolean;
 }

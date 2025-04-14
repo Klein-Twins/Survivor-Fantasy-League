@@ -2,19 +2,18 @@ import { AxiosResponse } from 'axios';
 import {
   Episode,
   GetLeagueMemberSurveyResponse,
+  GetLeagueMemberSurveysResponse,
   League,
-  LeagueSurvey,
-  PickIdAndPlayerChoice,
   Profile,
   SubmitSurveyRequestBody,
   SubmitSurveyResponse,
 } from '../../../../generated-api';
 import { ApiRequestParams } from '../../../hooks/useApi';
 import api from '../../apiContainer';
-import { SurveyPickChoicesMap } from '../../../hooks/survey/useSurvey';
 
 const surveyService = {
   getLeagueSurvey,
+  getLeagueSurveys,
   submitLeagueSurvey,
 };
 
@@ -22,6 +21,25 @@ export interface GetLeagueSurveyRequestParams {
   leagueId: League['id'];
   profileId: Profile['profileId'];
   episodeId: Episode['id'];
+}
+
+export interface GetLeagueSurveysRequestParams {
+  leagueId: League['id'];
+  profileId: Profile['profileId'];
+}
+
+async function getLeagueSurveys(
+  requestData: ApiRequestParams<void, GetLeagueSurveysRequestParams>
+): Promise<AxiosResponse<GetLeagueMemberSurveysResponse>> {
+  const response: AxiosResponse<GetLeagueMemberSurveysResponse> =
+    await api.surveyService.getLeagueSurveys(
+      requestData.queryParams.leagueId,
+      requestData.queryParams.profileId,
+      {
+        withCredentials: true,
+      }
+    );
+  return response;
 }
 
 async function getLeagueSurvey(

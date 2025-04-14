@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from 'express';
 import {
   GetLeagueMemberSurveyResponse,
   GetLeagueMemberSurveyResponseData,
+  GetLeagueMemberSurveysResponse,
+  GetLeagueMemberSurveysResponseData,
   PickIdAndPlayerChoice,
   SubmitSurveyRequestBody,
   SubmitSurveyResponse,
@@ -16,9 +18,11 @@ import { BadRequestError } from '../../../utils/errors/errors';
 
 import { UUID } from 'crypto';
 import pickService from '../../../services/league/survey/pickService';
+import logger from '../../../config/logger';
 
 const surveyController = {
   getSurveyForLeagueMember,
+  getSurveysForLeagueMember,
   submitSurvey,
 };
 
@@ -31,6 +35,50 @@ export interface GetSurveyRequestParams {
 export interface GetOustandingOpenSurveysRequestParams {
   profileId: ProfileAttributes['profileId'];
   leagueIds: LeagueAttributes['leagueId'][];
+}
+
+async function getSurveysForLeagueMember(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  let response: GetLeagueMemberSurveysResponse;
+  try {
+    const { leagueId, profileId } = req.params;
+    if (!leagueId) {
+      throw new BadRequestError('LeagueId is required');
+    }
+    if (!validator.isUUID(leagueId)) {
+      throw new BadRequestError('Invalid leagueId');
+    }
+    if (!profileId) {
+      throw new BadRequestError('ProfileId is required');
+    }
+    if (!validator.isUUID(profileId)) {
+      throw new BadRequestError('Invalid profileId');
+    }
+
+    const leagueMemberSurveys =
+      await leagueMemberSurveyService.getLeagueMemberSurveys(
+        leagueId as UUID,
+        profileId as UUID
+      );
+
+    logger.debug('Sending ' + leagueMemberSurveys.length + ' surveys');
+
+    const responseData: GetLeagueMemberSurveysResponseData =
+      leagueMemberSurveys;
+
+    response = {
+      success: true,
+      message: 'Successfully retrieved league surveys',
+      statusCode: 200,
+      responseData: responseData,
+    };
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
 }
 
 async function getSurveyForLeagueMember(
@@ -71,7 +119,6 @@ async function getSurveyForLeagueMember(
 
     const responseData: GetLeagueMemberSurveyResponseData = {
       leagueSurvey: leagueSurvey,
-      isCompleted: isCompleted,
     };
     response = {
       success: true,
@@ -94,7 +141,7 @@ async function submitSurvey(req: Request, res: Response, next: NextFunction) {
       await leagueMemberSurveyService.submitLeagueSurvey({
         surveyId: submitSurveyRequest.surveyId as UUID,
         leagueId: submitSurveyRequest.leagueId,
-        profileId: submitSurveyRequest.profileId as UUID,
+        leagueProfileId: submitSurveyRequest.leagueProfileId as UUID,
         episodeId: submitSurveyRequest.episodeId as UUID,
         leagueSurveyId: submitSurveyRequest.leagueSurveyId as UUID,
         picksWithChoice: submitSurveyRequest.picksWithChoice,
@@ -122,7 +169,7 @@ function validateSubmitSurveyRequest(reqBody: any): SubmitSurveyRequestBody {
     leagueId,
     leagueSurveyId,
     surveyId,
-    profileId,
+    leagueProfileId,
     picksWithChoice,
   } = reqBody;
 
@@ -141,7 +188,7 @@ function validateSubmitSurveyRequest(reqBody: any): SubmitSurveyRequestBody {
   if (!validator.isUUID(surveyId)) {
     throw new BadRequestError('Invalid surveyId');
   }
-  if (!validator.isUUID(profileId)) {
+  if (!validator.isUUID(leagueProfileId)) {
     throw new BadRequestError('Invalid profileId');
   }
   if (!Array.isArray(picksWithChoice)) {
@@ -183,7 +230,7 @@ function validateSubmitSurveyRequest(reqBody: any): SubmitSurveyRequestBody {
     episodeId: episodeId as UUID,
     leagueSurveyId: leagueSurveyId as UUID,
     surveyId: surveyId as UUID,
-    profileId: profileId as UUID,
+    leagueProfileId: leagueProfileId as UUID,
     leagueId: leagueId as UUID,
     picksWithChoice: convertedTypePicks,
   };

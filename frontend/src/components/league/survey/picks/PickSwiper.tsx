@@ -1,12 +1,18 @@
 import React, { useRef } from 'react';
 import {
   LeagueMemberSurvey,
+  SurveyAvailabilityStatus,
   SurveySubmissionStatus,
 } from '../../../../../generated-api';
 import { SurveyPickChoicesMap } from '../Survey';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { PickView } from './Picks';
-import usePickOptions from '../../../../hooks/survey/usePickOptions';
+import {
+  FaArrowLeft,
+  FaArrowRight,
+  FaCheckCircle,
+  FaTimesCircle,
+} from 'react-icons/fa';
 
 interface PickSwiperProps {
   survey: LeagueMemberSurvey;
@@ -19,7 +25,6 @@ interface PickSwiperProps {
   ) => void;
   setPlayerChoices: React.Dispatch<React.SetStateAction<SurveyPickChoicesMap>>;
   handleSurveySubmit: () => void;
-  surveySubmitted: boolean;
   allPicksCompleted?: boolean;
 }
 
@@ -27,37 +32,53 @@ const PickSwiper: React.FC<PickSwiperProps> = ({
   survey,
   playerChoices,
   handleOptionClick, // Use handleOptionClick from useSurvey
-  handleSurveySubmit,
-  surveySubmitted,
   allPicksCompleted,
+  handleSurveySubmit,
 }) => {
   const swiperRef = useRef<any>(null);
   const [activeIndex, setActiveIndex] = React.useState(0);
 
   return (
-    <div className='relative pt-12'>
-      {/* Navigation Buttons */}
-      <div className='absolute top-0 left-0 w-full flex'>
+    <div className='relative'>
+      <div className='absolute top-4 left-0 w-full flex justify-between items-center px-4'>
+        {/* Previous Button */}
         <button
-          className='custom-prev w-1/2 z-10 mr-1 rounded-md bg-blue-500 text-white py-2 hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed'
-          onClick={() => swiperRef.current?.slidePrev()}
-          disabled={activeIndex === 0}>
-          Prev
+          className={`custom-prev z-10 mr-1 rounded-md dark:bg-primary-a0-dark dark:hover:bg-primary-a1-dark transition-colors text-white px-4 py-2 ${
+            activeIndex === 0 ? 'invisible' : ''
+          }`}
+          onClick={() => swiperRef.current?.slidePrev()}>
+          <FaArrowLeft />
         </button>
-        {activeIndex === survey.picks.length - 1 ? (
-          <button
-            className='custom-submit w-1/2 ml-1 z-10 rounded-md bg-green-500 text-white py-2 hover:bg-green-600 disabled:bg-gray-400 disabled:cursor-not-allowed'
-            onClick={handleSurveySubmit}
-            disabled={surveySubmitted || !allPicksCompleted}>
-            {surveySubmitted ? 'Survey has been submitted' : 'Submit Survey'}
-          </button>
-        ) : (
-          <button
-            className='custom-next w-1/2 ml-1 z-10 rounded-md bg-blue-500 text-white py-2 hover:bg-blue-600 disabled:bg-gray-400 disabled:cursor-not-allowed'
-            onClick={() => swiperRef.current?.slideNext()}>
-            Next
-          </button>
-        )}
+
+        {/* Next or Submit Button */}
+        <button
+          className={`custom-next z-10 ml-1 rounded-md dark:bg-primary-a0-dark dark:hover:bg-primary-a1-dark transition-colors disabled:dark:bg-gray-700 text-white px-4 py-2`}
+          disabled={
+            activeIndex === survey.picks.length - 1 && !allPicksCompleted
+          }
+          onClick={() => swiperRef.current?.slideNext()}>
+          {activeIndex !== survey.picks.length - 1 ? (
+            <FaArrowRight />
+          ) : allPicksCompleted ? (
+            <FaCheckCircle onClick={handleSurveySubmit} />
+          ) : (
+            <div className='relative group'>
+              <FaTimesCircle />
+              {/* Tooltip */}
+              <div className='absolute bottom-full left-1/2 transform -translate-x-60 -translate-y-3 mb-2 w-max bg-gray-800 text-white text-xs rounded-md px-2 py-1 opacity-0 group-hover:opacity-100 transition-opacity'>
+                {survey.surveyAvailabilityStatus ===
+                SurveyAvailabilityStatus.Closed
+                  ? 'Survey is closed an no longer taking submissions.'
+                  : survey.surveyAvailabilityStatus ===
+                    SurveyAvailabilityStatus.NotOpenYet
+                  ? 'Survey is not yet open for submissions'
+                  : survey.submissionStatus === SurveySubmissionStatus.Submitted
+                  ? 'Survey has already been submitted'
+                  : 'Not all survey picks have been selected'}
+              </div>
+            </div>
+          )}
+        </button>
       </div>
 
       {/* Swiper Component */}
@@ -70,7 +91,9 @@ const PickSwiper: React.FC<PickSwiperProps> = ({
         {survey.picks.map((pick) => (
           <SwiperSlide key={pick.id}>
             <PickView
-              showPickInstructions={!surveySubmitted}
+              showPickInstructions={
+                survey.submissionStatus == SurveySubmissionStatus.NotSubmitted
+              }
               pick={pick}
               pickSelection={{
                 selectedItems: playerChoices.get(pick.id) || [],
@@ -87,7 +110,11 @@ const PickSwiper: React.FC<PickSwiperProps> = ({
                   (playerChoices.get(pick.id)?.length || 0) <=
                     pick.options.maxNumSelections,
               }}
-              disabled={surveySubmitted}
+              disabled={
+                survey.submissionStatus === SurveySubmissionStatus.Submitted ||
+                survey.surveyAvailabilityStatus !==
+                  SurveyAvailabilityStatus.Available
+              }
             />
           </SwiperSlide>
         ))}

@@ -35,6 +35,8 @@ paths:
   /api/league/invite/search:
     $ref: './paths/league/invite/search/search.yaml#/paths/search'
 
+  /api/league/survey/{leagueId}/{profileId}:
+    $ref: './paths/league/survey/survey.yaml#/paths/surveys'
   /api/league/survey/{leagueId}/{profileId}/{episodeId}:
     $ref: './paths/league/survey/survey.yaml#/paths/survey'
   /api/league/survey/submit:

@@ -59,7 +59,7 @@ export interface SubmitSurveyRequestBody {
      * @type {string}
      * @memberof SubmitSurveyRequestBody
      */
-    profileId: string;
+    leagueProfileId: string;
 
     /**
      * @type {Array<PickIdAndPlayerChoice>}

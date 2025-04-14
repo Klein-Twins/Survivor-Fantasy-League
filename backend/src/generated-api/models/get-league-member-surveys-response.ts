@@ -12,18 +12,19 @@
  * Do not edit the class manually.
  */
 
-import { LeagueMemberSurvey } from './league-member-survey';
+import { ApiResponse } from './api-response';
+import { GetLeagueMemberSurveysResponseData } from './get-league-member-surveys-response-data';
  /**
  * 
  *
  * @export
- * @interface GetLeagueMemberSurveyResponseData
+ * @interface GetLeagueMemberSurveysResponse
  */
-export interface GetLeagueMemberSurveyResponseData {
+export interface GetLeagueMemberSurveysResponse extends ApiResponse {
 
     /**
-     * @type {LeagueMemberSurvey}
-     * @memberof GetLeagueMemberSurveyResponseData
+     * @type {GetLeagueMemberSurveysResponseData}
+     * @memberof GetLeagueMemberSurveysResponse
      */
-    leagueSurvey: LeagueMemberSurvey;
+    responseData: GetLeagueMemberSurveysResponseData;
 }

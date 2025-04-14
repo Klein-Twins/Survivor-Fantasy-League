@@ -17,13 +17,7 @@ import { LeagueMemberSurvey } from './league-member-survey';
  * 
  *
  * @export
- * @interface GetLeagueMemberSurveyResponseData
+ * @interface GetLeagueMemberSurveysResponseData
  */
-export interface GetLeagueMemberSurveyResponseData {
-
-    /**
-     * @type {LeagueMemberSurvey}
-     * @memberof GetLeagueMemberSurveyResponseData
-     */
-    leagueSurvey: LeagueMemberSurvey;
+export interface GetLeagueMemberSurveysResponseData extends Array<LeagueMemberSurvey> {
 }

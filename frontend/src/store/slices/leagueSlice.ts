@@ -1,7 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import {
   ApiError,
-  CompletedLeagueMemberSurvey,
   CreateLeagueRequestBody,
   CreateLeagueResponse,
   GetLeaguesResponse,
@@ -22,7 +21,7 @@ enum AuthActionTypes {
 
 type LeagueAndLeagueSurvey = {
   league: League;
-  survey: LeagueSurvey | CompletedLeagueMemberSurvey;
+  survey: LeagueSurvey;
 };
 
 interface LeagueState {

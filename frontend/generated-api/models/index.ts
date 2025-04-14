@@ -33,6 +33,8 @@ export * from './get-league-invites-response';
 export * from './get-league-invites-response-data';
 export * from './get-league-member-survey-response';
 export * from './get-league-member-survey-response-data';
+export * from './get-league-member-surveys-response';
+export * from './get-league-member-surveys-response-data';
 export * from './get-leagues-response';
 export * from './get-leagues-response-data';
 export * from './get-seasons-response';
