@@ -3,12 +3,8 @@ import { models } from '../../config/db';
 import testPasswordData from './accountData/testPasswordData';
 import testProfileData from './accountData/testProfileData';
 import testUserData from './accountData/testUserData';
-import season48TestLeagues, {
-  season48TestLeague1,
-} from './leagueData/leagues48';
+import season48TestLeagues from './leagueData/leagues48';
 import testSurveyData from './leagueData/survey/testLeagueSurveys';
-import testLeagueData from './leagueData/testLeagueData';
-import testLeagueProfilesData from './leagueData/testLeagueProfilesData';
 import leagueProcessor from './processing/lge/leagueProcessor';
 import surveyProcessor from './processing/lge/surveys/surveyProcessor';
 
