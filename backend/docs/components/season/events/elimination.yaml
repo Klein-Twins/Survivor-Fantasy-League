@@ -1,0 +1,53 @@
+components:
+  schemas:
+    SurvivorElimination:
+      type: object
+      required:
+        - survivorId
+        - rank
+        - day
+      properties:
+        survivorId:
+          type: string
+        day:
+          type: integer
+          description: The day of the season when the elimination occurred.
+          example: 1
+        rank:
+          type: integer
+          description: The order of the survivor eliminated that episode.
+          example: 1
+
+    ProcessEliminationResponseData:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description:
+            The message indicating the result of the elimination process.
+          example: 'Elimination process completed successfully.'
+
+  requestBodies:
+    ProcessEliminationRequestBody:
+      type: object
+      required:
+        - survivorEliminations
+      properties:
+        survivorEliminations:
+          type: array
+          items:
+            $ref: '#/components/schemas/SurvivorElimination'
+
+  responses:
+    ProcessEliminationResponse:
+      type: object
+      allOf:
+        - $ref: '../../../components/common/api.yaml#/components/schemas/ApiResponse'
+        - type: object
+          required:
+            - responseData
+          properties:
+            responseData:
+              $ref: '#/components/schemas/ProcessEliminationResponseData'

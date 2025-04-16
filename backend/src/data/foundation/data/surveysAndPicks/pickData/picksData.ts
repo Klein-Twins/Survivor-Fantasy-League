@@ -1,7 +1,10 @@
 import { UUID } from 'crypto';
 
 import { v4 as uuidv4 } from 'uuid';
-import { PicksAttributes } from '../../../../../models/surveyAndPick/picks/Picks';
+import {
+  EventType,
+  PicksAttributes,
+} from '../../../../../models/surveyAndPick/picks/Picks';
 import { PickOptionsAttributes } from '../../../../../models/surveyAndPick/picks/PickOptions';
 import { PickPointsAttributes } from '../../../../../models/surveyAndPick/picks/PickPoints';
 import { EpisodeType, PickOptionTypeEnum } from '../../../../../generated-api';
@@ -57,6 +60,7 @@ export const picksData: PickData[] = [
     noneOptionAllowed: false,
     points: 42,
     episodeType: [...Object.values(EpisodeType)],
+    eventType: EventType.SurvivorElimination,
   },
   // {
   //   pickId: uuidv4() as UUID,

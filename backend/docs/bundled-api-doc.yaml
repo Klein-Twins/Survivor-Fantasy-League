@@ -3767,6 +3767,88 @@ paths:
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
+  '/api/admin/season/events/{episodeId}/elimination':
+    post:
+      tags:
+        - adminEventSurvice
+      summary: Fulfill elimination survey
+      description: This endpoint allows you to fulfill an elimination survey.
+      operationId: processElimination
+      parameters:
+        - name: episodeId
+          in: path
+          required: true
+          description: The id of the episode the event was fulfilled on.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - survivorEliminations
+              properties:
+                survivorEliminations:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                      - survivorId
+                      - rank
+                      - day
+                    properties:
+                      survivorId:
+                        type: string
+                      day:
+                        type: integer
+                        description: The day of the season when the elimination occurred.
+                        example: 1
+                      rank:
+                        type: integer
+                        description: The order of the survivor eliminated that episode.
+                        example: 1
+      responses:
+        '200':
+          description: Successfully fulfilled the elimination survey
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                  - type: object
+                    required:
+                      - success
+                      - message
+                      - statusCode
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      message:
+                        type: string
+                        example: Operation completed successfully.
+                      statusCode:
+                        type: integer
+                        example: 200
+                      error:
+                        type: string
+                        nullable: true
+                        example: An error occurred.
+                  - type: object
+                    required:
+                      - responseData
+                    properties:
+                      responseData:
+                        type: object
+                        required:
+                          - message
+                        properties:
+                          message:
+                            type: string
+                            description: The message indicating the result of the elimination process.
+                            example: Elimination process completed successfully.
 components:
   securitySchemes:
     accessTokenCookie:

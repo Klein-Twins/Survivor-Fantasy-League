@@ -91,6 +91,16 @@ const EpisodeModel = (sequelize: Sequelize) => {
       } else {
         logger.error('Error associating Episode with EpisodeSurvey');
       }
+
+      if (models.PickSolutions) {
+        this.hasMany(models.PickSolutions, {
+          foreignKey: 'episodeId',
+          sourceKey: 'id',
+          as: 'picksFulfilled',
+        });
+      } else {
+        logger.error('Error associating Episode with PickSolutions');
+      }
     }
   }
   Episode.init(

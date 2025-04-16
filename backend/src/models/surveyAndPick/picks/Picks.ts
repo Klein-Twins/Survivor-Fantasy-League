@@ -6,6 +6,11 @@ export interface PicksAttributes {
   pickId: UUID;
   description: string;
   notes?: string;
+  eventType?: EventType;
+}
+
+export enum EventType {
+  SurvivorElimination = 'SURVIVOR_ELIMINATION',
 }
 
 const PicksModel = (sequelize: Sequelize) => {
@@ -13,6 +18,7 @@ const PicksModel = (sequelize: Sequelize) => {
     public pickId!: UUID;
     public description!: string;
     public notes?: string;
+    public eventType!: EventType;
 
     static associate(models: any) {
       // this.hasOne(models.PickOptions, { foreignKey: 'pickId', as: 'pickOptions' });
@@ -53,6 +59,15 @@ const PicksModel = (sequelize: Sequelize) => {
       } else {
         logger.error('Error associating Picks with PickOptions');
       }
+      if (models.PickSolutions) {
+        this.hasMany(models.PickSolutions, {
+          foreignKey: 'pickId',
+          sourceKey: 'pickId',
+          as: 'pickSolutions',
+        });
+      } else {
+        logger.error('Error associating Picks with PickSolutions');
+      }
     }
   }
 
@@ -73,6 +88,12 @@ const PicksModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING(300),
         allowNull: true,
         field: 'NOTES',
+      },
+      eventType: {
+        type: DataTypes.ENUM(...Object.values(EventType)),
+        allowNull: true,
+        defaultValue: null,
+        field: 'EVENT_TYPE',
       },
     },
     {

@@ -41,6 +41,7 @@ async function seedPickTable(pick: PickData) {
     pickId: pick.pickId,
     description: pick.description,
     notes: pick.notes,
+    eventType: pick?.eventType || undefined,
   });
   logger.debug(`${models.Picks.tableName}: Created pick`);
 }

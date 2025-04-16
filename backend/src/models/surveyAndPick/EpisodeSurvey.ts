@@ -51,6 +51,16 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
           as: 'leagueSurveys',
         });
       }
+
+      if (models.PickSolutions) {
+        this.hasMany(models.PickSolutions, {
+          foreignKey: 'episodeSurveyId',
+          sourceKey: 'episodeSurveyId',
+          as: 'pickSolutions',
+        });
+      } else {
+        logger.error('Error associating EpisodeSurvey with PickSolutions');
+      }
     }
   }
 

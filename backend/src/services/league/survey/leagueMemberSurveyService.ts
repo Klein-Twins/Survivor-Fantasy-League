@@ -27,6 +27,7 @@ import { Transaction } from 'sequelize';
 import { v4 as uuidv4 } from 'uuid';
 import logger from '../../../config/logger.ts';
 import pickChoiceService from './pickChoiceService.ts';
+import { PickSubmissionStatus } from '../../../models/league/PickSubmission.ts';
 
 const leagueMemberSurveyService = {
   getLeagueMemberSurvey,
@@ -153,6 +154,7 @@ async function submitLeagueSurvey({
             playerChoice: pickChoice,
             rank,
             pointsEarned: null,
+            status: PickSubmissionStatus.PENDING,
           },
           { transaction: t }
         );

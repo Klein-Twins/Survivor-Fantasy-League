@@ -1,18 +1,15 @@
-import { get } from 'http';
 import { models } from '../../config/db';
-import logger from '../../config/logger';
 import { SurvivorBasic } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { TribeMemberAttributes } from '../../models/season/TribeMembers';
 import { TribeAttributes } from '../../models/season/Tribes';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import episodeService from '../../services/season/episodeService';
-import tribeService from '../../services/season/tribeService';
 import tribeRepository from './tribeRepository';
 import seasonEliminationService from '../../services/season/seasonEliminationService';
 import { InternalServerError } from '../../utils/errors/errors';
 import episodeRepository from './episode/episodeRepository';
-import { Op } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 
 export type TribeMemberQueryResult = Pick<
   TribeMemberAttributes,
@@ -42,7 +39,48 @@ type TribeWithMembers = {
 const tribeMemberRepository = {
   fetchTribeHistory,
   getTribeIdSurvivorBelongsToAtStartOfEpisode,
+  removeEliminatedSurvivorFromTribe,
 };
+
+async function removeEliminatedSurvivorFromTribe(
+  survivorId: SurvivorsAttributes['id'],
+  episodeId: EpisodeAttributes['id'],
+  transaction?: Transaction
+) {
+  const episode = await episodeService.getEpisode('episodeId', episodeId);
+  const seasonId = episode.seasonId;
+  const tribeIdsOnSeason = (
+    await tribeRepository.getTribesBySeasonId(seasonId)
+  ).map((tribeAttributes) => tribeAttributes.id);
+  let t = transaction;
+  if (!t) {
+    t = await models.sequelize.transaction();
+  }
+  try {
+    await models.TribeMembers.update(
+      {
+        episodeIdEnd: episodeId,
+      },
+      {
+        where: {
+          survivorId: survivorId,
+          episodeIdEnd: { [Op.is]: null },
+          tribeId: { [Op.in]: tribeIdsOnSeason },
+        },
+        transaction: t,
+      }
+    );
+
+    if (!transaction && t) {
+      await t.commit();
+    }
+  } catch (error) {
+    if (t && !transaction) {
+      await t.rollback();
+    }
+    throw error;
+  }
+}
 
 async function getTribeIdSurvivorBelongsToAtStartOfEpisode(
   survivorId: SurvivorsAttributes['id'],

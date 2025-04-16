@@ -5,13 +5,77 @@ import { SeasonsAttributes } from '../../models/season/Seasons';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import seasonEliminationRepository from '../../repositories/season/seasonEliminationRepository';
 import survivorService from './survivorService';
-import { EliminationStatus } from '../../generated-api';
+import { EliminationStatus, SurvivorElimination } from '../../generated-api';
+import episodeService from './episodeService';
+import { ConflictError, ForbiddenError } from '../../utils/errors/errors';
+import sequelize from '../../config/db';
+import survivorRepository from '../../repositories/season/survivorRepository';
 
 const seasonEliminationService = {
   getSurvivorEliminationStatusAtStartOfEpisode,
   getSurvivorEliminationInfo,
   getAllSurvivorsEliminationStatusAtStartOfEpisode,
+  eliminateSurvivors,
 };
+
+async function eliminateSurvivors(
+  survivorEliminations: SurvivorElimination[],
+  episodeId: UUID
+): Promise<Map<SurvivorsAttributes['id'], EliminationStatus>> {
+  const episode = await episodeService.getEpisode('episodeId', episodeId);
+
+  //Check to make sure none of the eliminated survivors are eliminated yet, exist and are on the season.
+  for (const survivorElimination of survivorEliminations) {
+    const survivorBasic = await survivorService.getBasicSurvivorDetails(
+      survivorElimination.survivorId as UUID
+    );
+
+    const isSurvivorOnSeason = await survivorRepository.isSurvivorOnSeason(
+      survivorElimination.survivorId as UUID,
+      episode.seasonId
+    );
+    if (!isSurvivorOnSeason) {
+      throw new ForbiddenError(
+        `${survivorBasic.name} is not on season ${episode.seasonId}`
+      );
+    }
+
+    const eliminationStatus = await getSurvivorEliminationInfo(
+      survivorElimination.survivorId as UUID,
+      episode.seasonId
+    );
+    if (eliminationStatus.isEliminated) {
+      throw new ConflictError(
+        `${survivorElimination.survivorId} is already eliminated in episode ${eliminationStatus.episodeEliminated} on Day ${eliminationStatus.dayEliminated}`
+      );
+    }
+  }
+
+  const transaction = await sequelize.transaction();
+  const eliminationsRecorded = new Map<
+    SurvivorsAttributes['id'],
+    EliminationStatus
+  >();
+
+  for (const survivorElimination of survivorEliminations) {
+    const seasonEliminationAttributes =
+      await seasonEliminationRepository.eliminateSurvivor(
+        survivorElimination.survivorId as UUID,
+        episode.seasonId,
+        episodeId,
+        survivorElimination.day,
+        survivorElimination.rank,
+        transaction
+      );
+    eliminationsRecorded.set(
+      survivorElimination.survivorId as UUID,
+      buildSurvivorEliminationInfo(seasonEliminationAttributes)
+    );
+  }
+  await transaction.commit();
+
+  return eliminationsRecorded;
+}
 
 async function getSurvivorEliminationStatusAtStartOfEpisode(
   survivorId: SurvivorsAttributes['id'],
@@ -64,7 +128,7 @@ async function getSurvivorEliminationInfo(
   return buildSurvivorEliminationInfo(seasonEliminationAttributes);
 }
 
-function buildSurvivorEliminationInfo(
+export function buildSurvivorEliminationInfo(
   seasonEliminationAttributes: SeasonEliminationAttributes | null
 ): EliminationStatus {
   if (!seasonEliminationAttributes) {

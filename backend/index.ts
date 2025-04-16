@@ -9,21 +9,26 @@ const IP: string = APP_HOST;
 
 const startServer = async (): Promise<void> => {
   try {
-    // logger.info('Dropping all tables...');
-    // await sequelize.getQueryInterface().dropAllTables();
-    // logger.info('All tables dropped successfully');
-    await sequelize.sync({ force: true });
-    logger.info('Database synced successfully');
+    // Run migrations
+    // logger.info('Running database migrations...');
+    // // await runMigrations();
+    // logger.info('Migrations applied successfully');
 
-    logger.info('Seeding data...');
-    await seedData();
-    logger.info('Data seeded successfully');
+    // Seed data (optional, for development only)
+    if (process.env.NODE_ENV === 'development') {
+      await sequelize.sync({ force: true });
+      logger.info('Database synced successfully');
+      logger.info('Seeding data...');
+      await seedData();
+      logger.info('Data seeded successfully');
+    }
 
+    // Start the server
     server.listen(PORT, () => {
       console.log(`Server running on ${IP}:${PORT}`);
     });
   } catch (error) {
-    console.error('Failed to sync database and start server:', error);
+    console.error('Failed to start server:', error);
   }
 };
 

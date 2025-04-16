@@ -22,7 +22,22 @@ const survivorRepository = {
   getSurvivorsBySeasonId,
   getSurvivorWithStatusAtStartOfEpisode,
   getSurvivorStatusAtEpisode,
+  isSurvivorOnSeason,
 };
+
+async function isSurvivorOnSeason(
+  survivorId: SurvivorsAttributes['id'],
+  seasonId: SurvivorDetailsOnSeasonAttributes['seasonId']
+): Promise<boolean> {
+  const survivorDetailsOnSeason = await models.SurvivorDetailsOnSeason.findOne({
+    where: {
+      id: survivorId,
+      seasonId: seasonId,
+    },
+  });
+
+  return !!survivorDetailsOnSeason;
+}
 
 async function getSurvivorStatusAtEpisode(
   survivorId: SurvivorsAttributes['id'],

@@ -11,6 +11,7 @@
  * https://github.com/swagger-api/swagger-codegen.git
  * Do not edit the class manually.
  */
+export * from './apis/admin-event-survice-api';
 export * from './apis/image-service-api';
 export * from './apis/league-invite-service-api';
 export * from './apis/league-service-api';

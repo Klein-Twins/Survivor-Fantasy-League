@@ -1,0 +1,28 @@
+paths:
+  elimination:
+    post:
+      tags:
+        - adminEventSurvice
+      summary: Fulfill elimination survey
+      description: This endpoint allows you to fulfill an elimination survey.
+      operationId: processElimination
+      parameters:
+        - name: episodeId
+          in: path
+          required: true
+          description: The id of the episode the event was fulfilled on.
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '../../../../components/season/events/elimination.yaml#/components/requestBodies/ProcessEliminationRequestBody'
+      responses:
+        '200':
+          description: Successfully fulfilled the elimination survey
+          content:
+            application/json:
+              schema:
+                $ref: '../../../../components/season/events/elimination.yaml#/components/responses/ProcessEliminationResponse'

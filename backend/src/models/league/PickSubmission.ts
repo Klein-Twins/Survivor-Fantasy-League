@@ -7,6 +7,12 @@ import { PickOptionTypeEnum } from '../../generated-api';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import logger from '../../config/logger';
 
+export enum PickSubmissionStatus {
+  PENDING = 'PENDING',
+  CORRECT = 'CORRECT',
+  INCORRECT = 'INCORRECT',
+}
+
 export interface PickSubmissionAttributes {
   surveySubmissionId: UUID;
   pickId: PicksAttributes['pickId'];
@@ -17,6 +23,7 @@ export interface PickSubmissionAttributes {
     | string;
   pointsEarned: PickPointsAttributes['points'] | null;
   rank: number;
+  status: PickSubmissionStatus;
 }
 
 const PickSubmissionModel = (sequelize: Sequelize) => {
@@ -29,6 +36,7 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
     public pickId!: PickSubmissionAttributes['pickId'];
     public pointsEarned!: PickSubmissionAttributes['pointsEarned'];
     public rank!: number;
+    public status!: PickSubmissionStatus;
 
     static associate(models: any) {
       if (models.SurveySubmissions) {
@@ -92,6 +100,16 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: 'RANK',
+      },
+      status: {
+        type: DataTypes.ENUM(
+          PickSubmissionStatus.PENDING,
+          PickSubmissionStatus.CORRECT,
+          PickSubmissionStatus.INCORRECT
+        ),
+        allowNull: false,
+        defaultValue: PickSubmissionStatus.PENDING,
+        field: 'STATUS',
       },
     },
     {
