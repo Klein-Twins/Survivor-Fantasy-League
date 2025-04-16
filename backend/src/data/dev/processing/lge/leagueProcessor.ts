@@ -2,21 +2,32 @@ import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
 import { LeagueMemberRole } from '../../../../generated-api';
 import { InviteStatus } from '../../../../models/league/LeagueProfile';
+import { SeasonsAttributes } from '../../../../models/season/Seasons';
 import leagueService from '../../../../services/league/leagueService';
-import { League } from '../../leagueData/leagues48';
+import { Episode } from '../../../foundation/data/ssn/dataTypes';
+import season48TestLeagues, { League } from '../../leagueData/leagues48';
 
 const leagueProcessor = {
   processLeague,
+  processLeagues,
 };
 
-async function processLeague(leageuData: League) {
+async function processLeagues(seasonId: SeasonsAttributes['seasonId']) {
   await models.League.destroy({
     where: {
-      seasonId: leageuData.seasonId,
-      name: leageuData.name,
+      seasonId,
     },
   });
 
+  if (seasonId === 48) {
+    const season48Leagues = season48TestLeagues;
+    for (const league of Object.values(season48Leagues)) {
+      await processLeague(league);
+    }
+  }
+}
+
+async function processLeague(leageuData: League) {
   logger.info(
     `Processing league data for season ${leageuData.seasonId} | ${leageuData.name}`
   );

@@ -21,9 +21,6 @@ const seedLeagueData = async () => {
   for (const league of season48TestLeagues) {
     await leagueProcessor.processLeague(league);
   }
-  await surveyProcessor.processSurveysForLeagueMember(
-    testSurveyData.tonyStarkLeague1Surveys
-  );
 };
 
 const seedDevData = async () => {

@@ -17,6 +17,7 @@ import {
 import survivorsData, {
   SurvivorData,
 } from '../../data/survivors/survivorsData';
+import eventService from '../../../../services/season/events/eventService';
 
 const survivorProcessor = {
   processSurvivors,
@@ -63,13 +64,16 @@ async function processEliminatedSurvivors(
     throw new Error(`Episode with ID ${episodeId} not found in the database`);
   }
 
-  for (const eliminatedSurvivor of eliminatedSurvivors) {
-    await processEliminatedSurvivor(
-      eliminatedSurvivor,
-      episodeId,
-      episodeAttributes.seasonId
-    );
-  }
+  eventService.processSurvivorElimination({
+    episodeId: episodeId,
+    survivorEliminations: eliminatedSurvivors.map((eliminatedSurvivor) => {
+      return {
+        survivorId: eliminatedSurvivor.survivorId,
+        day: eliminatedSurvivor.day,
+        rank: eliminatedSurvivor.placement,
+      };
+    }),
+  });
 
   logger.debug(`Processed eliminated survivors`);
 }

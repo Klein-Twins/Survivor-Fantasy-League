@@ -11,13 +11,16 @@ const profileRepository = {
 async function createProfile(
   firstName: ProfileAttributes['firstName'],
   lastName: ProfileAttributes['lastName'],
-  transaction: Transaction
+  transaction: Transaction,
+  profileId?: ProfileAttributes['profileId']
 ): Promise<ProfileAttributes> {
   let t = transaction;
   if (!t) {
     t = await models.sequelize.transaction();
   }
-  const profileId = uuidv4() as ProfileAttributes['profileId'];
+  profileId = profileId
+    ? profileId
+    : (uuidv4() as ProfileAttributes['profileId']);
   try {
     const profileRecord: ProfileAttributes = await models.Profile.create(
       {

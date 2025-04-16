@@ -4,6 +4,7 @@ import { EpisodeSurveyAttributes } from '../../../../models/surveyAndPick/Episod
 import { PicksAttributes } from '../../../../models/surveyAndPick/picks/Picks';
 import { PickSubmissionStatus } from '../../../../models/league/PickSubmission';
 import pickSolutionRepository from './pickSolutionRepository';
+import { UUID } from 'crypto';
 
 const pickSubmissionRepository = {
   fulfillPickSubmission,
@@ -27,6 +28,7 @@ async function fulfillPickSubmission(
       where: {
         episodeSurveyId: episodeSurveyId,
       },
+      transaction,
     })
   ).map((leagueSurveyAttributes) => leagueSurveyAttributes.leagueSurveyId);
 
@@ -37,6 +39,7 @@ async function fulfillPickSubmission(
           [Op.in]: affectedLeagueSurveyIds,
         },
       },
+      transaction,
     })
   ).map(
     (surveySubmissionAttributes) =>
@@ -51,15 +54,18 @@ async function fulfillPickSubmission(
       },
       status: PickSubmissionStatus.PENDING,
     },
+    transaction,
   });
 
   for (const pickSubmissionToUpdate of pickSubmissionsToUpdate) {
+    const playerChoiceStatus: PickSubmissionStatus = pickSolutionsIds.includes(
+      pickSubmissionToUpdate.playerChoice as UUID
+    )
+      ? PickSubmissionStatus.CORRECT
+      : PickSubmissionStatus.INCORRECT;
     await models.PickSubmissions.update(
       {
-        status:
-          pickSubmissionToUpdate.playerChoice in pickSolutionsIds
-            ? PickSubmissionStatus.CORRECT
-            : PickSubmissionStatus.INCORRECT,
+        status: playerChoiceStatus,
       },
       {
         where: {

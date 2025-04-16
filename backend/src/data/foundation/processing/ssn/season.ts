@@ -1,19 +1,32 @@
 import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
 import { SeasonsAttributes } from '../../../../models/season/Seasons';
+import leagueProcessor from '../../../dev/processing/lge/leagueProcessor';
+import season47, { Season47Tribes } from '../../data/ssn/47/season47';
+import { season48, Season48Tribes } from '../../data/ssn/48/season48';
 import {
   EpisodeInfo,
   SeasonData,
   StartingTribe,
   Tribes,
 } from '../../data/ssn/dataTypes';
+import surveyProcessor from '../sur/survey';
 import episodeProcessor from './episode';
 import survivorProcessor from './survivor';
 import tribeProcessor from './tribe';
 
 const seasonProcessor = {
+  processSeasons,
   processSeason,
 };
+
+async function processSeasons() {
+  const seasons: Array<SeasonData<Season47Tribes | Season48Tribes>> = [
+    season48,
+    season47,
+  ];
+  await processSeason(seasons[0]);
+}
 
 async function processSeason<T extends string | number | symbol>(
   seasonData: SeasonData<T>
@@ -24,6 +37,8 @@ async function processSeason<T extends string | number | symbol>(
   //Seed survivors
   await survivorProcessor.processSurvivors(seasonData.seasonId);
 
+  await leagueProcessor.processLeagues(seasonData.seasonId);
+
   //seed episode infos
   const episodeInfos: EpisodeInfo[] = [];
   for (const episode of seasonData.episodes) {
@@ -33,6 +48,10 @@ async function processSeason<T extends string | number | symbol>(
     episodeInfos,
     seasonData.seasonId
   );
+
+  for (const episodeInfo of episodeInfos) {
+    await surveyProcessor.processEpisodeSurvey(episodeInfo.id);
+  }
 
   //Seed starting tribes
   const startingTribes: StartingTribe[] = [];

@@ -34,6 +34,7 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
           foreignKey: 'seasonId',
           targetKey: 'seasonId',
           as: 'season',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating SeasonEliminations with Seasons');
@@ -117,7 +118,7 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
       timestamps: false,
       indexes: [
         {
-          fields: ['SEASON_ID', 'EPISODE_ID', 'SURVIVOR_ID'],
+          fields: ['SEASON_ID', 'SURVIVOR_ID'],
           unique: true,
           name: 'ssn_eliminations_pk',
         },

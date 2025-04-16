@@ -9,6 +9,8 @@ import {
   SurveySubmissionStatus,
   SubmitSurveyRequestBody,
   SubmitSurveyResponse,
+  PlayerChoice,
+  PlayerChoices,
 } from '../../../generated-api';
 import { ApiRequestParams, useApi } from '../useApi';
 import surveyService, {
@@ -26,7 +28,7 @@ interface UseSurveyProps {
   survey: LeagueMemberSurvey;
 }
 
-export type SurveyPickChoicesMap = Map<string, any[]>;
+export type SurveyPickChoicesMap = Map<string, PlayerChoices>;
 const useSurvey = ({ survey }: UseSurveyProps) => {
   const dispatch = useDispatch<AppDispatch>();
 
@@ -35,7 +37,7 @@ const useSurvey = ({ survey }: UseSurveyProps) => {
   );
 
   const [playerChoices, setPlayerChoices] = useState<SurveyPickChoicesMap>(
-    new Map<string, any[]>()
+    new Map<string, PlayerChoices>()
   );
 
   const handleOptionClick = (
@@ -96,7 +98,7 @@ const useSurvey = ({ survey }: UseSurveyProps) => {
         picksWithChoice: Array.from(playerChoices.entries()).map(
           ([pickId, choices]) => ({
             pickId,
-            choice: choices.map((choice) => choice.id as string),
+            choice: choices.map((choice) => choice.playerChoice as string),
           })
         ),
       },
@@ -107,13 +109,21 @@ const useSurvey = ({ survey }: UseSurveyProps) => {
   useEffect(() => {
     if (survey.submissionStatus === SurveySubmissionStatus.Submitted) {
       const picks = survey.picks;
-      const choicesMap = new Map<string, any[]>();
+      const choicesMap = new Map<string, PlayerChoices>();
       picks.forEach((pick: Pick) => {
         const pickId = pick.id;
-        const choices = pick.playerChoices.map((choice) => ({
-          id: choice.playerChoice,
-          rank: choice.rank,
-        }));
+        let choices: PlayerChoices = [];
+        if (!pick.playerChoices) {
+          choices = [];
+        } else {
+          const choices: PlayerChoices = pick.playerChoices.map(
+            (playerChoice: PlayerChoice) => ({
+              playerChoice: playerChoice.playerChoice,
+              rank: playerChoice.rank,
+            })
+          );
+        }
+
         choicesMap.set(pickId, choices);
       });
       setPlayerChoices(choicesMap);

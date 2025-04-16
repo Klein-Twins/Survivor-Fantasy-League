@@ -113,10 +113,25 @@ async function getTribeIdSurvivorBelongsToAtStartOfEpisode(
     },
   });
 
+  for (const survivorCompleteTribeHistory of survivorsCompleteTribeHistory) {
+    const isEliminatedSurvivor = await models.SeasonEliminations.findOne({
+      where: {
+        survivorId: survivorCompleteTribeHistory.survivorId,
+      },
+    });
+
+    if (!!isEliminatedSurvivor) {
+      survivorsCompleteTribeHistory.splice(
+        survivorsCompleteTribeHistory.indexOf(survivorCompleteTribeHistory),
+        1
+      );
+    }
+  }
+
   async function filterTribeHistory(
     episodeNumber: EpisodeAttributes['number'],
     survivorsCompleteTribeHistory: TribeMemberAttributes[]
-  ): Promise<TribeMemberAttributes> {
+  ): Promise<TribeMemberAttributes | void> {
     for (const survivorTribeHistory of survivorsCompleteTribeHistory) {
       const startEpisodeNumber = await episodeRepository
         .getEpisode('episodeId', survivorTribeHistory.episodeIdStart)
@@ -127,30 +142,82 @@ async function getTribeIdSurvivorBelongsToAtStartOfEpisode(
             .then((episode) => episode!.number)
         : null;
 
-      if (episodeNumber === 1 && startEpisodeNumber === 1) {
-        return survivorTribeHistory;
-      } else if (
-        episodeNumber > startEpisodeNumber &&
-        endEpisodeNumber &&
-        episodeNumber <= endEpisodeNumber!
-      ) {
-        return survivorTribeHistory;
-      } else if (episodeNumber > startEpisodeNumber && !endEpisodeNumber) {
-        return survivorTribeHistory;
-      } else if (endEpisodeNumber && episodeNumber > endEpisodeNumber) {
+      if (episodeNumber > startEpisodeNumber) {
+        if (endEpisodeNumber === null) {
+          return survivorTribeHistory;
+        } else {
+          if (episodeNumber < endEpisodeNumber) {
+            return survivorTribeHistory;
+          } else if (episodeNumber === endEpisodeNumber) {
+            return survivorTribeHistory;
+          } else if (episodeNumber > endEpisodeNumber) {
+            continue;
+          }
+        }
+      } else if (episodeNumber < startEpisodeNumber) {
         continue;
-      } else {
-        throw new InternalServerError(`Encountered a weird condition`);
+      } else if (episodeNumber === startEpisodeNumber) {
+        if (episodeNumber === 1) {
+          return survivorTribeHistory;
+        }
+        continue;
       }
+      throw new InternalServerError(
+        `Encountered a weird condition for survivor ${survivorId} on episode ${episodeNumber} with start episode ${startEpisodeNumber} and end episode ${endEpisodeNumber}`
+      );
+
+      // if (startEpisodeNumber > episodeNumber) {
+      //   if (endEpisodeNumber === null) {
+      //     return survivorTribeHistory;
+      //   } else {
+      //     if (endEpisodeNumber >= episodeNumber) {
+      //       return survivorTribeHistory;
+      //     }
+      //     continue;
+      //   }
+      // } else if (startEpisodeNumber === episodeNumber) {
+      //   if (episodeNumber === 1) {
+      //     return survivorTribeHistory;
+      //   }
+      //   continue;
+      // } else if (endEpisodeNumber) {
+      //   continue;
+      // } else {
+      //   throw new InternalServerError(
+      //     `Encountered a weird condition for survivor ${survivorId} on episode ${episodeNumber} with start episode ${startEpisodeNumber} and end episode ${endEpisodeNumber}`
+      //   );
     }
-    throw new InternalServerError('No tribe history found');
+
+    // if (episodeNumber === 1 && startEpisodeNumber === 1) {
+    //   return survivorTribeHistory;
+    // } else if (
+    //   episodeNumber > startEpisodeNumber &&
+    //   endEpisodeNumber &&
+    //   episodeNumber <= endEpisodeNumber!
+    // ) {
+    //   return survivorTribeHistory;
+    // } else if (episodeNumber > startEpisodeNumber && !endEpisodeNumber) {
+    //   return survivorTribeHistory;
+    // } else if (endEpisodeNumber && episodeNumber > endEpisodeNumber) {
+    //   continue;
+    // }
+    // if (episodeNumber < startEpisodeNumber) {
+    //   continue;
+    // } else {
+    //   throw new InternalServerError(
+    //     `Encountered a weird condition for survivor ${survivorId} on episode ${episodeNumber} with start episode ${startEpisodeNumber} and end episode ${endEpisodeNumber}`
+    //   );
+    // }
+    // }
+    // throw new InternalServerError('No tribe history found');
   }
 
   const currentTribe = await filterTribeHistory(
     episodeAttributes.number,
     survivorsCompleteTribeHistory
   );
-  return currentTribe.tribeId;
+
+  return currentTribe?.tribeId || null;
 }
 
 //This function fetches all tribe members for a given tribe with switches throughout their season. Hence, it needs to be filtered

@@ -15,14 +15,15 @@ async function createUser(
   email: UserAttributes['email'],
   profileId: UserAttributes['profileId'],
   userRole: UserAttributes['userRole'] = AccountRole.User,
-  transaction?: Transaction
+  transaction?: Transaction,
+  userId?: UserAttributes['userId']
 ): Promise<UserAttributes> {
   let t = transaction;
   if (!t) {
     t = await models.sequelize.transaction();
   }
   try {
-    const userId = uuidv4() as UUID;
+    userId = userId ? userId : (uuidv4() as UUID);
     const userAttributes = await models.User.create(
       {
         userId,

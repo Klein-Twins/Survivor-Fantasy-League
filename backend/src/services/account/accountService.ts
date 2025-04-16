@@ -21,6 +21,9 @@ async function createAccount(signupData: {
   firstName: ProfileAttributes['firstName'];
   lastName: ProfileAttributes['lastName'];
   password: PasswordAttributes['password'];
+  userRole?: AccountRole;
+  profileId?: ProfileAttributes['profileId'];
+  userId?: UserAttributes['userId'];
 }): Promise<Account> {
   const formattedSignupData = accountHelper.validate.createAccount(signupData);
 
@@ -44,14 +47,16 @@ async function createAccount(signupData: {
     const profileAttributes = await profileRepository.createProfile(
       formattedSignupData.firstName,
       formattedSignupData.lastName,
-      transaction
+      transaction,
+      signupData.profileId
     );
     const userAttributes = await userRepository.createUser(
       formattedSignupData.userName,
       formattedSignupData.email,
       profileAttributes.profileId,
       AccountRole.User,
-      transaction
+      transaction,
+      signupData.userId
     );
 
     await passwordService.createPassword(

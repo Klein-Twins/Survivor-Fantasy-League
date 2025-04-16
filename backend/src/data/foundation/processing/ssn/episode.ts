@@ -1,6 +1,7 @@
 import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
 import { SeasonsAttributes } from '../../../../models/season/Seasons';
+import surveyProcessor from '../../../dev/processing/lge/surveys/surveyProcessor';
 import { EpisodeInfo, Episodes, Episode } from '../../data/ssn/dataTypes';
 import challengeProcessor from './challenge';
 import survivorProcessor from './survivor';
@@ -21,6 +22,12 @@ async function processAllEpisodeEvents(episodes: Episodes) {
 }
 
 async function processEpisodeEvents(episode: Episode) {
+  logger.debug(
+    `Processing episode Survey for episode: ${episode.episodeInfo.number}`
+  );
+
+  await surveyProcessor.processSurveysForEpisode(episode.episodeInfo.id);
+
   const episodeAttributes = await models.Episode.findByPk(
     episode.episodeInfo.id
   );
