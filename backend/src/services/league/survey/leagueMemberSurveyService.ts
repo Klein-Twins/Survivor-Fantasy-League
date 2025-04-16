@@ -61,21 +61,32 @@ async function getLeagueMemberSurveys(
   return leagueMemberSurveys;
 }
 
-async function submitLeagueSurvey({
-  episodeId,
-  leagueSurveyId,
-  surveyId,
-  leagueId,
-  leagueProfileId,
-  picksWithChoice,
-}: {
-  episodeId: EpisodeAttributes['id'];
-  leagueSurveyId: LeagueSurveyForEpisodeAttributes['leagueSurveyId'];
-  surveyId: SurveyAttributes['surveyId'];
-  leagueId: LeagueAttributes['leagueId'];
-  leagueProfileId: ProfileAttributes['profileId'];
-  picksWithChoice: PickIdAndPlayerChoice[];
-}): Promise<LeagueMemberSurvey> {
+type SubmitSurveyOptions = {
+  ignoreSurveyAvailability: boolean;
+  ignoreSurveyCompleteness: boolean;
+};
+
+async function submitLeagueSurvey(
+  {
+    episodeId,
+    leagueSurveyId,
+    surveyId,
+    leagueId,
+    leagueProfileId,
+    picksWithChoice,
+  }: {
+    episodeId: EpisodeAttributes['id'];
+    leagueSurveyId: LeagueSurveyForEpisodeAttributes['leagueSurveyId'];
+    surveyId: SurveyAttributes['surveyId'];
+    leagueId: LeagueAttributes['leagueId'];
+    leagueProfileId: ProfileAttributes['profileId'];
+    picksWithChoice: PickIdAndPlayerChoice[];
+  },
+  options: SubmitSurveyOptions = {
+    ignoreSurveyAvailability: false,
+    ignoreSurveyCompleteness: false,
+  } // Default value
+): Promise<LeagueMemberSurvey> {
   const episode = await episodeService.getEpisode('episodeId', episodeId);
   const league = await leagueService.getLeague(leagueId);
   const profile = await profileService.getProfile(
@@ -105,11 +116,13 @@ async function submitLeagueSurvey({
   );
 
   //Validate that the current dateTime is between the openDae and closeDate
-  const currentDateTime = new Date();
-  if (currentDateTime < leagueSurvey.openDate) {
-    throw new ForbiddenError('Survey is not open for submission');
-  } else if (currentDateTime > leagueSurvey.dueDate) {
-    throw new ForbiddenError('Survey is closed for submission');
+  if (!options.ignoreSurveyAvailability) {
+    const currentDateTime = new Date();
+    if (currentDateTime < leagueSurvey.openDate) {
+      throw new ForbiddenError('Survey is not open for submission');
+    } else if (currentDateTime > leagueSurvey.dueDate) {
+      throw new ForbiddenError('Survey is closed for submission');
+    }
   }
 
   await leagueMemberService.isInLeague(
@@ -120,11 +133,13 @@ async function submitLeagueSurvey({
     true
   );
 
-  await pickService.validatePicksAreInSurvey(
-    picksWithChoice.map((pick) => pick.pickId as UUID),
-    episodeId,
-    true
-  );
+  if (!options.ignoreSurveyCompleteness) {
+    await pickService.validatePicksAreInSurvey(
+      picksWithChoice.map((pick) => pick.pickId as UUID),
+      episodeId,
+      true
+    );
+  }
 
   await pickOptionService.validatePicksOptions(
     picksWithChoice,

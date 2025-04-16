@@ -1,5 +1,4 @@
 import { LeagueSurveyForEpisodeAttributes } from '../../../models/league/LeagueSurveysForEpisode';
-import { season47EpisodeSurveyIds } from '../../foundation/foundationIds';
 import { testLeagueIds, testLeagueSurveyIds } from '../devIds';
 
 const testLeague1SurveyData: LeagueSurveyForEpisodeAttributes[] = [

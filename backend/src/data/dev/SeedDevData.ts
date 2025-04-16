@@ -3,9 +3,14 @@ import { models } from '../../config/db';
 import testPasswordData from './accountData/testPasswordData';
 import testProfileData from './accountData/testProfileData';
 import testUserData from './accountData/testUserData';
-import testLeague1SurveyData from './leagueData/testLeague1SurveyData';
+import season48TestLeagues, {
+  season48TestLeague1,
+} from './leagueData/leagues48';
+import testSurveyData from './leagueData/survey/testLeagueSurveys';
 import testLeagueData from './leagueData/testLeagueData';
 import testLeagueProfilesData from './leagueData/testLeagueProfilesData';
+import leagueProcessor from './processing/lge/leagueProcessor';
+import surveyProcessor from './processing/lge/surveys/surveyProcessor';
 
 const seedTestAccountData = async () => {
   await models.Profile.destroy({ where: {} });
@@ -17,19 +22,12 @@ const seedTestAccountData = async () => {
 };
 
 const seedLeagueData = async () => {
-  // await models.League.destroy({ where: {} });
-  // await models.League.bulkCreate(testLeagueData, { validate: true });
-  // await models.LeagueProfile.destroy({ where: {} });
-  // await models.LeagueProfile.bulkCreate(testLeagueProfilesData, {
-  //   validate: true,
-  // });
-  // await models.EpisodeSurvey.destroy({ where: {} });
-  // await models.EpisodeSurvey.bulkCreate(season47EpisodeSurveyData, {
-  //   validate: true,
-  // });
-  // await models.EpisodeSurvey.bulkCreate(season48EpisodeSurveyData, {
-  //   validate: true,
-  // });
+  for (const league of season48TestLeagues) {
+    await leagueProcessor.processLeague(league);
+  }
+  await surveyProcessor.processSurveysForLeagueMember(
+    testSurveyData.tonyStarkLeague1Surveys
+  );
 };
 
 const seedDevData = async () => {

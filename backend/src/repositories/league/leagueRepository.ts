@@ -11,9 +11,10 @@ const leagueRepository = {
 async function createLeague(
   seasonId: LeagueAttributes['seasonId'],
   name: LeagueAttributes['name'],
-  transaction: Transaction
+  transaction: Transaction,
+  id?: LeagueAttributes['leagueId']
 ): Promise<LeagueAttributes> {
-  const leagueId = uuidv4();
+  const leagueId = id ? id : uuidv4();
   const leagueAttributes = await models.League.create(
     {
       leagueId,

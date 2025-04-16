@@ -35,16 +35,18 @@ async function createLeague({
   name,
   seasonId,
   profileId,
+  id,
 }: {
   name: LeagueAttributes['name'];
   seasonId: LeagueAttributes['seasonId'];
   profileId: ProfileAttributes['profileId'];
+  id?: LeagueAttributes['leagueId'];
 }): Promise<League> {
   const transaction = await sequelize.transaction();
 
   try {
     const leagueAttributes: LeagueAttributes =
-      await leagueRepository.createLeague(seasonId, name, transaction);
+      await leagueRepository.createLeague(seasonId, name, transaction, id);
 
     const leagueMember = await leagueMemberService.createLeagueMember({
       leagueId: leagueAttributes.leagueId,

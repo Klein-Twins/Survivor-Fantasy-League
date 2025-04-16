@@ -13,6 +13,8 @@ export type PickData = PicksAttributes &
   Omit<PickOptionsAttributes, 'pickId'> &
   Omit<PickPointsAttributes, 'pickId'> & { episodeType: EpisodeType[] };
 
+export const survivorEliminationPickId = uuidv4() as UUID;
+
 export const picksData: PickData[] = [
   //Premier Episode Picks
   // {
@@ -52,7 +54,7 @@ export const picksData: PickData[] = [
 
   //All Episodes Picks
   {
-    pickId: uuidv4() as UUID,
+    pickId: survivorEliminationPickId,
     description: 'Which castaway will be eliminated?',
     type: PickOptionTypeEnum.Survivor,
     minNumSelections: 1,
