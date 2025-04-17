@@ -386,7 +386,7 @@ const season48Episodes = new Map<number, Episode>([
         title: 'Doing the Damn Thing',
         airDate: new Date('2025-04-02T19:00:00-06:00'),
         description: '',
-        type: EpisodeType.PREMERGE,
+        type: EpisodeType.TRIBELESS,
       },
       episodeEvents: {
         eliminatedSurvivors: [
@@ -539,7 +539,7 @@ export const season48: SeasonData<Season48Tribes> = {
     [
       Season48Tribes.Civa,
       {
-        id: 'cac70173-4546-49f6-88db-513bd3baad99',
+        id: season48TribeIds.Civa,
         name: 'Civa',
         color: 'Green',
         hexColor: '#008000',
@@ -559,7 +559,7 @@ export const season48: SeasonData<Season48Tribes> = {
     [
       Season48Tribes.Lagi,
       {
-        id: 'c1ae46fa-7ed0-489c-968c-b228a7870585',
+        id: season48TribeIds.Lagi,
         name: 'Lagi',
         color: 'Blue',
         hexColor: '#0000FF',
@@ -579,7 +579,7 @@ export const season48: SeasonData<Season48Tribes> = {
     [
       Season48Tribes.Vula,
       {
-        id: '56107769-c43c-4121-b553-164efc833fba',
+        id: season48TribeIds.Vula,
         name: 'Vula',
         color: 'Orange',
         hexColor: '#FFA500',

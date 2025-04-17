@@ -1,5 +1,36 @@
 components:
   schemas:
+    TribeStatuses:
+      type: array
+      items:
+        $ref: '#/components/schemas/TribeMemberStatusOnEpisode'
+
+    TribeMemberStatusOnEpisode:
+      type: object
+      required:
+        - tribeId
+        - tribeMembersEpisodeStart
+        - tribeMembersBeforeElimination
+        - tribeMembersAtEndOfEpisode
+      properties:
+        tribeId:
+          type: string
+          description: The tribe's unique identifier
+          format: uuid
+          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
+        tribeMembersEpisodeStart:
+          $ref: '#/components/schemas/TribeMembership'
+        tribeMembersBeforeElimination:
+          $ref: '#/components/schemas/TribeMembership'
+        tribeMembersAtEndOfEpisode:
+          $ref: '#/components/schemas/TribeMembership'
+
+    TribeMembership:
+      type: array
+      nullable: true
+      items:
+        $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
+
     Tribe:
       type: object
       required:

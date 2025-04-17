@@ -1,7 +1,11 @@
 import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
+import { EpisodeType } from '../../../../generated-api';
 import { SeasonsAttributes } from '../../../../models/season/Seasons';
+import tribeService from '../../../../services/season/tribeService';
 import surveyProcessor from '../../../dev/processing/lge/surveys/surveyProcessor';
+import season47 from '../../data/ssn/47/season47';
+import { season48TribeIds } from '../../data/ssn/48/ids';
 import { EpisodeInfo, Episodes, Episode } from '../../data/ssn/dataTypes';
 import challengeProcessor from './challenge';
 import survivorProcessor from './survivor';
@@ -40,6 +44,43 @@ async function processEpisodeEvents(episode: Episode) {
   logger.debug(
     `Processing episode events for episode: ${episode.episodeInfo.number} in season: ${episodeAttributes.seasonId}`
   );
+
+  if (episode.episodeInfo.type === EpisodeType.TRIBELESS) {
+    const survivors = await survivorProcessor.processSurvivorTribeless(
+      episode.episodeInfo.id
+    );
+
+    await models.Tribe.update(
+      {
+        episodeIdEnd: episode.episodeInfo.id,
+      },
+      {
+        where: {
+          seasonId: episodeAttributes.seasonId,
+        },
+      }
+    );
+
+    await models.Tribe.create({
+      id: season48TribeIds.Merge,
+      seasonId: episodeAttributes.seasonId,
+      name: 'TBD',
+      color: 'TBD',
+      hexColor: '#000000',
+      mergeTribe: true,
+      episodeIdStart: episode.episodeInfo.id,
+      episodeIdEnd: null,
+    });
+
+    for (const survivorId of survivors) {
+      await models.TribeMembers.create({
+        tribeId: season48TribeIds.Merge,
+        survivorId: survivorId,
+        episodeIdStart: episode.episodeInfo.id,
+        episodeIdEnd: null,
+      });
+    }
+  }
 
   if (episode.episodeEvents?.tribeSwitch) {
     await survivorProcessor.processSurvivorTribeSwitch(

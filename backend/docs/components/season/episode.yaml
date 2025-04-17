@@ -50,6 +50,8 @@ components:
           type: boolean
           description: Whether the episode is a tribe switch episode
           example: false
+        tribeStatuses:
+          $ref: './tribe.yaml#/components/schemas/TribeStatuses'
 
     EpisodeType:
       type: string

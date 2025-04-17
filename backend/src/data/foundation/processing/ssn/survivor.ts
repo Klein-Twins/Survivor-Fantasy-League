@@ -24,14 +24,61 @@ const survivorProcessor = {
   processTribeMembersForStartingTribe,
   processSurvivorTribeSwitch,
   processEliminatedSurvivors,
+  processSurvivorTribeless,
 };
+
+async function processSurvivorTribeless(
+  episodeId: EpisodeAttributes['id']
+): Promise<SurvivorsAttributes['id'][]> {
+  logger.debug(`Processing tribeless survivor for episode: ${episodeId}`);
+
+  const episodeAttributes = await models.Episode.findByPk(episodeId);
+  if (!episodeAttributes) {
+    throw new Error(`Episode with ID ${episodeId} not found in the database`);
+  }
+  if (episodeAttributes.type !== EpisodeType.TRIBELESS) {
+    throw new Error(`Episode with ID ${episodeId} is not a tribeless episode`);
+  }
+
+  const preMergeTribeIds = await models.Tribe.findAll({
+    where: {
+      seasonId: episodeAttributes.seasonId,
+      mergeTribe: false,
+    },
+  }).then((tribes) => tribes.map((tribe) => tribe.id));
+
+  const tribeMembers = await models.TribeMembers.update(
+    {
+      episodeIdEnd: episodeId,
+    },
+    {
+      where: {
+        episodeIdEnd: null,
+        tribeId: { [Op.in]: preMergeTribeIds },
+      },
+      returning: true,
+    }
+  );
+
+  logger.debug(`Processed tribeless survivor for episode: ${episodeId}`);
+  return tribeMembers[1].map((tribeMember) => tribeMember.survivorId);
+}
 
 async function processSurvivorTribeSwitch(
   tribeSwitch: TribeSwitch,
   episodeId: EpisodeAttributes['id']
 ) {
   for (const survivorTribeSwitch of tribeSwitch) {
-    await models.TribeMembers.update(
+    const survivor = await models.Survivors.findByPk(
+      survivorTribeSwitch.survivorId
+    );
+    const tribe = await models.Tribe.findByPk(survivorTribeSwitch.tribeId);
+
+    logger.debug(
+      `Processing tribe switch for survivor: ${survivor?.firstName} to tribe: ${tribe?.name}`
+    );
+
+    const [numUpdated, rowsUpdated] = await models.TribeMembers.update(
       {
         episodeIdEnd: episodeId,
       },
@@ -40,7 +87,25 @@ async function processSurvivorTribeSwitch(
           episodeIdEnd: null,
           survivorId: survivorTribeSwitch.survivorId,
         },
+        returning: true,
       }
+    );
+
+    logger.debug(
+      `Updated ${numUpdated} records for survivor: ${survivor?.firstName} to tribe: ${tribe?.name}`
+    );
+    for (const rowUpdated of rowsUpdated) {
+      const survivorUpdated = await models.Survivors.findByPk(
+        rowUpdated.survivorId
+      );
+      const tribeUpdated = await models.Tribe.findByPk(rowUpdated.tribeId);
+      logger.debug(
+        `Updated Record = ${survivorUpdated?.firstName} in tribe: ${tribeUpdated?.name}`
+      );
+    }
+
+    logger.debug(
+      `Updating tribe member record for survivor: ${survivor?.firstName} to tribe: ${tribe?.name}`
     );
 
     await models.TribeMembers.create({
@@ -50,6 +115,17 @@ async function processSurvivorTribeSwitch(
       episodeIdEnd: null,
       notes: `Switched to tribe ${survivorTribeSwitch.tribeId}`,
     });
+
+    await models.Episode.update(
+      {
+        isTribeSwitch: true,
+      },
+      {
+        where: {
+          id: episodeId,
+        },
+      }
+    );
   }
 }
 

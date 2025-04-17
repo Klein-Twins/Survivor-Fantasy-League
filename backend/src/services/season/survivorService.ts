@@ -19,6 +19,8 @@ const survivorService = {
   getSurvivorsAtStartOfEpisode,
   getSurvivorsBySeason,
   createSurvivor,
+  buildSurvivor,
+  buildBasicSurvivor,
   getSurvivorById,
   getBasicSurvivorDetails,
 };
@@ -148,16 +150,26 @@ async function createSurvivor(
   throw new NotImplementedError('createSurvivor');
 }
 
-function buildSurvivor(
-  survivorAttributes: SurvivorsAttributes,
-  survivorDetailAttributes: SurvivorDetailsOnSeasonAttributes,
-  survivorStatus?: SurvivorStatus
-): Survivor {
+function buildBasicSurvivor(
+  survivorAttributes: SurvivorsAttributes
+): SurvivorBasic {
   return {
     id: survivorAttributes.id,
     firstName: survivorAttributes.firstName,
     lastName: survivorAttributes.lastName,
     name: survivorAttributes.firstName + ' ' + survivorAttributes.lastName,
+  };
+}
+
+function buildSurvivor(
+  survivorAttributes: SurvivorsAttributes,
+  survivorDetailAttributes: SurvivorDetailsOnSeasonAttributes,
+  survivorStatus?: SurvivorStatus
+): Survivor {
+  const basicSurvivor: SurvivorBasic = buildBasicSurvivor(survivorAttributes);
+
+  return {
+    ...basicSurvivor,
     fromCity: survivorAttributes.fromCity,
     fromState: survivorAttributes.fromState,
     fromCountry: survivorAttributes.fromCountry,

@@ -13,6 +13,7 @@
  */
 
 import { EpisodeType } from './episode-type';
+import { TribeStatuses } from './tribe-statuses';
  /**
  * 
  *
@@ -98,4 +99,10 @@ export interface Episode {
      * @example false
      */
     isTribeSwitch: boolean;
+
+    /**
+     * @type {TribeStatuses}
+     * @memberof Episode
+     */
+    tribeStatuses?: TribeStatuses;
 }

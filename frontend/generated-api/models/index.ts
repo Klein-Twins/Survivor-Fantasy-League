@@ -86,5 +86,8 @@ export * from './survivor-elimination';
 export * from './survivor-pick-options';
 export * from './survivor-status';
 export * from './tribe';
+export * from './tribe-member-status-on-episode';
+export * from './tribe-membership';
 export * from './tribe-pick-options';
+export * from './tribe-statuses';
 export * from './user-session';

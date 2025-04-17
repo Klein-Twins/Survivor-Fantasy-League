@@ -29,7 +29,7 @@ export const AdminEventSurviceApiAxiosParamCreator = function (configuration?: C
          * This endpoint allows you to fulfill an elimination survey.
          * @summary Fulfill elimination survey
          * @param {ProcessEliminationRequestBody} body 
-         * @param {string} episodeId The ID of the episode survey.
+         * @param {string} episodeId The id of the episode the event was fulfilled on.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -87,7 +87,7 @@ export const AdminEventSurviceApiFp = function(configuration?: Configuration) {
          * This endpoint allows you to fulfill an elimination survey.
          * @summary Fulfill elimination survey
          * @param {ProcessEliminationRequestBody} body 
-         * @param {string} episodeId The ID of the episode survey.
+         * @param {string} episodeId The id of the episode the event was fulfilled on.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -111,7 +111,7 @@ export const AdminEventSurviceApiFactory = function (configuration?: Configurati
          * This endpoint allows you to fulfill an elimination survey.
          * @summary Fulfill elimination survey
          * @param {ProcessEliminationRequestBody} body 
-         * @param {string} episodeId The ID of the episode survey.
+         * @param {string} episodeId The id of the episode the event was fulfilled on.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
@@ -132,7 +132,7 @@ export class AdminEventSurviceApi extends BaseAPI {
      * This endpoint allows you to fulfill an elimination survey.
      * @summary Fulfill elimination survey
      * @param {ProcessEliminationRequestBody} body 
-     * @param {string} episodeId The ID of the episode survey.
+     * @param {string} episodeId The id of the episode the event was fulfilled on.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof AdminEventSurviceApi

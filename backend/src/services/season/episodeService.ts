@@ -2,6 +2,7 @@ import { Episode } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import episodeRepository from '../../repositories/season/episode/episodeRepository';
 import { InternalServerError, NotFoundError } from '../../utils/errors/errors';
+import tribeMemberService from './tribeMemberService';
 
 const episodeService = {
   getEpisodesBySeasonId,
@@ -110,7 +111,6 @@ async function getEpisode(
 
 function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
   const hasAired = new Date(episodeAttributes.airDate) < new Date();
-
   return {
     id: episodeAttributes.id,
     number: episodeAttributes.number,
