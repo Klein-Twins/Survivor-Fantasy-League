@@ -2,7 +2,7 @@ import { EpisodeType } from '../../../../../generated-api';
 import { ChallengeType } from '../../../../../models/season/challenges/Challenges';
 import { ChallengeWinnerType } from '../../../../../models/season/challenges/ChallengeWinners';
 import { TribeAttributes } from '../../../../../models/season/Tribes';
-import { Episode, SeasonData, startingTribeMembers } from '../dataTypes';
+import { Episode, SeasonData } from '../dataTypes';
 import {
   season47ChallengeIds,
   season47EpisodeIds,
@@ -1176,96 +1176,96 @@ export const season47: SeasonData<Season47Tribes> = {
   episodes: season47Episodes,
   startDate: season47Episodes.get(1)?.episodeInfo.airDate || null,
   endDate: null,
-  tribes: new Map<
-    Season47Tribes,
-    Omit<TribeAttributes, 'seasonId'> & startingTribeMembers
-  >([
-    [
-      Season47Tribes.Tuku,
-      {
-        id: season47TribeIds.Tuku,
-        name: 'Civa',
-        color: 'Green',
-        hexColor: '#008000',
-        mergeTribe: false,
-        episodeIdStart: season47Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: null,
-        startingSurvivors: [
-          season47SurvivorIds.TerranFoster,
-          season47SurvivorIds.TiyanaHallums,
-          season47SurvivorIds.GabeOrtis,
-          season47SurvivorIds.KyleOstwald,
-          season47SurvivorIds.CarolineVidmar,
-          season47SurvivorIds.SueSmey,
-        ],
-      },
-    ],
-    [
-      Season47Tribes.Lavo,
-      {
-        id: season47TribeIds.Lavo,
-        name: 'Lagi',
-        color: 'Blue',
-        hexColor: '#0000FF',
-        mergeTribe: false,
-        episodeIdStart: season47Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: null,
-        startingSurvivors: [
-          season47SurvivorIds.AyshaWelch,
-          season47SurvivorIds.KishanPatel,
-          season47SurvivorIds.RomeCooney,
-          season47SurvivorIds.SolomonYi,
-          season47SurvivorIds.GenevieveMushaluk,
-          season47SurvivorIds.TeenyChirichillo,
-        ],
-      },
-    ],
-    [
-      Season47Tribes.Gata,
-      {
-        id: season47TribeIds.Gata,
-        name: 'Vula',
-        color: 'Orange',
-        hexColor: '#FFA500',
-        mergeTribe: false,
-        episodeIdStart: season47Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: season47Episodes.get(7)!.episodeInfo.id,
-        startingSurvivors: [
-          season47SurvivorIds.JonLovett,
-          season47SurvivorIds.AnikaDhar,
-          season47SurvivorIds.SierraWright,
-          season47SurvivorIds.AndyRueda,
-          season47SurvivorIds.SamPhalen,
-          season47SurvivorIds.RachelLaMont,
-        ],
-      },
-    ],
-    [
-      Season47Tribes.Beka,
-      {
-        id: season47TribeIds.Beka,
-        name: 'Beka',
-        color: 'Purple',
-        hexColor: '#800080',
-        mergeTribe: true,
-        episodeIdStart: season47Episodes.get(7)!.episodeInfo.id,
-        episodeIdEnd: null,
-        startingSurvivors: [
-          season47SurvivorIds.AndyRueda,
-          season47SurvivorIds.CarolineVidmar,
-          season47SurvivorIds.GabeOrtis,
-          season47SurvivorIds.GenevieveMushaluk,
-          season47SurvivorIds.KyleOstwald,
-          season47SurvivorIds.RachelLaMont,
-          season47SurvivorIds.SamPhalen,
-          season47SurvivorIds.SierraWright,
-          season47SurvivorIds.SolomonYi,
-          season47SurvivorIds.SueSmey,
-          season47SurvivorIds.TeenyChirichillo,
-        ],
-      },
-    ],
-  ]),
+  // tribes: new Map<
+  //   Season47Tribes,
+  //   Omit<TribeAttributes, 'seasonId'> & startingTribeMembers
+  // >([
+  //   [
+  //     Season47Tribes.Tuku,
+  //     {
+  //       id: season47TribeIds.Tuku,
+  //       name: 'Civa',
+  //       color: 'Green',
+  //       hexColor: '#008000',
+  //       mergeTribe: false,
+  //       episodeIdStart: season47Episodes.get(1)!.episodeInfo.id,
+  //       episodeIdEnd: null,
+  //       startingSurvivors: [
+  //         season47SurvivorIds.TerranFoster,
+  //         season47SurvivorIds.TiyanaHallums,
+  //         season47SurvivorIds.GabeOrtis,
+  //         season47SurvivorIds.KyleOstwald,
+  //         season47SurvivorIds.CarolineVidmar,
+  //         season47SurvivorIds.SueSmey,
+  //       ],
+  //     },
+  //   ],
+  //   [
+  //     Season47Tribes.Lavo,
+  //     {
+  //       id: season47TribeIds.Lavo,
+  //       name: 'Lagi',
+  //       color: 'Blue',
+  //       hexColor: '#0000FF',
+  //       mergeTribe: false,
+  //       episodeIdStart: season47Episodes.get(1)!.episodeInfo.id,
+  //       episodeIdEnd: null,
+  //       startingSurvivors: [
+  //         season47SurvivorIds.AyshaWelch,
+  //         season47SurvivorIds.KishanPatel,
+  //         season47SurvivorIds.RomeCooney,
+  //         season47SurvivorIds.SolomonYi,
+  //         season47SurvivorIds.GenevieveMushaluk,
+  //         season47SurvivorIds.TeenyChirichillo,
+  //       ],
+  //     },
+  //   ],
+  //   [
+  //     Season47Tribes.Gata,
+  //     {
+  //       id: season47TribeIds.Gata,
+  //       name: 'Vula',
+  //       color: 'Orange',
+  //       hexColor: '#FFA500',
+  //       mergeTribe: false,
+  //       episodeIdStart: season47Episodes.get(1)!.episodeInfo.id,
+  //       episodeIdEnd: season47Episodes.get(7)!.episodeInfo.id,
+  //       startingSurvivors: [
+  //         season47SurvivorIds.JonLovett,
+  //         season47SurvivorIds.AnikaDhar,
+  //         season47SurvivorIds.SierraWright,
+  //         season47SurvivorIds.AndyRueda,
+  //         season47SurvivorIds.SamPhalen,
+  //         season47SurvivorIds.RachelLaMont,
+  //       ],
+  //     },
+  //   ],
+  //   [
+  //     Season47Tribes.Beka,
+  //     {
+  //       id: season47TribeIds.Beka,
+  //       name: 'Beka',
+  //       color: 'Purple',
+  //       hexColor: '#800080',
+  //       mergeTribe: true,
+  //       episodeIdStart: season47Episodes.get(7)!.episodeInfo.id,
+  //       episodeIdEnd: null,
+  //       startingSurvivors: [
+  //         season47SurvivorIds.AndyRueda,
+  //         season47SurvivorIds.CarolineVidmar,
+  //         season47SurvivorIds.GabeOrtis,
+  //         season47SurvivorIds.GenevieveMushaluk,
+  //         season47SurvivorIds.KyleOstwald,
+  //         season47SurvivorIds.RachelLaMont,
+  //         season47SurvivorIds.SamPhalen,
+  //         season47SurvivorIds.SierraWright,
+  //         season47SurvivorIds.SolomonYi,
+  //         season47SurvivorIds.SueSmey,
+  //         season47SurvivorIds.TeenyChirichillo,
+  //       ],
+  //     },
+  //   ],
+  // ]),
 };
 
 export default season47;

@@ -15,6 +15,9 @@ export interface EpisodeAttributes {
   isTribeSwitch?: boolean;
 }
 
+export interface EpisodeCreationAttributes
+  extends Omit<EpisodeAttributes, 'isTribeSwitch'> {}
+
 const EpisodeModel = (sequelize: Sequelize) => {
   class Episode extends Model<EpisodeAttributes> implements EpisodeAttributes {
     public id!: EpisodeAttributes['id'];

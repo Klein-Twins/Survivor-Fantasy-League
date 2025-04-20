@@ -1,6 +1,6 @@
 components:
   schemas:
-    Episode:
+    EpisodeInfo:
       type: object
       required:
         - id
@@ -12,6 +12,7 @@ components:
         - episodeType
         - hasAired
         - isTribeSwitch
+        - tribes
       properties:
         id:
           type: string
@@ -46,12 +47,27 @@ components:
           example: true
         episodeType:
           $ref: '#/components/schemas/EpisodeType'
+
+    EpisodeEvents:
+      required:
+        - isTribeSwitch
+        - tribesState
+      properties:
         isTribeSwitch:
           type: boolean
           description: Whether the episode is a tribe switch episode
           example: false
-        tribeStatuses:
-          $ref: './tribe.yaml#/components/schemas/TribeStatuses'
+        tribesState:
+          type: object
+          description:
+            The tribes in the episode - a map from the tribeId to the tribe
+          additionalProperties:
+            $ref: './tribe.yaml#/components/schemas/TribeMembersState'
+
+    Episode:
+      allOf:
+        - $ref: '#/components/schemas/EpisodeInfo'
+        - $ref: '#/components/schemas/EpisodeEvents'
 
     EpisodeType:
       type: string

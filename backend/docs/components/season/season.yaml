@@ -34,11 +34,6 @@ components:
           items:
             $ref: './survivor.yaml#/components/schemas/Survivor'
           description: The survivors in the season.
-        tribes:
-          type: array
-          items:
-            $ref: './tribe.yaml#/components/schemas/Tribe'
-          description: The tribes in the season.
         episodes:
           type: array
           items:
@@ -49,6 +44,11 @@ components:
           format: uuid
           description: The unique identifier of the next episode.
           nullable: true
+        tribesInSeason:
+          type: array
+          items:
+            $ref: './tribe.yaml#/components/schemas/Tribe'
+          description: The tribes in the season.
       required:
         - id
         - name
@@ -58,6 +58,6 @@ components:
         - theme
         - isActive
         - survivors
-        - tribes
+        - tribesInSeason
         - episodes
         - nextEpisode

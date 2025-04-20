@@ -656,7 +656,6 @@ paths:
                                             example: Doe
                                       - type: object
                                         required:
-                                          - seasonId
                                           - fromState
                                           - fromCountry
                                           - age
@@ -664,12 +663,13 @@ paths:
                                           - job
                                           - firstName
                                           - lastName
-                                          - eliminationInfo
+                                          - seasonId
+                                          - finishStatus
                                         properties:
                                           seasonId:
                                             type: integer
                                             description: The season tied with this survivor's details
-                                            example: 47I
+                                            example: 47
                                           nickName:
                                             type: string
                                             description: The survivor's nickname
@@ -708,51 +708,216 @@ paths:
                                             type: string
                                             description: The survivor's last name
                                             example: Doe
-                                          survivorStatus:
+                                          finishStatus:
                                             type: object
-                                            required:
-                                              - episodeId
-                                              - eliminationStatus
-                                              - currentTribeId
                                             properties:
-                                              episodeId:
-                                                type: string
-                                                description: Survivor status as of start of the episodeId.
-                                                example: 5
-                                              eliminationStatus:
-                                                type: object
-                                                properties:
-                                                  isEliminated:
-                                                    type: boolean
-                                                    description: Whether the survivor is eliminated or not
-                                                    example: false
-                                                  dayEliminated:
-                                                    type: integer
-                                                    description: The day the survivor was eliminated
-                                                    example: 12
-                                                    nullable: true
-                                                  placement:
-                                                    type: integer
-                                                    description: The placement of the survivor in the season
-                                                    example: 5
-                                                    nullable: true
-                                                  episodeEliminated:
-                                                    type: string
-                                                    description: The episode id the survivor was eliminated in
-                                                    example: 5
-                                                    nullable: true
-                                                required:
-                                                  - isEliminated
-                                                  - dayEliminated
-                                                  - placement
-                                                  - episodeEliminated
-                                              currentTribeId:
-                                                type: string
+                                              isTorchSnuffed:
+                                                type: boolean
+                                                description: Whether the survivor's torch was snuffed
+                                                example: false
+                                              placement:
+                                                type: integer
+                                                description: The placement of the survivor in the seaosn. Last place is 18th
                                                 nullable: true
-                                                description: The id of the tribe the survivor is currently in
-                                                example: tribeId
+                                              placementText:
+                                                type: string
+                                                description: The placement of the survivor in the season. Last place is 18th
+                                                example: 18th
+                                                nullable: true
+                                              dayEliminated:
+                                                type: integer
+                                                description: The day the survivor was eliminated
+                                                example: 12
+                                                nullable: true
+                                              juryPlacement:
+                                                type: integer
+                                                description: The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
+                                                example: 3
+                                                nullable: true
+                                              juryPlacementText:
+                                                type: string
+                                                description: The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
+                                                example: 3rd
+                                                nullable: true
+                                              episodeIdEliminated:
+                                                type: string
+                                                description: The episode id the survivor was eliminated in
+                                                example: 5
+                                                nullable: true
+                                              eliminationType:
+                                                type: string
+                                                enum:
+                                                  - eliminated
+                                                  - votedOut
+                                                  - quit
+                                                  - lostFiremakingChallenge
+                                                  - medicallyEvacuated
                                   description: The survivors in the season.
-                                tribes:
+                                episodes:
+                                  type: array
+                                  items:
+                                    allOf:
+                                      - type: object
+                                        required:
+                                          - id
+                                          - seasonId
+                                          - number
+                                          - airDate
+                                          - title
+                                          - description
+                                          - episodeType
+                                          - hasAired
+                                          - isTribeSwitch
+                                          - tribes
+                                        properties:
+                                          id:
+                                            type: string
+                                            description: The ID of the episode
+                                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                          seasonId:
+                                            type: number
+                                            description: The ID of the season the episode is in
+                                            example: '47'
+                                          number:
+                                            type: number
+                                            description: The number of the episode
+                                            example: '1'
+                                          airDate:
+                                            type: string
+                                            format: date
+                                            description: The air date of the episode
+                                            example: '2021-09-22'
+                                          title:
+                                            type: string
+                                            description: The title of the episode
+                                            example: The Beginning
+                                            nullable: true
+                                          description:
+                                            type: string
+                                            description: The description of the episode
+                                            example: The first episode of the season
+                                            nullable: true
+                                          hasAired:
+                                            type: boolean
+                                            description: Whether the episode has aired
+                                            example: true
+                                          episodeType:
+                                            type: string
+                                            enum:
+                                              - PREMIERE
+                                              - PRE-MERGE
+                                              - TRIBELESS
+                                              - POST_MERGE
+                                              - FINALE
+                                              - FINALE_1
+                                              - FINALE_2
+                                            description: The type of the episode
+                                            example: REWARD
+                                      - required:
+                                          - isTribeSwitch
+                                          - tribesState
+                                        properties:
+                                          isTribeSwitch:
+                                            type: boolean
+                                            description: Whether the episode is a tribe switch episode
+                                            example: false
+                                          tribesState:
+                                            type: object
+                                            description: The tribes in the episode - a map from the tribeId to the tribe
+                                            additionalProperties:
+                                              type: object
+                                              description: A map where the key is the tribeId and the value contains tribe membership details for the episode
+                                              properties:
+                                                tribeMembersEpisodeStart:
+                                                  type: array
+                                                  items:
+                                                    type: object
+                                                    required:
+                                                      - id
+                                                      - firstName
+                                                      - lastName
+                                                      - name
+                                                    properties:
+                                                      id:
+                                                        type: string
+                                                        description: The survivor's unique identifier
+                                                        example: 1
+                                                      name:
+                                                        type: string
+                                                        description: The survivor's full name
+                                                        example: John Doe
+                                                      firstName:
+                                                        type: string
+                                                        description: The survivor's first name
+                                                        example: John
+                                                      lastName:
+                                                        type: string
+                                                        description: The survivor's last name
+                                                        example: Doe
+                                                  description: List of member IDs at the start of the episode
+                                                tribeMembersBeforeElimination:
+                                                  type: array
+                                                  items:
+                                                    type: object
+                                                    required:
+                                                      - id
+                                                      - firstName
+                                                      - lastName
+                                                      - name
+                                                    properties:
+                                                      id:
+                                                        type: string
+                                                        description: The survivor's unique identifier
+                                                        example: 1
+                                                      name:
+                                                        type: string
+                                                        description: The survivor's full name
+                                                        example: John Doe
+                                                      firstName:
+                                                        type: string
+                                                        description: The survivor's first name
+                                                        example: John
+                                                      lastName:
+                                                        type: string
+                                                        description: The survivor's last name
+                                                        example: Doe
+                                                tribeMembersAtEndOfEpisode:
+                                                  type: array
+                                                  items:
+                                                    type: object
+                                                    required:
+                                                      - id
+                                                      - firstName
+                                                      - lastName
+                                                      - name
+                                                    properties:
+                                                      id:
+                                                        type: string
+                                                        description: The survivor's unique identifier
+                                                        example: 1
+                                                      name:
+                                                        type: string
+                                                        description: The survivor's full name
+                                                        example: John Doe
+                                                      firstName:
+                                                        type: string
+                                                        description: The survivor's first name
+                                                        example: John
+                                                      lastName:
+                                                        type: string
+                                                        description: The survivor's last name
+                                                        example: Doe
+                                              required:
+                                                - tribeMembersEpisodeStart
+                                                - tribeMembersBeforeElimination
+                                                - tribeMembersAtEndOfEpisode
+                                  description: The episodes in the season.
+                                nextEpisode:
+                                  type: string
+                                  format: uuid
+                                  description: The unique identifier of the next episode.
+                                  nullable: true
+                                tribesInSeason:
                                   type: array
                                   items:
                                     type: object
@@ -760,39 +925,8 @@ paths:
                                       - id
                                       - name
                                       - color
-                                      - seasonId
-                                      - survivors
+                                      - startingSurvivors
                                     properties:
-                                      survivors:
-                                        type: array
-                                        items:
-                                          type: object
-                                          required:
-                                            - id
-                                            - firstName
-                                            - lastName
-                                            - name
-                                          properties:
-                                            id:
-                                              type: string
-                                              description: The survivor's unique identifier
-                                              example: 1
-                                            name:
-                                              type: string
-                                              description: The survivor's full name
-                                              example: John Doe
-                                            firstName:
-                                              type: string
-                                              description: The survivor's first name
-                                              example: John
-                                            lastName:
-                                              type: string
-                                              description: The survivor's last name
-                                              example: Doe
-                                      seasonId:
-                                        type: string
-                                        description: The season's unique identifier
-                                        example: 47
                                       id:
                                         type: string
                                         description: The tribe's unique identifier
@@ -824,171 +958,34 @@ paths:
                                         nullable: true
                                         description: The id of the episode the tribe started in
                                         format: uuid
-                                  description: The tribes in the season.
-                                episodes:
-                                  type: array
-                                  items:
-                                    type: object
-                                    required:
-                                      - id
-                                      - seasonId
-                                      - number
-                                      - airDate
-                                      - title
-                                      - description
-                                      - episodeType
-                                      - hasAired
-                                      - isTribeSwitch
-                                    properties:
-                                      id:
-                                        type: string
-                                        description: The ID of the episode
-                                        example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                      seasonId:
-                                        type: number
-                                        description: The ID of the season the episode is in
-                                        example: '47'
-                                      number:
-                                        type: number
-                                        description: The number of the episode
-                                        example: '1'
-                                      airDate:
-                                        type: string
-                                        format: date
-                                        description: The air date of the episode
-                                        example: '2021-09-22'
-                                      title:
-                                        type: string
-                                        description: The title of the episode
-                                        example: The Beginning
-                                        nullable: true
-                                      description:
-                                        type: string
-                                        description: The description of the episode
-                                        example: The first episode of the season
-                                        nullable: true
-                                      hasAired:
-                                        type: boolean
-                                        description: Whether the episode has aired
-                                        example: true
-                                      episodeType:
-                                        type: string
-                                        enum:
-                                          - PREMIERE
-                                          - PRE-MERGE
-                                          - TRIBELESS
-                                          - POST_MERGE
-                                          - FINALE
-                                          - FINALE_1
-                                          - FINALE_2
-                                        description: The type of the episode
-                                        example: REWARD
-                                      isTribeSwitch:
-                                        type: boolean
-                                        description: Whether the episode is a tribe switch episode
-                                        example: false
-                                      tribeStatuses:
+                                      startingSurvivors:
                                         type: array
                                         items:
                                           type: object
                                           required:
-                                            - tribeId
-                                            - tribeMembersEpisodeStart
-                                            - tribeMembersBeforeElimination
-                                            - tribeMembersAtEndOfEpisode
+                                            - id
+                                            - firstName
+                                            - lastName
+                                            - name
                                           properties:
-                                            tribeId:
+                                            id:
                                               type: string
-                                              description: The tribe's unique identifier
-                                              format: uuid
-                                              example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                            tribeMembersEpisodeStart:
-                                              type: array
-                                              nullable: true
-                                              items:
-                                                type: object
-                                                required:
-                                                  - id
-                                                  - firstName
-                                                  - lastName
-                                                  - name
-                                                properties:
-                                                  id:
-                                                    type: string
-                                                    description: The survivor's unique identifier
-                                                    example: 1
-                                                  name:
-                                                    type: string
-                                                    description: The survivor's full name
-                                                    example: John Doe
-                                                  firstName:
-                                                    type: string
-                                                    description: The survivor's first name
-                                                    example: John
-                                                  lastName:
-                                                    type: string
-                                                    description: The survivor's last name
-                                                    example: Doe
-                                            tribeMembersBeforeElimination:
-                                              type: array
-                                              nullable: true
-                                              items:
-                                                type: object
-                                                required:
-                                                  - id
-                                                  - firstName
-                                                  - lastName
-                                                  - name
-                                                properties:
-                                                  id:
-                                                    type: string
-                                                    description: The survivor's unique identifier
-                                                    example: 1
-                                                  name:
-                                                    type: string
-                                                    description: The survivor's full name
-                                                    example: John Doe
-                                                  firstName:
-                                                    type: string
-                                                    description: The survivor's first name
-                                                    example: John
-                                                  lastName:
-                                                    type: string
-                                                    description: The survivor's last name
-                                                    example: Doe
-                                            tribeMembersAtEndOfEpisode:
-                                              type: array
-                                              nullable: true
-                                              items:
-                                                type: object
-                                                required:
-                                                  - id
-                                                  - firstName
-                                                  - lastName
-                                                  - name
-                                                properties:
-                                                  id:
-                                                    type: string
-                                                    description: The survivor's unique identifier
-                                                    example: 1
-                                                  name:
-                                                    type: string
-                                                    description: The survivor's full name
-                                                    example: John Doe
-                                                  firstName:
-                                                    type: string
-                                                    description: The survivor's first name
-                                                    example: John
-                                                  lastName:
-                                                    type: string
-                                                    description: The survivor's last name
-                                                    example: Doe
-                                  description: The episodes in the season.
-                                nextEpisode:
-                                  type: string
-                                  format: uuid
-                                  description: The unique identifier of the next episode.
-                                  nullable: true
+                                              description: The survivor's unique identifier
+                                              example: 1
+                                            name:
+                                              type: string
+                                              description: The survivor's full name
+                                              example: John Doe
+                                            firstName:
+                                              type: string
+                                              description: The survivor's first name
+                                              example: John
+                                            lastName:
+                                              type: string
+                                              description: The survivor's last name
+                                              example: Doe
+                                        description: The survivors that started in the tribe
+                                  description: The tribes in the season.
                               required:
                                 - id
                                 - name
@@ -998,7 +995,7 @@ paths:
                                 - theme
                                 - isActive
                                 - survivors
-                                - tribes
+                                - tribesInSeason
                                 - episodes
                                 - nextEpisode
   '/api/league/{profileId}/{seasonId}':
@@ -2066,39 +2063,8 @@ paths:
                                                             - id
                                                             - name
                                                             - color
-                                                            - seasonId
-                                                            - survivors
+                                                            - startingSurvivors
                                                           properties:
-                                                            survivors:
-                                                              type: array
-                                                              items:
-                                                                type: object
-                                                                required:
-                                                                  - id
-                                                                  - firstName
-                                                                  - lastName
-                                                                  - name
-                                                                properties:
-                                                                  id:
-                                                                    type: string
-                                                                    description: The survivor's unique identifier
-                                                                    example: 1
-                                                                  name:
-                                                                    type: string
-                                                                    description: The survivor's full name
-                                                                    example: John Doe
-                                                                  firstName:
-                                                                    type: string
-                                                                    description: The survivor's first name
-                                                                    example: John
-                                                                  lastName:
-                                                                    type: string
-                                                                    description: The survivor's last name
-                                                                    example: Doe
-                                                            seasonId:
-                                                              type: string
-                                                              description: The season's unique identifier
-                                                              example: 47
                                                             id:
                                                               type: string
                                                               description: The tribe's unique identifier
@@ -2130,6 +2096,33 @@ paths:
                                                               nullable: true
                                                               description: The id of the episode the tribe started in
                                                               format: uuid
+                                                            startingSurvivors:
+                                                              type: array
+                                                              items:
+                                                                type: object
+                                                                required:
+                                                                  - id
+                                                                  - firstName
+                                                                  - lastName
+                                                                  - name
+                                                                properties:
+                                                                  id:
+                                                                    type: string
+                                                                    description: The survivor's unique identifier
+                                                                    example: 1
+                                                                  name:
+                                                                    type: string
+                                                                    description: The survivor's full name
+                                                                    example: John Doe
+                                                                  firstName:
+                                                                    type: string
+                                                                    description: The survivor's first name
+                                                                    example: John
+                                                                  lastName:
+                                                                    type: string
+                                                                    description: The survivor's last name
+                                                                    example: Doe
+                                                              description: The survivors that started in the tribe
                                                       - type: array
                                                         items:
                                                           type: string
@@ -2406,39 +2399,8 @@ paths:
                                                               - id
                                                               - name
                                                               - color
-                                                              - seasonId
-                                                              - survivors
+                                                              - startingSurvivors
                                                             properties:
-                                                              survivors:
-                                                                type: array
-                                                                items:
-                                                                  type: object
-                                                                  required:
-                                                                    - id
-                                                                    - firstName
-                                                                    - lastName
-                                                                    - name
-                                                                  properties:
-                                                                    id:
-                                                                      type: string
-                                                                      description: The survivor's unique identifier
-                                                                      example: 1
-                                                                    name:
-                                                                      type: string
-                                                                      description: The survivor's full name
-                                                                      example: John Doe
-                                                                    firstName:
-                                                                      type: string
-                                                                      description: The survivor's first name
-                                                                      example: John
-                                                                    lastName:
-                                                                      type: string
-                                                                      description: The survivor's last name
-                                                                      example: Doe
-                                                              seasonId:
-                                                                type: string
-                                                                description: The season's unique identifier
-                                                                example: 47
                                                               id:
                                                                 type: string
                                                                 description: The tribe's unique identifier
@@ -2470,6 +2432,33 @@ paths:
                                                                 nullable: true
                                                                 description: The id of the episode the tribe started in
                                                                 format: uuid
+                                                              startingSurvivors:
+                                                                type: array
+                                                                items:
+                                                                  type: object
+                                                                  required:
+                                                                    - id
+                                                                    - firstName
+                                                                    - lastName
+                                                                    - name
+                                                                  properties:
+                                                                    id:
+                                                                      type: string
+                                                                      description: The survivor's unique identifier
+                                                                      example: 1
+                                                                    name:
+                                                                      type: string
+                                                                      description: The survivor's full name
+                                                                      example: John Doe
+                                                                    firstName:
+                                                                      type: string
+                                                                      description: The survivor's first name
+                                                                      example: John
+                                                                    lastName:
+                                                                      type: string
+                                                                      description: The survivor's last name
+                                                                      example: Doe
+                                                                description: The survivors that started in the tribe
                                                         - type: array
                                                           items:
                                                             type: string
@@ -2781,39 +2770,8 @@ paths:
                                                               - id
                                                               - name
                                                               - color
-                                                              - seasonId
-                                                              - survivors
+                                                              - startingSurvivors
                                                             properties:
-                                                              survivors:
-                                                                type: array
-                                                                items:
-                                                                  type: object
-                                                                  required:
-                                                                    - id
-                                                                    - firstName
-                                                                    - lastName
-                                                                    - name
-                                                                  properties:
-                                                                    id:
-                                                                      type: string
-                                                                      description: The survivor's unique identifier
-                                                                      example: 1
-                                                                    name:
-                                                                      type: string
-                                                                      description: The survivor's full name
-                                                                      example: John Doe
-                                                                    firstName:
-                                                                      type: string
-                                                                      description: The survivor's first name
-                                                                      example: John
-                                                                    lastName:
-                                                                      type: string
-                                                                      description: The survivor's last name
-                                                                      example: Doe
-                                                              seasonId:
-                                                                type: string
-                                                                description: The season's unique identifier
-                                                                example: 47
                                                               id:
                                                                 type: string
                                                                 description: The tribe's unique identifier
@@ -2845,6 +2803,33 @@ paths:
                                                                 nullable: true
                                                                 description: The id of the episode the tribe started in
                                                                 format: uuid
+                                                              startingSurvivors:
+                                                                type: array
+                                                                items:
+                                                                  type: object
+                                                                  required:
+                                                                    - id
+                                                                    - firstName
+                                                                    - lastName
+                                                                    - name
+                                                                  properties:
+                                                                    id:
+                                                                      type: string
+                                                                      description: The survivor's unique identifier
+                                                                      example: 1
+                                                                    name:
+                                                                      type: string
+                                                                      description: The survivor's full name
+                                                                      example: John Doe
+                                                                    firstName:
+                                                                      type: string
+                                                                      description: The survivor's first name
+                                                                      example: John
+                                                                    lastName:
+                                                                      type: string
+                                                                      description: The survivor's last name
+                                                                      example: Doe
+                                                                description: The survivors that started in the tribe
                                                         - type: array
                                                           items:
                                                             type: string
@@ -3229,7 +3214,6 @@ paths:
                                           example: Doe
                                     - type: object
                                       required:
-                                        - seasonId
                                         - fromState
                                         - fromCountry
                                         - age
@@ -3237,12 +3221,13 @@ paths:
                                         - job
                                         - firstName
                                         - lastName
-                                        - eliminationInfo
+                                        - seasonId
+                                        - finishStatus
                                       properties:
                                         seasonId:
                                           type: integer
                                           description: The season tied with this survivor's details
-                                          example: 47I
+                                          example: 47
                                         nickName:
                                           type: string
                                           description: The survivor's nickname
@@ -3281,51 +3266,216 @@ paths:
                                           type: string
                                           description: The survivor's last name
                                           example: Doe
-                                        survivorStatus:
+                                        finishStatus:
                                           type: object
-                                          required:
-                                            - episodeId
-                                            - eliminationStatus
-                                            - currentTribeId
                                           properties:
-                                            episodeId:
-                                              type: string
-                                              description: Survivor status as of start of the episodeId.
-                                              example: 5
-                                            eliminationStatus:
-                                              type: object
-                                              properties:
-                                                isEliminated:
-                                                  type: boolean
-                                                  description: Whether the survivor is eliminated or not
-                                                  example: false
-                                                dayEliminated:
-                                                  type: integer
-                                                  description: The day the survivor was eliminated
-                                                  example: 12
-                                                  nullable: true
-                                                placement:
-                                                  type: integer
-                                                  description: The placement of the survivor in the season
-                                                  example: 5
-                                                  nullable: true
-                                                episodeEliminated:
-                                                  type: string
-                                                  description: The episode id the survivor was eliminated in
-                                                  example: 5
-                                                  nullable: true
-                                              required:
-                                                - isEliminated
-                                                - dayEliminated
-                                                - placement
-                                                - episodeEliminated
-                                            currentTribeId:
-                                              type: string
+                                            isTorchSnuffed:
+                                              type: boolean
+                                              description: Whether the survivor's torch was snuffed
+                                              example: false
+                                            placement:
+                                              type: integer
+                                              description: The placement of the survivor in the seaosn. Last place is 18th
                                               nullable: true
-                                              description: The id of the tribe the survivor is currently in
-                                              example: tribeId
+                                            placementText:
+                                              type: string
+                                              description: The placement of the survivor in the season. Last place is 18th
+                                              example: 18th
+                                              nullable: true
+                                            dayEliminated:
+                                              type: integer
+                                              description: The day the survivor was eliminated
+                                              example: 12
+                                              nullable: true
+                                            juryPlacement:
+                                              type: integer
+                                              description: The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
+                                              example: 3
+                                              nullable: true
+                                            juryPlacementText:
+                                              type: string
+                                              description: The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
+                                              example: 3rd
+                                              nullable: true
+                                            episodeIdEliminated:
+                                              type: string
+                                              description: The episode id the survivor was eliminated in
+                                              example: 5
+                                              nullable: true
+                                            eliminationType:
+                                              type: string
+                                              enum:
+                                                - eliminated
+                                                - votedOut
+                                                - quit
+                                                - lostFiremakingChallenge
+                                                - medicallyEvacuated
                                 description: The survivors in the season.
-                              tribes:
+                              episodes:
+                                type: array
+                                items:
+                                  allOf:
+                                    - type: object
+                                      required:
+                                        - id
+                                        - seasonId
+                                        - number
+                                        - airDate
+                                        - title
+                                        - description
+                                        - episodeType
+                                        - hasAired
+                                        - isTribeSwitch
+                                        - tribes
+                                      properties:
+                                        id:
+                                          type: string
+                                          description: The ID of the episode
+                                          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                        seasonId:
+                                          type: number
+                                          description: The ID of the season the episode is in
+                                          example: '47'
+                                        number:
+                                          type: number
+                                          description: The number of the episode
+                                          example: '1'
+                                        airDate:
+                                          type: string
+                                          format: date
+                                          description: The air date of the episode
+                                          example: '2021-09-22'
+                                        title:
+                                          type: string
+                                          description: The title of the episode
+                                          example: The Beginning
+                                          nullable: true
+                                        description:
+                                          type: string
+                                          description: The description of the episode
+                                          example: The first episode of the season
+                                          nullable: true
+                                        hasAired:
+                                          type: boolean
+                                          description: Whether the episode has aired
+                                          example: true
+                                        episodeType:
+                                          type: string
+                                          enum:
+                                            - PREMIERE
+                                            - PRE-MERGE
+                                            - TRIBELESS
+                                            - POST_MERGE
+                                            - FINALE
+                                            - FINALE_1
+                                            - FINALE_2
+                                          description: The type of the episode
+                                          example: REWARD
+                                    - required:
+                                        - isTribeSwitch
+                                        - tribesState
+                                      properties:
+                                        isTribeSwitch:
+                                          type: boolean
+                                          description: Whether the episode is a tribe switch episode
+                                          example: false
+                                        tribesState:
+                                          type: object
+                                          description: The tribes in the episode - a map from the tribeId to the tribe
+                                          additionalProperties:
+                                            type: object
+                                            description: A map where the key is the tribeId and the value contains tribe membership details for the episode
+                                            properties:
+                                              tribeMembersEpisodeStart:
+                                                type: array
+                                                items:
+                                                  type: object
+                                                  required:
+                                                    - id
+                                                    - firstName
+                                                    - lastName
+                                                    - name
+                                                  properties:
+                                                    id:
+                                                      type: string
+                                                      description: The survivor's unique identifier
+                                                      example: 1
+                                                    name:
+                                                      type: string
+                                                      description: The survivor's full name
+                                                      example: John Doe
+                                                    firstName:
+                                                      type: string
+                                                      description: The survivor's first name
+                                                      example: John
+                                                    lastName:
+                                                      type: string
+                                                      description: The survivor's last name
+                                                      example: Doe
+                                                description: List of member IDs at the start of the episode
+                                              tribeMembersBeforeElimination:
+                                                type: array
+                                                items:
+                                                  type: object
+                                                  required:
+                                                    - id
+                                                    - firstName
+                                                    - lastName
+                                                    - name
+                                                  properties:
+                                                    id:
+                                                      type: string
+                                                      description: The survivor's unique identifier
+                                                      example: 1
+                                                    name:
+                                                      type: string
+                                                      description: The survivor's full name
+                                                      example: John Doe
+                                                    firstName:
+                                                      type: string
+                                                      description: The survivor's first name
+                                                      example: John
+                                                    lastName:
+                                                      type: string
+                                                      description: The survivor's last name
+                                                      example: Doe
+                                              tribeMembersAtEndOfEpisode:
+                                                type: array
+                                                items:
+                                                  type: object
+                                                  required:
+                                                    - id
+                                                    - firstName
+                                                    - lastName
+                                                    - name
+                                                  properties:
+                                                    id:
+                                                      type: string
+                                                      description: The survivor's unique identifier
+                                                      example: 1
+                                                    name:
+                                                      type: string
+                                                      description: The survivor's full name
+                                                      example: John Doe
+                                                    firstName:
+                                                      type: string
+                                                      description: The survivor's first name
+                                                      example: John
+                                                    lastName:
+                                                      type: string
+                                                      description: The survivor's last name
+                                                      example: Doe
+                                            required:
+                                              - tribeMembersEpisodeStart
+                                              - tribeMembersBeforeElimination
+                                              - tribeMembersAtEndOfEpisode
+                                description: The episodes in the season.
+                              nextEpisode:
+                                type: string
+                                format: uuid
+                                description: The unique identifier of the next episode.
+                                nullable: true
+                              tribesInSeason:
                                 type: array
                                 items:
                                   type: object
@@ -3333,39 +3483,8 @@ paths:
                                     - id
                                     - name
                                     - color
-                                    - seasonId
-                                    - survivors
+                                    - startingSurvivors
                                   properties:
-                                    survivors:
-                                      type: array
-                                      items:
-                                        type: object
-                                        required:
-                                          - id
-                                          - firstName
-                                          - lastName
-                                          - name
-                                        properties:
-                                          id:
-                                            type: string
-                                            description: The survivor's unique identifier
-                                            example: 1
-                                          name:
-                                            type: string
-                                            description: The survivor's full name
-                                            example: John Doe
-                                          firstName:
-                                            type: string
-                                            description: The survivor's first name
-                                            example: John
-                                          lastName:
-                                            type: string
-                                            description: The survivor's last name
-                                            example: Doe
-                                    seasonId:
-                                      type: string
-                                      description: The season's unique identifier
-                                      example: 47
                                     id:
                                       type: string
                                       description: The tribe's unique identifier
@@ -3397,171 +3516,34 @@ paths:
                                       nullable: true
                                       description: The id of the episode the tribe started in
                                       format: uuid
-                                description: The tribes in the season.
-                              episodes:
-                                type: array
-                                items:
-                                  type: object
-                                  required:
-                                    - id
-                                    - seasonId
-                                    - number
-                                    - airDate
-                                    - title
-                                    - description
-                                    - episodeType
-                                    - hasAired
-                                    - isTribeSwitch
-                                  properties:
-                                    id:
-                                      type: string
-                                      description: The ID of the episode
-                                      example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                    seasonId:
-                                      type: number
-                                      description: The ID of the season the episode is in
-                                      example: '47'
-                                    number:
-                                      type: number
-                                      description: The number of the episode
-                                      example: '1'
-                                    airDate:
-                                      type: string
-                                      format: date
-                                      description: The air date of the episode
-                                      example: '2021-09-22'
-                                    title:
-                                      type: string
-                                      description: The title of the episode
-                                      example: The Beginning
-                                      nullable: true
-                                    description:
-                                      type: string
-                                      description: The description of the episode
-                                      example: The first episode of the season
-                                      nullable: true
-                                    hasAired:
-                                      type: boolean
-                                      description: Whether the episode has aired
-                                      example: true
-                                    episodeType:
-                                      type: string
-                                      enum:
-                                        - PREMIERE
-                                        - PRE-MERGE
-                                        - TRIBELESS
-                                        - POST_MERGE
-                                        - FINALE
-                                        - FINALE_1
-                                        - FINALE_2
-                                      description: The type of the episode
-                                      example: REWARD
-                                    isTribeSwitch:
-                                      type: boolean
-                                      description: Whether the episode is a tribe switch episode
-                                      example: false
-                                    tribeStatuses:
+                                    startingSurvivors:
                                       type: array
                                       items:
                                         type: object
                                         required:
-                                          - tribeId
-                                          - tribeMembersEpisodeStart
-                                          - tribeMembersBeforeElimination
-                                          - tribeMembersAtEndOfEpisode
+                                          - id
+                                          - firstName
+                                          - lastName
+                                          - name
                                         properties:
-                                          tribeId:
+                                          id:
                                             type: string
-                                            description: The tribe's unique identifier
-                                            format: uuid
-                                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
-                                          tribeMembersEpisodeStart:
-                                            type: array
-                                            nullable: true
-                                            items:
-                                              type: object
-                                              required:
-                                                - id
-                                                - firstName
-                                                - lastName
-                                                - name
-                                              properties:
-                                                id:
-                                                  type: string
-                                                  description: The survivor's unique identifier
-                                                  example: 1
-                                                name:
-                                                  type: string
-                                                  description: The survivor's full name
-                                                  example: John Doe
-                                                firstName:
-                                                  type: string
-                                                  description: The survivor's first name
-                                                  example: John
-                                                lastName:
-                                                  type: string
-                                                  description: The survivor's last name
-                                                  example: Doe
-                                          tribeMembersBeforeElimination:
-                                            type: array
-                                            nullable: true
-                                            items:
-                                              type: object
-                                              required:
-                                                - id
-                                                - firstName
-                                                - lastName
-                                                - name
-                                              properties:
-                                                id:
-                                                  type: string
-                                                  description: The survivor's unique identifier
-                                                  example: 1
-                                                name:
-                                                  type: string
-                                                  description: The survivor's full name
-                                                  example: John Doe
-                                                firstName:
-                                                  type: string
-                                                  description: The survivor's first name
-                                                  example: John
-                                                lastName:
-                                                  type: string
-                                                  description: The survivor's last name
-                                                  example: Doe
-                                          tribeMembersAtEndOfEpisode:
-                                            type: array
-                                            nullable: true
-                                            items:
-                                              type: object
-                                              required:
-                                                - id
-                                                - firstName
-                                                - lastName
-                                                - name
-                                              properties:
-                                                id:
-                                                  type: string
-                                                  description: The survivor's unique identifier
-                                                  example: 1
-                                                name:
-                                                  type: string
-                                                  description: The survivor's full name
-                                                  example: John Doe
-                                                firstName:
-                                                  type: string
-                                                  description: The survivor's first name
-                                                  example: John
-                                                lastName:
-                                                  type: string
-                                                  description: The survivor's last name
-                                                  example: Doe
-                                description: The episodes in the season.
-                              nextEpisode:
-                                type: string
-                                format: uuid
-                                description: The unique identifier of the next episode.
-                                nullable: true
+                                            description: The survivor's unique identifier
+                                            example: 1
+                                          name:
+                                            type: string
+                                            description: The survivor's full name
+                                            example: John Doe
+                                          firstName:
+                                            type: string
+                                            description: The survivor's first name
+                                            example: John
+                                          lastName:
+                                            type: string
+                                            description: The survivor's last name
+                                            example: Doe
+                                      description: The survivors that started in the tribe
+                                description: The tribes in the season.
                             required:
                               - id
                               - name
@@ -3571,7 +3553,7 @@ paths:
                               - theme
                               - isActive
                               - survivors
-                              - tribes
+                              - tribesInSeason
                               - episodes
                               - nextEpisode
   /api/admin/season/survivor:
@@ -3702,7 +3684,6 @@ paths:
                                     example: Doe
                               - type: object
                                 required:
-                                  - seasonId
                                   - fromState
                                   - fromCountry
                                   - age
@@ -3710,12 +3691,13 @@ paths:
                                   - job
                                   - firstName
                                   - lastName
-                                  - eliminationInfo
+                                  - seasonId
+                                  - finishStatus
                                 properties:
                                   seasonId:
                                     type: integer
                                     description: The season tied with this survivor's details
-                                    example: 47I
+                                    example: 47
                                   nickName:
                                     type: string
                                     description: The survivor's nickname
@@ -3754,49 +3736,50 @@ paths:
                                     type: string
                                     description: The survivor's last name
                                     example: Doe
-                                  survivorStatus:
+                                  finishStatus:
                                     type: object
-                                    required:
-                                      - episodeId
-                                      - eliminationStatus
-                                      - currentTribeId
                                     properties:
-                                      episodeId:
-                                        type: string
-                                        description: Survivor status as of start of the episodeId.
-                                        example: 5
-                                      eliminationStatus:
-                                        type: object
-                                        properties:
-                                          isEliminated:
-                                            type: boolean
-                                            description: Whether the survivor is eliminated or not
-                                            example: false
-                                          dayEliminated:
-                                            type: integer
-                                            description: The day the survivor was eliminated
-                                            example: 12
-                                            nullable: true
-                                          placement:
-                                            type: integer
-                                            description: The placement of the survivor in the season
-                                            example: 5
-                                            nullable: true
-                                          episodeEliminated:
-                                            type: string
-                                            description: The episode id the survivor was eliminated in
-                                            example: 5
-                                            nullable: true
-                                        required:
-                                          - isEliminated
-                                          - dayEliminated
-                                          - placement
-                                          - episodeEliminated
-                                      currentTribeId:
-                                        type: string
+                                      isTorchSnuffed:
+                                        type: boolean
+                                        description: Whether the survivor's torch was snuffed
+                                        example: false
+                                      placement:
+                                        type: integer
+                                        description: The placement of the survivor in the seaosn. Last place is 18th
                                         nullable: true
-                                        description: The id of the tribe the survivor is currently in
-                                        example: tribeId
+                                      placementText:
+                                        type: string
+                                        description: The placement of the survivor in the season. Last place is 18th
+                                        example: 18th
+                                        nullable: true
+                                      dayEliminated:
+                                        type: integer
+                                        description: The day the survivor was eliminated
+                                        example: 12
+                                        nullable: true
+                                      juryPlacement:
+                                        type: integer
+                                        description: The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
+                                        example: 3
+                                        nullable: true
+                                      juryPlacementText:
+                                        type: string
+                                        description: The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
+                                        example: 3rd
+                                        nullable: true
+                                      episodeIdEliminated:
+                                        type: string
+                                        description: The episode id the survivor was eliminated in
+                                        example: 5
+                                        nullable: true
+                                      eliminationType:
+                                        type: string
+                                        enum:
+                                          - eliminated
+                                          - votedOut
+                                          - quit
+                                          - lostFiremakingChallenge
+                                          - medicallyEvacuated
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []
@@ -3892,39 +3875,8 @@ paths:
                               - id
                               - name
                               - color
-                              - seasonId
-                              - survivors
+                              - startingSurvivors
                             properties:
-                              survivors:
-                                type: array
-                                items:
-                                  type: object
-                                  required:
-                                    - id
-                                    - firstName
-                                    - lastName
-                                    - name
-                                  properties:
-                                    id:
-                                      type: string
-                                      description: The survivor's unique identifier
-                                      example: 1
-                                    name:
-                                      type: string
-                                      description: The survivor's full name
-                                      example: John Doe
-                                    firstName:
-                                      type: string
-                                      description: The survivor's first name
-                                      example: John
-                                    lastName:
-                                      type: string
-                                      description: The survivor's last name
-                                      example: Doe
-                              seasonId:
-                                type: string
-                                description: The season's unique identifier
-                                example: 47
                               id:
                                 type: string
                                 description: The tribe's unique identifier
@@ -3956,6 +3908,33 @@ paths:
                                 nullable: true
                                 description: The id of the episode the tribe started in
                                 format: uuid
+                              startingSurvivors:
+                                type: array
+                                items:
+                                  type: object
+                                  required:
+                                    - id
+                                    - firstName
+                                    - lastName
+                                    - name
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: The survivor's unique identifier
+                                      example: 1
+                                    name:
+                                      type: string
+                                      description: The survivor's full name
+                                      example: John Doe
+                                    firstName:
+                                      type: string
+                                      description: The survivor's first name
+                                      example: John
+                                    lastName:
+                                      type: string
+                                      description: The survivor's last name
+                                      example: Doe
+                                description: The survivors that started in the tribe
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []

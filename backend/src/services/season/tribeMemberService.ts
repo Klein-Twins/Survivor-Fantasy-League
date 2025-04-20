@@ -2,9 +2,9 @@ import { UUID } from 'crypto';
 import { models } from '../../config/db';
 import {
   EpisodeType,
+  Survivor,
   SurvivorBasic,
-  TribeMemberStatusOnEpisode,
-  TribeStatuses,
+  TribeMembersState,
 } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonsAttributes } from '../../models/season/Seasons';
@@ -15,15 +15,18 @@ import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import tribeMemberRepository, {
   TribeMemberQueryResult,
 } from '../../repositories/season/tribeMemberRepository';
-import episodeService from './episodeService';
 import tribeService from './tribeService';
 import episodeRepository from '../../repositories/season/episode/episodeRepository';
 import survivorService from './survivorService';
+import tribeRepository from '../../repositories/season/tribeRepository';
+import { NotFoundError } from '../../utils/errors/errors';
+import episodeService from './episodeService';
 
 const tribeMemberService = {
   getTribeMembers,
   getTribeMembersOnEpisode,
-  getTribeMemberStatusesOnEpisode,
+  getTribesState,
+  getTribeState,
 };
 
 // async function getTribeMemberStatusesOnEpisode(
@@ -39,6 +42,42 @@ const tribeMemberService = {
 //   }
 // }
 
+async function getOriginalTribeMembers(tribeId: TribeAttributes['id']) {
+  const tribeAttributes = await models.Tribe.findByPk(tribeId);
+  if (!tribeAttributes) {
+    throw new NotFoundError(`Tribe with ${tribeId} not found`);
+  }
+
+  if (!tribeAttributes.mergeTribe) {
+    const premierEpisodeAttributes = await models.Episode.findOne({
+      where: { seasonId: tribeAttributes.seasonId, number: 1 },
+    });
+    if (!premierEpisodeAttributes) {
+      throw new NotFoundError(
+        `Episode with seasonId ${tribeAttributes.seasonId} and number 1 not found`
+      );
+    }
+
+    const tribeMembers = (await models.TribeMembers.findAll({
+      where: { tribeId },
+      include: [
+        {
+          model: models.SurvivorDetailsOnSeason,
+          as: 'survivor',
+          required: true,
+          include: [
+            {
+              model: models.Survivors,
+              as: 'Survivor',
+              required: true,
+            },
+          ],
+        },
+      ],
+    })) as unknown as Survivor;
+  }
+}
+
 async function getTribeMembers(
   tribeId: TribeAttributes['id'],
   episodeId: EpisodeAttributes['id']
@@ -53,10 +92,27 @@ async function getTribeMembers(
   return tribeMembersOnEpisode;
 }
 
-async function getTribeMemberStatusesOnEpisode(
+async function getTribesState(
+  episodeId: EpisodeAttributes['id'],
+  seasonId: SeasonsAttributes['seasonId']
+): Promise<Map<TribeAttributes['id'], TribeMembersState>> {
+  const tribes = await models.Tribe.findAll({
+    where: { seasonId },
+  });
+  const tribeStatuses: Map<TribeAttributes['id'], TribeMembersState> =
+    new Map();
+  for (const tribe of tribes) {
+    const tribeMembership = await getTribeState(tribe.id as UUID, episodeId);
+    tribeStatuses.set(tribe.id, tribeMembership);
+  }
+
+  return tribeStatuses;
+}
+
+async function getTribeState(
   tribeId: TribeAttributes['id'],
   episodeId: EpisodeAttributes['id']
-): Promise<TribeMemberStatusOnEpisode> {
+): Promise<TribeMembersState> {
   // const { seasonId, number } = await episodeService.getEpisode(
   //   'episodeId',
   //   episodeId
@@ -263,8 +319,7 @@ async function getTribeMemberStatusesOnEpisode(
       }
     });
 
-  const tribeStatuses: TribeMemberStatusOnEpisode = {
-    tribeId: tribeId,
+  const tribeStatuses: TribeMembersState = {
     tribeMembersEpisodeStart: tribeMembersOnTribeAtEpisodeStart.map((member) =>
       survivorService.buildBasicSurvivor(member.survivor.Survivor)
     ),

@@ -6,7 +6,7 @@ import { TribeAttributes } from '../../models/season/Tribes';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import episodeService from '../../services/season/episodeService';
 import tribeRepository from './tribeRepository';
-import seasonEliminationService from '../../services/season/seasonEliminationService';
+// import seasonEliminationService from '../../services/season/seasonEliminationService';
 import { InternalServerError } from '../../utils/errors/errors';
 import episodeRepository from './episode/episodeRepository';
 import { Op, Transaction } from 'sequelize';
@@ -86,13 +86,13 @@ async function getTribeIdSurvivorBelongsToAtStartOfEpisode(
   survivorId: SurvivorsAttributes['id'],
   episodeId: EpisodeAttributes['id']
 ): Promise<TribeAttributes['id'] | null> {
-  if (
-    await seasonEliminationService
-      .getSurvivorEliminationStatusAtStartOfEpisode(survivorId, episodeId)
-      .then((eliminationStatus) => eliminationStatus.isEliminated)
-  ) {
-    return null;
-  }
+  // if (
+  //   await seasonEliminationService
+  //     .getSurvivorEliminationStatusAtStartOfEpisode(survivorId, episodeId)
+  //     .then((eliminationStatus) => eliminationStatus.isEliminated)
+  // ) {
+  //   return null;
+  // }
 
   const episodeAttributes = await episodeRepository.getEpisode(
     'episodeId',

@@ -1,8 +1,11 @@
-import { EpisodeType } from '../../../../../generated-api';
+import {
+  EpisodeType,
+  SurvivorEliminationType,
+} from '../../../../../generated-api';
 import { ChallengeType } from '../../../../../models/season/challenges/Challenges';
 import { ChallengeWinnerType } from '../../../../../models/season/challenges/ChallengeWinners';
 import { TribeAttributes } from '../../../../../models/season/Tribes';
-import { Episode, SeasonData, startingTribeMembers } from '../dataTypes';
+import { Episode, SeasonData } from '../dataTypes';
 import {
   season48ChallengeIds,
   season48SurvivorIds,
@@ -22,6 +25,50 @@ const season48Episodes = new Map<number, Episode>([
         type: EpisodeType.PREMIERE,
       },
       episodeEvents: {
+        tribeStart: [
+          {
+            id: season48TribeIds.Civa,
+            name: 'Civa',
+            color: 'Green',
+            hexColor: '#008000',
+            startingSurvivors: [
+              season48SurvivorIds.CharityNeims,
+              season48SurvivorIds.ChrissySarnowsky,
+              season48SurvivorIds.DavidKinne,
+              season48SurvivorIds.KyleFraser,
+              season48SurvivorIds.MitchGuerra,
+              season48SurvivorIds.KamillaKarthigesu,
+            ],
+          },
+          {
+            id: season48TribeIds.Lagi,
+            name: 'Lagi',
+            color: 'Blue',
+            hexColor: '#0000FF',
+            startingSurvivors: [
+              season48SurvivorIds.EvaErickson,
+              season48SurvivorIds.JoeHunter,
+              season48SurvivorIds.ShauhinDavari,
+              season48SurvivorIds.StarToomey,
+              season48SurvivorIds.ThomasKrottinger,
+              season48SurvivorIds.BiancaRoses,
+            ],
+          },
+          {
+            id: season48TribeIds.Vula,
+            name: 'Vula',
+            color: 'Orange',
+            hexColor: '#FFA500',
+            startingSurvivors: [
+              season48SurvivorIds.CedrekMcFadden,
+              season48SurvivorIds.JustinPioppi,
+              season48SurvivorIds.KevinLeung,
+              season48SurvivorIds.MaryZheng,
+              season48SurvivorIds.SaiouniaHughley,
+              season48SurvivorIds.StephanieBerger,
+            ],
+          },
+        ],
         eliminatedSurvivors: [
           {
             survivorId: season48SurvivorIds.StephanieBerger,
@@ -29,6 +76,8 @@ const season48Episodes = new Map<number, Episode>([
             notes: '',
             seq: 1,
             placement: 18,
+            juryPlacement: null,
+            type: SurvivorEliminationType.VotedOut,
           },
         ],
         challenges: [
@@ -117,6 +166,8 @@ const season48Episodes = new Map<number, Episode>([
             notes: '',
             seq: 1,
             placement: 17,
+            juryPlacement: null,
+            type: SurvivorEliminationType.VotedOut,
           },
         ],
         challenges: [
@@ -169,6 +220,8 @@ const season48Episodes = new Map<number, Episode>([
             notes: '',
             seq: 1,
             placement: 16,
+            juryPlacement: null,
+            type: SurvivorEliminationType.VotedOut,
           },
         ],
         challenges: [
@@ -221,6 +274,8 @@ const season48Episodes = new Map<number, Episode>([
             notes: '',
             seq: 1,
             placement: 15,
+            juryPlacement: null,
+            type: SurvivorEliminationType.VotedOut,
           },
         ],
         challenges: [
@@ -319,6 +374,8 @@ const season48Episodes = new Map<number, Episode>([
             notes: '',
             seq: 1,
             placement: 14,
+            juryPlacement: null,
+            type: SurvivorEliminationType.VotedOut,
           },
         ],
         challenges: [
@@ -389,6 +446,28 @@ const season48Episodes = new Map<number, Episode>([
         type: EpisodeType.TRIBELESS,
       },
       episodeEvents: {
+        mergeStart: [
+          {
+            id: season48TribeIds.Merge,
+            name: 'TBD Merge Tribe',
+            color: 'Purple',
+            hexColor: '#800080',
+            startingSurvivors: [
+              season48SurvivorIds.CedrekMcFadden,
+              season48SurvivorIds.ChrissySarnowsky,
+              season48SurvivorIds.DavidKinne,
+              season48SurvivorIds.EvaErickson,
+              season48SurvivorIds.JoeHunter,
+              season48SurvivorIds.KamillaKarthigesu,
+              season48SurvivorIds.KyleFraser,
+              season48SurvivorIds.MaryZheng,
+              season48SurvivorIds.MitchGuerra,
+              season48SurvivorIds.SaiouniaHughley,
+              season48SurvivorIds.ShauhinDavari,
+              season48SurvivorIds.StarToomey,
+            ],
+          },
+        ],
         eliminatedSurvivors: [
           {
             day: 13,
@@ -396,6 +475,8 @@ const season48Episodes = new Map<number, Episode>([
             notes: '',
             seq: 1,
             placement: 13,
+            juryPlacement: null,
+            type: SurvivorEliminationType.VotedOut,
           },
         ],
         challenges: [
@@ -532,95 +613,95 @@ export const season48: SeasonData<Season48Tribes> = {
   episodes: season48Episodes,
   startDate: season48Episodes.get(1)?.episodeInfo.airDate || null,
   endDate: null,
-  tribes: new Map<
-    Season48Tribes,
-    Omit<TribeAttributes, 'seasonId'> & startingTribeMembers
-  >([
-    [
-      Season48Tribes.Civa,
-      {
-        id: season48TribeIds.Civa,
-        name: 'Civa',
-        color: 'Green',
-        hexColor: '#008000',
-        mergeTribe: false,
-        episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: null,
-        startingSurvivors: [
-          season48SurvivorIds.CharityNeims,
-          season48SurvivorIds.ChrissySarnowsky,
-          season48SurvivorIds.DavidKinne,
-          season48SurvivorIds.KyleFraser,
-          season48SurvivorIds.MitchGuerra,
-          season48SurvivorIds.KamillaKarthigesu,
-        ],
-      },
-    ],
-    [
-      Season48Tribes.Lagi,
-      {
-        id: season48TribeIds.Lagi,
-        name: 'Lagi',
-        color: 'Blue',
-        hexColor: '#0000FF',
-        mergeTribe: false,
-        episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: season48Episodes.get(6)?.episodeInfo.id || null,
-        startingSurvivors: [
-          season48SurvivorIds.EvaErickson,
-          season48SurvivorIds.JoeHunter,
-          season48SurvivorIds.ShauhinDavari,
-          season48SurvivorIds.StarToomey,
-          season48SurvivorIds.ThomasKrottinger,
-          season48SurvivorIds.BiancaRoses,
-        ],
-      },
-    ],
-    [
-      Season48Tribes.Vula,
-      {
-        id: season48TribeIds.Vula,
-        name: 'Vula',
-        color: 'Orange',
-        hexColor: '#FFA500',
-        mergeTribe: false,
-        episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
-        episodeIdEnd: season48Episodes.get(6)?.episodeInfo.id || null,
-        startingSurvivors: [
-          season48SurvivorIds.CedrekMcFadden,
-          season48SurvivorIds.JustinPioppi,
-          season48SurvivorIds.KevinLeung,
-          season48SurvivorIds.MaryZheng,
-          season48SurvivorIds.SaiouniaHughley,
-          season48SurvivorIds.StephanieBerger,
-        ],
-      },
-    ],
-    [
-      Season48Tribes.Merge,
-      {
-        id: season48TribeIds.Merge,
-        name: 'TBD Merge Tribe',
-        color: 'Purple',
-        hexColor: '#800080',
-        mergeTribe: true,
-        episodeIdStart: season48Episodes.get(6)?.episodeInfo.id || null,
-        episodeIdEnd: null,
-        startingSurvivors: [
-          season48SurvivorIds.CedrekMcFadden,
-          season48SurvivorIds.ChrissySarnowsky,
-          season48SurvivorIds.DavidKinne,
-          season48SurvivorIds.EvaErickson,
-          season48SurvivorIds.JoeHunter,
-          season48SurvivorIds.KamillaKarthigesu,
-          season48SurvivorIds.KyleFraser,
-          season48SurvivorIds.MaryZheng,
-          season48SurvivorIds.MitchGuerra,
-          season48SurvivorIds.SaiouniaHughley,
-          season48SurvivorIds.ShauhinDavari,
-          season48SurvivorIds.StarToomey,
-        ],
-      },
-    ],
-  ]),
+  // tribes: new Map<
+  //   Season48Tribes,
+  //   Omit<TribeAttributes, 'seasonId'> & startingTribeMembers
+  // >([
+  //   [
+  //     Season48Tribes.Civa,
+  //     {
+  //       id: season48TribeIds.Civa,
+  //       name: 'Civa',
+  //       color: 'Green',
+  //       hexColor: '#008000',
+  //       mergeTribe: false,
+  //       episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
+  //       episodeIdEnd: null,
+  //       startingSurvivors: [
+  //         season48SurvivorIds.CharityNeims,
+  //         season48SurvivorIds.ChrissySarnowsky,
+  //         season48SurvivorIds.DavidKinne,
+  //         season48SurvivorIds.KyleFraser,
+  //         season48SurvivorIds.MitchGuerra,
+  //         season48SurvivorIds.KamillaKarthigesu,
+  //       ],
+  //     },
+  //   ],
+  //   [
+  //     Season48Tribes.Lagi,
+  //     {
+  //       id: season48TribeIds.Lagi,
+  //       name: 'Lagi',
+  //       color: 'Blue',
+  //       hexColor: '#0000FF',
+  //       mergeTribe: false,
+  //       episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
+  //       episodeIdEnd: season48Episodes.get(6)?.episodeInfo.id || null,
+  //       startingSurvivors: [
+  //         season48SurvivorIds.EvaErickson,
+  //         season48SurvivorIds.JoeHunter,
+  //         season48SurvivorIds.ShauhinDavari,
+  //         season48SurvivorIds.StarToomey,
+  //         season48SurvivorIds.ThomasKrottinger,
+  //         season48SurvivorIds.BiancaRoses,
+  //       ],
+  //     },
+  //   ],
+  //   [
+  //     Season48Tribes.Vula,
+  //     {
+  //       id: season48TribeIds.Vula,
+  //       name: 'Vula',
+  //       color: 'Orange',
+  //       hexColor: '#FFA500',
+  //       mergeTribe: false,
+  //       episodeIdStart: season48Episodes.get(1)!.episodeInfo.id,
+  //       episodeIdEnd: season48Episodes.get(6)?.episodeInfo.id || null,
+  //       startingSurvivors: [
+  //         season48SurvivorIds.CedrekMcFadden,
+  //         season48SurvivorIds.JustinPioppi,
+  //         season48SurvivorIds.KevinLeung,
+  //         season48SurvivorIds.MaryZheng,
+  //         season48SurvivorIds.SaiouniaHughley,
+  //         season48SurvivorIds.StephanieBerger,
+  //       ],
+  //     },
+  //   ],
+  //   [
+  //     Season48Tribes.Merge,
+  //     {
+  //       id: season48TribeIds.Merge,
+  //       name: 'TBD Merge Tribe',
+  //       color: 'Purple',
+  //       hexColor: '#800080',
+  //       mergeTribe: true,
+  //       episodeIdStart: season48Episodes.get(6)?.episodeInfo.id || null,
+  //       episodeIdEnd: null,
+  //       startingSurvivors: [
+  //         season48SurvivorIds.CedrekMcFadden,
+  //         season48SurvivorIds.ChrissySarnowsky,
+  //         season48SurvivorIds.DavidKinne,
+  //         season48SurvivorIds.EvaErickson,
+  //         season48SurvivorIds.JoeHunter,
+  //         season48SurvivorIds.KamillaKarthigesu,
+  //         season48SurvivorIds.KyleFraser,
+  //         season48SurvivorIds.MaryZheng,
+  //         season48SurvivorIds.MitchGuerra,
+  //         season48SurvivorIds.SaiouniaHughley,
+  //         season48SurvivorIds.ShauhinDavari,
+  //         season48SurvivorIds.StarToomey,
+  //       ],
+  //     },
+  //   ],
+  // ]),
 };

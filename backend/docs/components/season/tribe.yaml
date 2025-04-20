@@ -1,35 +1,44 @@
 components:
   schemas:
-    TribeStatuses:
-      type: array
-      items:
-        $ref: '#/components/schemas/TribeMemberStatusOnEpisode'
-
-    TribeMemberStatusOnEpisode:
+    TribeMembersState:
       type: object
+      description:
+        A map where the key is the tribeId and the value contains tribe
+        membership details for the episode
+      properties:
+        tribeMembersEpisodeStart:
+          type: array
+          items:
+            $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
+          description: List of member IDs at the start of the episode
+        tribeMembersBeforeElimination:
+          type: array
+          items:
+            $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
+        tribeMembersAtEndOfEpisode:
+          type: array
+          items:
+            $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
       required:
-        - tribeId
         - tribeMembersEpisodeStart
         - tribeMembersBeforeElimination
         - tribeMembersAtEndOfEpisode
-      properties:
-        tribeId:
-          type: string
-          description: The tribe's unique identifier
-          format: uuid
-          example: '49e27bd8-dc24-4159-9630-e989025bf8fd'
-        tribeMembersEpisodeStart:
-          $ref: '#/components/schemas/TribeMembership'
-        tribeMembersBeforeElimination:
-          $ref: '#/components/schemas/TribeMembership'
-        tribeMembersAtEndOfEpisode:
-          $ref: '#/components/schemas/TribeMembership'
 
-    TribeMembership:
-      type: array
-      nullable: true
-      items:
-        $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
+          # tribeMembersEpisodeStart:
+          #   type: array
+          #   nullable: true
+          #   items:
+          #     $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
+          # tribeMembersBeforeElimination:
+          #   type: array
+          #   nullable: true
+          #   items:
+          #     $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
+          # tribeMembersAtEndOfEpisode:
+          #   type: array
+          #   nullable: true
+          #   items:
+          #     $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
 
     Tribe:
       type: object
@@ -37,17 +46,8 @@ components:
         - id
         - name
         - color
-        - seasonId
-        - survivors
+        - startingSurvivors
       properties:
-        survivors:
-          type: array
-          items:
-            $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
-        seasonId:
-          type: string
-          description: The season's unique identifier
-          example: 47
         id:
           type: string
           description: The tribe's unique identifier
@@ -67,3 +67,8 @@ components:
           nullable: true
           description: The id of the episode the tribe started in
           format: uuid
+        startingSurvivors:
+          type: array
+          items:
+            $ref: './survivor.yaml#/components/schemas/SurvivorBasic'
+          description: The survivors that started in the tribe

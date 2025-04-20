@@ -2,14 +2,19 @@ import { DataTypes, Model, Sequelize } from 'sequelize';
 import logger from '../../config/logger';
 
 export interface SeasonsAttributes {
-  seasonId: number; // Primary key of type INTEGER
-  theme: string; // Theme of the season (optional)
-  location: string; // Location where the season takes place (optional)
-  name: string; // Name of the season (optional)
-  startDate: Date | null; // Start date of the season
-  endDate: Date | null; // End date of the season
+  seasonId: number;
+  theme: string;
+  location: string;
+  name: string;
+  startDate: Date | null;
+  endDate: Date | null;
   isActive: boolean;
 }
+
+export interface SeasonsCreationAttributes
+  extends Omit<SeasonsAttributes, 'seasonId' | 'isActive'> {}
+
+export interface SeasonsCreationAttributes extends SeasonsAttributes {}
 
 const SeasonsModel = (sequelize: Sequelize) => {
   class Seasons extends Model<SeasonsAttributes> implements SeasonsAttributes {
@@ -82,26 +87,67 @@ const SeasonsModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'THEME',
+        validate: {
+          notEmpty: {
+            msg: 'Theme is required',
+          },
+          len: {
+            args: [1, 100],
+            msg: 'Theme must be between 1 and 100 characters',
+          },
+        },
       },
       location: {
         type: DataTypes.STRING(100),
         allowNull: false,
         field: 'LOCATION',
+        validate: {
+          notEmpty: {
+            msg: 'Location is required',
+          },
+          len: {
+            args: [1, 100],
+            msg: 'Location must be between 1 and 100 characters',
+          },
+        },
       },
       name: {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'NAME',
+        validate: {
+          len: {
+            args: [0, 100],
+            msg: 'Name must be at most 100 characters',
+          },
+        },
       },
       startDate: {
         type: DataTypes.DATE,
         allowNull: true,
         field: 'START_DATE',
+        validate: {
+          isDate: {
+            args: true, // Add this line
+            msg: 'Start date must be a valid date',
+          },
+        },
       },
       endDate: {
         type: DataTypes.DATE,
         allowNull: true,
         field: 'END_DATE',
+        validate: {
+          isDate: {
+            args: true, // Add this line
+            msg: 'End date must be a valid date',
+          },
+          isAfterStartDate(value: Date | null) {
+            if (value && this.startDate && value < this.startDate) {
+              throw new Error('End date must be after the start date');
+            }
+          },
+        },
       },
       isActive: {
         type: DataTypes.BOOLEAN,

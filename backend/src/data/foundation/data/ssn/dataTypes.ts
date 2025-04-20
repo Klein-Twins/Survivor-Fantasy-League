@@ -1,3 +1,4 @@
+import { Tribe } from '../../../../domain/tribe';
 import { ChallengeAttributes } from '../../../../models/season/challenges/Challenges';
 import { ChallengeWinnersAttributes } from '../../../../models/season/challenges/ChallengeWinners';
 import { EpisodeAttributes } from '../../../../models/season/Episodes';
@@ -36,14 +37,14 @@ export type EliminatedSurvivor = Omit<
   'seasonId' | 'episodeId'
 >;
 
-export type Tribes<T extends string | number | symbol> = Map<T, StartingTribe>;
+// export type Tribes<T extends string | number | symbol> = Map<T, StartingTribe>;
 
-export type StartingTribe = Omit<TribeAttributes, 'seasonId'> &
-  startingTribeMembers;
+// export type StartingTribe = Omit<TribeAttributes, 'seasonId'> &
+//   startingTribeMembers;
 
-export type startingTribeMembers = {
-  startingSurvivors: SurvivorsAttributes['id'][];
-};
+// export type startingTribeMembers = {
+//   startingSurvivors: SurvivorsAttributes['id'][];
+// };
 
 export type EpisodeEvents = {
   tribeSwitch?: TribeSwitch;
@@ -51,7 +52,18 @@ export type EpisodeEvents = {
   challenges: Challenges;
   eliminatedSurvivors: EliminatedSurvivors;
   fireChallenge?: FireChallenge;
+  tribeStart?: TribeStartEvent;
+  mergeStart?: TribeStartEvent;
 };
+
+//export type TribeStartEvent = TribeAttributes['id'][];
+
+export type TribeStartEvent = (Omit<
+  TribeAttributes,
+  'seasonId' | 'episodeIdStart' | 'episodeIdEnd' | 'mergeTribe'
+> & {
+  startingSurvivors: SurvivorsAttributes['id'][];
+})[];
 
 export type FireChallenge = FireChallengeParicipant[];
 type FireChallengeParicipant = {
@@ -61,6 +73,6 @@ type FireChallengeParicipant = {
 
 export type SeasonData<T extends string | number | symbol> =
   SeasonsAttributes & {
-    tribes: Tribes<T>; // Pass the generic type `T` to `Tribes`
+    // tribes: Tribes<T>; // Pass the generic type `T` to `Tribes`
     episodes: Episodes;
   };

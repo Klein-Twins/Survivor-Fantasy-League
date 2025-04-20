@@ -30,7 +30,6 @@ components:
         - $ref: '#/components/schemas/SurvivorBasic'
         - type: object
           required:
-            - seasonId
             - fromState
             - fromCountry
             - age
@@ -38,12 +37,13 @@ components:
             - job
             - firstName
             - lastName
-            - eliminationInfo
+            - seasonId
+            - finishStatus
           properties:
             seasonId:
               type: integer
               description: The season tied with this survivor's details
-              example: 47I
+              example: 47
             nickName:
               type: string
               description: The survivor's nickname
@@ -82,8 +82,62 @@ components:
               type: string
               description: The survivor's last name
               example: 'Doe'
-            survivorStatus:
-              $ref: '#/components/schemas/SurvivorStatus'
+            finishStatus:
+              $ref: '#/components/schemas/SurvivorFinishStatus'
+
+    SurvivorFinishStatus:
+      type: object
+      properties:
+        isTorchSnuffed:
+          type: boolean
+          description: Whether the survivor's torch was snuffed
+          example: false
+        placement:
+          type: integer
+          description:
+            The placement of the survivor in the seaosn. Last place is 18th
+          nullable: true
+        placementText:
+          type: string
+          description:
+            The placement of the survivor in the season. Last place is 18th
+          example: '18th'
+          nullable: true
+        dayEliminated:
+          type: integer
+          description: The day the survivor was eliminated
+          example: 12
+          nullable: true
+        juryPlacement:
+          type: integer
+          description:
+            The placement of the jury member. 1st through 8th jury members with
+            1st being the first one voted out to the jury
+          example: 3
+          nullable: true
+        juryPlacementText:
+          type: string
+          description:
+            The placement of the jury member. 1st through 8th jury members with
+            1st being the first one voted out to the jury
+          example: '3rd'
+          nullable: true
+        episodeIdEliminated:
+          type: string
+          description: The episode id the survivor was eliminated in
+          example: 5
+          nullable: true
+        eliminationType:
+          $ref: '#/components/schemas/SurvivorEliminationType'
+
+    SurvivorEliminationType:
+      type: string
+      enum:
+        - 'eliminated'
+        - 'votedOut'
+        - 'quit'
+        - 'lostFiremakingChallenge'
+        - 'medicallyEvacuated'
 
     SurvivorStatus:
       type: object

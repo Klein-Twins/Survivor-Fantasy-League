@@ -12,23 +12,20 @@
  * Do not edit the class manually.
  */
 
-import { EpisodeEvents } from './episode-events';
-import { EpisodeInfo } from './episode-info';
-import { EpisodeType } from './episode-type';
 import { TribeMembersState } from './tribe-members-state';
  /**
  * 
  *
  * @export
- * @interface Episode
+ * @interface EpisodeEvents
  */
-export interface Episode extends EpisodeInfo {
+export interface EpisodeEvents {
 
     /**
      * Whether the episode is a tribe switch episode
      *
      * @type {boolean}
-     * @memberof Episode
+     * @memberof EpisodeEvents
      * @example false
      */
     isTribeSwitch: boolean;
@@ -37,7 +34,7 @@ export interface Episode extends EpisodeInfo {
      * The tribes in the episode - a map from the tribeId to the tribe
      *
      * @type {{ [key: string]: TribeMembersState; }}
-     * @memberof Episode
+     * @memberof EpisodeEvents
      */
     tribesState: { [key: string]: TribeMembersState; };
 }

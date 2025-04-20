@@ -13,7 +13,7 @@
  */
 
 import { SurvivorBasic } from './survivor-basic';
-import { SurvivorStatus } from './survivor-status';
+import { SurvivorFinishStatus } from './survivor-finish-status';
  /**
  * 
  *
@@ -27,6 +27,7 @@ export interface Survivor extends SurvivorBasic {
      *
      * @type {number}
      * @memberof Survivor
+     * @example 47
      */
     seasonId: number;
 
@@ -112,8 +113,8 @@ export interface Survivor extends SurvivorBasic {
     lastName: string;
 
     /**
-     * @type {SurvivorStatus}
+     * @type {SurvivorFinishStatus}
      * @memberof Survivor
      */
-    survivorStatus?: SurvivorStatus;
+    finishStatus: SurvivorFinishStatus;
 }

@@ -23,21 +23,6 @@ import { SurvivorBasic } from './survivor-basic';
 export interface Tribe {
 
     /**
-     * @type {Array<SurvivorBasic>}
-     * @memberof Tribe
-     */
-    survivors: Array<SurvivorBasic>;
-
-    /**
-     * The season's unique identifier
-     *
-     * @type {string}
-     * @memberof Tribe
-     * @example 47
-     */
-    seasonId: string;
-
-    /**
      * The tribe's unique identifier
      *
      * @type {string}
@@ -76,4 +61,12 @@ export interface Tribe {
      * @memberof Tribe
      */
     episodeStarted?: string | null;
+
+    /**
+     * The survivors that started in the tribe
+     *
+     * @type {Array<SurvivorBasic>}
+     * @memberof Tribe
+     */
+    startingSurvivors: Array<SurvivorBasic>;
 }

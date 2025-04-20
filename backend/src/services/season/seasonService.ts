@@ -1,7 +1,10 @@
 import { models } from '../../config/db';
 import { Episode, Season, Survivor, Tribe } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
-import { SeasonsAttributes } from '../../models/season/Seasons';
+import {
+  SeasonsAttributes,
+  SeasonsCreationAttributes,
+} from '../../models/season/Seasons';
 import seasonRepository from '../../repositories/season/seasonRepository';
 import { InternalServerError, NotFoundError } from '../../utils/errors/errors';
 import episodeService from './episodeService';
@@ -111,7 +114,7 @@ async function buildSeason(seasonInfo: SeasonsAttributes): Promise<Season> {
     theme: seasonAttributes.theme,
     isActive: seasonAttributes.isActive,
     survivors: survivors,
-    tribes: tribes,
+    tribesInSeason: tribes,
     episodes: episodes,
     nextEpisode: nextEpisodeId,
   };

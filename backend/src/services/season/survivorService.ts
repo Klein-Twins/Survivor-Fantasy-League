@@ -1,9 +1,10 @@
 import { UUID } from 'crypto';
 import {
   CreateSurvivorRequestBody,
+  // EliminationStatus,
   Survivor,
   SurvivorBasic,
-  SurvivorStatus,
+  SurvivorElimination,
 } from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
 import { SeasonsAttributes } from '../../models/season/Seasons';
@@ -11,9 +12,9 @@ import { SurvivorDetailsOnSeasonAttributes } from '../../models/survivors/Surviv
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import survivorRepository from '../../repositories/season/survivorRepository';
 import { NotFoundError, NotImplementedError } from '../../utils/errors/errors';
-import episodeService from './episodeService';
-import seasonEliminationService from './seasonEliminationService';
+// import seasonEliminationService from './seasonEliminationService';
 import { models } from '../../config/db';
+import episodeService from './episodeService';
 
 const survivorService = {
   getSurvivorsAtStartOfEpisode,
@@ -24,6 +25,22 @@ const survivorService = {
   getSurvivorById,
   getBasicSurvivorDetails,
 };
+
+async function getSurvivorInSeason(
+  survivorId: SurvivorDetailsOnSeasonAttributes['id'],
+  seasonId: SeasonsAttributes['seasonId']
+): Promise<Survivor> {
+  const survivorData = await survivorRepository.getSurvivor(
+    survivorId,
+    seasonId
+  );
+
+  if (!survivorData) {
+    throw new NotFoundError('No Survivor found for id: ' + survivorId);
+  }
+
+  return buildSurvivor(survivorData.survivor, survivorData);
+}
 
 async function getSurvivorsAtStartOfEpisode(
   episodeId: EpisodeAttributes['id']
@@ -37,7 +54,7 @@ async function getSurvivorsAtStartOfEpisode(
         survivor.id as UUID,
         episodeId
       );
-    survivor.survivorStatus = survivorsWithStatus;
+    // survivor.eliminationInfo = survivorsWithStatus;
   }
 
   return survivorsOnSeason;
@@ -76,11 +93,11 @@ async function getSurvivorById(
     throw new Error(`Survivor with ID ${survivorId} not found`);
   }
 
-  const survivorEliminationInfo =
-    await seasonEliminationService.getSurvivorEliminationInfo(
-      survivorId,
-      seasonId
-    );
+  // const survivorEliminationInfo =
+  //   await seasonEliminationService.getSurvivorEliminationInfo(
+  //     survivorId,
+  //     seasonId
+  //   );
 
   return buildSurvivor(survivorData.survivor, survivorData);
 }
@@ -133,11 +150,11 @@ async function getSurvivorsBySeason(
   const survivors: Survivor[] = [];
 
   for (const survivorData of survivorsOnSeasonData) {
-    const survivorEliminationInfo =
-      await seasonEliminationService.getSurvivorEliminationInfo(
-        survivorData.survivor.id,
-        seasonId
-      );
+    // const survivorEliminationInfo =
+    //   await seasonEliminationService.getSurvivorEliminationInfo(
+    //     survivorData.survivor.id,
+    //     seasonId
+    //   );
     survivors.push(buildSurvivor(survivorData.survivor, survivorData));
   }
 
@@ -163,10 +180,16 @@ function buildBasicSurvivor(
 
 function buildSurvivor(
   survivorAttributes: SurvivorsAttributes,
-  survivorDetailAttributes: SurvivorDetailsOnSeasonAttributes,
-  survivorStatus?: SurvivorStatus
+  survivorDetailAttributes: SurvivorDetailsOnSeasonAttributes
+  // survivorStatus?: EliminationStatus
 ): Survivor {
   const basicSurvivor: SurvivorBasic = buildBasicSurvivor(survivorAttributes);
+
+  // if (!survivorStatus) {
+  //   throw new NotFoundError(
+  //     'No Survivor Status found for id: ' + survivorAttributes.id
+  //   );
+  // }
 
   return {
     ...basicSurvivor,
@@ -178,6 +201,8 @@ function buildSurvivor(
     age: survivorDetailAttributes.age,
     description: survivorDetailAttributes.description,
     job: survivorDetailAttributes.job,
+    finishStatus: {},
+    // eliminationInfo: survivorStatus,
   };
 }
 

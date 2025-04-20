@@ -1,8 +1,15 @@
-import { Episode } from '../../generated-api';
+import {
+  Episode,
+  EpisodeEvents,
+  EpisodeInfo,
+  TribeMembersState,
+} from '../../generated-api';
 import { EpisodeAttributes } from '../../models/season/Episodes';
+import { TribeAttributes } from '../../models/season/Tribes';
 import episodeRepository from '../../repositories/season/episode/episodeRepository';
 import { InternalServerError, NotFoundError } from '../../utils/errors/errors';
 import tribeMemberService from './tribeMemberService';
+import tribeService from './tribeService';
 
 const episodeService = {
   getEpisodesBySeasonId,
@@ -19,7 +26,12 @@ async function getPremierEpisodeInSeason(
   if (!episodeAttributes) {
     throw new NotFoundError('Premier Episode not found for season');
   }
-  return buildEpisode(episodeAttributes);
+
+  const tribesMap = await tribeService.getTribesOnEpisode1(
+    episodeAttributes!.id
+  );
+
+  return buildEpisode(episodeAttributes!, tribesMap);
 }
 
 async function getAllEpisodesInSeason(
@@ -30,7 +42,13 @@ async function getAllEpisodesInSeason(
 
   const episodeMap = new Map<EpisodeAttributes['id'], Episode>();
   for (const episodeAttributes of episodesAttributes) {
-    episodeMap.set(episodeAttributes.id, buildEpisode(episodeAttributes));
+    const tribesMap = await tribeService.getTribesOnEpisode1(
+      episodeAttributes.id
+    );
+    episodeMap.set(
+      episodeAttributes.id,
+      buildEpisode(episodeAttributes, tribesMap)
+    );
   }
   return episodeMap;
 }
@@ -42,7 +60,10 @@ async function getEpisodesBySeasonId(
     await episodeRepository.getEpisodesBySeasonId(seasonId);
   const episodes: Episode[] = [];
   for (const episodeAttributes of episodesAttributes) {
-    episodes.push(buildEpisode(episodeAttributes));
+    const tribesMap = await tribeService.getTribesOnEpisode1(
+      episodeAttributes.id
+    );
+    episodes.push(buildEpisode(episodeAttributes, tribesMap));
   }
   return episodes;
 }
@@ -103,13 +124,44 @@ async function getEpisode(
     throw new InternalServerError('Invalid field to get episode');
   }
 
-  if (!episodeAttributes) {
-    throw new NotFoundError('Episode not found');
-  }
-  return buildEpisode(episodeAttributes);
+  const tribesMap = await tribeService.getTribesOnEpisode1(
+    episodeAttributes!.id
+  );
+
+  return buildEpisode(episodeAttributes!, tribesMap);
 }
 
-function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
+function buildEpisode(
+  episodeAttributes: EpisodeAttributes,
+  tribesMap: Map<TribeAttributes['id'], TribeMembersState>
+): Episode {
+  const tribesObject: { [key: string]: TribeMembersState } =
+    Object.fromEntries(tribesMap);
+
+  const episodeEvents = buildEpisodeEvents(episodeAttributes, tribesMap);
+
+  const episodeInfo = buildEpisodeInfo(episodeAttributes);
+
+  return {
+    ...episodeEvents,
+    ...episodeInfo,
+  };
+}
+
+function buildEpisodeEvents(
+  episodeAttributes: EpisodeAttributes,
+  tribesMap: Map<TribeAttributes['id'], TribeMembersState>
+): EpisodeEvents {
+  const tribesObject: { [key: string]: TribeMembersState } =
+    Object.fromEntries(tribesMap);
+
+  return {
+    isTribeSwitch: episodeAttributes.isTribeSwitch || false,
+    tribesState: tribesObject,
+  };
+}
+
+function buildEpisodeInfo(episodeAttributes: EpisodeAttributes): EpisodeInfo {
   const hasAired = new Date(episodeAttributes.airDate) < new Date();
   return {
     id: episodeAttributes.id,
@@ -120,7 +172,6 @@ function buildEpisode(episodeAttributes: EpisodeAttributes): Episode {
     title: episodeAttributes.title,
     episodeType: episodeAttributes.type,
     hasAired,
-    isTribeSwitch: episodeAttributes.isTribeSwitch || false,
   };
 }
 

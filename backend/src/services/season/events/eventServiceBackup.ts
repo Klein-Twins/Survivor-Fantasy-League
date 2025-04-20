@@ -13,7 +13,7 @@ import { ForbiddenError, NotFoundError } from '../../../utils/errors/errors';
 import episodeSurveyService from '../../league/survey/episodeSurveyService';
 import pickFulfillmentService from '../../league/survey/pickFullfillment/pickFulfillmentService';
 import episodeService from '../episodeService';
-import seasonEliminationService from '../seasonEliminationService';
+// import seasonEliminationService from '../seasonEliminationService';
 
 const eventService = {
   processSurvivorElimination,
@@ -34,11 +34,11 @@ async function processSurvivorElimination(
     );
   }
 
-  const eliminationsRecorded =
-    await seasonEliminationService.eliminateSurvivors(
-      survivorEliminations,
-      episodeId
-    );
+  // const eliminationsRecorded =
+  //   await seasonEliminationService.eliminateSurvivors(
+  //     survivorEliminations,
+  //     episodeId
+  //   );
 
   const event = EventType.SurvivorElimination;
   const pickOfEvent = (await models.Picks.findAll({
@@ -81,13 +81,13 @@ async function processSurvivorElimination(
     solution: PickSolutionAttributes['solution'];
     rank: PickSolutionAttributes['rank'];
   }[] = [];
-  for (const [key, value] of eliminationsRecorded.entries()) {
-    const solution = {
-      solution: key,
-      rank: solutions.length + 1,
-    };
-    solutions.push(solution);
-  }
+  // for (const [key, value] of eliminationsRecorded.entries()) {
+  //   const solution = {
+  //     solution: key,
+  //     rank: solutions.length + 1,
+  //   };
+  //   solutions.push(solution);
+  // }
 
   await pickFulfillmentService.fulfillPickSolution(
     pickOfEvent[0].pickId,
@@ -96,7 +96,7 @@ async function processSurvivorElimination(
     solutions
   );
 
-  return eliminationsRecorded;
+  // return eliminationsRecorded;
 }
 
 export default eventService;

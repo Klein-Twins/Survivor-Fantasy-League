@@ -17,7 +17,7 @@ import {
 import survivorsData, {
   SurvivorData,
 } from '../../data/survivors/survivorsData';
-import eventService from '../../../../services/season/events/eventService';
+import eventService from '../../../../services/season/events/eventServiceBackup';
 
 const survivorProcessor = {
   processSurvivors,

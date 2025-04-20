@@ -12,12 +12,16 @@
  * Do not edit the class manually.
  */
 
-import { TribeMemberStatusOnEpisode } from './tribe-member-status-on-episode';
- /**
+/**
  * 
- *
  * @export
- * @interface TribeStatuses
+ * @enum {string}
  */
-export interface TribeStatuses extends Array<TribeMemberStatusOnEpisode> {
+export enum SurvivorEliminationType {
+    Eliminated = 'eliminated',
+    VotedOut = 'votedOut',
+    Quit = 'quit',
+    LostFiremakingChallenge = 'lostFiremakingChallenge',
+    MedicallyEvacuated = 'medicallyEvacuated'
 }
+

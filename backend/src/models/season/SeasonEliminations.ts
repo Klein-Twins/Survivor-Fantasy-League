@@ -3,6 +3,7 @@ import { SeasonsAttributes } from './Seasons';
 import { EpisodeAttributes } from './Episodes';
 import { SurvivorsAttributes } from '../survivors/Survivors';
 import logger from '../../config/logger';
+import { SurvivorEliminationType } from '../../generated-api';
 
 export interface SeasonEliminationAttributes {
   seasonId: SeasonsAttributes['seasonId'];
@@ -12,6 +13,8 @@ export interface SeasonEliminationAttributes {
   notes: string | null;
   day: number;
   seq: number;
+  juryPlacement: number | null; //first jury member is 1 and last is 8
+  type: SurvivorEliminationType;
 }
 
 const SeasonEliminationsModel = (sequelize: Sequelize) => {
@@ -26,6 +29,8 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
     public notes!: SeasonEliminationAttributes['notes'];
     public seq!: SeasonEliminationAttributes['seq'];
     public placement!: SeasonEliminationAttributes['placement'];
+    public juryPlacement!: SeasonEliminationAttributes['juryPlacement'];
+    public type!: SeasonEliminationAttributes['type'];
 
     static associate(models: any) {
       //TODO - Add associations
@@ -110,6 +115,18 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
         type: DataTypes.INTEGER,
         allowNull: false,
         field: 'PLACEMENT',
+      },
+      juryPlacement: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        field: 'JURY_PLACEMENT',
+        defaultValue: null,
+      },
+      type: {
+        type: DataTypes.ENUM(...Object.values(SurvivorEliminationType)),
+        allowNull: false,
+        field: 'TYPE',
+        defaultValue: SurvivorEliminationType.VotedOut,
       },
     },
     {

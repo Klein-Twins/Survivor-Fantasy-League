@@ -16,10 +16,10 @@ import {
   BadRequestError,
   NotImplementedError,
 } from '../../../utils/errors/errors';
-import episodeService from '../../season/episodeService';
 import survivorService from '../../season/survivorService';
 import tribeService from '../../season/tribeService';
 import pickService from './pickService';
+import episodeService from '../../season/episodeService';
 
 const pickOptionService = {
   getPickOptions,
@@ -118,10 +118,12 @@ async function getSurvivorPickOptions(
 ): Promise<SurvivorPickOptions> {
   const survivorsWithEliminationStatusOnEpisode =
     await survivorService.getSurvivorsAtStartOfEpisode(episodeId);
-  return survivorsWithEliminationStatusOnEpisode.filter(
-    (survivor) =>
-      survivor.survivorStatus?.eliminationStatus.isEliminated === false
-  );
+  // return survivorsWithEliminationStatusOnEpisode.filter(
+  //   (survivor) =>
+  //     survivor.survivorStatus?.eliminationStatus.isEliminated === false
+  // );
+
+  return survivorsWithEliminationStatusOnEpisode;
 }
 
 async function getColorPickOptions(): Promise<ColorPickOptions> {

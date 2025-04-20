@@ -45,10 +45,7 @@ async function devTestTribeMemberData(seasonId: SeasonsAttributes['seasonId']) {
     );
     for (const tribe of tribes) {
       const tribeMembersThroughoutEpisode =
-        await tribeMemberService.getTribeMemberStatusesOnEpisode(
-          tribe.id,
-          episode.id
-        );
+        await tribeMemberService.getTribeState(tribe.id, episode.id);
 
       logger.debug(`Tribe: ${tribe.name}`);
       logger.debug(`Tribe Members at the beginning of episode:`);

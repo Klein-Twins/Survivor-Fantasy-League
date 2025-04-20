@@ -88,14 +88,6 @@ export interface Season {
     survivors: Array<Survivor>;
 
     /**
-     * The tribes in the season.
-     *
-     * @type {Array<Tribe>}
-     * @memberof Season
-     */
-    tribes: Array<Tribe>;
-
-    /**
      * The episodes in the season.
      *
      * @type {Array<Episode>}
@@ -110,4 +102,12 @@ export interface Season {
      * @memberof Season
      */
     nextEpisode: string | null;
+
+    /**
+     * The tribes in the season.
+     *
+     * @type {Array<Tribe>}
+     * @memberof Season
+     */
+    tribesInSeason: Array<Tribe>;
 }

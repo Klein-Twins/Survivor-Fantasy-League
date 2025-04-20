@@ -15,6 +15,15 @@ export interface TribeAttributes {
   episodeIdEnd: EpisodeAttributes['id'] | null;
 }
 
+export type TribeCreationAttributes = Omit<
+  TribeAttributes,
+  'episodeIdStart' | 'episodeIdEnd'
+>;
+// & {
+//   episodeIdStart: null;
+//   episodeIdEnd: null;
+// };
+
 const TribeModel = (sequelize: Sequelize) => {
   class Tribe extends Model<TribeAttributes> implements TribeAttributes {
     public id!: TribeAttributes['id'];
