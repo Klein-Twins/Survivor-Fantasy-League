@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import imageService from '../../services/image/imageService';
+import imageService from '../../servicesBackup/image/imageService';
 
 async function getLeagueImage(
   req: Request,

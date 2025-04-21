@@ -2,7 +2,7 @@
 import { Transaction } from 'sequelize';
 import { SeasonEliminationAttributes } from '../../../models/season/SeasonEliminations';
 import { DomainModel } from '../../domainModel';
-import { Transactional } from '../../../repositories/utils/Transactional';
+import { Transactional } from '../../../repositoriesBackup/utils/Transactional';
 import { models } from '../../../config/db';
 import { InternalServerError } from '../../../utils/errors/errors';
 import { SurvivorsAttributes } from '../../../models/survivors/Survivors';

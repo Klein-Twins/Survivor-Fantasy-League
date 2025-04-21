@@ -1,6 +1,6 @@
 import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
-import accountService from '../../../../services/account/accountService';
+import accountService from '../../../../servicesBackup/account/accountService';
 import testAccountData, { Account } from '../../accountData/testAccountData';
 
 const accountProcessor = {

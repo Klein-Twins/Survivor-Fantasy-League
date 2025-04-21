@@ -1,7 +1,7 @@
 import { PasswordAttributes } from '../../models/account/Password';
 import { ProfileAttributes } from '../../models/account/Profile';
 import { UserAttributes } from '../../models/account/User';
-import userRepository from '../../repositories/account/userRepository';
+import userRepository from '../../repositoriesBackup/account/userRepository';
 import { BadRequestError } from '../../utils/errors/errors';
 import validator from 'validator';
 import passwordHelper from './passwordHelper';

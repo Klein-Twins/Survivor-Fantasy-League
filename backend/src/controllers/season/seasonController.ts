@@ -12,7 +12,7 @@ import {
   NotImplementedError,
 } from '../../utils/errors/errors';
 import seasonHelper from '../../helpers/season/seasonHelper';
-import seasonService from '../../services/season/seasonService';
+import seasonService from '../../servicesBackup/season/seasonService';
 
 const upload = multer({ storage: multer.memoryStorage() });
 

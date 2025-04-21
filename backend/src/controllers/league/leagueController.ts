@@ -7,7 +7,7 @@ import {
 } from '../../generated-api';
 import logger from '../../config/logger';
 import leagueHelper from '../../helpers/league/leagueHelper';
-import leagueService from '../../services/league/leagueService';
+import leagueService from '../../servicesBackup/league/leagueService';
 import { BadRequestError } from '../../utils/errors/errors';
 import validator from 'validator';
 import { UUID } from 'crypto';

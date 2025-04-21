@@ -1,6 +1,6 @@
 // --- Imports ---
 import { Transaction } from 'sequelize';
-import { Transactional } from '../../repositories/utils/Transactional';
+import { Transactional } from '../../repositoriesBackup/utils/Transactional';
 import { SurvivorsAttributes } from '../../models/survivors/Survivors';
 import { DomainModel } from '../domainModel';
 import { Survivor as SurvivorDTO } from '../../generated-api/models/survivor';

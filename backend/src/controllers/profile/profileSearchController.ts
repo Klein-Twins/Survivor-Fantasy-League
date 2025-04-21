@@ -6,7 +6,7 @@ import {
 } from '../../generated-api';
 import { LeagueAttributes } from '../../models/league/League';
 import profileSearchHelper from '../../helpers/profile/profileSearchHelper';
-import profileSearchService from '../../services/league/leagueInvite/profileSearchService';
+import profileSearchService from '../../servicesBackup/league/leagueInvite/profileSearchService';
 
 const profileSearchControler = {
   getProfilesBySearch,

@@ -7,7 +7,7 @@ import {
 } from '../../generated-api';
 import survivorHelper from '../../helpers/survivor/survivorHelper';
 import logger from '../../config/logger';
-import survivorService from '../../services/season/survivorService';
+import survivorService from '../../servicesBackup/season/survivorService';
 
 const survivorController = {
   createSurvivor,

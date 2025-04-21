@@ -3,7 +3,7 @@ import { models } from '../config/db';
 import logger from '../config/logger';
 import { EpisodeType } from '../generated-api';
 import { SeasonsAttributes } from '../models/season/Seasons';
-import tribeMemberService from '../services/season/tribeMemberService';
+import tribeMemberService from '../servicesBackup/season/tribeMemberService';
 import accountProcessor from './dev/processing/account/accountProcessor';
 import leagueProcessor from './dev/processing/lge/leagueProcessor';
 import seedDevData from './dev/SeedDevData';

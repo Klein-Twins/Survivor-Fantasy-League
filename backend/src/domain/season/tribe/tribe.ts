@@ -8,7 +8,7 @@ import { UUID } from 'crypto';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { ConflictError } from '../../../utils/errors/errors';
 import logger from '../../../config/logger';
-import { Transactional } from '../../../repositories/utils/Transactional';
+import { Transactional } from '../../../repositoriesBackup/utils/Transactional';
 import { Transaction } from 'sequelize';
 import { SeasonSurvivor } from '../survivor/seasonSurvivor';
 import { SurvivorBasic } from '../../../generated-api';

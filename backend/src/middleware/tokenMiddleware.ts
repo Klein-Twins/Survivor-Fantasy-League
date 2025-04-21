@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import logger from '../config/logger';
 import { UserJwtPayload } from '../types/auth/tokenTypes';
 import { UnauthorizedError } from '../utils/errors/errors';
-import tokenService from '../services/auth/tokenService';
+import tokenService from '../servicesBackup/auth/tokenService';
 
 const tokenMiddleware = {
   authenticateToken: async (

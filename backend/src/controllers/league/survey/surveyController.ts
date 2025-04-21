@@ -13,11 +13,11 @@ import { LeagueAttributes } from '../../../models/league/League';
 import { ProfileAttributes } from '../../../models/account/Profile';
 
 import validator from 'validator';
-import leagueMemberSurveyService from '../../../services/league/survey/leagueMemberSurveyService';
+import leagueMemberSurveyService from '../../../servicesBackup/league/survey/leagueMemberSurveyService';
 import { BadRequestError } from '../../../utils/errors/errors';
 
 import { UUID } from 'crypto';
-import pickService from '../../../services/league/survey/pickService';
+import pickService from '../../../servicesBackup/league/survey/pickService';
 import logger from '../../../config/logger';
 
 const surveyController = {

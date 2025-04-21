@@ -14,10 +14,10 @@ import {
   SignupUserResponseData,
 } from '../../generated-api';
 import { CustomError, UnauthorizedError } from '../../utils/errors/errors';
-import userService from '../../services/account/userService';
-import userSessionService from '../../services/auth/userSessionService';
+import userService from '../../servicesBackup/account/userService';
+import userSessionService from '../../servicesBackup/auth/userSessionService';
 import { UUID } from 'crypto';
-import accountService from '../../services/account/accountService';
+import accountService from '../../servicesBackup/account/accountService';
 
 const authController = {
   signup,

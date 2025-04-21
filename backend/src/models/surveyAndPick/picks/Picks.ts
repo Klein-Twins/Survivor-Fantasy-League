@@ -5,20 +5,21 @@ import { UUID } from 'crypto';
 export interface PicksAttributes {
   pickId: UUID;
   description: string;
-  notes?: string;
-  eventType?: EventType;
+  notes: string | null;
+  eventType: EventType;
 }
 
 export enum EventType {
   SurvivorElimination = 'SURVIVOR_ELIMINATION',
+  ImmunityChallengeWinner = 'IMMUNITY_CHALLENGE_WINNER',
 }
 
 const PicksModel = (sequelize: Sequelize) => {
   class Picks extends Model<PicksAttributes> implements PicksAttributes {
-    public pickId!: UUID;
-    public description!: string;
-    public notes?: string;
-    public eventType!: EventType;
+    public pickId!: PicksAttributes['pickId'];
+    public description!: PicksAttributes['description'];
+    public notes!: PicksAttributes['notes'];
+    public eventType!: PicksAttributes['eventType'];
 
     static associate(models: any) {
       // this.hasOne(models.PickOptions, { foreignKey: 'pickId', as: 'pickOptions' });
@@ -91,8 +92,7 @@ const PicksModel = (sequelize: Sequelize) => {
       },
       eventType: {
         type: DataTypes.ENUM(...Object.values(EventType)),
-        allowNull: true,
-        defaultValue: null,
+        allowNull: false,
         field: 'EVENT_TYPE',
       },
     },

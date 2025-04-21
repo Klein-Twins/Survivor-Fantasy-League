@@ -7,7 +7,7 @@ import { DomainModel } from '../domainModel';
 import { TribeAttributes } from '../../models/season/Tribes';
 import { ConflictError } from '../../utils/errors/errors';
 import { Transaction } from 'sequelize';
-import { Transactional } from '../../repositories/utils/Transactional';
+import { Transactional } from '../../repositoriesBackup/utils/Transactional';
 import { Tribe } from './tribe/tribe';
 import { Episode } from './episode/episode';
 
@@ -64,6 +64,10 @@ export class Season implements DomainModel<SeasonsAttributes, SeasonDTO> {
     const episodes = await Season.fetchEpisodes(seasonId);
     const survivors = await Season.fetchSurvivors(seasonId, episodes);
     const tribes = await Season.fetchTribes(seasonId, survivors, episodes);
+
+    for (const episode of episodes) {
+      await episode.fetchTribesStateOnEpisode(tribes, survivors);
+    }
 
     return Season.fromAttributes(seasonData, survivors, tribes, episodes);
   }

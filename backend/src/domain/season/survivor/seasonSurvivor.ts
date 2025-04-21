@@ -6,7 +6,7 @@ import { models } from '../../../config/db';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { DomainModel } from '../../domainModel';
 import { ConflictError, NotFoundError } from '../../../utils/errors/errors';
-import { Transactional } from '../../../repositories/utils/Transactional';
+import { Transactional } from '../../../repositoriesBackup/utils/Transactional';
 import { Transaction } from 'sequelize';
 import {
   SurvivorFinishStatus,

@@ -7,7 +7,7 @@ import {
 import { BadRequestError } from '../../utils/errors/errors';
 
 import validator from 'validator';
-import eventService from '../../services/season/events/eventServiceBackup';
+import eventService from '../../servicesBackup/season/events/eventServiceBackup';
 
 const survivorEliminationController = {
   processSurvivorElimination,

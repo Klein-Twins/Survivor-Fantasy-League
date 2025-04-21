@@ -3,14 +3,28 @@ import { EpisodeAttributes } from '../../../models/season/Episodes';
 import { DomainModel } from '../../domainModel';
 import { Episode as EpisodeDTO } from '../../../generated-api/models/episode';
 import { models } from '../../../config/db';
-import { Transactional } from '../../../repositories/utils/Transactional';
+import { Transactional } from '../../../repositoriesBackup/utils/Transactional';
 import { Transaction } from 'sequelize';
+import { TribeMembersState } from '../../../generated-api';
+import { TribeAttributes } from '../../../models/season/Tribes';
+import { Tribe } from '../tribe/tribe';
+import tribeMemberRepository from '../../../repositoriesBackup/season/tribeMemberRepository';
+import { InternalServerError } from '../../../utils/errors/errors';
+import { SeasonSurvivor } from '../survivor/seasonSurvivor';
+import tribeMemberService from '../../../servicesBackup/season/tribeMemberService';
 
 // --- Type Definitions ---
 export type EpisodeProperties = EpisodeAttributes & {
   hasAired: boolean;
+  tribesState: Map<Tribe, TribeState> | null;
   // isTribeSwitch: EpisodeAttributes['isTribeSwitch'];
   // tribesState: Map<TribeAttributes['id'], TribeMembersState>;
+};
+
+export type TribeState = {
+  atEpisodeStart: Array<SeasonSurvivor>;
+  atEpisodeBeforeTribal: Array<SeasonSurvivor>;
+  atEpisodeEnd: Array<SeasonSurvivor>;
 };
 
 // --- Class Definition ---
@@ -24,6 +38,7 @@ export class Episode implements DomainModel<EpisodeAttributes, EpisodeDTO> {
   private description: EpisodeAttributes['description'];
   private type: EpisodeAttributes['type'];
   private hasAired: boolean;
+  private tribesState: EpisodeProperties['tribesState'];
   //private isTribeSwitch: EpisodeAttributes['isTribeSwitch'];
   //private tribesState: Map<TribeAttributes['id'], TribeMembersState>;
 
@@ -37,8 +52,8 @@ export class Episode implements DomainModel<EpisodeAttributes, EpisodeDTO> {
     this.description = episodePropertyValues.description;
     this.type = episodePropertyValues.type;
     this.hasAired = new Date() > new Date(episodePropertyValues.airDate);
+    this.tribesState = episodePropertyValues.tribesState || null;
     //this.isTribeSwitch = episodePropertyValues.isTribeSwitch;
-    //this.tribesState = episodePropertyValues.tribesState;
   }
 
   // --- Static Methods ---
@@ -46,10 +61,13 @@ export class Episode implements DomainModel<EpisodeAttributes, EpisodeDTO> {
    * Find an episode by its ID.
    */
   static async findById(id: EpisodeAttributes['id']): Promise<Episode> {
-    const episodeData = await models.Episode.findByPk(id);
+    const episodeData: EpisodeAttributes | null = await models.Episode.findByPk(
+      id
+    );
     if (!episodeData) {
       throw new Error(`Episode with ID ${id} not found`);
     }
+
     return Episode.fromAttributes(episodeData);
   }
 
@@ -95,18 +113,90 @@ export class Episode implements DomainModel<EpisodeAttributes, EpisodeDTO> {
   }
 
   /**
+   * Fetch the tribes state on the episode and attach to the episode instance.
+   */
+  async fetchTribesStateOnEpisode(
+    tribes: Tribe[],
+    survivors: SeasonSurvivor[]
+  ): Promise<void> {
+    const tribesState: Map<Tribe, TribeState> = new Map<Tribe, TribeState>();
+
+    for (const tribe of tribes) {
+      const tribeMemberStateTem: TribeMembersState =
+        await tribeMemberService.getTribeState(
+          tribe.getAttributes().id,
+          this.id
+        );
+
+      const atEpisodeStart = tribeMemberStateTem.tribeMembersAtEndOfEpisode.map(
+        (survivor) => {
+          const survivorId = survivor.id;
+          const tribeMember = survivors.find(
+            (s) => s.getAttributes().id === survivorId
+          );
+          if (!tribeMember) {
+            throw new InternalServerError(
+              `Survivor with ID ${survivorId} not found in survivors list`
+            );
+          }
+          return tribeMember;
+        }
+      );
+
+      const atEpisodeBeforeTribal =
+        tribeMemberStateTem.tribeMembersBeforeElimination.map((survivor) => {
+          const survivorId = survivor.id;
+          const tribeMember = survivors.find(
+            (s) => s.getAttributes().id === survivorId
+          );
+          if (!tribeMember) {
+            throw new InternalServerError(
+              `Survivor with ID ${survivorId} not found in survivors list`
+            );
+          }
+          return tribeMember;
+        });
+
+      const atEpisodeEnd = tribeMemberStateTem.tribeMembersAtEndOfEpisode.map(
+        (survivor) => {
+          const survivorId = survivor.id;
+          const tribeMember = survivors.find(
+            (s) => s.getAttributes().id === survivorId
+          );
+          if (!tribeMember) {
+            throw new InternalServerError(
+              `Survivor with ID ${survivorId} not found in survivors list`
+            );
+          }
+          return tribeMember;
+        }
+      );
+
+      tribesState.set(tribe, {
+        atEpisodeStart: atEpisodeStart,
+        atEpisodeBeforeTribal: atEpisodeBeforeTribal,
+        atEpisodeEnd: atEpisodeEnd,
+      });
+    }
+    this.tribesState = tribesState;
+  }
+
+  /**
    * Create an Episode instance from attributes.
    */
-  static fromAttributes(episodeAttributes: EpisodeAttributes): Episode {
+  static fromAttributes(
+    episodePropertyValues: Omit<EpisodeProperties, 'hasAired' | 'tribesState'>
+  ): Episode {
     return new Episode({
-      id: episodeAttributes.id,
-      seasonId: episodeAttributes.seasonId,
-      number: episodeAttributes.number,
-      airDate: episodeAttributes.airDate,
-      title: episodeAttributes.title,
-      description: episodeAttributes.description,
-      hasAired: new Date() > episodeAttributes.airDate,
-      type: episodeAttributes.type,
+      id: episodePropertyValues.id,
+      seasonId: episodePropertyValues.seasonId,
+      number: episodePropertyValues.number,
+      airDate: episodePropertyValues.airDate,
+      title: episodePropertyValues.title,
+      description: episodePropertyValues.description,
+      hasAired: new Date() > new Date(episodePropertyValues.airDate),
+      type: episodePropertyValues.type,
+      tribesState: null,
       //isTribeSwitch: episodeAttributes.isTribeSwitch ?? false,
       //tribesState: tribeToTribeMembershipOnEpisode,
     });

@@ -6,7 +6,7 @@ import {
   Tribe,
 } from '../../generated-api';
 import tribeHelper from '../../helpers/season/tribeHelper';
-import tribeService from '../../services/season/tribeService';
+import tribeService from '../../servicesBackup/season/tribeService';
 import { TribeAttributes } from '../../models/season/Tribes';
 
 const tribeController = {
