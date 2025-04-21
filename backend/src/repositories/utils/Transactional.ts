@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize';
-import sequelize from '../config/db';
+import sequelize from '../../config/db';
 
 export function Transactional() {
   return function (

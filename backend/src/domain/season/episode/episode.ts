@@ -1,9 +1,9 @@
 // --- Imports ---
-import { EpisodeAttributes } from '../models/season/Episodes';
-import { DomainModel } from './domainModel';
-import { Episode as EpisodeDTO } from '../generated-api/models/episode';
-import { models } from '../config/db';
-import { Transactional } from './Transactional';
+import { EpisodeAttributes } from '../../../models/season/Episodes';
+import { DomainModel } from '../../domainModel';
+import { Episode as EpisodeDTO } from '../../../generated-api/models/episode';
+import { models } from '../../../config/db';
+import { Transactional } from '../../../repositories/utils/Transactional';
 import { Transaction } from 'sequelize';
 
 // --- Type Definitions ---

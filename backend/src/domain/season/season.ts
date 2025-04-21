@@ -1,15 +1,15 @@
-import { models } from '../config/db';
-import { SeasonsAttributes } from '../models/season/Seasons';
-import { SeasonSurvivor } from './seasonSurvivor';
-import { Season as SeasonDTO } from '../generated-api/models/season';
-import { SurvivorsAttributes } from '../models/survivors/Survivors';
-import { DomainModel } from './domainModel';
-import { Episode } from './episode';
-import { TribeAttributes } from '../models/season/Tribes';
-import { ConflictError } from '../utils/errors/errors';
+import { models } from '../../config/db';
+import { SeasonsAttributes } from '../../models/season/Seasons';
+import { SeasonSurvivor } from './survivor/seasonSurvivor';
+import { Season as SeasonDTO } from '../../generated-api/models/season';
+import { SurvivorsAttributes } from '../../models/survivors/Survivors';
+import { DomainModel } from '../domainModel';
+import { TribeAttributes } from '../../models/season/Tribes';
+import { ConflictError } from '../../utils/errors/errors';
 import { Transaction } from 'sequelize';
-import { Transactional } from './Transactional';
-import { Tribe } from './tribe';
+import { Transactional } from '../../repositories/utils/Transactional';
+import { Tribe } from './tribe/tribe';
+import { Episode } from './episode/episode';
 
 type SeasonProperties = {
   id: SeasonsAttributes['seasonId'];

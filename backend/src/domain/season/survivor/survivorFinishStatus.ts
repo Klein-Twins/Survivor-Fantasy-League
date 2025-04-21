@@ -1,14 +1,14 @@
 // --- Imports ---
 import { Transaction } from 'sequelize';
-import { SeasonEliminationAttributes } from '../models/season/SeasonEliminations';
-import { DomainModel } from './domainModel';
-import { Transactional } from './Transactional';
-import { models } from '../config/db';
-import { Episode } from './episode';
-import { InternalServerError } from '../utils/errors/errors';
-import { SurvivorsAttributes } from '../models/survivors/Survivors';
-import { SeasonsAttributes } from '../models/season/Seasons';
-import { SurvivorFinishStatus as SurvivorFinishStatusDTO } from '../generated-api';
+import { SeasonEliminationAttributes } from '../../../models/season/SeasonEliminations';
+import { DomainModel } from '../../domainModel';
+import { Transactional } from '../../../repositories/utils/Transactional';
+import { models } from '../../../config/db';
+import { InternalServerError } from '../../../utils/errors/errors';
+import { SurvivorsAttributes } from '../../../models/survivors/Survivors';
+import { SeasonsAttributes } from '../../../models/season/Seasons';
+import { SurvivorFinishStatus as SurvivorFinishStatusDTO } from '../../../generated-api';
+import { Episode } from '../episode/episode';
 
 // --- Type Definitions ---
 export type SurvivorFinishStatusProperties =

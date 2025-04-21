@@ -1,19 +1,19 @@
 // --- Imports ---
-import { Survivor as SurvivorDTO } from '../generated-api/models/survivor';
-import { SurvivorsAttributes } from '../models/survivors/Survivors';
-import { SurvivorDetailsOnSeasonAttributes } from '../models/survivors/SurvivorDetailsOnSeason';
-import { models } from '../config/db';
-import { SeasonsAttributes } from '../models/season/Seasons';
-import { DomainModel } from './domainModel';
-import { ConflictError, NotFoundError } from '../utils/errors/errors';
-import { Survivor, SurvivorProperties } from './survivor';
-import { Transactional } from './Transactional';
+import { Survivor as SurvivorDTO } from '../../../generated-api/models/survivor';
+import { SurvivorsAttributes } from '../../../models/survivors/Survivors';
+import { SurvivorDetailsOnSeasonAttributes } from '../../../models/survivors/SurvivorDetailsOnSeason';
+import { models } from '../../../config/db';
+import { SeasonsAttributes } from '../../../models/season/Seasons';
+import { DomainModel } from '../../domainModel';
+import { ConflictError, NotFoundError } from '../../../utils/errors/errors';
+import { Transactional } from '../../../repositories/utils/Transactional';
 import { Transaction } from 'sequelize';
 import {
   SurvivorFinishStatus,
   SurvivorFinishStatusEliminated,
 } from './survivorFinishStatus';
-import { Episode } from './episode';
+import { Survivor, SurvivorProperties } from '../../survivor/survivor';
+import { Episode } from '../episode/episode';
 
 // --- Type Definitions ---
 export type SeasonSurvivorProperties = SurvivorProperties & {
@@ -177,7 +177,7 @@ export class SeasonSurvivor
   /**
    * Convert the SeasonSurvivor instance to a DTO.
    */
-  toDTO(params: void): SurvivorDTO {
+  toDTO(): SurvivorDTO {
     return {
       id: this.id,
       name: this.name,
@@ -191,7 +191,7 @@ export class SeasonSurvivor
       age: this.age,
       description: this.description,
       job: this.job,
-      finishStatus: {},
+      finishStatus: this.survivorFinishStatus.toDTO(),
     };
   }
 

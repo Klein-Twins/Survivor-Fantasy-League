@@ -1,5 +1,5 @@
 import { Transaction } from 'sequelize';
-import { Transactional } from './Transactional';
+import { Transactional } from '../repositories/utils/Transactional';
 
 export interface DomainModel<TAttributes, TDTO, DTOParams = void> {
   save(...args: any[]): Promise<void>;

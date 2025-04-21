@@ -1,19 +1,19 @@
 // --- Imports ---
-import { TribeAttributes } from '../models/season/Tribes';
-import { DomainModel } from './domainModel';
-import { Tribe as TribeDTO } from '../generated-api/models/tribe';
-import { Color } from '../generated-api/models/color';
-import { models } from '../config/db';
+import { TribeAttributes } from '../../../models/season/Tribes';
+import { DomainModel } from '../../domainModel';
+import { Tribe as TribeDTO } from '../../../generated-api/models/tribe';
+import { Color } from '../../../generated-api/models/color';
+import { models } from '../../../config/db';
 import { UUID } from 'crypto';
-import { SeasonsAttributes } from '../models/season/Seasons';
-import { ConflictError } from '../utils/errors/errors';
-import logger from '../config/logger';
-import { Transactional } from './Transactional';
+import { SeasonsAttributes } from '../../../models/season/Seasons';
+import { ConflictError } from '../../../utils/errors/errors';
+import logger from '../../../config/logger';
+import { Transactional } from '../../../repositories/utils/Transactional';
 import { Transaction } from 'sequelize';
-import { Survivor } from './survivor';
-import { SeasonSurvivor } from './seasonSurvivor';
-import { Episode } from './episode';
-import { SurvivorBasic } from '../generated-api';
+import { SeasonSurvivor } from '../survivor/seasonSurvivor';
+import { SurvivorBasic } from '../../../generated-api';
+import { Episode } from '../episode/episode';
+import { Survivor } from '../../survivor/survivor';
 
 // --- Type Definitions ---
 // export type TribeProperties = {

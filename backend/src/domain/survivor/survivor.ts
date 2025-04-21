@@ -1,11 +1,11 @@
 // --- Imports ---
-import { SurvivorsAttributes } from '../models/survivors/Survivors';
-import { DomainModel } from './domainModel';
-import { Survivor as SurvivorDTO } from '../generated-api/models/survivor';
 import { Transaction } from 'sequelize';
-import { models } from '../config/db';
-import { SurvivorBasic } from '../generated-api';
-import { Transactional } from './Transactional';
+import { Transactional } from '../../repositories/utils/Transactional';
+import { SurvivorsAttributes } from '../../models/survivors/Survivors';
+import { DomainModel } from '../domainModel';
+import { Survivor as SurvivorDTO } from '../../generated-api/models/survivor';
+import { models } from '../../config/db';
+import { SurvivorBasic } from '../../generated-api';
 
 // --- Type Definitions ---
 export type SurvivorProperties = {

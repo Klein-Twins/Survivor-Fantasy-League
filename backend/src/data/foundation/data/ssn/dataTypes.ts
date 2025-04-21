@@ -1,4 +1,4 @@
-import { Tribe } from '../../../../domain/tribe';
+import { Tribe } from '../../../../domain/season/tribe/tribe';
 import { ChallengeAttributes } from '../../../../models/season/challenges/Challenges';
 import { ChallengeWinnersAttributes } from '../../../../models/season/challenges/ChallengeWinners';
 import { EpisodeAttributes } from '../../../../models/season/Episodes';

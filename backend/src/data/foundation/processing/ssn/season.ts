@@ -1,22 +1,17 @@
 import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
-import { Episode } from '../../../../domain/episode';
-import { Season } from '../../../../domain/season';
-import { SeasonSurvivor } from '../../../../domain/seasonSurvivor';
-import { Survivor } from '../../../../domain/survivor';
-import { Tribe } from '../../../../domain/tribe';
+import { Episode } from '../../../../domain/season/episode/episode';
+import { Season } from '../../../../domain/season/season';
+import { SeasonSurvivor } from '../../../../domain/season/survivor/seasonSurvivor';
+import { Tribe } from '../../../../domain/season/tribe/tribe';
 import { EpisodeAttributes } from '../../../../models/season/Episodes';
 import { SeasonsAttributes } from '../../../../models/season/Seasons';
-import {
-  TribeAttributes,
-  TribeCreationAttributes,
-} from '../../../../models/season/Tribes';
+import { TribeAttributes } from '../../../../models/season/Tribes';
 import { SurvivorDetailsOnSeasonAttributes } from '../../../../models/survivors/SurvivorDetailsOnSeason';
 import { SurvivorsAttributes } from '../../../../models/survivors/Survivors';
-import leagueProcessor from '../../../dev/processing/lge/leagueProcessor';
 // import season47, { Season47Tribes } from '../../data/ssn/47/season47';
 import { season48, Season48Tribes } from '../../data/ssn/48/season48';
-import { EpisodeInfo, SeasonData } from '../../data/ssn/dataTypes';
+import { SeasonData } from '../../data/ssn/dataTypes';
 import survivorsData from '../../data/survivors/survivorsData';
 import { diff } from 'deep-object-diff';
 
