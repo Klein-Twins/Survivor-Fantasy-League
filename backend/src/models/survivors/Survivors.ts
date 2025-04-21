@@ -7,9 +7,9 @@ export interface SurvivorsAttributes {
   firstName: string;
   lastName: string;
   fromState: string;
-  fromCity?: string | null;
+  fromCity: string | null;
   fromCountry: string;
-  nickName?: string | null;
+  nickName: string | null;
 }
 
 const SurvivorsModel = (sequelize: Sequelize) => {
@@ -22,8 +22,8 @@ const SurvivorsModel = (sequelize: Sequelize) => {
     public lastName!: SurvivorsAttributes['lastName'];
     public fromState!: SurvivorsAttributes['fromState'];
     public fromCountry!: SurvivorsAttributes['fromCountry'];
-    public nickName?: SurvivorsAttributes['nickName'];
-    public fromCity?: SurvivorsAttributes['fromCity'];
+    public nickName!: SurvivorsAttributes['nickName'];
+    public fromCity!: SurvivorsAttributes['fromCity'];
 
     static associate(models: any) {
       if (models.SurvivorDetailsOnSeason) {
@@ -57,6 +57,7 @@ const SurvivorsModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING(100),
         allowNull: true,
         field: 'FROM_CITY',
+        defaultValue: null,
       },
       fromState: {
         type: DataTypes.STRING(100),
@@ -71,6 +72,7 @@ const SurvivorsModel = (sequelize: Sequelize) => {
       nickName: {
         type: DataTypes.STRING(100),
         allowNull: true,
+        defaultValue: null,
         field: 'NICK_NAME',
       },
     },

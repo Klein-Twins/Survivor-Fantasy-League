@@ -18,6 +18,7 @@ import leagueProcessor from '../../../dev/processing/lge/leagueProcessor';
 import { season48, Season48Tribes } from '../../data/ssn/48/season48';
 import { EpisodeInfo, SeasonData } from '../../data/ssn/dataTypes';
 import survivorsData from '../../data/survivors/survivorsData';
+import { diff } from 'deep-object-diff';
 
 const seasonProcessor = {
   processSeasons,
@@ -173,26 +174,44 @@ async function processSeason<T extends string | number | symbol>(
         );
         const episode = season.getEpisodeById(episodeInfo.id);
 
-        survivor.eliminate(
-          episodeObject,
-          eliminatedSurvivorData.placement,
-          eliminatedSurvivorData.notes,
-          eliminatedSurvivorData.day,
-          eliminatedSurvivorData.seq,
-          eliminatedSurvivorData.juryPlacement,
-          eliminatedSurvivorData.type
-        );
+        survivor.eliminate({
+          episodeEliminated: episodeObject,
+          placement: eliminatedSurvivorData.placement,
+          notes: eliminatedSurvivorData.notes,
+          day: eliminatedSurvivorData.day,
+          seq: eliminatedSurvivorData.seq,
+          juryPlacement: eliminatedSurvivorData.juryPlacement,
+          type: eliminatedSurvivorData.type,
+        });
       }
     }
   }
 
   await season.save();
 
-  const season1DTO = season.toDTO();
-
   const season2 = await Season.findById(seasonData.seasonId);
-  const season2DTO = season2.toDTO();
+
+  checkForDifferences(season, season2);
   console.log();
+}
+
+function checkForDifferences(season1: Season, season2: Season): void {
+  const season2DTO = season2.toDTO();
+  const season1DTO = season1.toDTO();
+
+  const dtoDifferences = diff(season1DTO, season2DTO);
+  const seasonDifferences = diff(season1, season2);
+
+  if (Object.keys(dtoDifferences).length > 0) {
+    logger.warn('DTO differences:', dtoDifferences);
+  } else {
+    logger.debug('No differences found in DTO');
+  }
+  if (Object.keys(seasonDifferences).length > 0) {
+    logger.warn('Season differences:', seasonDifferences);
+  } else {
+    logger.debug('No differences found in Season');
+  }
 }
 
 // async function processSeason<T extends string | number | symbol>(

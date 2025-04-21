@@ -63,7 +63,7 @@ export class Season implements DomainModel<SeasonsAttributes, SeasonDTO> {
     }
     const episodes = await Season.fetchEpisodes(seasonId);
     const survivors = await Season.fetchSurvivors(seasonId, episodes);
-    const tribes = await Season.fetchTribes(seasonId, survivors);
+    const tribes = await Season.fetchTribes(seasonId, survivors, episodes);
 
     return Season.fromAttributes(seasonData, survivors, tribes, episodes);
   }
@@ -86,12 +86,17 @@ export class Season implements DomainModel<SeasonsAttributes, SeasonDTO> {
    */
   private static async fetchTribes(
     seasonId: SeasonsAttributes['seasonId'],
-    survivors: SeasonSurvivor[]
+    survivors: SeasonSurvivor[],
+    episodesInSeason: Episode[] = []
   ): Promise<Tribe[]> {
     const tribesData = await models.Tribe.findAll({ where: { seasonId } });
     const tribesInSeason = [];
     for (const tribeData of tribesData) {
-      const tribe = await Tribe.fetchTribeById(tribeData.id, survivors);
+      const tribe = await Tribe.fetchTribeById(
+        tribeData.id,
+        survivors,
+        episodesInSeason
+      );
       tribesInSeason.push(tribe);
     }
     return tribesInSeason;

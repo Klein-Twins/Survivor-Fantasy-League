@@ -14,7 +14,6 @@ import {
   SurvivorFinishStatusEliminated,
 } from './survivorFinishStatus';
 import { Episode } from './episode';
-import { SeasonEliminationAttributes } from '../models/season/SeasonEliminations';
 
 // --- Type Definitions ---
 export type SeasonSurvivorProperties = SurvivorProperties & {
@@ -109,7 +108,8 @@ export class SeasonSurvivor
       const seasonSurvivor =
         await SeasonSurvivor.fetchSeasonSurvivorBySeasonIdAndSurvivorId(
           seasonId,
-          seasonSurvivorData.id
+          seasonSurvivorData.id,
+          episodesInSeason
         );
       seasonSurvivors.push(seasonSurvivor);
     }
@@ -159,12 +159,15 @@ export class SeasonSurvivor
       },
       { transaction }
     );
+    await this.survivorFinishStatus.save(this.id, this.seasonId, transaction);
   }
 
   /**
    * Eliminate the survivor on the season
    */
-  eliminate(eliminationDetails: SurvivorFinishStatusEliminated) {
+  eliminate(
+    eliminationDetails: Omit<SurvivorFinishStatusEliminated, 'isTorchSnuffed'>
+  ): void {
     if (this.survivorFinishStatus.getAttributes().isTorchSnuffed) {
       throw new ConflictError(`Survivor ${this.name} is already eliminated`);
     }

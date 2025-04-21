@@ -362,6 +362,7 @@ const survivorsData: SurvivorData[] = [
     fromCity: 'West Orange',
     fromState: 'N.J.',
     fromCountry: 'US',
+    nickName: null,
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
         48,
@@ -380,6 +381,7 @@ const survivorsData: SurvivorData[] = [
     fromCity: 'Columbia',
     fromState: 'S.C.',
     fromCountry: 'US',
+    nickName: null,
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
         48,
@@ -398,6 +400,7 @@ const survivorsData: SurvivorData[] = [
     fromCity: 'Monroe',
     fromState: 'Mich.',
     fromCountry: 'US',
+    nickName: null,
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
         48,
@@ -416,6 +419,7 @@ const survivorsData: SurvivorData[] = [
     fromCity: 'South Side of Chicago',
     fromState: 'Ill.',
     fromCountry: 'US',
+    nickName: null,
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
         48,
@@ -433,6 +437,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Kinne',
     fromCity: 'Long Beach',
     fromState: 'Calif.',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -451,6 +456,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Erickson',
     fromCity: 'Eagan',
     fromState: 'Minn.',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -469,6 +475,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Hunter',
     fromCity: 'Vacaville',
     fromState: 'Calif.',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -487,6 +494,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Pioppi',
     fromCity: 'Winthrop',
     fromState: 'Mass.',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -504,6 +512,8 @@ const survivorsData: SurvivorData[] = [
     firstName: 'Kamilla',
     lastName: 'Karthigesu',
     fromState: 'Toronto',
+    nickName: null,
+    fromCity: null,
     fromCountry: 'Canada',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -521,6 +531,7 @@ const survivorsData: SurvivorData[] = [
     firstName: 'Kevin',
     lastName: 'Leung',
     fromCity: 'Fremont',
+    nickName: null,
     fromState: 'Calif.',
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
@@ -539,6 +550,7 @@ const survivorsData: SurvivorData[] = [
     firstName: 'Kyle',
     lastName: 'Fraser',
     fromCity: 'Roanoke',
+    nickName: null,
     fromState: 'Va.',
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
@@ -558,6 +570,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Zheng',
     fromCity: 'Montgomery Village',
     fromState: 'Md.',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -576,6 +589,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Guerra',
     fromCity: 'Waco',
     fromState: 'Texas',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -594,6 +608,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Hughley',
     fromCity: 'Philadelphia',
     fromState: 'Pa.',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -613,6 +628,7 @@ const survivorsData: SurvivorData[] = [
     fromCity: 'East Bay',
     fromState: 'Calif.',
     fromCountry: 'US',
+    nickName: null,
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
         48,
@@ -629,6 +645,8 @@ const survivorsData: SurvivorData[] = [
     firstName: 'Star',
     lastName: 'Toomey',
     fromState: 'Monrovia',
+    fromCity: null,
+    nickName: null,
     fromCountry: 'Liberia',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -647,6 +665,7 @@ const survivorsData: SurvivorData[] = [
     lastName: 'Berger',
     fromCity: 'New York City',
     fromState: 'N.Y.',
+    nickName: null,
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([
       [
@@ -664,6 +683,7 @@ const survivorsData: SurvivorData[] = [
     firstName: 'Thomas',
     lastName: 'Krottinger',
     fromCity: 'Los Angeles',
+    nickName: null,
     fromState: 'Calif.',
     fromCountry: 'US',
     seasonDetails: new Map<number, SurvivorDetailsOnSeason>([

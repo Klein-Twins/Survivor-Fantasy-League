@@ -168,10 +168,10 @@ export class SurvivorFinishStatus
       if (
         !this.episodeEliminated ||
         !this.placement ||
-        !this.notes ||
+        !this.notes === undefined ||
         !this.day ||
         !this.seq ||
-        !this.juryPlacement ||
+        this.juryPlacement === undefined ||
         !this.type
       ) {
         throw new InternalServerError(
@@ -201,7 +201,7 @@ export class SurvivorFinishStatus
    * Set the SurvivorFinishStatus instance to eliminated.
    */
   setEliminationDetails(
-    survivorFinishStatus: SurvivorFinishStatusEliminated
+    survivorFinishStatus: Omit<SurvivorFinishStatusEliminated, 'isTorchSnuffed'>
   ): void {
     this.isTorchSnuffed = true;
     this.episodeEliminated = survivorFinishStatus.episodeEliminated;

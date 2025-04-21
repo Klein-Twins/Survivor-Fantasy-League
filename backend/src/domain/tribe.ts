@@ -67,23 +67,34 @@ export class Tribe implements DomainModel<TribeAttributes, TribeDTO> {
    */
   static async fetchTribeById(
     tribeId: TribeAttributes['id'],
-    survivorsInSeason: SeasonSurvivor[]
+    survivorsInSeason: SeasonSurvivor[],
+    episodesInSeason: Episode[]
   ): Promise<Tribe> {
     const tribeData = await models.Tribe.findByPk(tribeId);
     if (!tribeData) {
       throw new Error(`Tribe with ID ${tribeId} not found`);
     }
 
-    return Tribe.fromAttributes(tribeData, survivorsInSeason);
+    const episodeStarted =
+      episodesInSeason.find(
+        (episode) => episode.getAttributes().id === tribeData.episodeIdStart
+      ) || null;
+
+    const survivorsInTribe = await Tribe.fetchStartingTribeMembers(
+      tribeData,
+      survivorsInSeason
+    );
+
+    return Tribe.fromAttributes(tribeData, survivorsInTribe, episodeStarted);
   }
 
   /**
-   * Fetch starting tribe members.
+   * Fetch starting tribe members. Does not create new isntances of SeasonSurvivor
    */
   static async fetchStartingTribeMembers(
     tribeAttributes: TribeAttributes,
     survivorsInSeason: SeasonSurvivor[]
-  ): Promise<Survivor[]> {
+  ): Promise<SeasonSurvivor[]> {
     if (!tribeAttributes.episodeIdStart) {
       logger.warn(
         `Could not fetch starting tribe members for ${tribeAttributes.name}, episode started is null`
@@ -105,7 +116,9 @@ export class Tribe implements DomainModel<TribeAttributes, TribeDTO> {
       tribeMembersIds.includes(survivor.getAttributes().id)
     );
 
-    return tribeMembers;
+    return tribeMembers.sort((a, b) =>
+      a.getAttributes().firstName.localeCompare(b.getAttributes().firstName)
+    );
   }
 
   /**
@@ -113,7 +126,8 @@ export class Tribe implements DomainModel<TribeAttributes, TribeDTO> {
    */
   static async fetchTribesBySeasonId(
     seasonId: SeasonsAttributes['seasonId'],
-    survivorsInSeason: SeasonSurvivor[]
+    survivorsInSeason: SeasonSurvivor[],
+    episodesInSeason: Episode[]
   ): Promise<Tribe[]> {
     const tribesData = await models.Tribe.findAll({
       where: { seasonId },
@@ -121,7 +135,11 @@ export class Tribe implements DomainModel<TribeAttributes, TribeDTO> {
 
     const tribes: Tribe[] = [];
     for (const tribeData of tribesData) {
-      const tribe = await Tribe.fetchTribeById(tribeData.id, survivorsInSeason);
+      const tribe = await Tribe.fetchTribeById(
+        tribeData.id,
+        survivorsInSeason,
+        episodesInSeason
+      );
       tribes.push(tribe);
     }
     return tribes;
@@ -169,6 +187,10 @@ export class Tribe implements DomainModel<TribeAttributes, TribeDTO> {
       );
     }
     this.startingSurvivors.push(survivor);
+    // Sort the startingSurvivors array by first name
+    this.startingSurvivors.sort((a, b) =>
+      a.getAttributes().firstName.localeCompare(b.getAttributes().firstName)
+    );
   }
 
   /**
@@ -254,6 +276,13 @@ export class Tribe implements DomainModel<TribeAttributes, TribeDTO> {
       episodeIdStart: this.episodeStart?.getAttributes().id || null,
       episodeIdEnd: this.episodeEnded?.getAttributes().id || null,
     };
+  }
+
+  /**
+   * Get the starting survivors of the tribe.
+   */
+  getStartingSurvivors(): Survivor[] {
+    return this.startingSurvivors;
   }
 
   /**

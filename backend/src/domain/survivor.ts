@@ -52,7 +52,7 @@ export class Survivor
     this.name = survivorPropertyValues.name;
     this.firstName = survivorPropertyValues.firstName;
     this.lastName = survivorPropertyValues.lastName;
-    this.nickName = survivorPropertyValues.nickName;
+    this.nickName = survivorPropertyValues.nickName || null;
     this.fromCity = survivorPropertyValues.fromCity;
     this.fromState = survivorPropertyValues.fromState;
     this.fromCountry = survivorPropertyValues.fromCountry;
@@ -69,7 +69,7 @@ export class Survivor
       firstName: attributes.firstName,
       lastName: attributes.lastName,
       nickName: attributes.nickName,
-      fromCity: attributes.fromCity,
+      fromCity: attributes.fromCity || null,
       fromState: attributes.fromState,
       fromCountry: attributes.fromCountry,
     });
@@ -101,7 +101,7 @@ export class Survivor
         firstName: this.firstName,
         lastName: this.lastName,
         nickName: this.nickName,
-        fromCity: this.fromCity,
+        fromCity: this.fromCity || null,
         fromState: this.fromState,
         fromCountry: this.fromCountry,
       },
@@ -118,7 +118,7 @@ export class Survivor
       firstName: this.firstName,
       lastName: this.lastName,
       nickName: this.nickName,
-      fromCity: this.fromCity,
+      fromCity: this.fromCity || null,
       fromState: this.fromState,
       fromCountry: this.fromCountry,
     };
@@ -143,7 +143,7 @@ export class Survivor
       id: this.id,
       firstName: this.firstName,
       lastName: this.lastName,
-      fromCity: this.fromCity,
+      fromCity: this.fromCity || null,
       fromState: this.fromState,
       fromCountry: this.fromCountry,
       nickName: this.nickName,
