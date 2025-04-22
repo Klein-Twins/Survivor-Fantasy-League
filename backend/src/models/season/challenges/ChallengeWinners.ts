@@ -41,6 +41,7 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
           foreignKey: 'winnerSurvivorId',
           targetKey: 'id',
           as: 'survivorWinner',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(
@@ -52,6 +53,7 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
           foreignKey: 'winnerTribeId',
           targetKey: 'id',
           as: 'tribeWinner',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating ChallengeWinners with Tribe');
@@ -61,6 +63,7 @@ const ChallengeWinnersModel = (sequelize: Sequelize) => {
           foreignKey: 'challengeId',
           targetKey: 'id',
           as: 'challenge',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating ChallengeWinners with Challenge');

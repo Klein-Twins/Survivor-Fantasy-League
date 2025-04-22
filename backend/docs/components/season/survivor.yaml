@@ -130,6 +130,15 @@ components:
         eliminationType:
           $ref: '#/components/schemas/SurvivorEliminationType'
 
+      required:
+        - isTorchSnuffed
+        - placement
+        - placementText
+        - dayEliminated
+        - juryPlacement
+        - juryPlacementText
+        - episodeIdEliminated
+
     SurvivorEliminationType:
       type: string
       enum:

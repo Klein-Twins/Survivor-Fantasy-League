@@ -752,6 +752,14 @@ paths:
                                                   - quit
                                                   - lostFiremakingChallenge
                                                   - medicallyEvacuated
+                                            required:
+                                              - isTorchSnuffed
+                                              - placement
+                                              - placementText
+                                              - dayEliminated
+                                              - juryPlacement
+                                              - juryPlacementText
+                                              - episodeIdEliminated
                                   description: The survivors in the season.
                                 episodes:
                                   type: array
@@ -3310,6 +3318,14 @@ paths:
                                                 - quit
                                                 - lostFiremakingChallenge
                                                 - medicallyEvacuated
+                                          required:
+                                            - isTorchSnuffed
+                                            - placement
+                                            - placementText
+                                            - dayEliminated
+                                            - juryPlacement
+                                            - juryPlacementText
+                                            - episodeIdEliminated
                                 description: The survivors in the season.
                               episodes:
                                 type: array
@@ -3780,6 +3796,14 @@ paths:
                                           - quit
                                           - lostFiremakingChallenge
                                           - medicallyEvacuated
+                                    required:
+                                      - isTorchSnuffed
+                                      - placement
+                                      - placementText
+                                      - dayEliminated
+                                      - juryPlacement
+                                      - juryPlacementText
+                                      - episodeIdEliminated
       security:
         - accessTokenCookie: []
         - refreshTokenCookie: []

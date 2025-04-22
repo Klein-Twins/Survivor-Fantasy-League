@@ -20,6 +20,7 @@ const ProfileModel = (sequelize: Sequelize) => {
           foreignKey: 'profileId',
           sourceKey: 'profileId',
           as: 'User',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Profile with User');
@@ -29,11 +30,13 @@ const ProfileModel = (sequelize: Sequelize) => {
           foreignKey: 'profileId',
           sourceKey: 'profileId',
           as: 'leagueProfiles',
+          onDelete: 'CASCADE',
         });
         this.hasMany(models.LeagueProfile, {
           foreignKey: 'inviterProfileId',
           sourceKey: 'profileId',
           as: 'inviterProfile',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Profile with LeagueProfile');

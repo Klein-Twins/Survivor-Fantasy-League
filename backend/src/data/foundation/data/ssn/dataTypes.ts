@@ -1,4 +1,4 @@
-import { Tribe } from '../../../../domain/season/tribe/tribe';
+import { Tribe } from '../../../../domain/season/tribe/tribeBackup';
 import { ChallengeAttributes } from '../../../../models/season/challenges/Challenges';
 import { ChallengeWinnersAttributes } from '../../../../models/season/challenges/ChallengeWinners';
 import { EpisodeAttributes } from '../../../../models/season/Episodes';
@@ -30,9 +30,9 @@ export type Challenge = Omit<ChallengeAttributes, 'episodeId'> & {
   results: Omit<ChallengeWinnersAttributes, 'challengeId'>[];
 };
 
-export type EliminatedSurvivors = EliminatedSurvivor[];
+export type SurvivorEliminationEvent = SurvivorElimination[];
 
-export type EliminatedSurvivor = Omit<
+export type SurvivorElimination = Omit<
   SeasonEliminationAttributes,
   'seasonId' | 'episodeId'
 >;
@@ -50,7 +50,7 @@ export type EpisodeEvents = {
   tribeSwitch?: TribeSwitch;
   isMerge?: boolean;
   challenges: Challenges;
-  eliminatedSurvivors: EliminatedSurvivors;
+  survivorEliminationEvent: SurvivorEliminationEvent;
   fireChallenge?: FireChallenge;
   tribeStart?: TribeStartEvent;
   mergeStart?: TribeStartEvent;
@@ -58,12 +58,14 @@ export type EpisodeEvents = {
 
 //export type TribeStartEvent = TribeAttributes['id'][];
 
-export type TribeStartEvent = (Omit<
+export type TribeStartEvent = TribeStart[];
+
+export type TribeStart = Omit<
   TribeAttributes,
   'seasonId' | 'episodeIdStart' | 'episodeIdEnd' | 'mergeTribe'
 > & {
   startingSurvivors: SurvivorsAttributes['id'][];
-})[];
+};
 
 export type FireChallenge = FireChallengeParicipant[];
 type FireChallengeParicipant = {

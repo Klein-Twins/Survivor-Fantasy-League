@@ -18,6 +18,7 @@ const SurveyModel = (sequelize: Sequelize) => {
           foreignKey: 'surveyDefinition',
           sourceKey: 'surveyId',
           as: 'episodeSurvey',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Survey with EpisodeSurvey');
@@ -28,6 +29,7 @@ const SurveyModel = (sequelize: Sequelize) => {
           foreignKey: 'surveyId',
           sourceKey: 'surveyId',
           as: 'surveyPicks',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Survey with SurveyPicks');

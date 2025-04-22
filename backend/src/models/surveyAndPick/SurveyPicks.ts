@@ -22,6 +22,7 @@ const SurveyPicksModel = (sequelize: any) => {
           foreignKey: 'surveyId',
           targetKey: 'surveyId',
           as: 'survey',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating SurveyPicks with Survey');
@@ -32,6 +33,7 @@ const SurveyPicksModel = (sequelize: any) => {
           foreignKey: 'pickId',
           targetKey: 'pickId',
           as: 'pick',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating SurveyPicks with Picks');

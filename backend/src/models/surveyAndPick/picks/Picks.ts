@@ -29,6 +29,7 @@ const PicksModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           sourceKey: 'pickId',
           as: 'surveyPicks',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Picks with SurveyPicks');
@@ -38,6 +39,7 @@ const PicksModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           sourceKey: 'pickId',
           as: 'pickSubmissions',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Picks with PickSubmissions');
@@ -47,6 +49,7 @@ const PicksModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           sourceKey: 'pickId',
           as: 'points',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Picks with PickPoints');
@@ -56,6 +59,7 @@ const PicksModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           sourceKey: 'pickId',
           as: 'pickOptions',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Picks with PickOptions');
@@ -65,6 +69,7 @@ const PicksModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           sourceKey: 'pickId',
           as: 'pickSolutions',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Picks with PickSolutions');

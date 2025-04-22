@@ -190,7 +190,7 @@ function buildSurvivor(
   //     'No Survivor Status found for id: ' + survivorAttributes.id
   //   );
   // }
-
+  //@ts-ignore
   return {
     ...basicSurvivor,
     fromCity: survivorAttributes.fromCity,
@@ -201,7 +201,7 @@ function buildSurvivor(
     age: survivorDetailAttributes.age,
     description: survivorDetailAttributes.description,
     job: survivorDetailAttributes.job,
-    finishStatus: {},
+    //finishStatus: {},
     // eliminationInfo: survivorStatus,
   };
 }

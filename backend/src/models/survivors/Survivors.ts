@@ -31,6 +31,7 @@ const SurvivorsModel = (sequelize: Sequelize) => {
           foreignKey: 'id',
           sourceKey: 'id',
           as: 'SurvivorDetailsOnSeason',
+          onDelete: 'CASCADE',
         });
       }
     }

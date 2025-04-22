@@ -1,17 +1,13 @@
-import { NODE_ENV } from '../config/config';
 import { models } from '../config/db';
 import logger from '../config/logger';
 import { EpisodeType } from '../generated-api';
 import { SeasonsAttributes } from '../models/season/Seasons';
 import tribeMemberService from '../servicesBackup/season/tribeMemberService';
 import accountProcessor from './dev/processing/account/accountProcessor';
-import leagueProcessor from './dev/processing/lge/leagueProcessor';
-import seedDevData from './dev/SeedDevData';
 import { picksData } from './foundation/data/surveysAndPicks/pickData/picksData';
-import seasonProcessor from './foundation/processing/ssn/season';
+import seasonProcessor from './foundation/processing/season/seasonProcessor';
 import pickProcessor from './foundation/processing/sur/pick';
 import surveyProcessor from './foundation/processing/sur/survey';
-import seedFoundationData from './foundation/SeedFoundationData';
 
 const seedData = async () => {
   await accountProcessor.processTestAccounts();

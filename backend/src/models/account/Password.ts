@@ -25,6 +25,7 @@ const PasswordModel = (sequelize: Sequelize) => {
           foreignKey: 'userId',
           targetKey: 'userId',
           as: 'User',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associatiing Password with User');

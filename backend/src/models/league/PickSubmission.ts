@@ -44,6 +44,7 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
           foreignKey: 'surveySubmissionId',
           targetKey: 'surveySubmissionId',
           as: 'surveySubmission',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating PickSubmission with SurveySubmissions');
@@ -53,6 +54,7 @@ const PickSubmissionModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           targetKey: 'pickId',
           as: 'pick',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating PickSubmission with Picks');

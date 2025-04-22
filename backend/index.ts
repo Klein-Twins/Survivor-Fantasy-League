@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import server from './app.ts';
 import { APP_HOST, APP_PORT } from './src/config/config.ts';
 import sequelize from './src/config/db.ts';
@@ -18,6 +19,7 @@ const startServer = async (): Promise<void> => {
     if (process.env.NODE_ENV === 'development') {
       await sequelize.sync({ force: true });
       logger.info('Database synced successfully');
+
       logger.info('Seeding data...');
       await seedData();
       logger.info('Data seeded successfully');

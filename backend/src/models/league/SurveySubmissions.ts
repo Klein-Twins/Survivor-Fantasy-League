@@ -25,6 +25,7 @@ const SurveySubmissionModel = (sequelize: Sequelize) => {
           foreignKey: 'surveySubmissionId',
           sourceKey: 'surveySubmissionId',
           as: 'pickSubmissions',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating SurveySubmission with PickSubmissions');
@@ -34,6 +35,7 @@ const SurveySubmissionModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueProfileId',
           targetKey: 'id',
           as: 'leagueProfile',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating SurveySubmission with LeagueProfile');
@@ -43,6 +45,7 @@ const SurveySubmissionModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueSurveyId',
           targetKey: 'leagueSurveyId',
           as: 'leagueSurvey',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(

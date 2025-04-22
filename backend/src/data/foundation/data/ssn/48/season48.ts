@@ -69,7 +69,7 @@ const season48Episodes = new Map<number, Episode>([
             ],
           },
         ],
-        eliminatedSurvivors: [
+        survivorEliminationEvent: [
           {
             survivorId: season48SurvivorIds.StephanieBerger,
             day: 3,
@@ -159,7 +159,7 @@ const season48Episodes = new Map<number, Episode>([
         type: EpisodeType.PREMERGE,
       },
       episodeEvents: {
-        eliminatedSurvivors: [
+        survivorEliminationEvent: [
           {
             survivorId: season48SurvivorIds.KevinLeung,
             day: 5,
@@ -213,7 +213,7 @@ const season48Episodes = new Map<number, Episode>([
         type: EpisodeType.PREMERGE,
       },
       episodeEvents: {
-        eliminatedSurvivors: [
+        survivorEliminationEvent: [
           {
             day: 7,
             survivorId: season48SurvivorIds.JustinPioppi,
@@ -267,7 +267,7 @@ const season48Episodes = new Map<number, Episode>([
         type: EpisodeType.PREMERGE,
       },
       episodeEvents: {
-        eliminatedSurvivors: [
+        survivorEliminationEvent: [
           {
             day: 9,
             survivorId: season48SurvivorIds.ThomasKrottinger,
@@ -367,7 +367,7 @@ const season48Episodes = new Map<number, Episode>([
         type: EpisodeType.PREMERGE,
       },
       episodeEvents: {
-        eliminatedSurvivors: [
+        survivorEliminationEvent: [
           {
             day: 11,
             survivorId: season48SurvivorIds.BiancaRoses,
@@ -468,7 +468,7 @@ const season48Episodes = new Map<number, Episode>([
             ],
           },
         ],
-        eliminatedSurvivors: [
+        survivorEliminationEvent: [
           {
             day: 13,
             survivorId: season48SurvivorIds.CharityNeims,

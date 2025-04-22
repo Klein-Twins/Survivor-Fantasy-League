@@ -4,17 +4,21 @@ import { SeasonsAttributes } from './Seasons';
 import { EpisodeAttributes } from './Episodes';
 import logger from '../../config/logger';
 
-export interface TribeAttributes {
+export interface TribeTableAttributes {
   id: UUID;
   name: string;
-  seasonId: SeasonsAttributes['seasonId'];
   color: string;
   hexColor: string;
   mergeTribe: boolean;
+}
+
+export interface TribeDependencyAttributes {
+  seasonId: SeasonsAttributes['seasonId'];
   episodeIdStart: EpisodeAttributes['id'] | null;
   episodeIdEnd: EpisodeAttributes['id'] | null;
 }
 
+export type TribeAttributes = TribeTableAttributes & TribeDependencyAttributes;
 export type TribeCreationAttributes = Omit<
   TribeAttributes,
   'episodeIdStart' | 'episodeIdEnd'
@@ -41,6 +45,7 @@ const TribeModel = (sequelize: Sequelize) => {
           foreignKey: 'seasonId',
           targetKey: 'seasonId',
           as: 'season',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Tribe with Seasons');
@@ -50,6 +55,7 @@ const TribeModel = (sequelize: Sequelize) => {
           foreignKey: 'winnerTribeId',
           sourceKey: 'id',
           as: 'challengeWinners',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Tribe with ChallengeWinners');
@@ -59,11 +65,13 @@ const TribeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeIdStart',
           targetKey: 'id',
           as: 'episodeStarted',
+          onDelete: 'CASCADE',
         });
         this.belongsTo(models.Episode, {
           foreignKey: 'episodeIdEnd',
           targetKey: 'id',
           as: 'episodeEnded',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Tribe with Episode');
@@ -74,6 +82,7 @@ const TribeModel = (sequelize: Sequelize) => {
           foreignKey: 'tribeId',
           sourceKey: 'id',
           as: 'tribeMembers',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Tribe with TribeMembers');

@@ -31,6 +31,7 @@ const TribeMembersModel = (sequelize: Sequelize) => {
           foreignKey: 'tribeId',
           targetKey: 'id',
           as: 'tribe',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating TribeMember with Tribe');
@@ -41,11 +42,13 @@ const TribeMembersModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeIdStart',
           targetKey: 'id',
           as: 'episodeStarted',
+          onDelete: 'CASCADE',
         });
         this.belongsTo(models.Episode, {
           foreignKey: 'episodeIdEnd',
           targetKey: 'id',
           as: 'episodeEnded',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating TribeMember with Episode');
@@ -56,6 +59,7 @@ const TribeMembersModel = (sequelize: Sequelize) => {
           foreignKey: 'survivorId',
           targetKey: 'id',
           as: 'survivor',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(

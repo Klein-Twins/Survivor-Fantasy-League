@@ -44,20 +44,30 @@ const ProfilePickModel = (sequelize: Sequelize) => {
       this.belongsTo(models.LeagueProfile, {
         foreignKey: 'leagueProfileId',
         as: 'leagueProfile',
+        targetKey: 'profileId',
+        onDelete: 'CASCADE',
       });
-      this.belongsTo(models.League, { foreignKey: 'leagueId', as: 'league' });
+      this.belongsTo(models.League, {
+        foreignKey: 'leagueId',
+        as: 'league',
+        onDelete: 'CASCADE',
+      });
       this.belongsTo(models.Episode, {
         foreignKey: 'episodeId',
         as: 'episode',
+        targetKey: 'id',
+        onDelete: 'CASCADE',
       });
       //TODO: Add association to pickOptionType
       this.belongsTo(models.Survivors, {
         foreignKey: 'pickAnswerSurvivorId',
         as: 'survivor',
+        onDelete: 'CASCADE',
       });
       this.belongsTo(models.Tribe, {
         foreignKey: 'pickAnswerTribeId',
         as: 'tribe',
+        onDelete: 'CASCADE',
       });
     }
   }

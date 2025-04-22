@@ -31,6 +31,7 @@ const PickSolutionModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           targetKey: 'pickId',
           as: 'pick',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating PickSolutions with Picks');
@@ -41,6 +42,7 @@ const PickSolutionModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeSurveyId',
           targetKey: 'episodeSurveyId',
           as: 'episodeSurvey',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating PickSolutions with EpisodeSurvey');
@@ -51,6 +53,7 @@ const PickSolutionModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           targetKey: 'id',
           as: 'fulfilledOnEpisode',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating PickSolutions with Episode');

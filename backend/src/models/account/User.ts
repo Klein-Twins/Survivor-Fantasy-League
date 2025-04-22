@@ -26,6 +26,7 @@ const UserModel = (sequelize: Sequelize) => {
           foreignKey: 'userId',
           sourceKey: 'userId',
           as: 'Password',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating User with Password');
@@ -35,6 +36,7 @@ const UserModel = (sequelize: Sequelize) => {
           foreignKey: 'profileId',
           targetKey: 'profileId',
           as: 'profile',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating User with Profile');

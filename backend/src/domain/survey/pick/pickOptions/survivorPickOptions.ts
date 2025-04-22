@@ -1,8 +1,8 @@
 import { PickOptions as PickOptionsDTO } from '../../../../generated-api';
 import { NotImplementedError } from '../../../../utils/errors/errors';
 import { Episode } from '../../../season/episode/episode';
-import { SeasonSurvivor } from '../../../season/survivor/seasonSurvivor';
-import { Tribe } from '../../../season/tribe/tribe';
+import { SeasonSurvivor } from '../../../season/survivor/seasonSurvivorBackuo';
+import { Tribe } from '../../../season/tribe/tribeBackup';
 import { PickOptions, PickOptionsProperties } from './pickOptions';
 
 export type SurvivorPickOptionsProperties = Array<SeasonSurvivor> &

@@ -49,6 +49,7 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           targetKey: 'id',
           as: 'episode',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating SeasonEliminations with Episode');
@@ -58,6 +59,7 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
           foreignKey: 'survivorId',
           targetKey: 'id',
           as: 'survivor',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(

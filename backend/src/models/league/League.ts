@@ -17,10 +17,11 @@ const LeagueModel = (sequelize: Sequelize) => {
 
     static associate(models: any) {
       if (models.Seasons) {
-        League.belongsTo(models.Seasons, {
+        this.belongsTo(models.Seasons, {
           foreignKey: 'seasonId',
           targetKey: 'seasonId',
           as: 'season',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating League with Seasons');
@@ -30,6 +31,7 @@ const LeagueModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueId',
           sourceKey: 'leagueId',
           as: 'leagueProfiles',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating League with LeagueProfile');
@@ -39,6 +41,7 @@ const LeagueModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueId',
           sourceKey: 'leagueId',
           as: 'leagueSurveys',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating League with LeagueSurveyForEpisode');

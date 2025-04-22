@@ -25,6 +25,7 @@ const LeagueSurveyForEpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeSurveyId',
           targetKey: 'episodeId',
           as: 'episodeSurvey',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(
@@ -36,6 +37,7 @@ const LeagueSurveyForEpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueId',
           targetKey: 'leagueId',
           as: 'league',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating LeagueSurveyForEpisode with League');
@@ -45,6 +47,7 @@ const LeagueSurveyForEpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueSurveyId',
           sourceKey: 'leagueSurveyId',
           as: 'surveySubmissions',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(

@@ -28,7 +28,7 @@ export interface SurvivorFinishStatus {
      * @memberof SurvivorFinishStatus
      * @example false
      */
-    isTorchSnuffed?: boolean;
+    isTorchSnuffed: boolean;
 
     /**
      * The placement of the survivor in the seaosn. Last place is 18th
@@ -36,7 +36,7 @@ export interface SurvivorFinishStatus {
      * @type {number}
      * @memberof SurvivorFinishStatus
      */
-    placement?: number | null;
+    placement: number | null;
 
     /**
      * The placement of the survivor in the season. Last place is 18th
@@ -45,7 +45,7 @@ export interface SurvivorFinishStatus {
      * @memberof SurvivorFinishStatus
      * @example 18th
      */
-    placementText?: string | null;
+    placementText: string | null;
 
     /**
      * The day the survivor was eliminated
@@ -54,7 +54,7 @@ export interface SurvivorFinishStatus {
      * @memberof SurvivorFinishStatus
      * @example 12
      */
-    dayEliminated?: number | null;
+    dayEliminated: number | null;
 
     /**
      * The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
@@ -63,7 +63,7 @@ export interface SurvivorFinishStatus {
      * @memberof SurvivorFinishStatus
      * @example 3
      */
-    juryPlacement?: number | null;
+    juryPlacement: number | null;
 
     /**
      * The placement of the jury member. 1st through 8th jury members with 1st being the first one voted out to the jury
@@ -72,7 +72,7 @@ export interface SurvivorFinishStatus {
      * @memberof SurvivorFinishStatus
      * @example 3rd
      */
-    juryPlacementText?: string | null;
+    juryPlacementText: string | null;
 
     /**
      * The episode id the survivor was eliminated in
@@ -81,7 +81,7 @@ export interface SurvivorFinishStatus {
      * @memberof SurvivorFinishStatus
      * @example 5
      */
-    episodeIdEliminated?: string | null;
+    episodeIdEliminated: string | null;
 
     /**
      * @type {SurvivorEliminationType}

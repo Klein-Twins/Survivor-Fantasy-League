@@ -29,6 +29,7 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
           foreignKey: 'surveyDefinition',
           targetKey: 'surveyId',
           as: 'survey',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating EpisodeSurvey with Survey');
@@ -39,6 +40,7 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           targetKey: 'id',
           as: 'episode',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating EpisodeSurvey with Episode');
@@ -49,6 +51,7 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeSurveyId',
           sourceKey: 'episodeSurveyId',
           as: 'leagueSurveys',
+          onDelete: 'CASCADE',
         });
       }
 
@@ -57,6 +60,7 @@ const EpisodeSurveyModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeSurveyId',
           sourceKey: 'episodeSurveyId',
           as: 'pickSolutions',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating EpisodeSurvey with PickSolutions');

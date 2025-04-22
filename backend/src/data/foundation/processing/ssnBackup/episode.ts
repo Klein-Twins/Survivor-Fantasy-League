@@ -2,7 +2,6 @@ import { models } from '../../../../config/db';
 import logger from '../../../../config/logger';
 import { EpisodeType } from '../../../../generated-api';
 import { SeasonsAttributes } from '../../../../models/season/Seasons';
-import tribeService from '../../../../services/season/tribeService';
 import surveyProcessor from '../../../dev/processing/lge/surveys/surveyProcessor';
 import season47 from '../../data/ssn/47/season47';
 import { season48TribeIds } from '../../data/ssn/48/ids';

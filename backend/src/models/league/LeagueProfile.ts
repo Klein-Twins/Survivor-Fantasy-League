@@ -37,6 +37,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueId',
           targetKey: 'leagueId',
           as: 'league',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating LeagueProfile with Profile');
@@ -46,11 +47,13 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
           foreignKey: 'profileId',
           targetKey: 'profileId',
           as: 'profile',
+          onDelete: 'CASCADE',
         });
         this.belongsTo(models.Profile, {
           foreignKey: 'inviterProfileId',
           targetKey: 'profileId',
           as: 'inviterProfile',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating LeagueProfile with Profile');
@@ -60,6 +63,7 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
           foreignKey: 'leagueProfileId',
           sourceKey: 'id',
           as: 'surveySubmissions',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating LeagueProfile with SurveySubmissions');

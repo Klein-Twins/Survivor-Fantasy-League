@@ -4,9 +4,12 @@ import { SeasonsAttributes } from './Seasons';
 import logger from '../../config/logger';
 import { EpisodeType } from '../../generated-api';
 
-export interface EpisodeAttributes {
-  id: UUID;
+export interface EpisodeDependenciesAttributes {
   seasonId: SeasonsAttributes['seasonId'];
+}
+
+export interface EpisodeTableAttributes {
+  id: UUID;
   number: number;
   title: string | null;
   airDate: Date;
@@ -15,8 +18,8 @@ export interface EpisodeAttributes {
   isTribeSwitch?: boolean;
 }
 
-export interface EpisodeCreationAttributes
-  extends Omit<EpisodeAttributes, 'isTribeSwitch'> {}
+export type EpisodeAttributes = EpisodeDependenciesAttributes &
+  EpisodeTableAttributes;
 
 const EpisodeModel = (sequelize: Sequelize) => {
   class Episode extends Model<EpisodeAttributes> implements EpisodeAttributes {
@@ -35,6 +38,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'seasonId',
           targetKey: 'seasonId',
           as: 'season',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Episode with Seasons');
@@ -45,6 +49,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           sourceKey: 'id',
           as: 'eliminations',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Episode with SeasonEliminations');
@@ -55,6 +60,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           sourceKey: 'id',
           as: 'challenges',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Episode with Challenges');
@@ -65,11 +71,13 @@ const EpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeIdStart',
           sourceKey: 'id',
           as: 'tribeStarted',
+          onDelete: 'CASCADE',
         });
         this.hasMany(models.Tribe, {
           foreignKey: 'episodeIdEnd',
           sourceKey: 'id',
           as: 'tribeEnded',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Episode with Tribe');
@@ -80,6 +88,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           sourceKey: 'id',
           as: 'tribeMembersOnEpisode',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Episode with TribeMembers');
@@ -90,6 +99,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           sourceKey: 'id',
           as: 'episodeSurvey',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Episode with EpisodeSurvey');
@@ -100,6 +110,7 @@ const EpisodeModel = (sequelize: Sequelize) => {
           foreignKey: 'episodeId',
           sourceKey: 'id',
           as: 'picksFulfilled',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating Episode with PickSolutions');

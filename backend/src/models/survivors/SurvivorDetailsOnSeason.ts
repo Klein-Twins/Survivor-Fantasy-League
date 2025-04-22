@@ -29,6 +29,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
           foreignKey: 'id',
           targetKey: 'id',
           as: 'Survivor',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(
@@ -40,6 +41,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
           foreignKey: 'seasonId',
           targetKey: 'seasonId',
           as: 'Season',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating SurvivorDetailsOnSeason with Seasons');
@@ -49,6 +51,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
           foreignKey: 'survivorId',
           sourceKey: 'id',
           as: 'eliminations',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(
@@ -60,6 +63,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
           foreignKey: 'winnerSurvivorId',
           sourceKey: 'id',
           as: 'challengeWins',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(
@@ -71,6 +75,7 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
           foreignKey: 'survivorId',
           sourceKey: 'id',
           as: 'tribe',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error(

@@ -28,6 +28,7 @@ const PickOptionsModel = (sequelize: Sequelize) => {
           foreignKey: 'pickId',
           targetKey: 'pickId',
           as: 'pick',
+          onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating PickOptions with Picks');
