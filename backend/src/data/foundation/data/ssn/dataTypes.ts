@@ -103,12 +103,13 @@ export type SeedTribalCouncilEpisodeEvent = SeedTribalCouncil[];
 export type SeedTribalCouncil =
   | (Omit<TribalCouncilAttributes, 'episodeId' | 'attendingTribeId'> & {
       attendingTribeId: TribeAttributes['id'];
-      eliminatedSurvivor: SurvivorsAttributes['id'];
+      attendingSurvivorIds: null;
+      eliminatedSurvivorId: SurvivorsAttributes['id'];
     })
   | (Omit<TribalCouncilAttributes, 'episodeId' | 'attendingTribeId'> & {
       attendingTribeId: null;
-      attendingSurvivors: SurvivorsAttributes['id'][];
-      eliminatedSurvivor: SurvivorsAttributes['id'];
+      attendingSurvivorIds: SurvivorsAttributes['id'][];
+      eliminatedSurvivorId: SurvivorsAttributes['id'];
     });
 
 export type SeedTribeStartEpisodeEvent = SeedTribeStart[];

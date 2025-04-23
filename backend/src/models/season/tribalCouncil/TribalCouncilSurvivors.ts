@@ -4,7 +4,7 @@ import { TribalCouncilAttributes } from './TribalCouncil';
 import { SurvivorsAttributes } from '../../survivors/Survivors';
 import logger from '../../../config/logger';
 
-type TribalCouncilSurvivorsAttributes =
+export type TribalCouncilSurvivorsAttributes =
   TribalCouncilSurvivorsDependencyAttributes &
     TribalCouncilSurvivorsTableAttributes;
 

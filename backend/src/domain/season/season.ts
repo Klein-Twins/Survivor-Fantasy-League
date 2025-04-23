@@ -7,7 +7,7 @@ import { DomainModel } from '../DomainModel';
 import { SeasonSurvivor } from './survivor/SeasonSurvivor';
 import { Episode } from './episode/Episode';
 import { singleton } from 'tsyringe';
-import { NotFoundError } from '../../utils/errors/errors';
+import { ConflictError, NotFoundError } from '../../utils/errors/errors';
 
 export type SeasonDependencies = {
   survivors: SeasonSurvivor[];
@@ -20,6 +20,7 @@ type Tribe = any;
 export class Season extends DomainModel<
   SeasonTableAttributes,
   SeasonDependencies,
+  SeasonsAttributes,
   SeasonDTO
 > {
   private seasonId: SeasonTableAttributes['seasonId'];
@@ -59,6 +60,11 @@ export class Season extends DomainModel<
   }
 
   addTribe(tribe: Tribe): void {
+    if (this.tribes.some((t) => t.id === tribe.id)) {
+      throw new ConflictError(
+        `Tribe with id ${tribe.id} already exists in season`
+      );
+    }
     this.tribes.push(tribe);
   }
 
@@ -125,10 +131,7 @@ export class Season extends DomainModel<
     return survivor;
   }
 
-  toDTO(): SeasonDTO {
-    throw new Error('Method not implemented.');
-  }
-  getAttributes(): SeasonTableAttributes & SeasonDependencies {
+  getAttributes(): SeasonsAttributes {
     return {
       seasonId: this.seasonId,
       theme: this.theme,
@@ -137,10 +140,11 @@ export class Season extends DomainModel<
       startDate: this.startDate,
       endDate: this.endDate,
       isActive: this.isActive,
-      survivors: this.survivors,
-      episodes: this.episodes,
-      tribes: this.tribes,
     };
+  }
+
+  toDTO(): SeasonDTO {
+    throw new Error('Method not implemented.');
   }
 }
 

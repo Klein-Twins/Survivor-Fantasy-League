@@ -66,7 +66,7 @@ const TribalCouncilModel = (sequelize: Sequelize) => {
         this.hasOne(models.SeasonEliminations, {
           foreignKey: 'tribalCouncilId',
           sourceKey: 'id',
-          as: 'eliminations',
+          as: 'elimination',
           onDelete: 'CASCADE',
         });
       }

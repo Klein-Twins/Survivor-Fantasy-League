@@ -1,6 +1,12 @@
 import { SeasonsAttributes } from '../../../models/season/Seasons';
-import { SurvivorDetailsOnSeasonTableAttributes } from '../../../models/survivors/SurvivorDetailsOnSeason';
-import { SurvivorsTableAttributes } from '../../../models/survivors/Survivors';
+import {
+  SurvivorDetailsOnSeasonAttributes,
+  SurvivorDetailsOnSeasonTableAttributes,
+} from '../../../models/survivors/SurvivorDetailsOnSeason';
+import {
+  SurvivorsAttributes,
+  SurvivorsTableAttributes,
+} from '../../../models/survivors/Survivors';
 import { DomainModel } from '../../DomainModel';
 import { Survivor as SurvivorDTO } from '../../../generated-api/';
 
@@ -11,6 +17,7 @@ type SeasonSurvivorDependencies = {
 export class SeasonSurvivor extends DomainModel<
   SurvivorsTableAttributes & SurvivorDetailsOnSeasonTableAttributes,
   SeasonSurvivorDependencies,
+  SurvivorsAttributes & SurvivorDetailsOnSeasonAttributes,
   SurvivorDTO
 > {
   private seasonId: SeasonSurvivorDependencies['seasonId'];
@@ -57,9 +64,7 @@ export class SeasonSurvivor extends DomainModel<
   toDTO(): SurvivorDTO {
     throw new Error('Method not implemented.');
   }
-  getAttributes(): SurvivorsTableAttributes &
-    SurvivorDetailsOnSeasonTableAttributes &
-    SeasonSurvivorDependencies {
+  getAttributes(): SurvivorsAttributes & SurvivorDetailsOnSeasonAttributes {
     return {
       seasonId: this.seasonId,
       id: this.id,

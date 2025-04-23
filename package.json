@@ -10,6 +10,7 @@
   "dependencies": {
     "concurrently": "^9.1.0",
     "formik": "^2.4.6",
+    "json-stringify-safe": "^5.0.1",
     "swagger-cli": "^4.0.4",
     "yamljs": "^0.3.0"
   },

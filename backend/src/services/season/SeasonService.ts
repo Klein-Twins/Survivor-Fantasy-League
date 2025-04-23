@@ -49,16 +49,12 @@ export class SeasonService {
       season.addSurvivor(survivor);
     }
 
-    const episodes: Episode[] =
-      await this.episodeService.fetchEpisodeBySeasonId(seasonId);
-    for (const episode of episodes) {
-      season.addEpisode(episode);
-    }
+    await this.episodeService.fetchEpisodeBySeasonId(seasonId);
 
-    const tribes = await this.tribeService.fetchTribesBySeasonId(seasonId);
-    for (const tribe of tribes) {
-      season.addTribe(tribe);
-    }
+    // const tribes = await this.tribeService.fetchTribesBySeasonId(seasonId);
+    // for (const tribe of tribes) {
+    //   season.addTribe(tribe);
+    // }
 
     return season;
   }
@@ -80,8 +76,8 @@ export class SeasonService {
       await this.episodeService.saveEpisode(episode, transaction);
     }
 
-    for (const tribe of season.getTribes()) {
-      await this.tribeService.saveTribe(tribe, transaction);
-    }
+    // for (const tribe of season.getTribes()) {
+    //   await this.tribeService.saveTribe(tribe, transaction);
+    // }
   }
 }

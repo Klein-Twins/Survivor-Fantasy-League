@@ -1,11 +1,46 @@
 import { TribalCouncilAttributes } from '../../../../models/season/tribalCouncil/TribalCouncil';
 import { TribalCouncil } from './TribalCouncil';
+import { TribeStart } from './TribeStart';
 
 export class EpisodeEvents {
   private tribalCouncils: TribalCouncil[];
+  private tribeStarts: TribeStart[];
 
   constructor() {
     this.tribalCouncils = [];
+    this.tribeStarts = [];
+  }
+
+  getTribesStart(): TribeStart[] {
+    return this.tribeStarts;
+  }
+
+  addTribeStarts(tribeStarts: TribeStart[]): void {
+    tribeStarts.forEach((tribe) => {
+      this.addTribeStart(tribe);
+    });
+  }
+
+  addTribeStart(tribeStart: TribeStart): void {
+    const existingTribeStart = this.tribeStarts.find(
+      (ts) =>
+        ts.getTribe().getAttributes().id ===
+          tribeStart.getTribe().getAttributes().id ||
+        ts.getTribe().getAttributes().name ===
+          tribeStart.getTribe().getAttributes().name
+    );
+    if (existingTribeStart) {
+      throw new Error(
+        `Tribe with ID ${tribeStart.getTribe().getAttributes().id} or name ${
+          tribeStart.getTribe().getAttributes().name
+        } already exists`
+      );
+    }
+    this.tribeStarts.push(tribeStart);
+  }
+
+  getTribesStartedOnEpisode() {
+    return this.tribeStarts;
   }
 
   addTribalCouncil(tribalCouncil: TribalCouncil) {

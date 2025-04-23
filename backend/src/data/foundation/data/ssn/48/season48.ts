@@ -1,5 +1,5 @@
 import { SeedSeasonData } from '../dataTypes';
-import season48Episodes from './season48episodes';
+import season48Episodes from './season48Episodes';
 
 const season48Data: SeedSeasonData = {
   seasonId: 48,

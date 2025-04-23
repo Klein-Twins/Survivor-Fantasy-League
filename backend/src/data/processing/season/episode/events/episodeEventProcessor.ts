@@ -6,21 +6,28 @@ import {
 } from '../../../../foundation/data/ssn/dataTypes';
 
 import tribeProcessor from '../../tribe/tribeProcessor';
+import tribalCouncilProcessor from './tribalCouncilProcessor';
 
 const episodeEventProcessor = {
   processEpisodeEvents,
 };
 
-async function processEpisodeEvents(
-  season: Season,
-  episodeData: SeedEpisode
-): Promise<void> {
+function processEpisodeEvents(season: Season, episodeData: SeedEpisode): void {
   if (episodeData.episodeEvents?.tribeStart) {
     processTribeStartEvent(
       season,
       episodeData.episodeInfo.id,
       episodeData.episodeEvents.tribeStart
     );
+  }
+  if (episodeData.episodeEvents?.tribalCouncil) {
+    for (const tribalCouncil of episodeData.episodeEvents.tribalCouncil) {
+      tribalCouncilProcessor.processTribalCouncil(
+        season,
+        episodeData.episodeInfo.id,
+        tribalCouncil
+      );
+    }
   }
 }
 

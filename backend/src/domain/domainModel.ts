@@ -1,8 +1,9 @@
 export abstract class DomainModel<
   TTableAttributes = void,
   TDependencies = void,
+  Attributes = void,
   TDTO = void
 > {
   abstract toDTO(): TDTO;
-  abstract getAttributes(): TTableAttributes & TDependencies;
+  abstract getAttributes(): Attributes;
 }

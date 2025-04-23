@@ -1,3 +1,4 @@
+import { TribeStart } from '../../../../domain/season/episode/events/TribeStart';
 import { Season } from '../../../../domain/season/Season';
 import { Tribe } from '../../../../domain/season/tribe/Tribe';
 import { EpisodeAttributes } from '../../../../models/season/Episodes';
@@ -25,6 +26,9 @@ function processTribeStart(
   });
 
   season.addTribe(tribe);
+
+  const tribeStart = new TribeStart(tribe);
+  season.getEpisodeById(episodeId).getEpisodeEvents().addTribeStart(tribeStart);
 }
 
 export default tribeProcessor;

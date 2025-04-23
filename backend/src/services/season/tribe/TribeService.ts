@@ -12,9 +12,7 @@ export class TribeService {
     @inject(SeasonStorage) private seasonStorage: SeasonStorage
   ) {}
 
-  private async fetchTribeByTribeId(
-    tribeId: TribeAttributes['id']
-  ): Promise<Tribe> {
+  async fetchTribeByTribeId(tribeId: TribeAttributes['id']): Promise<Tribe> {
     const tribeAttributes = await this.tribeRepository.findTribeById(tribeId);
 
     if (!tribeAttributes) {
@@ -37,6 +35,8 @@ export class TribeService {
       episodeStart: episodeStart,
       episodeEnd: episodeEnd,
     });
+
+    this.seasonStorage.getSeason(tribeAttributes.seasonId).addTribe(tribe);
 
     return tribe;
   }

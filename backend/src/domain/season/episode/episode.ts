@@ -15,6 +15,7 @@ export type EpisodeDependencies = {
 export class Episode extends DomainModel<
   EpisodeTableAttributes,
   EpisodeDependencies,
+  EpisodeAttributes,
   EpisodeDTO
 > {
   private seasonId: EpisodeAttributes['seasonId'];
@@ -36,7 +37,11 @@ export class Episode extends DomainModel<
     description,
     type,
     isTribeSwitch = false,
-  }: EpisodeTableAttributes & Omit<EpisodeDependencies, 'episodeEvents'>) {
+    episodeEvents = new EpisodeEvents(),
+  }: EpisodeTableAttributes &
+    Omit<EpisodeDependencies, 'episodeEvents'> & {
+      episodeEvents?: EpisodeEvents;
+    }) {
     super();
     this.seasonId = seasonId;
     this.id = id;
@@ -46,13 +51,18 @@ export class Episode extends DomainModel<
     this.description = description;
     this.type = type;
     this.isTribeSwitch = isTribeSwitch;
-    this.episodeEvents = new EpisodeEvents();
+    this.episodeEvents = episodeEvents;
   }
 
   toDTO(): EpisodeDTO {
     throw new Error('Method not implemented.');
   }
-  getAttributes(): EpisodeTableAttributes & EpisodeDependencies {
+
+  getEpisodeEvents(): EpisodeEvents {
+    return this.episodeEvents;
+  }
+
+  getAttributes(): EpisodeAttributes {
     return {
       seasonId: this.seasonId,
       id: this.id,
@@ -62,7 +72,6 @@ export class Episode extends DomainModel<
       description: this.description,
       type: this.type,
       isTribeSwitch: this.isTribeSwitch,
-      episodeEvents: this.episodeEvents,
     };
   }
 }

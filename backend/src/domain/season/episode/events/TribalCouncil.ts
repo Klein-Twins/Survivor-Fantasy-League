@@ -6,6 +6,7 @@ import {
 import { DomainModel } from '../../../DomainModel';
 import { Tribe } from '../../tribe/Tribe';
 import { SeasonSurvivor } from '../../survivor/SeasonSurvivor';
+import { TribalCouncilSurvivorsAttributes } from '../../../../models/season/tribalCouncil/TribalCouncilSurvivors';
 
 type TribalCouncilDependencies = {
   attendingTribe: Tribe | null;
@@ -16,7 +17,10 @@ type TribalCouncilDependencies = {
 
 export class TribalCouncil extends DomainModel<
   TribalCouncilTableAttributes,
-  TribalCouncilDependencies
+  TribalCouncilDependencies,
+  TribalCouncilAttributes & {
+    tribalCouncilSurvivorAttributes: TribalCouncilSurvivorsAttributes[];
+  }
 > {
   private id: TribalCouncilAttributes['id'];
   private day: TribalCouncilAttributes['day'];
@@ -49,15 +53,35 @@ export class TribalCouncil extends DomainModel<
     throw new Error('Method not implemented.');
   }
 
-  getAttributes(): TribalCouncilTableAttributes & TribalCouncilDependencies {
+  getAttendingTribe(): Tribe | null {
+    return this.attendingTribe;
+  }
+
+  getAttendingSurvivors(): SeasonSurvivor[] {
+    return this.attendingSurvivors;
+  }
+
+  getEliminatedSurvivor(): SeasonSurvivor {
+    return this.eliminatedSurvivor;
+  }
+
+  getAttributes(): TribalCouncilAttributes & {
+    tribalCouncilSurvivorAttributes: TribalCouncilSurvivorsAttributes[];
+  } {
     return {
       id: this.id,
       day: this.day,
-      attendingTribe: this.attendingTribe,
+      attendingTribeId: this.attendingTribe?.getAttributes().id || null,
       episodeId: this.episodeId,
-      attendingSurvivors: this.attendingSurvivors,
-      eliminatedSurvivor: this.eliminatedSurvivor,
       seq: this.seq,
+      tribalCouncilSurvivorAttributes: this.attendingSurvivors.map(
+        (attendingSurvivor) => {
+          return {
+            tribalCouncilId: this.id,
+            survivorId: attendingSurvivor.getAttributes().id,
+          };
+        }
+      ),
     };
   }
 }

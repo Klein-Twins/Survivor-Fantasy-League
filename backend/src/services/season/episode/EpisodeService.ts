@@ -5,11 +5,16 @@ import { EpisodeRepository } from '../../../repositories/season/episode/EpisodeR
 import { BadRequestError } from '../../../utils/errors/errors';
 import { Transaction } from 'sequelize';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
+import { EpisodeEventService } from './events/EpisodeEventService';
+import { SeasonStorage } from '../../../domain/season/Season';
 
 @injectable()
 export class EpisodeService {
   constructor(
-    @inject(EpisodeRepository) private episodeRepository: EpisodeRepository
+    @inject(SeasonStorage) private seasonStorage: SeasonStorage,
+    @inject(EpisodeRepository) private episodeRepository: EpisodeRepository,
+    @inject(EpisodeEventService)
+    private episodeEventService: EpisodeEventService
   ) {}
 
   async fetchEpisodeById(episodeId: EpisodeAttributes['id']): Promise<Episode> {
@@ -30,6 +35,12 @@ export class EpisodeService {
       type: episodeAttributes.type,
       isTribeSwitch: episodeAttributes.isTribeSwitch,
     });
+
+    this.seasonStorage
+      .getSeason(episodeAttributes.seasonId)
+      .addEpisode(episode);
+
+    await this.episodeEventService.fetchEpisodeEvents(episode);
 
     return episode;
   }
@@ -52,6 +63,11 @@ export class EpisodeService {
   async saveEpisode(episode: Episode, transaction: Transaction) {
     await this.episodeRepository.saveEpisodeAttributes(
       episode.getAttributes(),
+      transaction
+    );
+
+    await this.episodeEventService.saveEpisodeEvents(
+      episode.getEpisodeEvents(),
       transaction
     );
   }
