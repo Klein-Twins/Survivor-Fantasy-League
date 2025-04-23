@@ -115,6 +115,17 @@ const EpisodeModel = (sequelize: Sequelize) => {
       } else {
         logger.error('Error associating Episode with PickSolutions');
       }
+
+      if (models.TribalCouncils) {
+        this.hasMany(models.TribalCouncils, {
+          foreignKey: 'episodeId',
+          sourceKey: 'id',
+          as: 'tribalCouncils',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error('Error associating Episode with TribalCouncil');
+      }
     }
   }
   Episode.init(

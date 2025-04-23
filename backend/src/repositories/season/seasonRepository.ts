@@ -1,26 +1,28 @@
 import { injectable } from 'tsyringe';
-import { models } from '../../config/db';
-import { Season } from '../../domain/season/season';
 import { SeasonsAttributes } from '../../models/season/Seasons';
+import { models } from '../../config/db';
 import { Transaction } from 'sequelize';
-import { Transactional } from '../../repositoriesBackup/utils/Transactional';
+import logger from '../../config/logger';
 
 @injectable()
 export class SeasonRepository {
-  async findById(seasonId: number): Promise<SeasonsAttributes | null> {
-    return await models.Seasons.findByPk(seasonId).then((season) => {
-      if (!season) {
-        return null;
-      }
-      return season.get({ plain: true }) as SeasonsAttributes;
-    });
+  async findByPk(
+    seasonId: SeasonsAttributes['seasonId']
+  ): Promise<SeasonsAttributes | null> {
+    return await models.Seasons.findByPk(seasonId);
   }
 
-  @Transactional()
-  async saveSeason(
+  async saveSeasonAttributes(
     seasonAttributes: SeasonsAttributes,
-    transaction?: Transaction
+    transaction: Transaction
   ): Promise<void> {
-    await models.Seasons.upsert(seasonAttributes, { transaction });
+    logger.debug(
+      `${models.Seasons.tableName}: Saving attributes: ${JSON.stringify(
+        seasonAttributes
+      )}`
+    );
+    await models.Seasons.upsert(seasonAttributes, {
+      transaction,
+    });
   }
 }

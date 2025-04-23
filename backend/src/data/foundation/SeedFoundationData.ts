@@ -1,6 +1,6 @@
 import logger from '../../config/logger';
 import seasonProcessor from './processing/ssnBackup/season';
-import { season48 } from './data/ssn/48/season48';
+import { season48 } from './data/ssn/48/season48Backup';
 import season47 from './data/ssn/47/season47';
 import surveyProcessor from './processing/sur/survey';
 import pickProcessor from './processing/sur/pick';

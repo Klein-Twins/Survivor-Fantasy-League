@@ -1,27 +1,44 @@
 import { injectable } from 'tsyringe';
-import { models } from '../../../config/db';
+import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { TribeAttributes } from '../../../models/season/Tribes';
-import { Transactional } from '../../../repositoriesBackup/utils/Transactional';
+import { models } from '../../../config/db';
 import { Transaction } from 'sequelize';
+import logger from '../../../config/logger';
 
 @injectable()
 export class TribeRepository {
-  async findById(
+  async findTribeById(
     tribeId: TribeAttributes['id']
   ): Promise<TribeAttributes | null> {
-    return await models.Tribe.findByPk(tribeId);
+    return await models.Tribe.findOne({
+      where: {
+        id: tribeId,
+      },
+    }).then((tribe) => (tribe ? tribe.get({ plain: true }) : null));
   }
 
-  async findAllBySeasonId(
-    seasonId: TribeAttributes['seasonId']
-  ): Promise<TribeAttributes[]> {
+  async findTribeIdsInSeason(
+    seasonId: SeasonsAttributes['seasonId']
+  ): Promise<TribeAttributes['id'][]> {
     return await models.Tribe.findAll({
-      where: { seasonId },
-    });
+      where: {
+        seasonId,
+      },
+      attributes: ['id'],
+    }).then((tribes) => tribes.map((tribe) => tribe.id));
   }
 
-  @Transactional()
-  async save(tribe: TribeAttributes, transaction?: Transaction): Promise<void> {
-    await models.Tribe.upsert(tribe);
+  async saveTribeAttributes(
+    tribeAttributes: TribeAttributes,
+    transaction: Transaction
+  ): Promise<void> {
+    logger.debug(
+      `${models.Tribe.tableName}: Saving attributes: ${JSON.stringify(
+        tribeAttributes
+      )}`
+    );
+    await models.Tribe.upsert(tribeAttributes, {
+      transaction,
+    });
   }
 }

@@ -1,4 +1,4 @@
-import { season48 } from '../../../foundation/data/ssn/48/season48';
+import { season48 } from '../../../foundation/data/ssn/48/season48Backup';
 import season48TestLeagues, {
   League,
   season48TestLeague1,

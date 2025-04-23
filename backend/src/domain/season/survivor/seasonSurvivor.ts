@@ -1,102 +1,77 @@
-import { Survivor } from '../../survivor/survivor';
-import { SurvivorsAttributes } from '../../../models/survivors/Survivors';
-import { Survivor as SurvivorDTO } from '../../../generated-api';
-import { SurvivorDetailsOnSeasonAttributes } from '../../../models/survivors/SurvivorDetailsOnSeason';
-import {
-  SurvivorEliminationStatus,
-  SurvivorEliminationStatusTypeDetails,
-} from './survivorFinishStatus';
-
-type SeasonSurvivorAttributes = SurvivorsAttributes &
-  SurvivorDetailsOnSeasonAttributes;
+import { SeasonsAttributes } from '../../../models/season/Seasons';
+import { SurvivorDetailsOnSeasonTableAttributes } from '../../../models/survivors/SurvivorDetailsOnSeason';
+import { SurvivorsTableAttributes } from '../../../models/survivors/Survivors';
+import { DomainModel } from '../../DomainModel';
+import { Survivor as SurvivorDTO } from '../../../generated-api/';
 
 type SeasonSurvivorDependencies = {
-  survivorEliminationStatus: SurvivorEliminationStatus;
+  seasonId: SeasonsAttributes['seasonId'];
 };
 
-export class SeasonSurvivor
-  extends Survivor
-  implements SurvivorDetailsOnSeasonAttributes
-{
-  id: SurvivorDetailsOnSeasonAttributes['id'];
-  seasonId: SurvivorDetailsOnSeasonAttributes['seasonId'];
-  age: SurvivorDetailsOnSeasonAttributes['age'];
-  description: SurvivorDetailsOnSeasonAttributes['description'];
-  job: SurvivorDetailsOnSeasonAttributes['job'];
-  survivorEliminationStatus: SurvivorEliminationStatus;
+export class SeasonSurvivor extends DomainModel<
+  SurvivorsTableAttributes & SurvivorDetailsOnSeasonTableAttributes,
+  SeasonSurvivorDependencies,
+  SurvivorDTO
+> {
+  private seasonId: SeasonSurvivorDependencies['seasonId'];
+  private id: SurvivorsTableAttributes['id'];
+  private firstName: SurvivorsTableAttributes['firstName'];
+  private lastName: SurvivorsTableAttributes['lastName'];
+  private fromState: SurvivorsTableAttributes['fromState'];
+  private fromCity: SurvivorsTableAttributes['fromCity'];
+  private fromCountry: SurvivorsTableAttributes['fromCountry'];
+  private nickName: SurvivorsTableAttributes['nickName'];
+  private age: SurvivorDetailsOnSeasonTableAttributes['age'];
+  private description: SurvivorDetailsOnSeasonTableAttributes['description'];
+  private job: SurvivorDetailsOnSeasonTableAttributes['job'];
 
-  constructor(
-    attributes: SeasonSurvivorAttributes,
-    dependencies?: Partial<SeasonSurvivorDependencies>,
-    survivorEliminationStatus: SurvivorEliminationStatus = new SurvivorEliminationStatus(
-      {
-        isTorchSnuffed: false,
-        eliminationDetails: null,
-      }
-    )
-  ) {
-    super(attributes, dependencies);
-    this.id = attributes.id;
-    this.seasonId = attributes.seasonId;
-    this.age = attributes.age;
-    this.description = attributes.description;
-    this.job = attributes.job;
-    this.survivorEliminationStatus = survivorEliminationStatus;
-  }
-
-  protected getDefaultDependencies(): SeasonSurvivorDependencies {
-    return {
-      ...super.getDefaultDependencies(), // Include Survivor's default dependencies
-      survivorEliminationStatus: new SurvivorEliminationStatus({
-        isTorchSnuffed: false,
-        eliminationDetails: null,
-      }),
-    };
-  }
-
-  getSurvivorEliminationStatus(): SurvivorEliminationStatus {
-    return this.survivorEliminationStatus;
-  }
-
-  eliminate(
-    survivorEliminationStatusTypeDetails: SurvivorEliminationStatusTypeDetails
-  ) {
-    this.survivorEliminationStatus.setElimination(
-      survivorEliminationStatusTypeDetails
-    );
-  }
-
-  getAttributes(): SeasonSurvivorAttributes {
-    return {
-      ...super.getAttributes(),
-      id: this.id,
-      seasonId: this.seasonId,
-      age: this.age,
-      description: this.description,
-      job: this.job,
-    };
+  constructor({
+    seasonId,
+    id,
+    firstName,
+    lastName,
+    fromState,
+    fromCity,
+    fromCountry,
+    nickName,
+    age,
+    description,
+    job,
+  }: SurvivorsTableAttributes &
+    SurvivorDetailsOnSeasonTableAttributes &
+    SeasonSurvivorDependencies) {
+    super();
+    this.seasonId = seasonId;
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.fromState = fromState;
+    this.fromCity = fromCity;
+    this.fromCountry = fromCountry;
+    this.nickName = nickName;
+    this.age = age;
+    this.description = description;
+    this.job = job;
   }
 
   toDTO(): SurvivorDTO {
+    throw new Error('Method not implemented.');
+  }
+  getAttributes(): SurvivorsTableAttributes &
+    SurvivorDetailsOnSeasonTableAttributes &
+    SeasonSurvivorDependencies {
     return {
-      ...super.toDTO(),
-      fromCountry: this.attributes.fromCountry,
-      fromState: this.attributes.fromState,
-      fromCity: this.attributes.fromCity,
-      nickName: this.attributes.nickName,
       seasonId: this.seasonId,
+      id: this.id,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      fromState: this.fromState,
+      fromCity: this.fromCity,
+      fromCountry: this.fromCountry,
+      nickName: this.nickName,
       age: this.age,
       description: this.description,
       job: this.job,
-      finishStatus: this.survivorEliminationStatus?.toDTO() || {
-        isTorchSnuffed: false,
-        placement: null,
-        placementText: null,
-        dayEliminated: null,
-        juryPlacement: null,
-        juryPlacementText: null,
-        episodeIdEliminated: null,
-      },
     };
   }
 }

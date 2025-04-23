@@ -14,7 +14,7 @@ export interface TribeTableAttributes {
 
 export interface TribeDependencyAttributes {
   seasonId: SeasonsAttributes['seasonId'];
-  episodeIdStart: EpisodeAttributes['id'] | null;
+  episodeIdStart: EpisodeAttributes['id'];
   episodeIdEnd: EpisodeAttributes['id'] | null;
 }
 
@@ -86,6 +86,17 @@ const TribeModel = (sequelize: Sequelize) => {
         });
       } else {
         logger.error('Error associating Tribe with TribeMembers');
+      }
+
+      if (models.TribalCouncils) {
+        this.hasMany(models.TribalCouncils, {
+          foreignKey: 'attendingTribeId',
+          sourceKey: 'id',
+          as: 'tribalCouncils',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error('Error associating Tribe with TribalCouncil');
       }
     }
   }

@@ -2,7 +2,8 @@ import { UUID } from 'crypto';
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import logger from '../../config/logger';
 
-export interface SurvivorsAttributes {
+export interface SurvivorsDependenciesAttributes {}
+export interface SurvivorsTableAttributes {
   id: UUID;
   firstName: string;
   lastName: string;
@@ -11,6 +12,9 @@ export interface SurvivorsAttributes {
   fromCountry: string;
   nickName: string | null;
 }
+
+export type SurvivorsAttributes = SurvivorsTableAttributes &
+  SurvivorsDependenciesAttributes;
 
 const SurvivorsModel = (sequelize: Sequelize) => {
   class Survivors

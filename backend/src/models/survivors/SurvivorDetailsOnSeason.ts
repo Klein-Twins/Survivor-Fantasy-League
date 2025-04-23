@@ -4,13 +4,20 @@ import { SeasonsAttributes } from '../season/Seasons';
 import { TribeAttributes } from '../season/Tribes';
 import logger from '../../config/logger';
 
-export interface SurvivorDetailsOnSeasonAttributes {
+export interface SurvivorDetailsOnSeasonDependenciesAttributes {
   id: SurvivorsAttributes['id'];
   seasonId: SeasonsAttributes['seasonId'];
+}
+
+export interface SurvivorDetailsOnSeasonTableAttributes {
   age: number;
   description: string;
   job: string;
 }
+
+export type SurvivorDetailsOnSeasonAttributes =
+  SurvivorDetailsOnSeasonTableAttributes &
+    SurvivorDetailsOnSeasonDependenciesAttributes;
 
 const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
   class SurvivorDetailsOnSeason
@@ -80,6 +87,18 @@ const SurvivorDetailsOnSeasonModel = (sequelize: Sequelize) => {
       } else {
         logger.error(
           'Error associating SurvivorDetailsOnSeason with TribeMembers'
+        );
+      }
+      if (models.TribalCouncilSurvivors) {
+        this.hasMany(models.TribalCouncilSurvivors, {
+          foreignKey: 'survivorId',
+          sourceKey: 'id',
+          as: 'tribalCouncilSurvivors',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error(
+          'Error associating SurvivorDetailsOnSeason with TribalCouncilSurvivors'
         );
       }
     }

@@ -1,159 +1,168 @@
-import { SeasonsAttributes } from '../../models/season/Seasons';
-import { Season as SeasonDTO } from '../../generated-api';
-import { DomainModel } from '../domainModel';
-import { SeasonSurvivor } from './survivor/seasonSurvivor';
-import { Tribe } from './tribe/tribe';
-import { Episode } from './episode/episode';
-import { ConflictError, NotFoundError } from '../../utils/errors/errors';
-import { SurvivorsAttributes } from '../../models/survivors/Survivors';
-import { EpisodeAttributes } from '../../models/season/Episodes';
+import {
+  SeasonsAttributes,
+  SeasonTableAttributes,
+} from '../../models/season/Seasons';
+import { Season as SeasonDTO } from '../../generated-api/';
+import { DomainModel } from '../DomainModel';
+import { SeasonSurvivor } from './survivor/SeasonSurvivor';
+import { Episode } from './episode/Episode';
+import { singleton } from 'tsyringe';
+import { NotFoundError } from '../../utils/errors/errors';
 
-type SeasonDependencies = {
+export type SeasonDependencies = {
   survivors: SeasonSurvivor[];
-  tribes: Tribe[];
   episodes: Episode[];
+  tribes: any[];
 };
 
+type Tribe = any;
+
 export class Season extends DomainModel<
-  SeasonsAttributes,
+  SeasonTableAttributes,
   SeasonDependencies,
   SeasonDTO
 > {
-  constructor(
-    attributes: SeasonsAttributes,
-    dependencies?: Partial<SeasonDependencies>
-  ) {
-    super(attributes, dependencies);
-  }
+  private seasonId: SeasonTableAttributes['seasonId'];
+  private theme: SeasonTableAttributes['theme'];
+  private location: SeasonTableAttributes['location'];
+  private name: SeasonTableAttributes['name'];
+  private startDate: SeasonTableAttributes['startDate'];
+  private endDate: SeasonTableAttributes['endDate'];
+  private isActive: SeasonTableAttributes['isActive'];
+  private survivors: any[];
+  private episodes: any[];
+  private tribes: any[];
 
-  protected getDefaultDependencies(): SeasonDependencies {
-    return {
-      survivors: [],
-      tribes: [],
-      episodes: [],
-    };
-  }
-
-  // --- Instance Methods ---
-  addSurvivors(survivors: SeasonSurvivor[]): void {
-    survivors.forEach((survivor) => {
-      const isSurvivorOnSeason = this.dependencies.survivors.some(
-        (s) => s.getAttributes().id === survivor.getAttributes().id
-      );
-      if (isSurvivorOnSeason) {
-        throw new ConflictError(
-          `Survivor with ID ${
-            survivor.getAttributes().id
-          } is already added to this season`
-        );
-      }
-      this.dependencies.survivors.push(survivor);
-    });
-  }
-
-  addSurvivor(survivor: SeasonSurvivor): void {
-    const isSurvivorOnSeason = this.dependencies.survivors.some(
-      (s) => s.getAttributes().id === survivor.getAttributes().id
-    );
-    if (isSurvivorOnSeason) {
-      throw new ConflictError(
-        `Survivor with ID ${
-          survivor.getAttributes().id
-        } is already added to this season`
-      );
-    }
-    this.dependencies.survivors.push(survivor);
+  constructor({
+    seasonId,
+    theme,
+    location,
+    name,
+    startDate,
+    endDate,
+    isActive,
+    survivors: survivors = [],
+    episodes: episodes = [],
+    tribes: tribes = [],
+  }: SeasonTableAttributes & Partial<SeasonDependencies>) {
+    super();
+    this.seasonId = seasonId;
+    this.theme = theme;
+    this.location = location;
+    this.name = name;
+    this.startDate = startDate;
+    this.endDate = endDate;
+    this.isActive = isActive;
+    this.survivors = survivors;
+    this.episodes = episodes;
+    this.tribes = tribes;
   }
 
   addTribe(tribe: Tribe): void {
-    const isTribeOnSeason = this.dependencies.tribes.some(
-      (t) => t.getAttributes().id === tribe.getAttributes().id
-    );
-    if (isTribeOnSeason) {
-      throw new ConflictError(
-        `Tribe with ID ${
-          tribe.getAttributes().id
-        } is already added to this season`
-      );
-    }
-    this.dependencies.tribes.push(tribe);
-  }
-
-  addTribes(tribes: Tribe[]): void {
-    tribes.forEach((tribe) => {
-      this.dependencies.tribes.push(tribe);
-    });
-  }
-
-  addEpisodes(episodes: Episode[]): void {
-    episodes.forEach((episode) => {
-      this.addEpisode(episode);
-    });
-  }
-
-  addEpisode(episode: Episode): void {
-    const isEpisodeOnSeason = this.dependencies.episodes.some(
-      (e) => e.getAttributes().id === episode.getAttributes().id
-    );
-    if (isEpisodeOnSeason) {
-      throw new ConflictError(
-        `Episode with ID ${
-          episode.getAttributes().id
-        } is already added to this season`
-      );
-    }
-    this.dependencies.episodes.push(episode);
-
-    this.dependencies.episodes.sort((a, b) => {
-      return a.getAttributes().number - b.getAttributes().number;
-    });
-  }
-
-  getSurvivors(): SeasonSurvivor[] {
-    return this.dependencies.survivors;
-  }
-
-  getSurvivorById(id: SurvivorsAttributes['id']): SeasonSurvivor {
-    const survivor = this.dependencies.survivors.find(
-      (s) => s.getAttributes().id === id
-    );
-    if (!survivor) {
-      throw new Error(`Survivor with ID ${id} not found`);
-    }
-    return survivor;
+    this.tribes.push(tribe);
   }
 
   getTribes(): Tribe[] {
-    return this.dependencies.tribes;
+    return this.tribes;
+  }
+
+  getTribeById(id: Tribe['id']): Tribe {
+    const tribe = this.tribes.find((tribe) => tribe.id === id);
+    if (!tribe) {
+      throw new NotFoundError(`Tribe with id ${id} not found in season`);
+    }
+    return tribe;
+  }
+
+  addEpisode(episode: Episode): void {
+    this.episodes.push(episode);
+    this.episodes.sort((a, b) => {
+      if (a.number < b.number) {
+        return -1;
+      }
+      if (a.number > b.number) {
+        return 1;
+      }
+      return 0;
+    });
   }
 
   getEpisodes(): Episode[] {
-    return this.dependencies.episodes;
+    return this.episodes;
   }
 
-  getEpisodeById(id: EpisodeAttributes['id']): Episode {
-    const episode = this.dependencies.episodes.find(
-      (e) => e.getAttributes().id === id
-    );
+  getEpisodeByNumber(number: Episode['number']): Episode {
+    const episode = this.episodes.find((episode) => episode.number === number);
     if (!episode) {
-      throw new NotFoundError(`Episode with ID ${id} not found`);
+      throw new NotFoundError(
+        `Episode with number ${number} not found in season`
+      );
     }
     return episode;
   }
 
+  getEpisodeById(id: Episode['id']): Episode {
+    const episode = this.episodes.find((episode) => episode.id === id);
+    if (!episode) {
+      throw new NotFoundError(`Episode with id ${id} not found in season`);
+    }
+    return episode;
+  }
+
+  addSurvivor(survivor: SeasonSurvivor): void {
+    this.survivors.push(survivor);
+  }
+
+  getSurvivors(): SeasonSurvivor[] {
+    return this.survivors;
+  }
+
+  getSurvivorById(id: SeasonSurvivor['id']): SeasonSurvivor {
+    const survivor = this.survivors.find((survivor) => survivor.id === id);
+    if (!survivor) {
+      throw new NotFoundError(`Survivor with id ${id} not found in season`);
+    }
+    return survivor;
+  }
+
   toDTO(): SeasonDTO {
+    throw new Error('Method not implemented.');
+  }
+  getAttributes(): SeasonTableAttributes & SeasonDependencies {
     return {
-      id: this.attributes.seasonId,
-      name: this.attributes.name,
-      startDate: this.attributes.startDate?.toISOString() || null,
-      endDate: this.attributes.endDate?.toISOString() || null,
-      location: this.attributes.location,
-      theme: this.attributes.theme,
-      isActive: this.attributes.isActive,
-      survivors: this.dependencies.survivors.map((s) => s.toDTO()),
-      tribesInSeason: this.dependencies.tribes.map((t) => t.toDTO()),
-      episodes: this.dependencies.episodes.map((e) => e.toDTO()),
-      nextEpisode: null,
+      seasonId: this.seasonId,
+      theme: this.theme,
+      location: this.location,
+      name: this.name,
+      startDate: this.startDate,
+      endDate: this.endDate,
+      isActive: this.isActive,
+      survivors: this.survivors,
+      episodes: this.episodes,
+      tribes: this.tribes,
     };
+  }
+}
+
+@singleton()
+export class SeasonStorage {
+  private seasons: Map<SeasonsAttributes['seasonId'], Season> = new Map();
+
+  addSeason(season: Season): void {
+    this.seasons.set(season.getAttributes().seasonId, season);
+  }
+
+  getSeason(seasonId: SeasonsAttributes['seasonId']): Season {
+    const season = this.seasons.get(seasonId);
+    if (!season) {
+      throw new NotFoundError(
+        `Season with id ${seasonId} not stored in SeasonStorage`
+      );
+    }
+    return season;
+  }
+
+  clear(): void {
+    this.seasons.clear();
   }
 }

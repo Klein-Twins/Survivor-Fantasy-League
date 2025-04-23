@@ -1,5 +1,4 @@
 import { UUID } from 'crypto';
-import { Season48Tribes } from './season48';
 
 export type EpisodeKeys = `episode${
   | 1
@@ -74,6 +73,8 @@ export const season48SurvivorIds: Record<Season48SurvivorNames, UUID> = {
   StarToomey: 'cba37a9b-ea47-42b4-bbc5-366ebce84146',
   MaryZheng: '76b6811f-df81-4e8c-bcae-10056bff43fa',
 };
+
+type Season48Tribes = 'Vula' | 'Lagi' | 'Civa' | 'Merge';
 
 export const season48TribeIds: Record<Season48Tribes, UUID> = {
   Vula: 'cac70173-4546-49f6-88db-513bd3baad99',

@@ -1,50 +1,39 @@
 import { injectable } from 'tsyringe';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
 import { models } from '../../../config/db';
-import { Transactional } from '../../../repositoriesBackup/utils/Transactional';
+import logger from '../../../config/logger';
 import { Transaction } from 'sequelize';
 
 @injectable()
 export class EpisodeRepository {
-  async findById(
+  async findByPk(
     episodeId: EpisodeAttributes['id']
   ): Promise<EpisodeAttributes | null> {
-    return await models.Episode.findByPk(episodeId).then((episodeData) =>
-      episodeData ? episodeData.get({ plain: true }) : null
-    );
+    return await models.Episode.findByPk(episodeId);
   }
 
-  async findBySeasonIdAndEpisodeNumber(
-    seasonId: EpisodeAttributes['seasonId'],
-    episodeNumber: EpisodeAttributes['number']
-  ): Promise<EpisodeAttributes | null> {
-    return await models.Episode.findOne({
-      where: {
-        seasonId,
-        number: episodeNumber,
-      },
-    }).then((episodeData) =>
-      episodeData ? episodeData.get({ plain: true }) : null
-    );
-  }
-
-  async findAllEpisodesBySeasonId(
+  async findEpisodeIdsBySeasonId(
     seasonId: EpisodeAttributes['seasonId']
-  ): Promise<EpisodeAttributes[]> {
-    return await models.Episode.findAll({
+  ): Promise<EpisodeAttributes['id'][]> {
+    const episodes = await models.Episode.findAll({
       where: {
         seasonId,
       },
-    }).then((episodesData) =>
-      episodesData.map((episodeData) => episodeData.get({ plain: true }))
-    );
+      attributes: ['id'],
+    });
+
+    return episodes.map((episode) => episode.id);
   }
 
-  @Transactional()
   async saveEpisodeAttributes(
     episodeAttributes: EpisodeAttributes,
-    transaction?: Transaction
+    transaction: Transaction
   ): Promise<void> {
+    logger.debug(
+      `${models.Episode.tableName}: Saving attributes: ${JSON.stringify(
+        episodeAttributes
+      )}`
+    );
     await models.Episode.upsert(episodeAttributes, {
       transaction,
     });

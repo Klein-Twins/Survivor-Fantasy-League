@@ -27,6 +27,8 @@ import PickSubmissionModel from './league/PickSubmission';
 import EpisodeSurveyModel from './surveyAndPick/EpisodeSurvey';
 import TribeMembersModel from './season/TribeMembers';
 import PickSolutionModel from './surveyAndPick/picks/PickSolutions';
+import TribalCouncilModel from './season/tribalCouncil/TribalCouncil';
+import TribalCouncilSurvivorsModel from './season/tribalCouncil/TribalCouncilSurvivors';
 
 const initModels = (sequelize: Sequelize) => {
   logger.debug('Initializing models');
@@ -59,6 +61,8 @@ const initModels = (sequelize: Sequelize) => {
   const PickSubmissions = PickSubmissionModel(sequelize);
   const TribeMembers = TribeMembersModel(sequelize);
   const PickSolutions = PickSolutionModel(sequelize);
+  const TribalCouncils = TribalCouncilModel(sequelize);
+  const TribalCouncilSurvivors = TribalCouncilSurvivorsModel(sequelize);
 
   logger.debug('Models initialized');
 
@@ -82,10 +86,17 @@ const initModels = (sequelize: Sequelize) => {
     SeasonEliminations,
     ChallengeWinners,
     TribeMembers,
+    TribalCouncilSurvivors,
   });
 
   LeagueProfile.associate({ League, Profile, SurveySubmissions });
-  Tribe.associate({ ChallengeWinners, Seasons, Episode, TribeMembers });
+  Tribe.associate({
+    ChallengeWinners,
+    Seasons,
+    Episode,
+    TribeMembers,
+    TribalCouncils,
+  });
   Episode.associate({
     Seasons,
     SeasonEliminations,
@@ -94,6 +105,7 @@ const initModels = (sequelize: Sequelize) => {
     TribeMembers,
     EpisodeSurvey,
     PickSolutions,
+    TribalCouncils,
   });
   SeasonEliminations.associate({ Seasons, Episode, SurvivorDetailsOnSeason });
   ChallengeWinners.associate({
@@ -139,6 +151,9 @@ const initModels = (sequelize: Sequelize) => {
     Episode,
   });
 
+  TribalCouncilSurvivors.associate({ TribalCouncils, SurvivorDetailsOnSeason });
+  TribalCouncils.associate({ Tribe, TribalCouncilSurvivors, Episode });
+
   logger.debug('Models associated');
 
   return {
@@ -172,6 +187,8 @@ const initModels = (sequelize: Sequelize) => {
     TribeMembers,
     PickOptions,
     PickSolutions,
+    TribalCouncils,
+    TribalCouncilSurvivors,
   };
 };
 

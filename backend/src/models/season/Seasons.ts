@@ -1,7 +1,7 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import logger from '../../config/logger';
 
-export interface SeasonsAttributes {
+export interface SeasonTableAttributes {
   seasonId: number;
   theme: string;
   location: string;
@@ -11,10 +11,10 @@ export interface SeasonsAttributes {
   isActive: boolean;
 }
 
-export interface SeasonsCreationAttributes
-  extends Omit<SeasonsAttributes, 'seasonId' | 'isActive'> {}
+export interface SeasonDependencyAttributes {}
 
-export interface SeasonsCreationAttributes extends SeasonsAttributes {}
+export type SeasonsAttributes = SeasonTableAttributes &
+  SeasonDependencyAttributes;
 
 const SeasonsModel = (sequelize: Sequelize) => {
   class Seasons extends Model<SeasonsAttributes> implements SeasonsAttributes {

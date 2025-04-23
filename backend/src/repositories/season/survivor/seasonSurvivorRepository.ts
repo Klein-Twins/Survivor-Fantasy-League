@@ -1,37 +1,28 @@
 import { injectable } from 'tsyringe';
 import { SurvivorsAttributes } from '../../../models/survivors/Survivors';
+import { models } from '../../../config/db';
 import { SurvivorDetailsOnSeasonAttributes } from '../../../models/survivors/SurvivorDetailsOnSeason';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
-import { models } from '../../../config/db';
 import { Transaction } from 'sequelize';
-import { Transactional } from '../../../repositoriesBackup/utils/Transactional';
+import logger from '../../../config/logger';
+
+type SeasonSurvivorQueryResult =
+  | (SurvivorDetailsOnSeasonAttributes & {
+      Survivor: SurvivorsAttributes;
+    })
+  | null;
 
 @injectable()
 export class SeasonSurvivorRepository {
-  async findSurvivorsIdsInSeason(
-    seasonId: SurvivorDetailsOnSeasonAttributes['seasonId']
-  ): Promise<SurvivorsAttributes['id'][]> {
-    const survivorsAttributesOnSeason: SurvivorDetailsOnSeasonAttributes[] =
-      await models.SurvivorDetailsOnSeason.findAll({
-        where: {
-          seasonId: seasonId,
-        },
-      });
-    const survivorIdsOnSeason = survivorsAttributesOnSeason.map((survivor) => {
-      return survivor.id;
-    });
-    return survivorIdsOnSeason;
-  }
-
   async findBySurvivorIdAndSeasonId(
     survivorId: SurvivorsAttributes['id'],
     seasonId: SeasonsAttributes['seasonId']
-  ): Promise<(SurvivorsAttributes & SurvivorDetailsOnSeasonAttributes) | null> {
-    const survivorData = (
+  ): Promise<(SurvivorDetailsOnSeasonAttributes & SurvivorsAttributes) | null> {
+    const queryResult = (
       await models.SurvivorDetailsOnSeason.findOne({
         where: {
           id: survivorId,
-          seasonId: seasonId,
+          seasonId,
         },
         include: [
           {
@@ -41,44 +32,64 @@ export class SeasonSurvivorRepository {
           },
         ],
       })
-    )?.get({ plain: true }) as unknown as SurvivorDetailsOnSeasonAttributes & {
-      Survivor: SurvivorsAttributes;
-    };
+    )?.get({ plain: true }) as unknown as SeasonSurvivorQueryResult;
 
-    return survivorData
-      ? {
-          ...survivorData,
-          ...survivorData.Survivor,
-        }
-      : null;
+    if (!queryResult) {
+      return null;
+    }
+
+    return {
+      ...queryResult,
+      ...queryResult.Survivor,
+    };
   }
 
-  @Transactional()
-  async saveSurvivor(
-    survivor: SurvivorsAttributes & SurvivorDetailsOnSeasonAttributes,
-    transaction?: Transaction
-  ) {
+  async findSurvivorsIdsInSeason(
+    seasonId: SeasonsAttributes['seasonId']
+  ): Promise<SurvivorsAttributes['id'][]> {
+    const survivorIds = await models.SurvivorDetailsOnSeason.findAll({
+      where: {
+        seasonId,
+      },
+    }).then((survivors) => survivors.map((survivor) => survivor.id));
+    return survivorIds;
+  }
+
+  async saveSeasonSurvivorAttirbutes(
+    survivorAttributes: SurvivorDetailsOnSeasonAttributes & SurvivorsAttributes,
+    transaction: Transaction
+  ): Promise<void> {
+    logger.debug(
+      `${models.Survivors.tableName}: Saving attributes: ${JSON.stringify(
+        survivorAttributes
+      )}`
+    );
     await models.Survivors.upsert(
       {
-        id: survivor.id,
-        firstName: survivor.firstName,
-        lastName: survivor.lastName,
-        fromCity: survivor.fromCity,
-        fromState: survivor.fromState,
-        fromCountry: survivor.fromCountry,
-        nickName: survivor.nickName,
+        id: survivorAttributes.id,
+        firstName: survivorAttributes.firstName,
+        lastName: survivorAttributes.lastName,
+        fromState: survivorAttributes.fromState,
+        fromCity: survivorAttributes.fromCity,
+        fromCountry: survivorAttributes.fromCountry,
+        nickName: survivorAttributes.nickName,
       },
       {
         transaction,
       }
     );
+    logger.debug(
+      `${
+        models.SurvivorDetailsOnSeason.tableName
+      }: Saving attributes: ${JSON.stringify(survivorAttributes)}`
+    );
     await models.SurvivorDetailsOnSeason.upsert(
       {
-        id: survivor.id,
-        seasonId: survivor.seasonId,
-        age: survivor.age,
-        description: survivor.description,
-        job: survivor.job,
+        id: survivorAttributes.id,
+        seasonId: survivorAttributes.seasonId,
+        age: survivorAttributes.age,
+        description: survivorAttributes.description,
+        job: survivorAttributes.job,
       },
       {
         transaction,
