@@ -62,6 +62,14 @@ const TribalCouncilModel = (sequelize: Sequelize) => {
           'Error associating TribalCouncil with TribalCouncilSurvivors'
         );
       }
+      if (models.SeasonEliminations) {
+        this.hasOne(models.SeasonEliminations, {
+          foreignKey: 'tribalCouncilId',
+          sourceKey: 'id',
+          as: 'eliminations',
+          onDelete: 'CASCADE',
+        });
+      }
     }
   }
   TribalCouncil.init(

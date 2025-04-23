@@ -4,36 +4,70 @@ import { EpisodeAttributes } from './Episodes';
 import { SurvivorsAttributes } from '../survivors/Survivors';
 import logger from '../../config/logger';
 import { SurvivorEliminationType } from '../../generated-api';
+import { TribalCouncilAttributes } from './tribalCouncil/TribalCouncil';
 
-export interface SeasonEliminationAttributes {
-  seasonId: SeasonsAttributes['seasonId'];
-  episodeId: EpisodeAttributes['id'];
+export interface SeasonEliminationTableAttributes {
+  juryPlacement: number | null; //first jury member is 1 and last is 8 or null if not a jury member
   placement: number;
-  survivorId: SurvivorsAttributes['id'];
-  notes: string | null;
-  day: number;
-  seq: number;
-  juryPlacement: number | null; //first jury member is 1 and last is 8
-  type: SurvivorEliminationType;
 }
+
+export interface SeasonEliminationDependencyAttributes {
+  tribalCouncilId: TribalCouncilAttributes['id'];
+  survivorId: SurvivorsAttributes['id'];
+  seasonId: SeasonsAttributes['seasonId'];
+}
+
+export type SeasonEliminationAttributes = SeasonEliminationTableAttributes &
+  SeasonEliminationDependencyAttributes;
+
+// export interface SeasonEliminationAttributes {
+//   seasonId: SeasonsAttributes['seasonId'];
+//   episodeId: EpisodeAttributes['id'];
+//   placement: number;
+//   survivorId: SurvivorsAttributes['id'];
+//   notes: string | null;
+//   day: number;
+//   seq: number;
+//   juryPlacement: number | null; //first jury member is 1 and last is 8
+//   type: SurvivorEliminationType;
+// }
 
 const SeasonEliminationsModel = (sequelize: Sequelize) => {
   class SeasonEliminations
     extends Model<SeasonEliminationAttributes>
     implements SeasonEliminationAttributes
   {
-    public seasonId!: SeasonEliminationAttributes['seasonId'];
-    public episodeId!: SeasonEliminationAttributes['episodeId'];
-    public day!: SeasonEliminationAttributes['day'];
+    public seasonId!: number;
+    public tribalCouncilId!: SeasonEliminationAttributes['tribalCouncilId'];
     public survivorId!: SeasonEliminationAttributes['survivorId'];
-    public notes!: SeasonEliminationAttributes['notes'];
-    public seq!: SeasonEliminationAttributes['seq'];
     public placement!: SeasonEliminationAttributes['placement'];
     public juryPlacement!: SeasonEliminationAttributes['juryPlacement'];
-    public type!: SeasonEliminationAttributes['type'];
 
     static associate(models: any) {
-      //TODO - Add associations
+      if (models.SurvivorDetailsOnSeason) {
+        this.belongsTo(models.SurvivorDetailsOnSeason, {
+          foreignKey: 'survivorId',
+          targetKey: 'id',
+          as: 'eliminatedSurvivor',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error(
+          'Error associating SeasonEliminations with SurvivorDetailsOnSeason'
+        );
+      }
+      if (models.TribalCouncils) {
+        this.belongsTo(models.TribalCouncils, {
+          foreignKey: 'tribalCouncilId',
+          targetKey: 'id',
+          as: 'tribalCouncil',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error(
+          'Error associating SeasonEliminations with TribalCouncils'
+        );
+      }
       if (models.Seasons) {
         this.belongsTo(models.Seasons, {
           foreignKey: 'seasonId',
@@ -44,74 +78,21 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
       } else {
         logger.error('Error associating SeasonEliminations with Seasons');
       }
-      if (models.Episode) {
-        this.belongsTo(models.Episode, {
-          foreignKey: 'episodeId',
-          targetKey: 'id',
-          as: 'episode',
-          onDelete: 'CASCADE',
-        });
-      } else {
-        logger.error('Error associating SeasonEliminations with Episode');
-      }
-      if (models.SurvivorDetailsOnSeason) {
-        this.belongsTo(models.SurvivorDetailsOnSeason, {
-          foreignKey: 'survivorId',
-          targetKey: 'id',
-          as: 'survivor',
-          onDelete: 'CASCADE',
-        });
-      } else {
-        logger.error(
-          'Error associating SeasonEliminations with SurvivorDetailsOnSeason'
-        );
-      }
     }
   }
 
   SeasonEliminations.init(
     {
-      seasonId: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        references: {
-          model: 'SSN_SEASONS',
-          key: 'SEASON_ID',
-        },
-        field: 'SEASON_ID',
-      },
-      episodeId: {
+      tribalCouncilId: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: {
-          model: 'SSN_EPISODES',
-          key: 'EPISODE_ID',
-        },
-        field: 'EPISODE_ID',
-      },
-      day: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: 'DAY',
+        primaryKey: true,
+        field: 'TRIBAL_COUNCIL_ID',
       },
       survivorId: {
         type: DataTypes.UUID,
         allowNull: false,
-        references: {
-          model: 'CST_SURVIVORS',
-          key: 'SURVIVOR_ID',
-        },
-        field: 'SURVIVOR_ID',
-      },
-      notes: {
-        type: DataTypes.STRING(500),
-        allowNull: true,
-        field: 'NOTES',
-      },
-      seq: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        field: 'SEQ',
+        field: 'ELIMINATED_SURVIVOR_ID',
       },
       placement: {
         type: DataTypes.INTEGER,
@@ -124,29 +105,16 @@ const SeasonEliminationsModel = (sequelize: Sequelize) => {
         field: 'JURY_PLACEMENT',
         defaultValue: null,
       },
-      type: {
-        type: DataTypes.ENUM(...Object.values(SurvivorEliminationType)),
+      seasonId: {
+        type: DataTypes.INTEGER,
         allowNull: false,
-        field: 'TYPE',
-        defaultValue: SurvivorEliminationType.VotedOut,
+        field: 'SEASON_ID',
       },
     },
     {
       sequelize,
       tableName: 'SSN_ELIMINATIONS',
       timestamps: false,
-      indexes: [
-        {
-          fields: ['SEASON_ID', 'SURVIVOR_ID'],
-          unique: true,
-          name: 'ssn_eliminations_pk',
-        },
-        {
-          fields: ['SEASON_ID', 'PLACEMENT'],
-          unique: true,
-          name: 'ssn_eliminations_season_placement_uk',
-        },
-      ],
     }
   );
   return SeasonEliminations;

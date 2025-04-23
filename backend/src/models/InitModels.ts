@@ -99,7 +99,6 @@ const initModels = (sequelize: Sequelize) => {
   });
   Episode.associate({
     Seasons,
-    SeasonEliminations,
     Challenges,
     Tribe,
     TribeMembers,
@@ -107,7 +106,11 @@ const initModels = (sequelize: Sequelize) => {
     PickSolutions,
     TribalCouncils,
   });
-  SeasonEliminations.associate({ Seasons, Episode, SurvivorDetailsOnSeason });
+  SeasonEliminations.associate({
+    Seasons,
+    SurvivorDetailsOnSeason,
+    TribalCouncils,
+  });
   ChallengeWinners.associate({
     Tribe,
     Challenges,
@@ -152,7 +155,12 @@ const initModels = (sequelize: Sequelize) => {
   });
 
   TribalCouncilSurvivors.associate({ TribalCouncils, SurvivorDetailsOnSeason });
-  TribalCouncils.associate({ Tribe, TribalCouncilSurvivors, Episode });
+  TribalCouncils.associate({
+    Tribe,
+    TribalCouncilSurvivors,
+    Episode,
+    SeasonEliminations,
+  });
 
   logger.debug('Models associated');
 

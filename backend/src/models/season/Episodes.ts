@@ -44,17 +44,6 @@ const EpisodeModel = (sequelize: Sequelize) => {
         logger.error('Error associating Episode with Seasons');
       }
 
-      if (models.SeasonEliminations) {
-        this.hasMany(models.SeasonEliminations, {
-          foreignKey: 'episodeId',
-          sourceKey: 'id',
-          as: 'eliminations',
-          onDelete: 'CASCADE',
-        });
-      } else {
-        logger.error('Error associating Episode with SeasonEliminations');
-      }
-
       if (models.Challenges) {
         this.hasMany(models.Challenges, {
           foreignKey: 'episodeId',
