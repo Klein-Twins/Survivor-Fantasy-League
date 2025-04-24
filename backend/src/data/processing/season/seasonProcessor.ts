@@ -22,8 +22,8 @@ function processSeasonData(seasonData: SeedSeasonData): Season {
 
   const season = new Season(seasonAttributes);
 
-  //const seasonStorage = container.resolve(SeasonStorage);
-  //seasonStorage.addSeason(season);
+  const seasonStorage = container.resolve(SeasonStorage);
+  seasonStorage.addSeason(season);
 
   survivorProcessor.processSeasonSurvivors(season);
 

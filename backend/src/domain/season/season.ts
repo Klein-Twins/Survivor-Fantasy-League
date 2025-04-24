@@ -8,14 +8,13 @@ import { SeasonSurvivor } from './survivor/SeasonSurvivor';
 import { Episode } from './episode/Episode';
 import { singleton } from 'tsyringe';
 import { ConflictError, NotFoundError } from '../../utils/errors/errors';
+import { Tribe } from './tribe/Tribe';
 
 export type SeasonDependencies = {
   survivors: SeasonSurvivor[];
   episodes: Episode[];
-  tribes: any[];
+  tribes: Tribe[];
 };
-
-type Tribe = any;
 
 export class Season extends DomainModel<
   SeasonTableAttributes,
@@ -60,9 +59,9 @@ export class Season extends DomainModel<
   }
 
   addTribe(tribe: Tribe): void {
-    if (this.tribes.some((t) => t.id === tribe.id)) {
+    if (this.tribes.some((t) => t.id === tribe.getAttributes().id)) {
       throw new ConflictError(
-        `Tribe with id ${tribe.id} already exists in season`
+        `Tribe with id ${tribe.getAttributes().id} already exists in season`
       );
     }
     this.tribes.push(tribe);
@@ -121,6 +120,18 @@ export class Season extends DomainModel<
 
   getSurvivors(): SeasonSurvivor[] {
     return this.survivors;
+  }
+
+  getSurvivorsByIds(ids: SeasonSurvivor['id'][]): SeasonSurvivor[] {
+    const numberOfSurvivorsRequested = ids.length;
+    const survivorsFound = this.survivors.filter((survivor) =>
+      ids.includes(survivor.id)
+    );
+    const numberOfSurvivorsFound = survivorsFound.length;
+    if (numberOfSurvivorsRequested !== numberOfSurvivorsFound) {
+      ids.map((id) => this.getSurvivorById(id));
+    }
+    return survivorsFound;
   }
 
   getSurvivorById(id: SeasonSurvivor['id']): SeasonSurvivor {

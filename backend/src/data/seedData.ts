@@ -15,7 +15,6 @@ const seedData = async () => {
 
   try {
     await seasonService.saveSeason(season, transaction);
-
     await transaction.commit();
   } catch (error) {
     await transaction.rollback();
@@ -24,7 +23,7 @@ const seedData = async () => {
   container.resolve(SeasonStorage).clear();
   const fetchedSeason = await seasonService.fetchSeasonById(48);
   logger.debug('');
-  compareSeasonWithFetchedSeason(season, fetchedSeason, 5);
+  compareSeasonWithFetchedSeason(season, fetchedSeason, 10);
 };
 function compareSeasonWithFetchedSeason(
   season: Season,
@@ -45,17 +44,36 @@ function compareSeasonWithFetchedSeason(
     console.log('No differences found.');
   }
 }
-
 function truncateObjectWithSafeStringify(obj: any, depth: number): any {
   const jsonString = stringifySafe(obj, (key, value) => {
-    // Limit depth by replacing nested objects beyond the specified depth
-    if (typeof value === 'object' && value !== null && depth <= 0) {
-      return '[Truncated]';
+    // Handle Maps explicitly
+    if (value instanceof Map) {
+      return Array.from(value.entries()).reduce<Record<string, any>>(
+        (acc, [mapKey, mapValue]) => {
+          acc[String(mapKey)] = truncateValue(mapValue, depth - 1); // Convert mapKey to a string
+          return acc;
+        },
+        {}
+      );
     }
-    return value;
+
+    // Limit depth by replacing nested objects beyond the specified depth
+    return truncateValue(value, depth);
   });
 
   return JSON.parse(jsonString);
+}
+
+function truncateValue(value: any, depth: number): any {
+  if (depth <= 0) {
+    return '[Truncated]';
+  }
+
+  if (typeof value === 'object' && value !== null) {
+    return value;
+  }
+
+  return value;
 }
 
 export default seedData;

@@ -1,0 +1,303 @@
+import { Transaction } from 'sequelize';
+import { TribeMemberAttributes } from '../../../models/season/TribeMembers';
+import { inject, injectable } from 'tsyringe';
+import { models } from '../../../config/db';
+import { TribeAttributes } from '../../../models/season/Tribes';
+import { EpisodeAttributes } from '../../../models/season/Episodes';
+import { SurvivorDetailsOnSeasonAttributes } from '../../../models/survivors/SurvivorDetailsOnSeason';
+import { SurvivorsAttributes } from '../../../models/survivors/Survivors';
+import { EpisodeRepository } from '../episode/EpisodeRepository';
+import { TribeRepository } from './TribeRepository';
+import { NotFoundError } from '../../../utils/errors/errors';
+import { EpisodeType } from '../../../generated-api';
+
+type TribeMemberRosterHistoryQuery = (TribeMemberAttributes & {
+  tribe: TribeAttributes;
+  episodeStarted: EpisodeAttributes;
+  episodeEnded: EpisodeAttributes | null;
+  survivor: SurvivorDetailsOnSeasonAttributes & {
+    Survivor: SurvivorsAttributes;
+  };
+})[];
+
+@injectable()
+export class TribeMemberRepository {
+  constructor(
+    @inject(EpisodeRepository) private episodeRepository: EpisodeRepository,
+    @inject(TribeRepository) private tribeRepository: TribeRepository
+  ) {}
+
+  async getSurvivorIdsInTribeAtEpisodeStart(
+    tribeId: TribeMemberAttributes['tribeId'],
+    episodeId: TribeMemberAttributes['episodeIdStart']
+  ): Promise<TribeMemberAttributes['survivorId'][]> {
+    const fullTribeMemberHistory = await this.getTribeMembersHistory(tribeId);
+
+    const tribeAttributes = await this.tribeRepository.findTribeById(tribeId);
+    if (!tribeAttributes) {
+      throw new NotFoundError(`Tribe with ID ${tribeId} not found`);
+    }
+
+    const episodeAttributes = await this.episodeRepository.findByPk(episodeId);
+    if (!episodeAttributes) {
+      throw new NotFoundError(`Episode with ID ${episodeId} not found`);
+    }
+
+    const episodeNumber = episodeAttributes.number;
+    const isMergeTribe = tribeAttributes.mergeTribe;
+    const isTribeSwitch = episodeAttributes.isTribeSwitch;
+
+    const tribeMembersOnTribeAtEpisodeStart = fullTribeMemberHistory.filter(
+      (member) => {
+        const startEpisodeNumber = member.episodeStarted.number;
+        const endEpisodeNumber = member.episodeEnded
+          ? member.episodeEnded.number
+          : null;
+
+        if (episodeNumber < startEpisodeNumber) {
+          return false;
+        } else if (episodeNumber === startEpisodeNumber) {
+          if (episodeNumber === 1) {
+            return true;
+          }
+          return false;
+        } else {
+          if (endEpisodeNumber === null) {
+            return true;
+          } else if (episodeNumber <= endEpisodeNumber) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+    );
+    return this.getTribeMemberIds(tribeMembersOnTribeAtEpisodeStart);
+  }
+
+  async getSurvivorIdsInTribeAtEpisodeEnd(
+    tribeId: TribeMemberAttributes['tribeId'],
+    episodeId: TribeMemberAttributes['episodeIdStart']
+  ): Promise<TribeMemberAttributes['survivorId'][]> {
+    const fullTribeMemberHistory = await this.getTribeMembersHistory(tribeId);
+
+    const tribeAttributes = await this.tribeRepository.findTribeById(tribeId);
+    if (!tribeAttributes) {
+      throw new NotFoundError(`Tribe with ID ${tribeId} not found`);
+    }
+
+    const episodeAttributes = await this.episodeRepository.findByPk(episodeId);
+    if (!episodeAttributes) {
+      throw new NotFoundError(`Episode with ID ${episodeId} not found`);
+    }
+
+    const episodeNumber = episodeAttributes.number;
+    const isMergeTribe = tribeAttributes.mergeTribe;
+    const isTribeSwitch = episodeAttributes.isTribeSwitch;
+
+    const tribeMembersOnTribeAtEpisodeEnd = fullTribeMemberHistory.filter(
+      (member) => {
+        const startEpisodeNumber = member.episodeStarted.number;
+        const endEpisodeNumber = member.episodeEnded
+          ? member.episodeEnded.number
+          : null;
+
+        if (isTribeSwitch) {
+          if (episodeNumber < startEpisodeNumber) {
+            return false;
+          } else if (episodeNumber === startEpisodeNumber) {
+            if (endEpisodeNumber === null) {
+              return true;
+            }
+            if (episodeNumber < endEpisodeNumber) {
+              return true;
+            }
+            if (episodeNumber === endEpisodeNumber) {
+              return false;
+            }
+            if (episodeNumber > endEpisodeNumber) {
+              return false;
+            }
+          } else {
+            if (endEpisodeNumber === null) {
+              return true;
+            } else if (episodeNumber < endEpisodeNumber) {
+              return true;
+            } else if (episodeNumber === endEpisodeNumber) {
+              return false;
+            } else {
+              return false;
+            }
+          }
+        }
+
+        if (episodeNumber < startEpisodeNumber) {
+          return false;
+        } else if (episodeNumber === startEpisodeNumber) {
+          if (endEpisodeNumber === null) {
+            return true;
+          } else {
+            if (episodeNumber >= endEpisodeNumber) {
+              return false;
+            } else {
+              return true;
+            }
+          }
+        } else {
+          if (endEpisodeNumber === null) {
+            return true;
+          } else if (episodeNumber < endEpisodeNumber) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      }
+    );
+
+    return this.getTribeMemberIds(tribeMembersOnTribeAtEpisodeEnd);
+  }
+
+  async getSurvivorIdsInTribeAtEpisodeTribal(
+    tribeId: TribeMemberAttributes['tribeId'],
+    episodeId: TribeMemberAttributes['episodeIdStart']
+  ): Promise<TribeMemberAttributes['survivorId'][]> {
+    const fullTribeMemberHistory = await this.getTribeMembersHistory(tribeId);
+
+    const tribeAttributes = await this.tribeRepository.findTribeById(tribeId);
+    if (!tribeAttributes) {
+      throw new NotFoundError(`Tribe with ID ${tribeId} not found`);
+    }
+
+    const episodeAttributes = await this.episodeRepository.findByPk(episodeId);
+    if (!episodeAttributes) {
+      throw new NotFoundError(`Episode with ID ${episodeId} not found`);
+    }
+
+    const episodeNumber = episodeAttributes.number;
+    const isMergeTribe = tribeAttributes.mergeTribe;
+    const isTribeSwitch = episodeAttributes.isTribeSwitch;
+    const episodeType = episodeAttributes.type;
+
+    const tribeMembersOnTribeRightBeforeElimination =
+      fullTribeMemberHistory.filter((member) => {
+        const startEpisodeNumber = member.episodeStarted.number;
+        const endEpisodeNumber = member.episodeEnded
+          ? member.episodeEnded.number
+          : null;
+
+        if (episodeType === EpisodeType.TRIBELESS) {
+          return false;
+        }
+
+        if (isTribeSwitch) {
+          if (episodeNumber < startEpisodeNumber) {
+            return false;
+          } else if (episodeNumber === startEpisodeNumber) {
+            if (endEpisodeNumber === null) {
+              return true;
+            }
+            if (episodeNumber < endEpisodeNumber) {
+              return true;
+            }
+            if (episodeNumber === endEpisodeNumber) {
+              return true;
+            }
+            if (episodeNumber > endEpisodeNumber) {
+              return false;
+            }
+          } else {
+            if (endEpisodeNumber === null) {
+              return true;
+            } else if (episodeNumber < endEpisodeNumber) {
+              return true;
+            } else if (episodeNumber === endEpisodeNumber) {
+              return false;
+            } else {
+              return false;
+            }
+          }
+        }
+
+        if (episodeNumber < startEpisodeNumber) {
+          return false;
+        } else if (episodeNumber === startEpisodeNumber) {
+          if (endEpisodeNumber === null) {
+            return true;
+          } else {
+            if (episodeNumber <= endEpisodeNumber) {
+              return true;
+            } else {
+              return false;
+            }
+          }
+        } else {
+          if (endEpisodeNumber === null) {
+            return true;
+          } else if (episodeNumber <= endEpisodeNumber) {
+            return true;
+          } else {
+            return false;
+          }
+        }
+      });
+
+    return this.getTribeMemberIds(tribeMembersOnTribeRightBeforeElimination);
+  }
+
+  private async getTribeMemberIds(
+    filteredTribeHistory: TribeMemberRosterHistoryQuery
+  ) {
+    const tribeMemberIds = filteredTribeHistory.map((member) => {
+      return member.survivor.id;
+    });
+    return tribeMemberIds;
+  }
+
+  private async getTribeMembersHistory(
+    tribeId: TribeMemberAttributes['tribeId']
+  ): Promise<TribeMemberRosterHistoryQuery> {
+    const tribeMemberHistoryOnTribe = (await models.TribeMembers.findAll({
+      where: { tribeId },
+      include: [
+        {
+          model: models.Tribe,
+          as: 'tribe',
+          required: true,
+        },
+        {
+          model: models.Episode,
+          as: 'episodeStarted',
+          required: true,
+        },
+        {
+          model: models.Episode,
+          as: 'episodeEnded',
+          required: false,
+        },
+        {
+          model: models.SurvivorDetailsOnSeason,
+          as: 'survivor',
+          required: true,
+          include: [
+            {
+              model: models.Survivors,
+              as: 'Survivor',
+              required: true,
+            },
+          ],
+        },
+      ],
+    })) as unknown as TribeMemberRosterHistoryQuery;
+    return tribeMemberHistoryOnTribe;
+  }
+
+  async saveTribeStartMembers(
+    tribeMembersAttributes: TribeMemberAttributes[],
+    transaction: Transaction
+  ) {
+    for (const tribeMemberAttributes of tribeMembersAttributes) {
+      await models.TribeMembers.create(tribeMemberAttributes, { transaction });
+    }
+  }
+}

@@ -96,8 +96,11 @@ export type SeedEpisodeInfo = Pick<
 
 export type SeedEpisodeEvents = {
   tribalCouncil: SeedTribalCouncilEpisodeEvent;
+  tribeSwitch?: SeedTribeSwitch;
   tribeStart?: SeedTribeStartEpisodeEvent;
 };
+
+export type SeedTribeSwitch = {};
 
 export type SeedTribalCouncilEpisodeEvent = SeedTribalCouncil[];
 export type SeedTribalCouncil =

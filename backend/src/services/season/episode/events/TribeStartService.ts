@@ -5,10 +5,15 @@ import { TribeService } from '../../tribe/TribeService';
 import { TribeStart } from '../../../../domain/season/episode/events/TribeStart';
 import { Tribe } from '../../../../domain/season/tribe/Tribe';
 import { Episode } from '../../../../domain/season/episode/Episode';
+import { Transaction } from 'sequelize';
+import { TribeMemberService } from '../../tribe/TribeMemberService';
 
 @injectable()
 export class TribeStartService {
-  constructor(@inject(TribeService) private tribeService: TribeService) {}
+  constructor(
+    @inject(TribeService) private tribeService: TribeService,
+    @inject(TribeMemberService) private tribeMemberService: TribeMemberService
+  ) {}
 
   async fetchTribeStartsEventOnEpisode(
     episode: Episode
@@ -33,5 +38,26 @@ export class TribeStartService {
     }
     episode.getEpisodeEvents().addTribeStarts(tribeStarts);
     return tribeStarts;
+  }
+
+  async saveTribeStarts(
+    tribeStarts: TribeStart[],
+    transaction: Transaction
+  ): Promise<void> {
+    for (const tribeStart of tribeStarts) {
+      await this.saveTribeStart(tribeStart, transaction);
+    }
+  }
+
+  async saveTribeStart(
+    tribeStart: TribeStart,
+    transaction: Transaction
+  ): Promise<void> {
+    const tribe = tribeStart.getTribe();
+    await this.tribeService.saveTribe(tribe, transaction);
+    await this.tribeMemberService.saveTribeStartTribeMembers(
+      tribeStart,
+      transaction
+    );
   }
 }

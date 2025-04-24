@@ -3,7 +3,6 @@ import { EpisodeEvents } from '../../../../domain/season/episode/events/EpisodeE
 import { Transaction } from 'sequelize';
 import { TribalCouncilService } from './TribalCouncilService';
 import { TribeService } from '../../tribe/TribeService';
-import { EpisodeAttributes } from '../../../../models/season/Episodes';
 import { TribeStartService } from './TribeStartService';
 import { TribeStart } from '../../../../domain/season/episode/events/TribeStart';
 import { SeasonStorage } from '../../../../domain/season/Season';
@@ -52,9 +51,7 @@ export class EpisodeEventService {
   ) {
     const tribesStart = episodeEvents.getTribesStart();
     if (tribesStart.length > 0) {
-      for (const tribe of tribesStart) {
-        await this.tribeService.saveTribe(tribe.getTribe(), transaction);
-      }
+      await this.tribeStartService.saveTribeStarts(tribesStart, transaction);
     }
 
     const tribalCouncils = episodeEvents.getTribalCouncils();

@@ -4,11 +4,13 @@ import { Tribe } from '../../../domain/season/tribe/Tribe';
 import { SeasonStorage } from '../../../domain/season/Season';
 import { Transaction } from 'sequelize';
 import { TribeRepository } from '../../../repositories/season/tribe/TribeRepository';
+import { TribeMemberService } from './TribeMemberService';
 
 @injectable()
 export class TribeService {
   constructor(
     @inject(TribeRepository) private tribeRepository: TribeRepository,
+    @inject(TribeMemberService) private tribeMemberService: TribeMemberService,
     @inject(SeasonStorage) private seasonStorage: SeasonStorage
   ) {}
 
@@ -36,6 +38,8 @@ export class TribeService {
       episodeEnd: episodeEnd,
     });
 
+    await this.tribeMemberService.fetchTribeMemberRoster(tribe);
+
     this.seasonStorage.getSeason(tribeAttributes.seasonId).addTribe(tribe);
 
     return tribe;
@@ -62,8 +66,8 @@ export class TribeService {
     await this.tribeRepository.saveTribeAttributes(
       {
         ...tribe.getAttributes(),
-        episodeIdEnd: tribe.episodeEnd?.getAttributes().id || null,
-        episodeIdStart: tribe.episodeStart.getAttributes().id,
+        episodeIdEnd: tribe.getEpisodeEnd()?.getAttributes().id || null,
+        episodeIdStart: tribe.getEpisodeStart().getAttributes().id,
       },
       transaction
     );

@@ -1,3 +1,4 @@
+import { Episode } from '../../../../../domain/season/episode/Episode';
 import { Season } from '../../../../../domain/season/Season';
 import { EpisodeAttributes } from '../../../../../models/season/Episodes';
 import {
@@ -6,6 +7,7 @@ import {
 } from '../../../../foundation/data/ssn/dataTypes';
 
 import tribeProcessor from '../../tribe/tribeProcessor';
+import tribeRosterProcessor from '../../tribe/tribeRosterProcessor';
 import tribalCouncilProcessor from './tribalCouncilProcessor';
 
 const episodeEventProcessor = {
@@ -13,13 +15,26 @@ const episodeEventProcessor = {
 };
 
 function processEpisodeEvents(season: Season, episodeData: SeedEpisode): void {
+  const episode = season.getEpisodeById(episodeData.episodeInfo.id);
+
   if (episodeData.episodeEvents?.tribeStart) {
     processTribeStartEvent(
       season,
       episodeData.episodeInfo.id,
       episodeData.episodeEvents.tribeStart
     );
+  } else {
+    tribeRosterProcessor.populateTribeRosterAtEpisodeStart(season, episode);
   }
+
+  if (episodeData.episodeEvents?.tribeSwitch) {
+  } else {
+    tribeRosterProcessor.populateTribeRosterAtEpisodeTribalCouncil(
+      season,
+      episode
+    );
+  }
+
   if (episodeData.episodeEvents?.tribalCouncil) {
     for (const tribalCouncil of episodeData.episodeEvents.tribalCouncil) {
       tribalCouncilProcessor.processTribalCouncil(
@@ -29,6 +44,7 @@ function processEpisodeEvents(season: Season, episodeData: SeedEpisode): void {
       );
     }
   }
+  tribeRosterProcessor.populateTribeRosterAtEpisodeEnd(season, episode);
 }
 
 function processTribeStartEvent(
