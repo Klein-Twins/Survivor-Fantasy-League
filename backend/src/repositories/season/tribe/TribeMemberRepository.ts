@@ -1,4 +1,4 @@
-import { Transaction } from 'sequelize';
+import { Op, Transaction } from 'sequelize';
 import { TribeMemberAttributes } from '../../../models/season/TribeMembers';
 import { inject, injectable } from 'tsyringe';
 import { models } from '../../../config/db';
@@ -10,6 +10,7 @@ import { EpisodeRepository } from '../episode/EpisodeRepository';
 import { TribeRepository } from './TribeRepository';
 import { NotFoundError } from '../../../utils/errors/errors';
 import { EpisodeType } from '../../../generated-api';
+import { SeasonsAttributes } from '../../../models/season/Seasons';
 
 type TribeMemberRosterHistoryQuery = (TribeMemberAttributes & {
   tribe: TribeAttributes;
@@ -299,5 +300,33 @@ export class TribeMemberRepository {
     for (const tribeMemberAttributes of tribeMembersAttributes) {
       await models.TribeMembers.create(tribeMemberAttributes, { transaction });
     }
+  }
+
+  async saveEliminatedTribeMembersAttributes(
+    survivorId: TribeMemberAttributes['survivorId'][],
+    seasonId: SeasonsAttributes['seasonId'],
+    episodeIdEnded: EpisodeAttributes['id'],
+    transaction: Transaction
+  ) {
+    const tribeIds = await models.Tribe.findAll({
+      where: {
+        seasonId,
+      },
+      transaction,
+    }).then((tribes) => tribes.map((tribe) => tribe.id));
+
+    await models.TribeMembers.update(
+      {
+        episodeIdEnd: episodeIdEnded,
+      },
+      {
+        where: {
+          tribeId: { [Op.in]: tribeIds },
+          survivorId: { [Op.in]: survivorId },
+          episodeIdEnd: null,
+        },
+        transaction,
+      }
+    );
   }
 }

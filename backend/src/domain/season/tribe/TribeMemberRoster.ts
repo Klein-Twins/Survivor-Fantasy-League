@@ -62,6 +62,18 @@ export class TribeMemberRoster {
     for (const tribeMember of tribeMembers) {
       this.checkNoSurvivorRepeats(episodeId, phase, tribeMember);
       episodeState[phase].push(tribeMember);
+      episodeState[phase] = episodeState[phase].sort((a, b) => {
+        const firstNameA = a.getAttributes().firstName.toLowerCase();
+        const firstNameB = b.getAttributes().firstName.toLowerCase();
+
+        if (firstNameA < firstNameB) {
+          return -1;
+        }
+        if (firstNameA > firstNameB) {
+          return 1;
+        }
+        return 0;
+      });
     }
   }
 

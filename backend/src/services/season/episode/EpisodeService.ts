@@ -7,6 +7,7 @@ import { Transaction } from 'sequelize';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { EpisodeEventService } from './events/EpisodeEventService';
 import { SeasonStorage } from '../../../domain/season/Season';
+import { TribeMemberService } from '../tribe/TribeMemberService';
 
 @injectable()
 export class EpisodeService {
@@ -14,7 +15,8 @@ export class EpisodeService {
     @inject(SeasonStorage) private seasonStorage: SeasonStorage,
     @inject(EpisodeRepository) private episodeRepository: EpisodeRepository,
     @inject(EpisodeEventService)
-    private episodeEventService: EpisodeEventService
+    private episodeEventService: EpisodeEventService,
+    @inject(TribeMemberService) private tribeMemberService: TribeMemberService
   ) {}
 
   async fetchEpisodeById(episodeId: EpisodeAttributes['id']): Promise<Episode> {

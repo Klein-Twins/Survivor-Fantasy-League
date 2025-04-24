@@ -6,6 +6,7 @@ import { Episode } from '../../../../domain/season/episode/Episode';
 import { SeasonStorage } from '../../../../domain/season/Season';
 import { Tribe } from '../../../../domain/season/tribe/Tribe';
 import { SeasonEliminationRepository } from '../../../../repositories/season/survivor/SeasonEliminationRepository';
+import { TribeMemberRepository } from '../../../../repositories/season/tribe/TribeMemberRepository';
 
 @injectable()
 export class TribalCouncilService {
@@ -15,7 +16,9 @@ export class TribalCouncilService {
     @inject(SeasonEliminationRepository)
     private seasonEliminationRepository: SeasonEliminationRepository,
     @inject(SeasonStorage)
-    private seasonStorage: SeasonStorage
+    private seasonStorage: SeasonStorage,
+    @inject(TribeMemberRepository)
+    private tribeMemberRepository: TribeMemberRepository
   ) {}
 
   async fetchTribalCouncilEventsOnEpisode(episode: Episode) {
@@ -77,6 +80,12 @@ export class TribalCouncilService {
         seasonId: tribalCouncil.getEliminatedSurvivor().getAttributes()
           .seasonId,
       },
+      transaction
+    );
+    await this.tribeMemberRepository.saveEliminatedTribeMembersAttributes(
+      [tribalCouncil.getEliminatedSurvivor().getAttributes().id],
+      tribalCouncil.getEliminatedSurvivor().getAttributes().seasonId,
+      tribalCouncil.getAttributes().episodeId,
       transaction
     );
   }

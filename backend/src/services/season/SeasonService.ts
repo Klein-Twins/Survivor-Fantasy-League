@@ -8,6 +8,7 @@ import { EpisodeService } from './episode/EpisodeService';
 import { Episode } from '../../domain/season/episode/Episode';
 import { SeasonSurvivorService } from './survivor/SeasonSurvivorService';
 import { TribeService } from './tribe/TribeService';
+import { TribeMemberService } from './tribe/TribeMemberService';
 
 @injectable()
 export class SeasonService {
@@ -17,7 +18,8 @@ export class SeasonService {
     @inject(SeasonSurvivorService)
     private seasonSurvivorService: SeasonSurvivorService,
     @inject(SeasonStorage) private seasonStorage: SeasonStorage,
-    @inject(TribeService) private tribeService: TribeService
+    @inject(TribeService) private tribeService: TribeService,
+    @inject(TribeMemberService) private tribeMemberService: TribeMemberService
   ) {}
 
   async fetchSeasonById(
@@ -50,6 +52,10 @@ export class SeasonService {
     }
 
     await this.episodeService.fetchEpisodeBySeasonId(seasonId);
+
+    for (const tribe of season.getTribes()) {
+      await this.tribeMemberService.fetchTribeMemberRoster(tribe);
+    }
 
     // const tribes = await this.tribeService.fetchTribesBySeasonId(seasonId);
     // for (const tribe of tribes) {

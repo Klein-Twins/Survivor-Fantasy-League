@@ -38,8 +38,6 @@ export class TribeService {
       episodeEnd: episodeEnd,
     });
 
-    await this.tribeMemberService.fetchTribeMemberRoster(tribe);
-
     this.seasonStorage.getSeason(tribeAttributes.seasonId).addTribe(tribe);
 
     return tribe;

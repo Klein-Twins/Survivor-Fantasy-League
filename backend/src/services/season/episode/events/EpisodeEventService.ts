@@ -8,6 +8,7 @@ import { TribeStart } from '../../../../domain/season/episode/events/TribeStart'
 import { SeasonStorage } from '../../../../domain/season/Season';
 import { Episode } from '../../../../domain/season/episode/Episode';
 import { TribalCouncil } from '../../../../domain/season/episode/events/TribalCouncil';
+import { TribeMemberService } from '../../tribe/TribeMemberService';
 
 // export type TribeStartEvent = TribeStart[];
 
@@ -28,7 +29,9 @@ export class EpisodeEventService {
     @inject(TribeService)
     private tribeService: TribeService,
     @inject(TribeStartService)
-    private tribeStartService: TribeStartService
+    private tribeStartService: TribeStartService,
+    @inject(TribeMemberService)
+    private tribeMemberService: TribeMemberService
   ) {}
 
   async fetchEpisodeEvents(episode: Episode): Promise<EpisodeEvents> {
