@@ -9,6 +9,7 @@ import { SeasonStorage } from '../../../../domain/season/Season';
 import { Episode } from '../../../../domain/season/episode/Episode';
 import { TribalCouncil } from '../../../../domain/season/episode/events/TribalCouncil';
 import { TribeMemberService } from '../../tribe/TribeMemberService';
+import { models } from '../../../../config/db';
 
 // export type TribeStartEvent = TribeStart[];
 
@@ -44,6 +45,15 @@ export class EpisodeEventService {
       await this.tribalCouncilService.fetchTribalCouncilEventsOnEpisode(
         episode
       );
+    const tribeSwitch = (await models.TribeMembers.findOne({
+      where: {
+        episodeIdEnd: episodeId,
+        isTribeSwitch: true,
+      },
+    }))
+      ? true
+      : false;
+    episodeEvents.setTribeSwitch(tribeSwitch);
 
     return episodeEvents;
   }
@@ -52,9 +62,22 @@ export class EpisodeEventService {
     episodeEvents: EpisodeEvents,
     transaction: Transaction
   ) {
+    const episode = episodeEvents.getEpisode();
+
     const tribesStart = episodeEvents.getTribesStart();
     if (tribesStart.length > 0) {
       await this.tribeStartService.saveTribeStarts(tribesStart, transaction);
+    }
+
+    const tribeSwitch = episodeEvents.getTribeSwitch();
+    if (tribeSwitch) {
+      await this.tribeMemberService.saveTribeSwitches(
+        this.seasonStorage
+          .getSeason(episode.getAttributes().seasonId)
+          .getTribes(),
+        episode,
+        transaction
+      );
     }
 
     const tribalCouncils = episodeEvents.getTribalCouncils();

@@ -1,14 +1,31 @@
 import { TribalCouncilAttributes } from '../../../../models/season/tribalCouncil/TribalCouncil';
+import { Episode } from '../Episode';
 import { TribalCouncil } from './TribalCouncil';
 import { TribeStart } from './TribeStart';
 
 export class EpisodeEvents {
+  private episode: Episode;
   private tribalCouncils: TribalCouncil[];
   private tribeStarts: TribeStart[];
+  private tribeSwitch: boolean;
 
-  constructor() {
+  constructor(episode: Episode) {
+    this.tribeSwitch = false;
     this.tribalCouncils = [];
     this.tribeStarts = [];
+    this.episode = episode;
+  }
+
+  getEpisode(): Episode {
+    return this.episode;
+  }
+
+  getTribeSwitch(): boolean {
+    return this.tribeSwitch;
+  }
+
+  setTribeSwitch(tribeSwitch: boolean): void {
+    this.tribeSwitch = tribeSwitch;
   }
 
   getTribesStart(): TribeStart[] {

@@ -37,7 +37,6 @@ export class Episode extends DomainModel<
     description,
     type,
     isTribeSwitch = false,
-    episodeEvents = new EpisodeEvents(),
   }: EpisodeTableAttributes &
     Omit<EpisodeDependencies, 'episodeEvents'> & {
       episodeEvents?: EpisodeEvents;
@@ -51,7 +50,7 @@ export class Episode extends DomainModel<
     this.description = description;
     this.type = type;
     this.isTribeSwitch = isTribeSwitch;
-    this.episodeEvents = episodeEvents;
+    this.episodeEvents = new EpisodeEvents(this);
   }
 
   toDTO(): EpisodeDTO {

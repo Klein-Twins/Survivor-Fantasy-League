@@ -95,12 +95,15 @@ export type SeedEpisodeInfo = Pick<
 >;
 
 export type SeedEpisodeEvents = {
-  tribalCouncil: SeedTribalCouncilEpisodeEvent;
+  tribalCouncil?: SeedTribalCouncilEpisodeEvent;
   tribeSwitch?: SeedTribeSwitch;
   tribeStart?: SeedTribeStartEpisodeEvent;
 };
 
-export type SeedTribeSwitch = {};
+export type SeedTribeSwitch = {
+  survivorId: SurvivorsAttributes['id'];
+  tribeId: TribeAttributes['id'];
+}[];
 
 export type SeedTribalCouncilEpisodeEvent = SeedTribalCouncil[];
 export type SeedTribalCouncil =

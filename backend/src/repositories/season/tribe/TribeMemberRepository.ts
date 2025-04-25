@@ -8,9 +8,14 @@ import { SurvivorDetailsOnSeasonAttributes } from '../../../models/survivors/Sur
 import { SurvivorsAttributes } from '../../../models/survivors/Survivors';
 import { EpisodeRepository } from '../episode/EpisodeRepository';
 import { TribeRepository } from './TribeRepository';
-import { NotFoundError } from '../../../utils/errors/errors';
+import {
+  InternalServerError,
+  NotFoundError,
+} from '../../../utils/errors/errors';
 import { EpisodeType } from '../../../generated-api';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
+import { SeasonService } from '../../../services/season/SeasonService';
+import { SeasonStorage } from '../../../domain/season/Season';
 
 type TribeMemberRosterHistoryQuery = (TribeMemberAttributes & {
   tribe: TribeAttributes;
@@ -25,7 +30,8 @@ type TribeMemberRosterHistoryQuery = (TribeMemberAttributes & {
 export class TribeMemberRepository {
   constructor(
     @inject(EpisodeRepository) private episodeRepository: EpisodeRepository,
-    @inject(TribeRepository) private tribeRepository: TribeRepository
+    @inject(TribeRepository) private tribeRepository: TribeRepository,
+    @inject(SeasonStorage) private seasonStorage: SeasonStorage
   ) {}
 
   async getSurvivorIdsInTribeAtEpisodeStart(
@@ -46,7 +52,11 @@ export class TribeMemberRepository {
 
     const episodeNumber = episodeAttributes.number;
     const isMergeTribe = tribeAttributes.mergeTribe;
-    const isTribeSwitch = episodeAttributes.isTribeSwitch;
+    const isTribeSwitch = this.seasonStorage
+      .getSeason(episodeAttributes.seasonId)
+      .getEpisodeByNumber(episodeNumber)
+      .getEpisodeEvents()
+      .getTribeSwitch();
 
     const tribeMembersOnTribeAtEpisodeStart = fullTribeMemberHistory.filter(
       (member) => {
@@ -94,7 +104,11 @@ export class TribeMemberRepository {
 
     const episodeNumber = episodeAttributes.number;
     const isMergeTribe = tribeAttributes.mergeTribe;
-    const isTribeSwitch = episodeAttributes.isTribeSwitch;
+    const isTribeSwitch = this.seasonStorage
+      .getSeason(episodeAttributes.seasonId)
+      .getEpisodeByNumber(episodeNumber)
+      .getEpisodeEvents()
+      .getTribeSwitch();
 
     const tribeMembersOnTribeAtEpisodeEnd = fullTribeMemberHistory.filter(
       (member) => {
@@ -177,7 +191,11 @@ export class TribeMemberRepository {
 
     const episodeNumber = episodeAttributes.number;
     const isMergeTribe = tribeAttributes.mergeTribe;
-    const isTribeSwitch = episodeAttributes.isTribeSwitch;
+    const isTribeSwitch = this.seasonStorage
+      .getSeason(episodeAttributes.seasonId)
+      .getEpisodeByNumber(episodeNumber)
+      .getEpisodeEvents()
+      .getTribeSwitch();
     const episodeType = episodeAttributes.type;
 
     const tribeMembersOnTribeRightBeforeElimination =
@@ -328,5 +346,62 @@ export class TribeMemberRepository {
         transaction,
       }
     );
+  }
+
+  async saveTribeSwitch(
+    tribeMembersAttributes: TribeMemberAttributes[],
+    episodeId: TribeMemberAttributes['episodeIdStart'],
+    transaction: Transaction
+  ) {
+    for (const tribeMemberAttributes of tribeMembersAttributes) {
+      const survivorCurrentTribeStatusAttributes =
+        await models.TribeMembers.findOne({
+          where: {
+            survivorId: tribeMemberAttributes.survivorId,
+            episodeIdEnd: null,
+          },
+          transaction,
+        });
+      if (!survivorCurrentTribeStatusAttributes) {
+        throw new InternalServerError(
+          `Survivor with ID ${tribeMemberAttributes.survivorId} not found in tribe members with episodeIdEnd === null`
+        );
+      }
+
+      if (
+        survivorCurrentTribeStatusAttributes.tribeId ===
+        tribeMemberAttributes.tribeId
+      ) {
+        await survivorCurrentTribeStatusAttributes.update(
+          {
+            notes: 'Stayed in the same tribe after tribe switch',
+          },
+          {
+            transaction,
+          }
+        );
+      } else {
+        await survivorCurrentTribeStatusAttributes.update(
+          {
+            episodeIdEnd: episodeId,
+            notes: 'Moved to a new tribe for tribe switch',
+            isTribeSwitch: true,
+          },
+          {
+            transaction,
+          }
+        );
+        await models.TribeMembers.create(
+          {
+            tribeId: tribeMemberAttributes.tribeId,
+            survivorId: tribeMemberAttributes.survivorId,
+            episodeIdStart: episodeId,
+            episodeIdEnd: null,
+            notes: 'Moved to a new tribe for tribe switch',
+          },
+          { transaction }
+        );
+      }
+    }
   }
 }

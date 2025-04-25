@@ -2,12 +2,79 @@ import { container } from 'tsyringe';
 import { Episode } from '../../../../domain/season/episode/Episode';
 import { Season } from '../../../../domain/season/Season';
 import { TribeHelper } from '../../../../helpers/season/tribe/tribeHelper';
+import { TribeAttributes } from '../../../../models/season/Tribes';
+import { SurvivorsAttributes } from '../../../../models/survivors/Survivors';
+import { SeasonSurvivor } from '../../../../domain/season/survivor/SeasonSurvivor';
 
 const tribeRosterProcessor = {
   populateTribeRosterAtEpisodeStart,
   populateTribeRosterAtEpisodeEnd,
   populateTribeRosterAtEpisodeTribalCouncil,
+  processTribeMemberSwitch,
 };
+
+function processTribeMemberSwitch(
+  season: Season,
+  episode: Episode,
+  tribeSwitchData: {
+    survivorId: SurvivorsAttributes['id'];
+    tribeId: TribeAttributes['id'];
+  }[]
+) {
+  const { id: currentEpisodeId, number: currentEpisodeNumber } =
+    episode.getAttributes();
+
+  const tribesActiveOnEpisodeStart = container
+    .resolve(TribeHelper)
+    .getActiveTribesOnEpisodeTribal(episode);
+
+  //Go through each active tribe and update survivor roster for tribal council
+  for (const activeTribe of tribesActiveOnEpisodeStart) {
+    //Active tribe members at the start of the episode
+    const tribeMembersAtEpisodeStart =
+      activeTribe.getTribeMemberRosterOnEpisode(currentEpisodeId);
+
+    //Filter out tribe members that will not be switched (aka, survivor Id is not in tribeSwitchData)
+    const tribeMembersStillOnTribeAfterTribeSwitch =
+      tribeMembersAtEpisodeStart.episodeStart.filter(
+        (tribeMemberAtEpisodeStart) => {
+          return !tribeSwitchData.some(
+            (tribeSwitch) =>
+              tribeSwitch.survivorId ===
+              tribeMemberAtEpisodeStart.getAttributes().id
+          );
+        }
+      );
+    const existingTribeMembers: SeasonSurvivor[] = season.getSurvivorsByIds(
+      tribeMembersStillOnTribeAfterTribeSwitch.map(
+        (tribeMemberStillOnTribe) => tribeMemberStillOnTribe.getAttributes().id
+      )
+    );
+
+    //Filter out tribe members that will be switched to current working tribe
+    const tribeMembersToAddToTribeAfterTribeSwitch = tribeSwitchData.filter(
+      (tribeSwitch) => {
+        return tribeSwitch.tribeId === activeTribe.getAttributes().id;
+      }
+    );
+    const tribeMembersToAdd: SeasonSurvivor[] = season.getSurvivorsByIds(
+      tribeMembersToAddToTribeAfterTribeSwitch.map(
+        (tribeMemberToSwitchIntoTribe) =>
+          tribeMemberToSwitchIntoTribe.survivorId
+      )
+    );
+
+    activeTribe
+      .getTribeMemberRoster()
+      .addTribeMembers(currentEpisodeId, 'episodeTribalCouncil', [
+        ...existingTribeMembers,
+        ...tribeMembersToAdd,
+      ]);
+
+    // //Remove tribe members that are being switched to another tribe
+    // activeTribe.getTribeMemberRosterOnEpisode(currentEpisodeId).episodeEnd = [];
+  }
+}
 
 function populateTribeRosterAtEpisodeStart(
   season: Season,
@@ -83,7 +150,9 @@ function populateTribeRosterAtEpisodeEnd(season: Season, episode: Episode) {
 
   activeTribesOnEpisodeEnd.forEach((tribe) => {
     const tribeMembersAtEpisodeStart =
-      tribe.getTribeMemberRosterOnEpisode(currentEpisodeId).episodeStart;
+      tribe.getTribeMemberRosterOnEpisode(
+        currentEpisodeId
+      ).episodeTribalCouncil;
     const survivorsEliminatedAtTribalCouncil = episode
       .getEpisodeEvents()
       .getTribalCouncils()

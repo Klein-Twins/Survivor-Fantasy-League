@@ -10,6 +10,7 @@ export interface TribeMemberAttributes {
   episodeIdEnd: EpisodeAttributes['id'] | null;
   survivorId: UUID;
   notes: string | null;
+  isTribeSwitch?: boolean;
 }
 
 type MembershipType = 'START' | 'CHANGE';
@@ -24,6 +25,7 @@ const TribeMembersModel = (sequelize: Sequelize) => {
     public episodeIdEnd!: TribeMemberAttributes['episodeIdEnd'];
     public survivorId!: TribeMemberAttributes['survivorId'];
     public notes!: string | null;
+    public isTribeSwitch!: boolean;
 
     static associate(models: any) {
       if (models.Tribe) {
@@ -94,6 +96,12 @@ const TribeMembersModel = (sequelize: Sequelize) => {
         type: DataTypes.STRING,
         allowNull: true,
         field: 'NOTES',
+      },
+      isTribeSwitch: {
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+        field: 'IS_TRIBE_SWITCH',
+        defaultValue: false,
       },
     },
     {

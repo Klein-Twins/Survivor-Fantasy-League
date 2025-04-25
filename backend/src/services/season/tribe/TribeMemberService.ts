@@ -111,4 +111,39 @@ export class TribeMemberService {
       transaction
     );
   }
+
+  private async saveTribeSwitch(
+    tribe: Tribe,
+    episode: Episode,
+    transaction: Transaction
+  ) {
+    const tribeMembersInTribeAfterTribeSwitch =
+      tribe.getTribeMemberRosterOnEpisode(
+        episode.getAttributes().id
+      ).episodeTribalCouncil;
+    const tribeMembersAttributes: TribeMemberAttributes[] =
+      tribeMembersInTribeAfterTribeSwitch.map((tribeMember) => {
+        return {
+          tribeId: tribe.getAttributes().id,
+          survivorId: tribeMember.getAttributes().id,
+          episodeIdStart: episode.getAttributes().id,
+          episodeIdEnd: null,
+          notes: null,
+        };
+      });
+    await this.tribeMemberRepository.saveTribeSwitch(
+      tribeMembersAttributes,
+      episode.getAttributes().id,
+      transaction
+    );
+  }
+  async saveTribeSwitches(
+    tribes: Tribe[],
+    episode: Episode,
+    transaction: Transaction
+  ) {
+    for (const tribe of tribes) {
+      await this.saveTribeSwitch(tribe, episode, transaction);
+    }
+  }
 }

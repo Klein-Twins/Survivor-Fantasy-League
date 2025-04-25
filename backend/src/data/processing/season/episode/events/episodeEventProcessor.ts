@@ -1,9 +1,11 @@
+import logger from '../../../../../config/logger';
 import { Episode } from '../../../../../domain/season/episode/Episode';
 import { Season } from '../../../../../domain/season/Season';
 import { EpisodeAttributes } from '../../../../../models/season/Episodes';
 import {
   SeedEpisode,
   SeedTribeStartEpisodeEvent,
+  SeedTribeSwitch,
 } from '../../../../foundation/data/ssn/dataTypes';
 
 import tribeProcessor from '../../tribe/tribeProcessor';
@@ -28,6 +30,11 @@ function processEpisodeEvents(season: Season, episodeData: SeedEpisode): void {
   }
 
   if (episodeData.episodeEvents?.tribeSwitch) {
+    processTribeSwitchEvent(
+      season,
+      episode,
+      episodeData.episodeEvents.tribeSwitch
+    );
   } else {
     tribeRosterProcessor.populateTribeRosterAtEpisodeTribalCouncil(
       season,
@@ -45,6 +52,24 @@ function processEpisodeEvents(season: Season, episodeData: SeedEpisode): void {
     }
   }
   tribeRosterProcessor.populateTribeRosterAtEpisodeEnd(season, episode);
+}
+
+function processTribeSwitchEvent(
+  season: Season,
+  episode: Episode,
+  tribeSwitchEvent: SeedTribeSwitch
+) {
+  episode.getEpisodeEvents().setTribeSwitch(true);
+  tribeRosterProcessor.processTribeMemberSwitch(
+    season,
+    episode,
+    tribeSwitchEvent
+  );
+  logger.info(
+    `Episode ${
+      episode.getAttributes().number
+    } - Tribe Switch Event: ${JSON.stringify(tribeSwitchEvent)}`
+  );
 }
 
 function processTribeStartEvent(
