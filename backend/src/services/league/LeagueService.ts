@@ -9,9 +9,70 @@ import { AccountService } from '../account/AccountService';
 import { LeagueMemberService } from './LeagueMemberService';
 import sequelize from '../../config/db';
 import { LeagueRepository } from '../../repositories/league/LeagueRepository';
+import { NotFoundError } from '../../utils/errors/errors';
+import { LeagueMember, LeagueOwner } from '../../domain/league/LeagueMember';
+import { LeagueMemberRole } from '../../generated-api';
 
 @injectable()
 export class LeagueService {
+  static async fetchLeagues({
+    profileId,
+    seasonId,
+  }: {
+    profileId: ProfileAttributes['profileId'];
+    seasonId: SeasonsAttributes['seasonId'];
+  }): Promise<League[]> {
+    const account: Account = await AccountRepository.getAccountByField(
+      'profileId',
+      profileId
+    );
+
+    const leagueIds: League['id'][] =
+      await LeagueRepository.getLeagueIdsProfileIdIsEnrolledIn(
+        profileId,
+        seasonId
+      );
+
+    const leagues: League[] = [];
+    for (const leagueId of leagueIds) {
+      const league: League = await this.fetchLeague(leagueId);
+      if (league.getSeasonId() === seasonId) {
+        leagues.push(league);
+      }
+    }
+
+    return leagues;
+  }
+
+  static async fetchLeague(
+    leagueId: LeagueAttributes['leagueId']
+  ): Promise<League> {
+    const leagueData: LeagueAttributes | null =
+      await LeagueRepository.getLeagueById(leagueId);
+    if (!leagueData) {
+      throw new NotFoundError('League not found');
+    }
+
+    const league: League = new League({
+      id: leagueData.leagueId,
+      seasonId: leagueData.seasonId,
+      name: leagueData.name,
+    });
+
+    const leagueMembers: LeagueMember[] =
+      await LeagueMemberService.fetchLeagueMembers(league);
+
+    for (const leagueMember of leagueMembers) {
+      if (leagueMember.getRole() === LeagueMemberRole.Owner) {
+        league.addLeagueOwner(leagueMember as LeagueOwner);
+      } else {
+        league.addLeagueMember(leagueMember);
+      }
+    }
+
+    return league;
+  }
+
   static async createLeague({
     profileId,
     seasonId,

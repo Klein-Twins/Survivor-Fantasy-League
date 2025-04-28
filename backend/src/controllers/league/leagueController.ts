@@ -7,12 +7,46 @@ import { CreateLeagueResponse } from '../../generated-api';
 
 const leagueController = {
   createLeague,
+  getLeagues,
 };
 
 export type CreateLeaguePathParams = {
   profileId: ProfileAttributes['profileId'];
   seasonId: SeasonsAttributes['seasonId'];
 };
+
+export type GetLeaguePathParams = {
+  profileId: ProfileAttributes['profileId'];
+  seasonId: SeasonsAttributes['seasonId'];
+};
+
+async function getLeagues(req: Request, res: Response, next: NextFunction) {
+  const { profileId, seasonId } = req.params;
+  try {
+    const getLeagueRequest = leagueControllerHelper.validateGetLeaguesRequest({
+      profileId,
+      seasonId,
+    });
+
+    const leagues = await LeagueService.fetchLeagues({
+      profileId: getLeagueRequest.pathParams.profileId,
+      seasonId: getLeagueRequest.pathParams.seasonId,
+    });
+
+    const response = {
+      success: true,
+      statusCode: 200,
+      message: 'Leagues retrieved successfully',
+      responseData: {
+        leagues: leagues.map((league) => league.toDTO()),
+      },
+    };
+
+    res.status(200).json(response);
+  } catch (error) {
+    next(error);
+  }
+}
 
 async function createLeague(req: Request, res: Response, next: NextFunction) {
   const { profileId, seasonId } = req.params;

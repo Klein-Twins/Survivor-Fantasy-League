@@ -9,4 +9,22 @@ export class LeagueMemberRepository {
   ) {
     await models.LeagueProfile.upsert(attributes, { transaction });
   }
+
+  static async getLeagueMemberIdsByLeagueId(
+    leagueId: LeagueProfileAttributes['leagueId']
+  ): Promise<LeagueProfileAttributes['id'][]> {
+    return await models.LeagueProfile.findAll({
+      where: {
+        leagueId,
+      },
+    }).then((leagueProfiles) =>
+      leagueProfiles.map((leagueProfile) => leagueProfile.id)
+    );
+  }
+
+  static async getLeagueMemberById(
+    leagueMemberId: LeagueProfileAttributes['id']
+  ): Promise<LeagueProfileAttributes | null> {
+    return await models.LeagueProfile.findByPk(leagueMemberId);
+  }
 }

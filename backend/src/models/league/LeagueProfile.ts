@@ -4,6 +4,7 @@ import { ProfileAttributes } from '../account/Profile';
 import { LeagueAttributes } from './League';
 import { LeagueMemberRole } from '../../generated-api';
 import logger from '../../config/logger';
+import { UUID } from 'crypto';
 
 export enum InviteStatus {
   Pending = 'pending',
@@ -11,7 +12,7 @@ export enum InviteStatus {
 }
 
 export interface LeagueProfileAttributes {
-  id: string;
+  id: UUID;
   profileId: ProfileAttributes['profileId'];
   leagueId: LeagueAttributes['leagueId'];
   role: LeagueMemberRole;
@@ -75,12 +76,10 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     {
       profileId: {
         type: DataTypes.UUID,
-        primaryKey: true,
         field: 'PROFILE_ID',
       },
       leagueId: {
         type: DataTypes.UUID,
-        primaryKey: true,
         field: 'LEAGUE_ID',
       },
       role: {
@@ -112,6 +111,13 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
       timestamps: true,
       createdAt: 'CREATED_AT',
       updatedAt: 'UPDATED_AT',
+      indexes: [
+        {
+          unique: true,
+          fields: ['LEAGUE_ID', 'PROFILE_ID'],
+          name: 'LEAGUE_PROFILE_UNIQUE',
+        },
+      ],
       hooks: {
         // beforeCreate Hook: Enforce single Owner per league
         beforeCreate: async (leagueProfile: LeagueProfile, options) => {
