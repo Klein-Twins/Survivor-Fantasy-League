@@ -54,7 +54,7 @@ export interface SignupUserRequestBody {
      * @memberof SignupUserRequestBody
      * @example Jeff
      */
-    firstName?: string;
+    firstName: string;
 
     /**
      * Last name of the user
@@ -63,5 +63,5 @@ export interface SignupUserRequestBody {
      * @memberof SignupUserRequestBody
      * @example Probst
      */
-    lastName?: string;
+    lastName: string;
 }

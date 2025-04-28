@@ -2,7 +2,7 @@ import express from 'express';
 
 import tribeRoutes from './tribe/tribe';
 import survivorRoutes from './survivor/survivor';
-import seasonController from '../../../controllers/season/seasonController';
+import seasonController from '../../../controllersBackup/season/seasonController';
 import eventRoutes from './events/events';
 
 const router = express.Router();

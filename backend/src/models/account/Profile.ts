@@ -4,15 +4,15 @@ import logger from '../../config/logger';
 
 export interface ProfileAttributes {
   profileId: UUID;
-  firstName?: string | null;
-  lastName?: string | null;
+  firstName: string;
+  lastName: string;
 }
 
 const ProfileModel = (sequelize: Sequelize) => {
   class Profile extends Model<ProfileAttributes> implements ProfileAttributes {
     public profileId!: ProfileAttributes['profileId'];
-    public firstName?: ProfileAttributes['firstName'];
-    public lastName?: ProfileAttributes['lastName'];
+    public firstName!: ProfileAttributes['firstName'];
+    public lastName!: ProfileAttributes['lastName'];
 
     static associate(models: any) {
       if (models.User) {
@@ -54,12 +54,10 @@ const ProfileModel = (sequelize: Sequelize) => {
       },
       firstName: {
         type: DataTypes.STRING(100),
-        allowNull: true,
         field: 'FIRST_NAME',
       },
       lastName: {
         type: DataTypes.STRING(100),
-        allowNull: true,
         field: 'LAST_NAME',
       },
     },

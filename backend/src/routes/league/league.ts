@@ -1,5 +1,5 @@
 import express from 'express';
-import leagueController from '../../controllers/league/leagueController';
+import leagueController from '../../controllersBackup/league/leagueController';
 
 import inviteRoutes from './invite/invite';
 import surveyRoutes from './survey/survey';

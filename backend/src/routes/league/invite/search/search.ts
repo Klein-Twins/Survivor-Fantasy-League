@@ -1,5 +1,5 @@
 import express from 'express';
-import profileSearchControler from '../../../../controllers/profile/profileSearchController';
+import profileSearchControler from '../../../../controllersBackup/profile/profileSearchController';
 
 const router = express.Router();
 

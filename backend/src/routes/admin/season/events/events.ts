@@ -1,5 +1,5 @@
 import express from 'express';
-import survivorEliminationController from '../../../../controllers/events/survivorEliminationController';
+import survivorEliminationController from '../../../../controllersBackup/events/survivorEliminationController';
 
 const router = express.Router();
 

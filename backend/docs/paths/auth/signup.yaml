@@ -57,6 +57,8 @@ components:
         - email
         - password
         - userName
+        - firstName
+        - lastName
       properties:
         email:
           type: string

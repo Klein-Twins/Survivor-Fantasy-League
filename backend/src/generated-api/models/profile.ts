@@ -12,35 +12,34 @@
  * Do not edit the class manually.
  */
 
- /**
- * 
+/**
+ *
  *
  * @export
  * @interface Profile
  */
 export interface Profile {
+  /**
+   * @type {string}
+   * @memberof Profile
+   */
+  profileId: string;
 
-    /**
-     * @type {string}
-     * @memberof Profile
-     */
-    profileId: string;
+  /**
+   * @type {string}
+   * @memberof Profile
+   */
+  userName: string;
 
-    /**
-     * @type {string}
-     * @memberof Profile
-     */
-    userName: string;
+  /**
+   * @type {string}
+   * @memberof Profile
+   */
+  firstName: string;
 
-    /**
-     * @type {string}
-     * @memberof Profile
-     */
-    firstName: string | null;
-
-    /**
-     * @type {string}
-     * @memberof Profile
-     */
-    lastName: string | null;
+  /**
+   * @type {string}
+   * @memberof Profile
+   */
+  lastName: string;
 }

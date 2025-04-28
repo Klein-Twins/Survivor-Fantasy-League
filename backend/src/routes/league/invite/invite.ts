@@ -1,5 +1,5 @@
 import express from 'express';
-import leagueInviteController from '../../../controllers/league/leagueInviteController';
+import leagueInviteController from '../../../controllersBackup/league/leagueInviteController';
 
 import searchRoutes from './search/search';
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import seasonController from '../../controllers/season/seasonController';
+import seasonController from '../../controllersBackup/season/seasonController';
 
 const router = express.Router();
 

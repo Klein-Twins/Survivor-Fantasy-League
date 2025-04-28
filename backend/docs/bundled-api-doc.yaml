@@ -35,6 +35,8 @@ paths:
                 - email
                 - password
                 - userName
+                - firstName
+                - lastName
               properties:
                 email:
                   type: string
@@ -127,10 +129,8 @@ paths:
                                     type: string
                                   firstName:
                                     type: string
-                                    nullable: true
                                   lastName:
                                     type: string
-                                    nullable: true
                               - type: object
                                 properties:
                                   email:
@@ -251,10 +251,8 @@ paths:
                                     type: string
                                   firstName:
                                     type: string
-                                    nullable: true
                                   lastName:
                                     type: string
-                                    nullable: true
                               - type: object
                                 properties:
                                   email:
@@ -390,10 +388,8 @@ paths:
                                     type: string
                                   firstName:
                                     type: string
-                                    nullable: true
                                   lastName:
                                     type: string
-                                    nullable: true
                               - type: object
                                 properties:
                                   email:
@@ -487,10 +483,8 @@ paths:
                                     type: string
                                   firstName:
                                     type: string
-                                    nullable: true
                                   lastName:
                                     type: string
-                                    nullable: true
                               - type: object
                                 properties:
                                   email:
@@ -1109,10 +1103,8 @@ paths:
                                             type: string
                                           firstName:
                                             type: string
-                                            nullable: true
                                           lastName:
                                             type: string
-                                            nullable: true
                                       role:
                                         type: string
                                         enum:
@@ -1249,10 +1241,8 @@ paths:
                                           type: string
                                         firstName:
                                           type: string
-                                          nullable: true
                                         lastName:
                                           type: string
-                                          nullable: true
                                     role:
                                       type: string
                                       enum:
@@ -1388,10 +1378,8 @@ paths:
                                                 type: string
                                               firstName:
                                                 type: string
-                                                nullable: true
                                               lastName:
                                                 type: string
-                                                nullable: true
                                           role:
                                             type: string
                                             enum:
@@ -1430,10 +1418,8 @@ paths:
                                       type: string
                                     firstName:
                                       type: string
-                                      nullable: true
                                     lastName:
                                       type: string
-                                      nullable: true
                                 inviteId:
                                   type: string
                                   description: The unique ID of the league invite.
@@ -1540,10 +1526,8 @@ paths:
                                     type: string
                                   firstName:
                                     type: string
-                                    nullable: true
                                   lastName:
                                     type: string
-                                    nullable: true
                               role:
                                 type: string
                                 enum:
@@ -1690,10 +1674,8 @@ paths:
                                           type: string
                                         firstName:
                                           type: string
-                                          nullable: true
                                         lastName:
                                           type: string
-                                          nullable: true
                                     role:
                                       type: string
                                       enum:
@@ -1850,10 +1832,8 @@ paths:
                                       type: string
                                     firstName:
                                       type: string
-                                      nullable: true
                                     lastName:
                                       type: string
-                                      nullable: true
                                 isInvited:
                                   type: boolean
                                   description: Indicates if the profile has been invited to the league.

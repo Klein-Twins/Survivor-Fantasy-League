@@ -1,30 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import {
-  Account,
-  ApiResponse,
-  CheckAuthResponse,
-  CheckAuthResponseData,
-  ExtendSessionResponse,
-  ExtendSessionResponseData,
-  LoginUserRequestBody,
   LoginUserResponse,
-  LoginUserResponseData,
-  SignupUserRequestBody,
+  LogoutUserResponse,
   SignupUserResponse,
-  SignupUserResponseData,
 } from '../../generated-api';
-import { CustomError, UnauthorizedError } from '../../utils/errors/errors';
-import userService from '../../servicesBackup/account/userService';
-import userSessionService from '../../servicesBackup/auth/userSessionService';
-import { UUID } from 'crypto';
-import accountService from '../../servicesBackup/account/accountService';
+import { AuthService } from '../../services/account/AuthService';
+import { UserSession } from '../../domain/account/UserSession';
+import authControllerHelper from './authControllerHelper';
+import { NODE_ENV } from '../../config/config';
 
 const authController = {
   signup,
   login,
   logout,
-  extendSession,
-  checkAuth,
 };
 
 async function signup(
@@ -32,42 +20,47 @@ async function signup(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  const { email, password, userName, firstName, lastName } = req.body;
   try {
-    const reqBody = req.body;
+    authControllerHelper.validateSignupRequest(
+      email,
+      password,
+      userName,
+      firstName,
+      lastName
+    );
+    const userSession: UserSession = await AuthService.signup({
+      email,
+      password,
+      userName,
+      firstName,
+      lastName,
+    });
+    const response: SignupUserResponse = {
+      statusCode: 201,
+      message: 'Account created successfully',
+      success: true,
+      responseData: {
+        account: userSession.getAccount().toDTO(),
+        userSession: userSession.toDTO(),
+      },
+    };
 
-    const account = await userService.signup({
-      email: reqBody.email,
-      password: reqBody.password,
-      userName: reqBody.userName,
-      firstName: reqBody.firstName,
-      lastName: reqBody.lastName,
+    res.cookie('accessToken', userSession.getAccessToken()?.getToken(), {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
     });
 
-    const userSession = await userSessionService.createUserSession(
-      {
-        userId: account.userId as UUID,
-        profileId: account.profileId as UUID,
-        accountRole: account.accountRole,
-      },
-      res
-    );
+    res.cookie('refreshToken', userSession.getRefreshToken()?.getToken(), {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
 
-    const responseData: SignupUserResponseData = {
-      userSession,
-      account,
-    };
-
-    //Format Response and send
-    const response: SignupUserResponse = {
-      success: true,
-      responseData: responseData,
-      message: 'User signed up successfully',
-      statusCode: 200,
-    };
-    res.status(200).json(response);
+    res.status(201).json(response);
   } catch (error) {
     next(error);
-    return;
   }
 }
 
@@ -76,43 +69,37 @@ async function login(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  const { email, password } = req.body;
   try {
-    const reqBody: LoginUserRequestBody = req.body;
-
-    let account: Account;
-    try {
-      account = await userService.login({
-        email: reqBody.email,
-        password: reqBody.password,
-      });
-    } catch (error) {
-      if (error instanceof CustomError) {
-        throw new UnauthorizedError('Invalid email or password');
-      }
-      throw error;
-    }
-
-    const userSession = await userSessionService.createUserSession(
-      {
-        userId: account.userId as UUID,
-        profileId: account.profileId as UUID,
-        accountRole: account.accountRole,
-      },
-      res
+    const loginRequestData = authControllerHelper.validateLoginRequest(
+      email,
+      password
     );
 
-    const responseData: LoginUserResponseData = {
-      userSession,
-      account,
+    const userSession: UserSession = await AuthService.login(loginRequestData);
+
+    const response: LoginUserResponse = {
+      statusCode: 200,
+      message: 'Login successful',
+      success: true,
+      responseData: {
+        account: userSession.getAccount().toDTO(),
+        userSession: userSession.toDTO(),
+      },
     };
 
-    //Format Response and send
-    const response: LoginUserResponse = {
-      success: true,
-      responseData: responseData,
-      message: 'User logged in successfully',
-      statusCode: 200,
-    };
+    res.cookie('accessToken', userSession.getAccessToken()?.getToken(), {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
+    res.cookie('refreshToken', userSession.getRefreshToken()?.getToken(), {
+      httpOnly: true,
+      secure: NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+
     res.status(200).json(response);
   } catch (error) {
     next(error);
@@ -124,115 +111,32 @@ async function logout(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  const accessToken = req.cookies['accessToken'];
+  const refreshToken = req.cookies['refreshToken'];
   try {
-    const tokens: { accessToken: string; refreshToken: string } = {
-      accessToken: req.cookies.accessToken,
-      refreshToken: req.cookies.refreshToken,
+    authControllerHelper.validateLogoutRequest(accessToken, refreshToken);
+
+    const userSession: UserSession = await AuthService.logout({
+      accessToken,
+      refreshToken,
+    });
+
+    const response: LogoutUserResponse = {
+      statusCode: 200,
+      message: 'Logout successful',
+      success: true,
+      responseData: {
+        message: `Until your torch is lit again ${userSession
+          .getAccount()
+          .getUserName()}`,
+      },
     };
+
     res.clearCookie('accessToken');
     res.clearCookie('refreshToken');
 
-    await userService.logout();
-
-    await userSessionService.endUserSession(tokens, false, res);
-
-    const response: ApiResponse = {
-      success: true,
-      message: 'User logged out successfully',
-      statusCode: 200,
-    };
     res.status(200).json(response);
   } catch (error) {
-    next(error);
-  }
-}
-
-async function extendSession(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const tokens: { accessToken: string; refreshToken: string } = {
-      accessToken: req.cookies.accessToken,
-      refreshToken: req.cookies.refreshToken,
-    };
-
-    const userSession = await userSessionService.extendSession(tokens, res);
-
-    const responseData: ExtendSessionResponseData = {
-      userSession,
-    };
-
-    const response: ExtendSessionResponse = {
-      success: true,
-      message: 'Session extended successfully',
-      statusCode: 200,
-      responseData: responseData,
-    };
-    res.status(200).json(response);
-  } catch (error) {
-    next(error);
-  }
-}
-
-async function checkAuth(
-  req: Request,
-  res: Response,
-  next: NextFunction
-): Promise<void> {
-  try {
-    const tokens: { accessToken: string; refreshToken: string } = {
-      accessToken: req.cookies.accessToken,
-      refreshToken: req.cookies.refreshToken,
-    };
-
-    const userSession = await userSessionService.checkAuthSession(
-      req.params.userId as UUID,
-      tokens,
-      res
-    );
-
-    let account: Account | undefined = undefined;
-    if (userSession.isAuthenticated) {
-      account = await accountService.getAccount(
-        'userId',
-        req.params.userId as UUID
-      );
-    }
-
-    const responseData: CheckAuthResponseData = {
-      account,
-      userSession,
-    };
-
-    const response: CheckAuthResponse = {
-      success: true,
-      message: responseData.userSession.isAuthenticated
-        ? 'User is authenticated'
-        : 'User is not authenticated',
-      statusCode: 200,
-      responseData: responseData,
-    };
-    res.status(200).json(response);
-  } catch (error) {
-    if (error instanceof CustomError) {
-      res.clearCookie('accessToken');
-      res.clearCookie('refreshToken');
-      const response: CheckAuthResponse = {
-        success: true,
-        message: 'User is not authenticated',
-        statusCode: 200,
-        responseData: {
-          userSession: {
-            isAuthenticated: false,
-            numSecondsRefreshTokenExpiresIn: 0,
-          },
-        },
-      };
-      res.status(200).json(response);
-      return;
-    }
     next(error);
   }
 }

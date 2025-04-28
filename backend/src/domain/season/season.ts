@@ -5,10 +5,10 @@ import {
 import { Season as SeasonDTO } from '../../generated-api/';
 import { DomainModel } from '../DomainModel';
 import { SeasonSurvivor } from './survivor/SeasonSurvivor';
-import { Episode } from './episode/Episode';
 import { singleton } from 'tsyringe';
 import { ConflictError, NotFoundError } from '../../utils/errors/errors';
 import { Tribe } from './tribe/Tribe';
+import { Episode } from './episode/Episode';
 
 export type SeasonDependencies = {
   survivors: SeasonSurvivor[];
