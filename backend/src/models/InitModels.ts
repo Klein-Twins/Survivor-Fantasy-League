@@ -29,6 +29,7 @@ import TribeMembersModel from './season/TribeMembers';
 import PickSolutionModel from './surveyAndPick/picks/PickSolutions';
 import TribalCouncilModel from './season/tribalCouncil/TribalCouncil';
 import TribalCouncilSurvivorsModel from './season/tribalCouncil/TribalCouncilSurvivors';
+import LeagueInviteModel from './league/LeagueInvites';
 
 const initModels = (sequelize: Sequelize) => {
   logger.debug('Initializing models');
@@ -63,13 +64,19 @@ const initModels = (sequelize: Sequelize) => {
   const PickSolutions = PickSolutionModel(sequelize);
   const TribalCouncils = TribalCouncilModel(sequelize);
   const TribalCouncilSurvivors = TribalCouncilSurvivorsModel(sequelize);
+  const LeagueInvites = LeagueInviteModel(sequelize);
 
   logger.debug('Models initialized');
 
   User.associate({ Password, Profile });
-  Profile.associate({ User, LeagueProfile });
+  Profile.associate({ User, LeagueProfile, LeagueInvites });
   Password.associate({ User });
-  League.associate({ Seasons, LeagueProfile, LeagueSurveyForEpisode });
+  League.associate({
+    Seasons,
+    LeagueProfile,
+    LeagueSurveyForEpisode,
+    LeagueInvites,
+  });
   Survivors.associate({
     SurvivorDetailsOnSeason,
   });
@@ -162,6 +169,8 @@ const initModels = (sequelize: Sequelize) => {
     SeasonEliminations,
   });
 
+  LeagueInvites.associate({ League, Profile });
+
   logger.debug('Models associated');
 
   return {
@@ -197,6 +206,7 @@ const initModels = (sequelize: Sequelize) => {
     PickSolutions,
     TribalCouncils,
     TribalCouncilSurvivors,
+    LeagueInvites,
   };
 };
 

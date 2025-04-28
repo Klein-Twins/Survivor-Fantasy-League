@@ -47,6 +47,16 @@ const LeagueModel = (sequelize: Sequelize) => {
       } else {
         logger.error('Error associating League with LeagueSurveyForEpisode');
       }
+      if (models.LeagueInvites) {
+        this.hasMany(models.LeagueInvites, {
+          foreignKey: 'leagueId',
+          sourceKey: 'leagueId',
+          as: 'leagueInvites',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error('Error associating League with LeagueInvites');
+      }
     }
   }
 
