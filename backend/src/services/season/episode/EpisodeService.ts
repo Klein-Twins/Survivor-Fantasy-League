@@ -42,12 +42,10 @@ export class EpisodeService {
       .getSeason(episodeAttributes.seasonId)
       .addEpisode(episode);
 
-    await this.episodeEventService.fetchEpisodeEvents(episode);
-
     return episode;
   }
 
-  async fetchEpisodeBySeasonId(
+  async fetchEpisodesBySeasonId(
     seasonId: SeasonsAttributes['seasonId']
   ): Promise<Episode[]> {
     const episodeIdsInSeason: EpisodeAttributes['id'][] =
@@ -58,16 +56,21 @@ export class EpisodeService {
       const episode = await this.fetchEpisodeById(episodeId);
       episodes.push(episode);
     }
+    for (const episode of episodes) {
+      await this.episodeEventService.fetchEpisodeEvents(episode);
+    }
 
     return episodes;
   }
 
-  async saveEpisode(episode: Episode, transaction: Transaction) {
+  async saveEpisodeInfo(episode: Episode, transaction: Transaction) {
     await this.episodeRepository.saveEpisodeAttributes(
       episode.getAttributes(),
       transaction
     );
+  }
 
+  async saveEpisodeEvents(episode: Episode, transaction: Transaction) {
     await this.episodeEventService.saveEpisodeEvents(
       episode.getEpisodeEvents(),
       transaction

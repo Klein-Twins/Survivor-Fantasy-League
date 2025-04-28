@@ -51,7 +51,7 @@ export class SeasonService {
       season.addSurvivor(survivor);
     }
 
-    await this.episodeService.fetchEpisodeBySeasonId(seasonId);
+    await this.episodeService.fetchEpisodesBySeasonId(seasonId);
 
     for (const tribe of season.getTribes()) {
       await this.tribeMemberService.fetchTribeMemberRoster(tribe);
@@ -79,7 +79,10 @@ export class SeasonService {
     }
 
     for (const episode of season.getEpisodes()) {
-      await this.episodeService.saveEpisode(episode, transaction);
+      await this.episodeService.saveEpisodeInfo(episode, transaction);
+    }
+    for (const episode of season.getEpisodes()) {
+      await this.episodeService.saveEpisodeEvents(episode, transaction);
     }
 
     // for (const tribe of season.getTribes()) {

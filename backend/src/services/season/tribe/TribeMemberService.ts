@@ -7,6 +7,7 @@ import { SeasonStorage } from '../../../domain/season/Season';
 import { Episode } from '../../../domain/season/episode/Episode';
 import { TribeMemberRepository } from '../../../repositories/season/tribe/TribeMemberRepository';
 import { TribeMemberRosterOnEpisode } from '../../../domain/season/tribe/TribeMemberRoster';
+import { TribeHelper } from '../../../helpers/season/tribe/tribeHelper';
 
 @injectable()
 export class TribeMemberService {
@@ -14,7 +15,9 @@ export class TribeMemberService {
     @inject(TribeMemberRepository)
     private tribeMemberRepository: TribeMemberRepository,
     @inject(SeasonStorage)
-    private seasonStorage: SeasonStorage
+    private seasonStorage: SeasonStorage,
+    @inject(TribeHelper)
+    private tribeHelper: TribeHelper
   ) {}
 
   async fetchTribeMemberRosterOnEpisode(
@@ -66,6 +69,14 @@ export class TribeMemberService {
     const tribeMemberRoster = tribe.getTribeMemberRoster();
 
     for (const episode of episodesInSeason) {
+      const isTribeActiveOnEpisode = this.tribeHelper.isTribeActiveOnEpisode(
+        tribe,
+        episode
+      );
+      if (!isTribeActiveOnEpisode) {
+        continue;
+      }
+
       const tribeMemberRosterOnEpisode =
         await this.fetchTribeMemberRosterOnEpisode(tribe, episode);
 

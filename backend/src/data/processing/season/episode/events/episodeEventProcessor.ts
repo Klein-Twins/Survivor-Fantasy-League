@@ -69,6 +69,11 @@ function processMergeEvent(season: Season, episodeData: SeedEpisode) {
     episodeData.episodeInfo.id,
     episodeData.episodeEvents.merge
   );
+
+  tribeProcessor.processMergeTribesEnd(
+    season.getTribes().filter((tribe) => !tribe.getAttributes().mergeTribe),
+    season.getEpisodeById(episodeData.episodeInfo.id)
+  );
 }
 
 function processTribeSwitchEvent(

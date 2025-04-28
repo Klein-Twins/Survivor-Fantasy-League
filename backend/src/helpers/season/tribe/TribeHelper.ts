@@ -132,4 +132,22 @@ export class TribeHelper {
     );
     return activeTribesOnEpisodeTribalCouncil;
   }
+
+  isTribeActiveOnEpisode(tribe: Tribe, episode: Episode): boolean {
+    const tribeEpisodeStart = tribe.getEpisodeStart();
+    const tribeEpisodeEnd = tribe.getEpisodeEnd();
+    const { number: currentEpisodeNumber } = episode.getAttributes();
+
+    if (tribeEpisodeStart.getAttributes().number <= currentEpisodeNumber) {
+      if (!tribeEpisodeEnd) {
+        return true;
+      }
+      const { number: tribeEpisodeEndNumber } = tribeEpisodeEnd.getAttributes();
+
+      if (tribeEpisodeEndNumber > currentEpisodeNumber) {
+        return true;
+      }
+    }
+    return false;
+  }
 }

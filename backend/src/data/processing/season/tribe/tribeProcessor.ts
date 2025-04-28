@@ -1,14 +1,25 @@
+import { Episode } from '../../../../domain/season/episode/Episode';
 import { TribeStart } from '../../../../domain/season/episode/events/TribeStart';
 import { Season } from '../../../../domain/season/Season';
 import { SeasonSurvivor } from '../../../../domain/season/survivor/SeasonSurvivor';
 import { Tribe } from '../../../../domain/season/tribe/Tribe';
 import { EpisodeAttributes } from '../../../../models/season/Episodes';
-import { SeedTribeStart } from '../../../foundation/data/ssn/dataTypes';
+import {
+  SeedEpisode,
+  SeedTribeStart,
+} from '../../../foundation/data/ssn/dataTypes';
 
 const tribeProcessor = {
   processTribeStart,
   processMergeTribeStart,
+  processMergeTribesEnd,
 };
+
+function processMergeTribesEnd(nonMergeTribes: Tribe[], episode: Episode) {
+  for (const tribe of nonMergeTribes) {
+    tribe.end(episode);
+  }
+}
 
 function processMergeTribeStart(
   season: Season,
