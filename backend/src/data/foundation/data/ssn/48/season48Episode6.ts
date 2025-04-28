@@ -1,5 +1,8 @@
+import { v4 } from 'uuid';
 import { EpisodeType } from '../../../../../generated-api';
 import { SeedEpisode } from '../dataTypes';
+import { season48SurvivorIds, season48TribeIds } from './ids';
+import { UUID } from 'crypto';
 
 const season48Episode6: SeedEpisode = {
   episodeInfo: {
@@ -10,6 +13,25 @@ const season48Episode6: SeedEpisode = {
     description:
       'A mad dash ensues when an opportunity to get ahead in the game lands on the beach; information is a free-for-all when players talk strategy over a reward meal.',
     type: EpisodeType.TRIBELESS,
+  },
+  episodeEvents: {
+    merge: {
+      id: season48TribeIds.Merge,
+      name: 'Merge tbd',
+      color: 'Blue',
+      hexColor: '#0000FF',
+      startingSurvivors: [],
+    },
+    tribalCouncil: [
+      {
+        attendingTribeId: null,
+        attendingSurvivorIds: null,
+        day: 13,
+        eliminatedSurvivorId: season48SurvivorIds.CharityNeims,
+        id: v4() as UUID,
+        seq: 1,
+      },
+    ],
   },
 };
 

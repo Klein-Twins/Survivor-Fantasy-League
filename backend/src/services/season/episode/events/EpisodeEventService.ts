@@ -10,6 +10,7 @@ import { Episode } from '../../../../domain/season/episode/Episode';
 import { TribalCouncil } from '../../../../domain/season/episode/events/TribalCouncil';
 import { TribeMemberService } from '../../tribe/TribeMemberService';
 import { models } from '../../../../config/db';
+import { MergeEventService } from './MergeService';
 
 // export type TribeStartEvent = TribeStart[];
 
@@ -32,7 +33,9 @@ export class EpisodeEventService {
     @inject(TribeStartService)
     private tribeStartService: TribeStartService,
     @inject(TribeMemberService)
-    private tribeMemberService: TribeMemberService
+    private tribeMemberService: TribeMemberService,
+    @inject(MergeEventService)
+    private mergeService: MergeEventService
   ) {}
 
   async fetchEpisodeEvents(episode: Episode): Promise<EpisodeEvents> {
@@ -55,7 +58,25 @@ export class EpisodeEventService {
       : false;
     episodeEvents.setTribeSwitch(tribeSwitch);
 
+    const isMerge = this.fetchIsMergeEpisode(episode);
+    if (isMerge) {
+      episode.getEpisodeEvents().setMerge(true);
+    }
+
     return episodeEvents;
+  }
+
+  private fetchIsMergeEpisode(episode: Episode): boolean {
+    const season = this.seasonStorage.getSeason(episode.getSeasonId());
+    const tribes = season.getTribes();
+    const mergeTribe = tribes.find((tribe) => tribe.getAttributes().mergeTribe);
+    if (
+      mergeTribe &&
+      mergeTribe.getEpisodeStart().getEpisodeId() === episode.getEpisodeId()
+    ) {
+      return true;
+    }
+    return false;
   }
 
   async saveEpisodeEvents(
@@ -67,6 +88,14 @@ export class EpisodeEventService {
     const tribesStart = episodeEvents.getTribesStart();
     if (tribesStart.length > 0) {
       await this.tribeStartService.saveTribeStarts(tribesStart, transaction);
+    }
+
+    const isMerge = episodeEvents.getMerge();
+    if (isMerge) {
+      await this.mergeService.saveMergeEvent(
+        episodeEvents.getEpisode(),
+        transaction
+      );
     }
 
     const tribeSwitch = episodeEvents.getTribeSwitch();
@@ -86,6 +115,10 @@ export class EpisodeEventService {
         tribalCouncils,
         transaction
       );
+    }
+
+    if (isMerge) {
+      await this.mergeService.saveMergeStartTribeMembers(episode, transaction);
     }
   }
 }

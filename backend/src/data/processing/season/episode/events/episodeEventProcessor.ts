@@ -19,6 +19,9 @@ const episodeEventProcessor = {
 function processEpisodeEvents(season: Season, episodeData: SeedEpisode): void {
   const episode = season.getEpisodeById(episodeData.episodeInfo.id);
 
+  if (episodeData.episodeEvents?.merge) {
+    processMergeEvent(season, episodeData);
+  }
   if (episodeData.episodeEvents?.tribeStart) {
     processTribeStartEvent(
       season,
@@ -52,6 +55,20 @@ function processEpisodeEvents(season: Season, episodeData: SeedEpisode): void {
     }
   }
   tribeRosterProcessor.populateTribeRosterAtEpisodeEnd(season, episode);
+}
+
+function processMergeEvent(season: Season, episodeData: SeedEpisode) {
+  if (!episodeData.episodeEvents?.merge) {
+    logger.error(
+      `Episode ${episodeData.episodeInfo.id} - Merge event is missing in the episode data`
+    );
+    return;
+  }
+  tribeProcessor.processMergeTribeStart(
+    season,
+    episodeData.episodeInfo.id,
+    episodeData.episodeEvents.merge
+  );
 }
 
 function processTribeSwitchEvent(

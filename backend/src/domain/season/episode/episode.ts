@@ -61,6 +61,14 @@ export class Episode extends DomainModel<
     return this.episodeEvents;
   }
 
+  getSeasonId(): Episode['seasonId'] {
+    return this.seasonId;
+  }
+
+  getEpisodeId(): Episode['id'] {
+    return this.id;
+  }
+
   getAttributes(): EpisodeAttributes {
     return {
       seasonId: this.seasonId,

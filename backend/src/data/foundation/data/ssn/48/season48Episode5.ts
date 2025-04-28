@@ -1,5 +1,8 @@
+import { v4 } from 'uuid';
 import { EpisodeType } from '../../../../../generated-api';
 import { SeedEpisode } from '../dataTypes';
+import { season48SurvivorIds, season48TribeIds } from './ids';
+import { UUID } from 'crypto';
 
 const season48Episode5: SeedEpisode = {
   episodeInfo: {
@@ -10,6 +13,18 @@ const season48Episode5: SeedEpisode = {
     description:
       "Loose lips sink ships when one castaway's frustrations put a wedge between them and their tribe; a shared meal breeds connections between tribemates as they discuss race and heritage.",
     type: EpisodeType.PREMERGE,
+  },
+  episodeEvents: {
+    tribalCouncil: [
+      {
+        day: 11,
+        attendingSurvivorIds: null,
+        attendingTribeId: season48TribeIds.Civa,
+        eliminatedSurvivorId: season48SurvivorIds.BiancaRoses,
+        id: v4() as UUID,
+        seq: 1,
+      },
+    ],
   },
 };
 

@@ -23,6 +23,13 @@ export class TribeHelper {
         tribeEpisodeStart.getAttributes();
       const tribeEpisodeEnd = tribe.getEpisodeEnd();
 
+      if (
+        tribe.getAttributes().mergeTribe &&
+        tribeEpisodeStartId === currentEpisodeId
+      ) {
+        return false;
+      }
+
       if (tribeEpisodeStartNumber <= episode.getAttributes().number) {
         if (!tribeEpisodeEnd) {
           return true;
@@ -36,7 +43,7 @@ export class TribeHelper {
       }
     });
     logger.debug(
-      `Active tribes on episode ${currentEpisodeNumber} start: ${activeTribesOnEpisodeStart.forEach(
+      `Active tribes on episode ${currentEpisodeNumber} start: ${activeTribesOnEpisodeStart.map(
         (tribe) => tribe.getAttributes().name
       )}`
     );
@@ -52,6 +59,13 @@ export class TribeHelper {
       episode.getAttributes();
 
     const activeTribesOnEpisodeEnd = tribesInSeason.filter((tribe) => {
+      if (
+        episode.getEpisodeEvents().getMerge() &&
+        !tribe.getAttributes().mergeTribe
+      ) {
+        return false;
+      }
+
       const tribeEpisodeStart = tribe.getEpisodeStart();
       const tribeEpisodeEnd = tribe.getEpisodeEnd();
       const { id: tribeEpisodeStartId, number: tribeEpisodeStartNumber } =
@@ -72,7 +86,7 @@ export class TribeHelper {
     });
 
     logger.debug(
-      `Active tribes on episode ${currentEpisodeNumber} end: ${activeTribesOnEpisodeEnd.forEach(
+      `Active tribes on episode ${currentEpisodeNumber} end: ${activeTribesOnEpisodeEnd.map(
         (tribe) => tribe.getAttributes().name
       )}`
     );
@@ -112,7 +126,7 @@ export class TribeHelper {
       }
     );
     logger.debug(
-      `Active tribes on episode ${currentEpisodeNumber} tribal council: ${activeTribesOnEpisodeTribalCouncil.forEach(
+      `Active tribes on episode ${currentEpisodeNumber} tribal council: ${activeTribesOnEpisodeTribalCouncil.map(
         (tribe) => tribe.getAttributes().name
       )}`
     );

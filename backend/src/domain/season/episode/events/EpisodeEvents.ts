@@ -8,12 +8,22 @@ export class EpisodeEvents {
   private tribalCouncils: TribalCouncil[];
   private tribeStarts: TribeStart[];
   private tribeSwitch: boolean;
+  private merge: boolean;
 
   constructor(episode: Episode) {
     this.tribeSwitch = false;
     this.tribalCouncils = [];
     this.tribeStarts = [];
     this.episode = episode;
+    this.merge = false;
+  }
+
+  getMerge(): boolean {
+    return this.merge;
+  }
+
+  setMerge(merge: boolean): void {
+    this.merge = merge;
   }
 
   getEpisode(): Episode {

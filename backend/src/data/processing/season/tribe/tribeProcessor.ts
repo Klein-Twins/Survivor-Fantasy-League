@@ -7,7 +7,31 @@ import { SeedTribeStart } from '../../../foundation/data/ssn/dataTypes';
 
 const tribeProcessor = {
   processTribeStart,
+  processMergeTribeStart,
 };
+
+function processMergeTribeStart(
+  season: Season,
+  episodeId: EpisodeAttributes['id'],
+  mergeTribeData: SeedTribeStart
+): void {
+  const episode = season.getEpisodeById(episodeId);
+  const tribe = new Tribe({
+    seasonId: season.getAttributes().seasonId,
+    id: mergeTribeData.id,
+    name: mergeTribeData.name,
+    color: mergeTribeData.color,
+    hexColor: mergeTribeData.hexColor,
+    mergeTribe: episode.getAttributes().number === 1 ? false : true,
+    episodeStart: episode,
+    episodeEnd: null,
+  });
+
+  season.addTribe(tribe);
+  episode.getEpisodeEvents().setMerge(true);
+  const tribeStart = new TribeStart(tribe);
+  episode.getEpisodeEvents().addTribeStart(tribeStart);
+}
 
 function processTribeStart(
   season: Season,

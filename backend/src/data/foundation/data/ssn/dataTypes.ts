@@ -98,6 +98,7 @@ export type SeedEpisodeEvents = {
   tribalCouncil?: SeedTribalCouncilEpisodeEvent;
   tribeSwitch?: SeedTribeSwitch;
   tribeStart?: SeedTribeStartEpisodeEvent;
+  merge?: SeedTribeStart;
 };
 
 export type SeedTribeSwitch = {
@@ -105,18 +106,17 @@ export type SeedTribeSwitch = {
   tribeId: TribeAttributes['id'];
 }[];
 
+export type SeedMergeEvent = boolean;
+
 export type SeedTribalCouncilEpisodeEvent = SeedTribalCouncil[];
-export type SeedTribalCouncil =
-  | (Omit<TribalCouncilAttributes, 'episodeId' | 'attendingTribeId'> & {
-      attendingTribeId: TribeAttributes['id'];
-      attendingSurvivorIds: null;
-      eliminatedSurvivorId: SurvivorsAttributes['id'];
-    })
-  | (Omit<TribalCouncilAttributes, 'episodeId' | 'attendingTribeId'> & {
-      attendingTribeId: null;
-      attendingSurvivorIds: SurvivorsAttributes['id'][];
-      eliminatedSurvivorId: SurvivorsAttributes['id'];
-    });
+export type SeedTribalCouncil = Omit<
+  TribalCouncilAttributes,
+  'episodeId' | 'attendingTribeId'
+> & {
+  attendingTribeId: TribeAttributes['id'] | null;
+  attendingSurvivorIds: null | SurvivorsAttributes['id'][];
+  eliminatedSurvivorId: SurvivorsAttributes['id'];
+};
 
 export type SeedTribeStartEpisodeEvent = SeedTribeStart[];
 export type SeedTribeStart = Omit<

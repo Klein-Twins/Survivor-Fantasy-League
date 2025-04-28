@@ -1,3 +1,4 @@
+import logger from '../../../config/logger';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
 import { SeasonSurvivor } from '../survivor/SeasonSurvivor';
 
@@ -98,7 +99,16 @@ export class TribeMemberRoster {
   ): TribeMemberRosterOnEpisode {
     const tribeMemberState = this.tribeMemberState.get(episodeId);
     if (!tribeMemberState) {
-      throw new Error(`No tribe member state found for episode ${episodeId}`);
+      logger.warn(
+        `No tribe member state found for episode ${episodeId}. Returning empty state.`
+      );
+
+      this.tribeMemberState.set(episodeId, {
+        episodeStart: [],
+        episodeTribalCouncil: [],
+        episodeEnd: [],
+      });
+      return this.tribeMemberState.get(episodeId)!;
     }
     return tribeMemberState;
   }

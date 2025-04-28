@@ -79,6 +79,16 @@ export class Season extends DomainModel<
     return tribe;
   }
 
+  getMergeTribe(): Tribe {
+    const mergeTribe = this.tribes.find(
+      (tribe) => tribe.getAttributes().mergeTribe
+    );
+    if (!mergeTribe) {
+      throw new NotFoundError(`Merge tribe is not attached to season`);
+    }
+    return mergeTribe;
+  }
+
   addEpisode(episode: Episode): void {
     this.episodes.push(episode);
     this.episodes.sort((a, b) => {

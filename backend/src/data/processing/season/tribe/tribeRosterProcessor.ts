@@ -5,6 +5,7 @@ import { TribeHelper } from '../../../../helpers/season/tribe/tribeHelper';
 import { TribeAttributes } from '../../../../models/season/Tribes';
 import { SurvivorsAttributes } from '../../../../models/survivors/Survivors';
 import { SeasonSurvivor } from '../../../../domain/season/survivor/SeasonSurvivor';
+import logger from '../../../../config/logger';
 
 const tribeRosterProcessor = {
   populateTribeRosterAtEpisodeStart,
@@ -117,7 +118,10 @@ function populateTribeRosterAtEpisodeTribalCouncil(
   const { id: currentEpisodeId, number: currentEpisodeNumber } =
     episode.getAttributes();
 
-  if (episode.getAttributes().isTribeSwitch) {
+  if (
+    episode.getAttributes().isTribeSwitch ||
+    episode.getEpisodeEvents().getMerge()
+  ) {
     return;
   }
 
@@ -144,11 +148,49 @@ function populateTribeRosterAtEpisodeEnd(season: Season, episode: Episode) {
   const { id: currentEpisodeId, number: currentEpisodeNumber } =
     episode.getAttributes();
 
+  if (episode.getEpisodeEvents().getMerge()) {
+    logger.debug('Break point');
+  }
+
   const activeTribesOnEpisodeEnd = container
     .resolve(TribeHelper)
     .getActiveTribesOnEpisodeEnd(episode);
 
   activeTribesOnEpisodeEnd.forEach((tribe) => {
+    if (
+      episode.getEpisodeEvents().getMerge() &&
+      tribe.getAttributes().mergeTribe
+    ) {
+      const nonMergeTribes = season
+        .getTribes()
+        .filter((tribe) => tribe.getAttributes().mergeTribe === false);
+
+      const survivorsIncludingEliminated = nonMergeTribes
+        .map((tribe) => {
+          return tribe
+            .getTribeMemberRosterOnEpisode(currentEpisodeId)
+            .episodeStart.map((tm) => tm);
+        })
+        .flat();
+
+      const survivors = survivorsIncludingEliminated.filter((tm) => {
+        const eliminatedSurvivors = episode
+          .getEpisodeEvents()
+          .getTribalCouncils()
+          .map((tc) => tc.getEliminatedSurvivor());
+
+        //Remove eliminated survivors from survivorsIncludingEliminated
+        return !eliminatedSurvivors.some(
+          (eliminatedSurvivor) =>
+            tm.getAttributes().id === eliminatedSurvivor.getAttributes().id
+        );
+      });
+
+      tribe
+        .getTribeMemberRoster()
+        .addTribeMembers(episode.getAttributes().id, 'episodeEnd', survivors);
+    }
+
     const tribeMembersAtEpisodeStart =
       tribe.getTribeMemberRosterOnEpisode(
         currentEpisodeId

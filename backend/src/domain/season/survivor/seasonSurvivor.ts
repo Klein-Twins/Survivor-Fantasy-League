@@ -79,4 +79,12 @@ export class SeasonSurvivor extends DomainModel<
       job: this.job,
     };
   }
+
+  getSurvivorId(): SeasonSurvivor['id'] {
+    return this.id;
+  }
+
+  getSeasonId(): SeasonSurvivor['seasonId'] {
+    return this.seasonId;
+  }
 }

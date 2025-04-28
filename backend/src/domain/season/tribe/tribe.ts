@@ -102,4 +102,8 @@ export class Tribe extends DomainModel<
       episodeIdEnd: this.episodeEnd?.getAttributes().id || null,
     };
   }
+
+  getTribeId(): Tribe['id'] {
+    return this.id;
+  }
 }
