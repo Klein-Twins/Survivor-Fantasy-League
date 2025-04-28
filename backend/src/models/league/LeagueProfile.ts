@@ -15,8 +15,8 @@ export interface LeagueProfileAttributes {
   profileId: ProfileAttributes['profileId'];
   leagueId: LeagueAttributes['leagueId'];
   role: LeagueMemberRole;
-  inviteStatus: InviteStatus;
-  inviterProfileId: ProfileAttributes['profileId'] | null;
+  // inviteStatus: InviteStatus;
+  // inviterProfileId: ProfileAttributes['profileId'] | null;
 }
 
 const LeagueProfileModel = (sequelize: Sequelize) => {
@@ -27,9 +27,9 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
     public id!: LeagueProfileAttributes['id'];
     public leagueId!: LeagueProfileAttributes['leagueId'];
     public profileId!: LeagueProfileAttributes['profileId'];
-    public inviterProfileId!: LeagueProfileAttributes['profileId'];
+    // public inviterProfileId!: LeagueProfileAttributes['profileId'];
     public role!: LeagueProfileAttributes['role'];
-    public inviteStatus!: LeagueProfileAttributes['inviteStatus'];
+    // public inviteStatus!: LeagueProfileAttributes['inviteStatus'];
 
     static associate(models: any) {
       if (models.League) {
@@ -49,12 +49,12 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
           as: 'profile',
           onDelete: 'CASCADE',
         });
-        this.belongsTo(models.Profile, {
-          foreignKey: 'inviterProfileId',
-          targetKey: 'profileId',
-          as: 'inviterProfile',
-          onDelete: 'CASCADE',
-        });
+        // this.belongsTo(models.Profile, {
+        //   foreignKey: 'inviterProfileId',
+        //   targetKey: 'profileId',
+        //   as: 'inviterProfile',
+        //   onDelete: 'CASCADE',
+        // });
       } else {
         logger.error('Error associating LeagueProfile with Profile');
       }
@@ -88,17 +88,17 @@ const LeagueProfileModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'ROLE',
       },
-      inviteStatus: {
-        type: DataTypes.ENUM(...Object.values(InviteStatus)),
-        allowNull: false,
-        field: 'INVITE_STATUS',
-      },
-      inviterProfileId: {
-        type: DataTypes.UUID,
-        primaryKey: false,
-        allowNull: true,
-        field: 'INVITER_PROFILE_ID',
-      },
+      // inviteStatus: {
+      //   type: DataTypes.ENUM(...Object.values(InviteStatus)),
+      //   allowNull: false,
+      //   field: 'INVITE_STATUS',
+      // },
+      // inviterProfileId: {
+      //   type: DataTypes.UUID,
+      //   primaryKey: false,
+      //   allowNull: true,
+      //   field: 'INVITER_PROFILE_ID',
+      // },
       id: {
         type: DataTypes.UUID,
         primaryKey: true,

@@ -33,10 +33,7 @@ export class AccountRepository {
 
         break;
       case 'profileId':
-        // account = await ProfileRepository.getProfileById(value as string);
-        throw new NotImplementedError(
-          'getUserByUserName is not implemented yet'
-        );
+        account = await AccountRepository.getAccountByProfileId(value as UUID);
         break;
       case 'email':
         if (!validator.isEmail(value)) {
@@ -48,6 +45,33 @@ export class AccountRepository {
       default:
         throw new Error('Invalid field');
     }
+    return account;
+  }
+
+  private static async getAccountByProfileId(profileId: UUID) {
+    const userAttributes: UserAttributes | null =
+      await UserRepository.getUserByProfileId(profileId);
+
+    if (!userAttributes) {
+      throw new NotFoundError('User not found');
+    }
+
+    const profileAttributes: ProfileAttributes | null =
+      await ProfileRepository.getProfileByProfileId(userAttributes.profileId);
+    if (!profileAttributes) {
+      throw new NotFoundError('Profile not found');
+    }
+
+    const account = new Account({
+      accountId: userAttributes.userId,
+      email: userAttributes.email,
+      userName: userAttributes.userName,
+      accountRole: userAttributes.userRole,
+      firstName: profileAttributes.firstName,
+      lastName: profileAttributes.lastName,
+      profileId: userAttributes.profileId,
+    });
+
     return account;
   }
 

@@ -19,6 +19,15 @@ export class UserRepository {
     return user ? user.get({ plain: true }) : null;
   }
 
+  static async getUserByProfileId(
+    profileId: UserAttributes['profileId']
+  ): Promise<UserAttributes | null> {
+    const user = await models.User.findOne({
+      where: { profileId },
+    });
+    return user ? user.get({ plain: true }) : null;
+  }
+
   static async saveUserAttributes(
     attributes: UserAttributes,
     transaction: Transaction

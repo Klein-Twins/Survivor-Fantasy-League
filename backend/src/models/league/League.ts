@@ -1,9 +1,10 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { SeasonsAttributes } from '../season/Seasons';
 import logger from '../../config/logger';
+import { UUID } from 'crypto';
 
 export interface LeagueAttributes {
-  leagueId: string;
+  leagueId: UUID;
   seasonId: SeasonsAttributes['seasonId'];
   name: string;
   createdAt?: Date;
