@@ -32,17 +32,27 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
          * This endpoint allows the user to create a new league invite for a profile and then send the invite to them.
          * @summary Create and send league invite for a profile
          * @param {CreateAndSendLeagueInviteRequestBody} body 
-         * @param {string} [profileId] The ID of the profile.
-         * @param {number} [seasonId] The ID of the season.
+         * @param {string} profileId The ID of the profile.
+         * @param {number} seasonId The ID of the season.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        createAndSendLeagueInvite: async (body: CreateAndSendLeagueInviteRequestBody, profileId?: string, seasonId?: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
+        createAndSendLeagueInvite: async (body: CreateAndSendLeagueInviteRequestBody, profileId: string, seasonId: number, options: AxiosRequestConfig = {}): Promise<RequestArgs> => {
             // verify required parameter 'body' is not null or undefined
             if (body === null || body === undefined) {
                 throw new RequiredError('body','Required parameter body was null or undefined when calling createAndSendLeagueInvite.');
             }
-            const localVarPath = `/api/league/invite/{profileId}/{seasonId}`;
+            // verify required parameter 'profileId' is not null or undefined
+            if (profileId === null || profileId === undefined) {
+                throw new RequiredError('profileId','Required parameter profileId was null or undefined when calling createAndSendLeagueInvite.');
+            }
+            // verify required parameter 'seasonId' is not null or undefined
+            if (seasonId === null || seasonId === undefined) {
+                throw new RequiredError('seasonId','Required parameter seasonId was null or undefined when calling createAndSendLeagueInvite.');
+            }
+            const localVarPath = `/api/league/invite/{profileId}/{seasonId}`
+                .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)))
+                .replace(`{${"seasonId"}}`, encodeURIComponent(String(seasonId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -67,14 +77,6 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
                     ? await configuration.apiKey("refreshToken")
                     : await configuration.apiKey;
                 localVarQueryParameter["refreshToken"] = localVarApiKeyValue;
-            }
-
-            if (profileId !== undefined) {
-                localVarQueryParameter['profileId'] = profileId;
-            }
-
-            if (seasonId !== undefined) {
-                localVarQueryParameter['seasonId'] = seasonId;
             }
 
             localVarHeaderParameter['Content-Type'] = 'application/json';
@@ -114,7 +116,9 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
             if (seasonId === null || seasonId === undefined) {
                 throw new RequiredError('seasonId','Required parameter seasonId was null or undefined when calling getLeagueInvitesForPlayer.');
             }
-            const localVarPath = `/api/league/invite/{profileId}/{seasonId}`;
+            const localVarPath = `/api/league/invite/{profileId}/{seasonId}`
+                .replace(`{${"profileId"}}`, encodeURIComponent(String(profileId)))
+                .replace(`{${"seasonId"}}`, encodeURIComponent(String(seasonId)));
             // use dummy base URL string because the URL constructor only accepts absolute URLs.
             const localVarUrlObj = new URL(localVarPath, 'https://example.com');
             let baseOptions;
@@ -139,14 +143,6 @@ export const LeagueInviteServiceApiAxiosParamCreator = function (configuration?:
                     ? await configuration.apiKey("refreshToken")
                     : await configuration.apiKey;
                 localVarQueryParameter["refreshToken"] = localVarApiKeyValue;
-            }
-
-            if (profileId !== undefined) {
-                localVarQueryParameter['profileId'] = profileId;
-            }
-
-            if (seasonId !== undefined) {
-                localVarQueryParameter['seasonId'] = seasonId;
             }
 
             const query = new URLSearchParams(localVarUrlObj.search);
@@ -255,12 +251,12 @@ export const LeagueInviteServiceApiFp = function(configuration?: Configuration) 
          * This endpoint allows the user to create a new league invite for a profile and then send the invite to them.
          * @summary Create and send league invite for a profile
          * @param {CreateAndSendLeagueInviteRequestBody} body 
-         * @param {string} [profileId] The ID of the profile.
-         * @param {number} [seasonId] The ID of the season.
+         * @param {string} profileId The ID of the profile.
+         * @param {number} seasonId The ID of the season.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createAndSendLeagueInvite(body: CreateAndSendLeagueInviteRequestBody, profileId?: string, seasonId?: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CreateAndSendLeagueInviteResponse>>> {
+        async createAndSendLeagueInvite(body: CreateAndSendLeagueInviteRequestBody, profileId: string, seasonId: number, options?: AxiosRequestConfig): Promise<(axios?: AxiosInstance, basePath?: string) => Promise<AxiosResponse<CreateAndSendLeagueInviteResponse>>> {
             const localVarAxiosArgs = await LeagueInviteServiceApiAxiosParamCreator(configuration).createAndSendLeagueInvite(body, profileId, seasonId, options);
             return (axios: AxiosInstance = globalAxios, basePath: string = BASE_PATH) => {
                 const axiosRequestArgs :AxiosRequestConfig = {...localVarAxiosArgs.options, url: basePath + localVarAxiosArgs.url};
@@ -311,12 +307,12 @@ export const LeagueInviteServiceApiFactory = function (configuration?: Configura
          * This endpoint allows the user to create a new league invite for a profile and then send the invite to them.
          * @summary Create and send league invite for a profile
          * @param {CreateAndSendLeagueInviteRequestBody} body 
-         * @param {string} [profileId] The ID of the profile.
-         * @param {number} [seasonId] The ID of the season.
+         * @param {string} profileId The ID of the profile.
+         * @param {number} seasonId The ID of the season.
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        async createAndSendLeagueInvite(body: CreateAndSendLeagueInviteRequestBody, profileId?: string, seasonId?: number, options?: AxiosRequestConfig): Promise<AxiosResponse<CreateAndSendLeagueInviteResponse>> {
+        async createAndSendLeagueInvite(body: CreateAndSendLeagueInviteRequestBody, profileId: string, seasonId: number, options?: AxiosRequestConfig): Promise<AxiosResponse<CreateAndSendLeagueInviteResponse>> {
             return LeagueInviteServiceApiFp(configuration).createAndSendLeagueInvite(body, profileId, seasonId, options).then((request) => request(axios, basePath));
         },
         /**
@@ -356,13 +352,13 @@ export class LeagueInviteServiceApi extends BaseAPI {
      * This endpoint allows the user to create a new league invite for a profile and then send the invite to them.
      * @summary Create and send league invite for a profile
      * @param {CreateAndSendLeagueInviteRequestBody} body 
-     * @param {string} [profileId] The ID of the profile.
-     * @param {number} [seasonId] The ID of the season.
+     * @param {string} profileId The ID of the profile.
+     * @param {number} seasonId The ID of the season.
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof LeagueInviteServiceApi
      */
-    public async createAndSendLeagueInvite(body: CreateAndSendLeagueInviteRequestBody, profileId?: string, seasonId?: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<CreateAndSendLeagueInviteResponse>> {
+    public async createAndSendLeagueInvite(body: CreateAndSendLeagueInviteRequestBody, profileId: string, seasonId: number, options?: AxiosRequestConfig) : Promise<AxiosResponse<CreateAndSendLeagueInviteResponse>> {
         return LeagueInviteServiceApiFp(this.configuration).createAndSendLeagueInvite(body, profileId, seasonId, options).then((request) => request(this.axios, this.basePath));
     }
     /**

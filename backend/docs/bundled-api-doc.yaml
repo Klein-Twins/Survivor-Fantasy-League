@@ -1275,13 +1275,13 @@ paths:
         - LeagueInviteService
       parameters:
         - name: profileId
-          in: query
+          in: path
           required: true
           description: The ID of the profile.
           schema:
             type: string
         - name: seasonId
-          in: query
+          in: path
           required: true
           description: The ID of the season.
           schema:
@@ -1329,8 +1329,7 @@ paths:
                               type: object
                               required:
                                 - league
-                                - message
-                                - inviterProfile
+                                - inviterProfiles
                                 - inviteId
                               properties:
                                 league:
@@ -1400,26 +1399,24 @@ paths:
                                             type: integer
                                             description: The total points of the user in the league
                                             example: 100
-                                message:
-                                  type: string
-                                  description: A message indicating the success of the operation.
-                                  example: Tony Stark has invited you to join a league
-                                inviterProfile:
-                                  type: object
-                                  required:
-                                    - profileId
-                                    - userName
-                                    - firstName
-                                    - lastName
-                                  properties:
-                                    profileId:
-                                      type: string
-                                    userName:
-                                      type: string
-                                    firstName:
-                                      type: string
-                                    lastName:
-                                      type: string
+                                inviterProfiles:
+                                  type: array
+                                  items:
+                                    type: object
+                                    required:
+                                      - profileId
+                                      - userName
+                                      - firstName
+                                      - lastName
+                                    properties:
+                                      profileId:
+                                        type: string
+                                      userName:
+                                        type: string
+                                      firstName:
+                                        type: string
+                                      lastName:
+                                        type: string
                                 inviteId:
                                   type: string
                                   description: The unique ID of the league invite.

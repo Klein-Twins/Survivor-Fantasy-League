@@ -1,19 +1,13 @@
 import express from 'express';
-import leagueInviteController from '../../../controllersBackup/league/leagueInviteController';
+import leagueInviteController from '../../../controllers/league/invite/leagueInviteController';
 
-import searchRoutes from './search/search';
+// import searchRoutes from './search/search';
 
 const router = express.Router();
 
-router.use('/search', searchRoutes);
-router.get(
-  '/:profileId/:seasonId',
-  leagueInviteController.getLeagueInvitesForProfileId
-);
-router.post(
-  '/:profileId/:seasonId',
-  leagueInviteController.createAndSendLeagueInvite
-);
+// router.use('/search', searchRoutes);
+router.get('/:profileId/:seasonId', leagueInviteController.getLeagueInvites);
+router.post('/:profileId/:seasonId', leagueInviteController.sendLeagueInvite);
 router.put(
   '/:profileId/:seasonId',
   leagueInviteController.respondToLeagueInvite

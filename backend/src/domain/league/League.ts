@@ -2,8 +2,11 @@ import { v4 } from 'uuid';
 import { LeagueAttributes } from '../../models/league/League';
 import { LeagueMember, LeagueOwner } from './LeagueMember';
 import { UUID } from 'crypto';
-import { ConflictError } from '../../utils/errors/errors';
+import { ConflictError, NotFoundError } from '../../utils/errors/errors';
 import { League as LeagueDTO } from '../../generated-api';
+import { ProfileAttributes } from '../../models/account/Profile';
+import { Account } from '../account/Account';
+import { LeagueInvite } from './invite/LeagueInvite';
 
 export class League {
   private id: LeagueAttributes['leagueId'];
@@ -11,6 +14,8 @@ export class League {
   private name!: LeagueAttributes['name'];
   private leagueMembers!: LeagueMember[];
   private leagueOwner!: LeagueOwner;
+  //Map of accountId to Account
+  private invites: Map<UUID, LeagueInvite>;
 
   constructor({
     id = v4() as UUID,
@@ -25,6 +30,7 @@ export class League {
     this.seasonId = seasonId;
     this.name = name;
     this.leagueMembers = [];
+    this.invites = new Map<UUID, LeagueInvite>();
   }
 
   getId(): LeagueAttributes['leagueId'] {
@@ -38,6 +44,21 @@ export class League {
   }
   getLeagueMembers(): LeagueMember[] {
     return this.leagueMembers;
+  }
+  getLeagueInvite(invitedAccountId: UUID): LeagueInvite | undefined {
+    return this.invites.get(invitedAccountId);
+  }
+
+  getLeagueMemberByProfileId(
+    profileId: ProfileAttributes['profileId']
+  ): LeagueMember {
+    const leagueMember = this.leagueMembers.find(
+      (member) => member.getAccount().getProfileId() === profileId
+    );
+    if (!leagueMember) {
+      throw new NotFoundError(`League member is not in league: ${this.name}`);
+    }
+    return leagueMember;
   }
 
   /**

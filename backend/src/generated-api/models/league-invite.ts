@@ -29,19 +29,10 @@ export interface LeagueInvite {
     league: League;
 
     /**
-     * A message indicating the success of the operation.
-     *
-     * @type {string}
-     * @memberof LeagueInvite
-     * @example Tony Stark has invited you to join a league
-     */
-    message: string;
-
-    /**
-     * @type {Profile}
+     * @type {Array<Profile>}
      * @memberof LeagueInvite
      */
-    inviterProfile: Profile;
+    inviterProfiles: Array<Profile>;
 
     /**
      * The unique ID of the league invite.

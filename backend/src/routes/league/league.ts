@@ -6,7 +6,7 @@ import leagueController from '../../controllers/league/leagueController';
 
 const router = express.Router();
 
-// router.use('/invite', inviteRoutes);
+router.use('/invite', inviteRoutes);
 // router.use('/survey', surveyRoutes);
 router.get('/:profileId/:seasonId', leagueController.getLeagues);
 router.post('/:profileId/:seasonId', leagueController.createLeague);

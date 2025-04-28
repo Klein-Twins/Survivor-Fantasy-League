@@ -7,7 +7,6 @@ export interface LeagueAttributes {
   leagueId: UUID;
   seasonId: SeasonsAttributes['seasonId'];
   name: string;
-  createdAt?: Date;
 }
 
 const LeagueModel = (sequelize: Sequelize) => {

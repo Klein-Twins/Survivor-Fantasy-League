@@ -9,13 +9,13 @@ paths:
         - LeagueInviteService
       parameters:
         - name: profileId
-          in: query
+          in: path
           required: true
           description: The ID of the profile.
           schema:
             type: string
         - name: seasonId
-          in: query
+          in: path
           required: true
           description: The ID of the season.
           schema:
@@ -41,14 +41,14 @@ paths:
         - LeagueInviteService
       parameters:
         - name: profileId
-          in: query
-          required: false
+          in: path
+          required: true
           description: The ID of the profile.
           schema:
             type: string
         - name: seasonId
-          in: query
-          required: false
+          in: path
+          required: true
           description: The ID of the season.
           schema:
             type: integer

@@ -4,18 +4,15 @@ components:
       type: object
       required:
         - league
-        - message
-        - inviterProfile
+        - inviterProfiles
         - inviteId
       properties:
         league:
           $ref: './league.yaml#/components/schemas/League'
-        message:
-          type: string
-          description: A message indicating the success of the operation.
-          example: Tony Stark has invited you to join a league
-        inviterProfile:
-          $ref: '../user/profile.yaml#/components/schemas/Profile'
+        inviterProfiles:
+          type: array
+          items:
+            $ref: '../user/profile.yaml#/components/schemas/Profile'
         inviteId:
           type: string
           description: The unique ID of the league invite.
