@@ -28,6 +28,19 @@ export class UserSessions {
     this.userSessionHistory.push(userSession);
   }
 
+  addInactiveUserSession(userSession: UserSession): void {
+    if (
+      this.userSessionHistory.some(
+        (session) => session.getId() === userSession.getId()
+      )
+    ) {
+      throw new InternalServerError(
+        `User session with ID ${userSession.getId()} already exists in history`
+      );
+    }
+    this.userSessionHistory.push(userSession);
+  }
+
   getAccount(): Account {
     return this.account;
   }
@@ -79,10 +92,16 @@ export class UserSession {
   }
 
   setActiveAccessToken(token: Token): void {
+    if (this.activeAccessToken) {
+      this.activeAccessToken.endToken();
+    }
     this.activeAccessToken = token;
     this.accessTokens.set(this.accessTokens.size + 1, token);
   }
   setActiveRefreshToken(token: Token): void {
+    if (this.activeRefreshToken) {
+      this.activeRefreshToken.endToken();
+    }
     this.activeRefreshToken = token;
     this.refreshTokens.set(this.refreshTokens.size + 1, token);
   }
@@ -132,6 +151,36 @@ export class UserSession {
   }
   getActiveRefreshToken(): Token | null {
     return this.activeRefreshToken;
+  }
+
+  addAccessToken(token: Token, seq: number, isActive: boolean = true): void {
+    if (this.accessTokens.has(seq)) {
+      throw new InternalServerError(
+        `Access token with sequence ${seq} already exists in history`
+      );
+    }
+    this.accessTokens.set(seq, token);
+    if (isActive) {
+      if (this.activeAccessToken) {
+        this.activeAccessToken.endToken();
+      }
+      this.activeAccessToken = token;
+    }
+  }
+
+  addRefreshToken(token: Token, seq: number, isActive: boolean = true): void {
+    if (this.refreshTokens.has(seq)) {
+      throw new InternalServerError(
+        `Refresh token with sequence ${seq} already exists in history`
+      );
+    }
+    this.refreshTokens.set(seq, token);
+    if (isActive) {
+      if (this.activeRefreshToken) {
+        this.activeRefreshToken.endToken();
+      }
+      this.activeRefreshToken = token;
+    }
   }
 
   setEndTime(endTime: Date): void {

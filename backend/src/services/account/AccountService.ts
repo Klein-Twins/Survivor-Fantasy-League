@@ -7,14 +7,21 @@ import { AccountRepository } from '../../repositories/account/AccountRepository'
 import { ConflictError } from '../../utils/errors/errors';
 import { AccountStorage } from '../../storage/account/AccountStorage';
 import logger from '../../config/logger';
-import { PasswordAttributes } from '../../models/account/Password';
+import { PasswordService } from './PasswordService';
+import { Transaction } from 'sequelize';
+import { Passwords } from '../../domain/account/Passwords';
+import { UserSessions } from '../../domain/account/UserSession';
+import { UserSessionService } from './UserSessionService';
+import { CACHE_ENABLED } from '../../config/config';
 
 @injectable()
 export class AccountService {
   constructor(
     @inject(AccountStorage) private accountStorage: AccountStorage,
     @inject(AccountRepository) private accountRepository: AccountRepository,
-    @inject(AccountHelper) private accountHelper: AccountHelper
+    @inject(AccountHelper) private accountHelper: AccountHelper,
+    @inject(PasswordService) private passwordService: PasswordService,
+    @inject(UserSessionService) private userSessionService: UserSessionService
   ) {}
 
   async createAccount({
@@ -46,26 +53,19 @@ export class AccountService {
       lastName,
     });
 
-    const passwordAttributes: Pick<
-      PasswordAttributes,
-      'password' | 'passwordSeq'
-    > = {
-      password: password,
-      passwordSeq: 1,
-    };
-
     const account = new Account({
       email,
       accountRole: AccountRole.User,
       firstName,
       lastName,
       userName,
-      passwordsAttributes: [passwordAttributes],
     });
+
+    await this.passwordService.createPasswordForAccount(account, password, 1);
 
     const transaction = await sequelize.transaction();
     try {
-      await this.accountRepository.saveAccount(account, transaction);
+      await this.saveAccount(account, transaction);
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();
@@ -73,7 +73,9 @@ export class AccountService {
     }
 
     // Add the account to the storage
-    this.accountStorage.addAccount(account);
+    if (CACHE_ENABLED) {
+      this.accountStorage.addAccount(account);
+    }
 
     return account;
   }
@@ -93,17 +95,21 @@ export class AccountService {
       | Account['profileId']
       | Account['email']
   ): Promise<Account> {
-    const cachedAccount = await this.accountStorage.getAccount({
-      field,
-      value,
-    });
-    if (cachedAccount) {
-      logger.debug(
-        `Account ${cachedAccount.getAccountId()} fetched from cache`
-      );
-      return cachedAccount;
+    if (CACHE_ENABLED) {
+      const cachedAccount = await this.accountStorage.getAccount({
+        field,
+        value,
+      });
+      if (cachedAccount) {
+        logger.debug(
+          `Account ${cachedAccount.getAccountId()} fetched from cache`
+        );
+        return cachedAccount;
+      }
+      logger.debug(`Account ${value} not found in cache, fetching from DB`);
+    } else {
+      logger.debug(`Cache is disabled, fetching account from DB`);
     }
-    logger.debug(`Account ${value} not found in cache, fetching from DB`);
 
     const accountData = await this.accountRepository.fetchAccountDataByField({
       field,
@@ -118,10 +124,24 @@ export class AccountService {
       firstName: accountData.profile.firstName,
       lastName: accountData.profile.lastName,
       accountRole: accountData.userRole,
-      passwordsAttributes: accountData.passwords,
     });
 
-    this.accountStorage.addAccount(account);
+    const passwords: Passwords = await this.passwordService.fetchPasswords(
+      account
+    );
+
+    const userSessions: UserSessions =
+      await this.userSessionService.fetchUserSessions(account);
+
+    if (CACHE_ENABLED) {
+      this.accountStorage.addAccount(account);
+    }
     return account;
+  }
+
+  async saveAccount(account: Account, transaction: Transaction): Promise<void> {
+    await this.accountRepository.saveAccount(account, transaction);
+
+    await this.passwordService.savePasswordsOnAccount(account, transaction);
   }
 }

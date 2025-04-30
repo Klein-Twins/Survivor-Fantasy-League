@@ -7,7 +7,7 @@ import { UserJwtPayload } from '../../types/auth/tokenTypes';
 type TokenConstructorArgs = {
   tokenType: TokenType;
   userSessionId: UserSessionAttributes['id'];
-  tokenEndTime?: Date;
+  tokenEndTime: Date | null;
 } & (
   | {
       tokenValue: string;

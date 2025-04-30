@@ -69,13 +69,13 @@ async function signup(
       );
     }
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie('accessToken', accessToken.getToken(), {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
     });
 
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie('refreshToken', refreshToken.getToken(), {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
@@ -125,13 +125,13 @@ async function login(
       );
     }
 
-    res.cookie('accessToken', accessToken, {
+    res.cookie('accessToken', accessToken.getToken(), {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
     });
 
-    res.cookie('refreshToken', refreshToken, {
+    res.cookie('refreshToken', refreshToken.getToken(), {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',

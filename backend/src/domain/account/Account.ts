@@ -5,9 +5,6 @@ import { Account as AccountDTO } from '../../generated-api';
 import bcrypt from 'bcrypt';
 import { UserSession, UserSessions } from './UserSession';
 import { Password, Passwords } from './Passwords';
-import { PasswordAttributes } from '../../models/account/Password';
-import { container } from 'tsyringe';
-import { UserSessionService } from '../../services/account/UserSessionService';
 
 export class Account {
   private accountId: UUID;
@@ -28,7 +25,6 @@ export class Account {
     firstName,
     lastName,
     userName,
-    passwordsAttributes,
   }: {
     accountId?: UUID;
     email: string;
@@ -37,7 +33,6 @@ export class Account {
     firstName: string;
     lastName: string;
     userName: string;
-    passwordsAttributes: Pick<PasswordAttributes, 'password' | 'passwordSeq'>[];
   }) {
     this.accountId = accountId;
     this.email = email;
@@ -46,8 +41,12 @@ export class Account {
     this.firstName = firstName;
     this.lastName = lastName;
     this.userName = userName;
-    this.passwords = new Passwords(passwordsAttributes);
+    this.passwords = new Passwords(this);
     this.userSessions = new UserSessions(this);
+  }
+
+  setUserSessions(userSessions: UserSessions): void {
+    this.userSessions = userSessions;
   }
 
   async authenticateAccount(password: string): Promise<boolean> {
@@ -57,6 +56,19 @@ export class Account {
       activePassword.getHashedPassword()
     );
     return isSamePassword;
+  }
+
+  setPasswords(passwords: Passwords): void {
+    this.passwords = passwords;
+  }
+
+  addNewPassword(password: Password): Password {
+    this.passwords.addPassword(password);
+    return password;
+  }
+
+  getPasswordHistory(): Map<number, Password> {
+    return this.passwords.getPasswordHistory();
   }
 
   getAccountId(): UUID {

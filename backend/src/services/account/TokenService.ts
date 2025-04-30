@@ -2,13 +2,8 @@ import { Transaction } from 'sequelize';
 import { Account } from '../../domain/account/Account';
 import { TokenType } from '../../models/account/Tokens';
 import { UserJwtPayload } from '../../types/auth/tokenTypes';
-import sequelize from '../../config/db';
 import { TokenRepository } from '../../repositories/account/TokenRepository';
-import {
-  ForbiddenError,
-  InternalServerError,
-  NotFoundError,
-} from '../../utils/errors/errors';
+import {} from '../../utils/errors/errors';
 import { inject, injectable } from 'tsyringe';
 import { Token } from '../../domain/account/Token';
 import { UserSessionAttributes } from '../../models/userSession/userSessions';
@@ -24,6 +19,31 @@ export class TokenService {
   constructor(
     @inject(TokenRepository) private tokenRepository: TokenRepository
   ) {}
+
+  async fetchTokensForUserSession(userSession: UserSession): Promise<Token[]> {
+    const tokensDataInUserSession =
+      await this.tokenRepository.fetchTokensInUserSession(userSession.getId());
+
+    const tokens: Token[] = [];
+
+    for (const tokenData of tokensDataInUserSession) {
+      const token = new Token({
+        tokenType: tokenData.tokenType,
+        userSessionId: tokenData.userSessionId,
+        tokenEndTime: tokenData.tokenEndTime,
+        tokenValue: tokenData.token,
+      });
+      tokens.push(token);
+
+      if (tokenData.tokenType === 'access') {
+        userSession.addAccessToken(token, tokenData.seq, tokenData.isActive);
+      } else if (tokenData.tokenType === 'refresh') {
+        userSession.addRefreshToken(token, tokenData.seq, tokenData.isActive);
+      }
+    }
+
+    return tokens;
+  }
 
   // static async fetchTokens({
   //   accessToken,
@@ -123,6 +143,7 @@ export class TokenService {
       tokenType: tokenType,
       userSessionId: userSessionId,
       tokenPayload: payload,
+      tokenEndTime: null,
     });
     return token;
   }
@@ -145,6 +166,7 @@ export class TokenService {
             userSession.getIsActive() &&
             userSession.getActiveAccessToken() === accessToken,
           issuedAt: accessToken.getIssuedAtTime(),
+          tokenEndTime: accessToken.getTokenEndTime(),
         },
         transaction
       );
@@ -163,6 +185,7 @@ export class TokenService {
             userSession.getIsActive() &&
             userSession.getActiveRefreshToken() === refreshToken,
           issuedAt: refreshToken.getIssuedAtTime(),
+          tokenEndTime: refreshToken.getTokenEndTime(),
         },
         transaction
       );

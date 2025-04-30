@@ -1,25 +1,22 @@
+import logger from '../../config/logger';
 import { PasswordAttributes } from '../../models/account/Password';
+import { Account } from './Account';
 
 export class Passwords {
-  private passwordHistory: Password[] = [];
+  private account: Account;
+  private passwordHistory: Map<number, Password> = new Map();
   private activePassword: Password | null = null;
 
-  constructor(
-    passwordsAttributes: Pick<PasswordAttributes, 'password' | 'passwordSeq'>[]
-  ) {
-    const passwords: Password[] = [];
-    for (const passwordAttributes of passwordsAttributes) {
-      const password = new Password(
-        passwordAttributes.passwordSeq,
-        passwordAttributes.password
-      );
-      this.addPassword(password);
-    }
+  constructor(account: Account) {
+    this.account = account;
   }
 
   addPassword(password: Password): void {
-    if (this.passwordHistory.some((p) => p.getSeq() === password.getSeq())) {
-      throw new Error('Found duplicate password sequence');
+    if (this.passwordHistory.has(password.getSeq())) {
+      logger.warn(
+        `Password with seq ${password.getSeq()} already exists in history.`
+      );
+      return;
     }
 
     //If first password, set as active
@@ -37,12 +34,10 @@ export class Passwords {
       password.inactivatePassword();
     }
 
-    //Add to history
-    this.passwordHistory.push(password);
-    this.passwordHistory.sort((a, b) => a.getSeq() - b.getSeq());
+    this.passwordHistory.set(password.getSeq(), password);
   }
 
-  getPasswordHistory(): Password[] {
+  getPasswordHistory(): Map<number, Password> {
     return this.passwordHistory;
   }
 

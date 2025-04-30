@@ -13,6 +13,7 @@ export interface TokenAttributes {
   issuedAt: Date;
   tokenExpiresTime: Date;
   isActive: boolean;
+  tokenEndTime: Date | null;
 }
 
 const TokensModel = (sequelize: Sequelize) => {
@@ -24,6 +25,7 @@ const TokensModel = (sequelize: Sequelize) => {
     public tokenExpiresTime!: TokenAttributes['tokenExpiresTime'];
     public isActive!: TokenAttributes['isActive'];
     public issuedAt!: Date;
+    public tokenEndTime!: Date | null;
 
     static associate(models: any) {
       if (models.UserSessions) {
@@ -77,11 +79,28 @@ const TokensModel = (sequelize: Sequelize) => {
         allowNull: false,
         field: 'IS_ACTIVE',
       },
+      tokenEndTime: {
+        type: DataTypes.DATE,
+        allowNull: true,
+        field: 'TOKEN_END_TIME',
+      },
     },
     {
       sequelize,
       tableName: 'ATH_TOKENS',
       timestamps: true,
+      indexes: [
+        {
+          unique: true,
+          fields: ['USER_SESSION_ID', 'TOKEN_TYPE', 'TOKEN'],
+          name: 'idx_user_session_token_type',
+        },
+        {
+          unique: true,
+          fields: ['USER_SESSION_ID', 'TOKEN_TYPE', 'SEQ'],
+          name: 'idx_user_session_token_type_seq',
+        },
+      ],
     }
   );
 

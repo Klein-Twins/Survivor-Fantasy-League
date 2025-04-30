@@ -8,6 +8,7 @@ import { Transaction } from 'sequelize';
 import { UserSessionRepository } from '../../repositories/account/UserSessionRepository';
 import { v4 } from 'uuid';
 import { UUID } from 'crypto';
+import sequelize from '../../config/db';
 
 @injectable()
 export class UserSessionService {
@@ -16,6 +17,38 @@ export class UserSessionService {
     @inject(UserSessionRepository)
     private userSessionRepository: UserSessionRepository
   ) {}
+
+  async fetchUserSessions(account: Account): Promise<UserSessions> {
+    const userSessions = new UserSessions(account);
+
+    const userSessionsData = await this.userSessionRepository.getUserSessions(
+      account.getAccountId()
+    );
+
+    for (const userSessionData of userSessionsData) {
+      const userSession = new UserSession({
+        account: account,
+        id: userSessionData.id,
+        endTime: userSessionData.endTime,
+        startTime: userSessionData.startTime,
+        expectedEndTime: userSessionData.expectedEndTime,
+      });
+
+      const tokens = await this.tokenService.fetchTokensForUserSession(
+        userSession
+      );
+
+      const isUserSessionActive = userSession.getIsActive();
+      if (isUserSessionActive) {
+        userSessions.setActiveUserSession(userSession);
+      } else {
+        userSessions.addInactiveUserSession(userSession);
+      }
+    }
+
+    account.setUserSessions(userSessions);
+    return userSessions;
+  }
 
   async createAndStartNewUserSession(account: Account): Promise<UserSession> {
     const userSessionId = v4() as UUID;
@@ -34,6 +67,14 @@ export class UserSessionService {
 
     account.setActiveUserSession(userSession);
 
+    const transaction = await sequelize.transaction();
+    try {
+      await this.saveUserSession(userSession, transaction);
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw new InternalServerError('Failed to save user session: ' + error);
+    }
     return userSession;
   }
 
@@ -44,6 +85,14 @@ export class UserSessionService {
     }
 
     userSession.deactivateUserSession();
+    const transaction = await sequelize.transaction();
+    try {
+      await this.saveUserSession(userSession, transaction);
+      await transaction.commit();
+    } catch (error) {
+      await transaction.rollback();
+      throw new InternalServerError('Failed to save user session: ' + error);
+    }
 
     return userSession;
   }

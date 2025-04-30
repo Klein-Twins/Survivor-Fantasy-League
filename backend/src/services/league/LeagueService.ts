@@ -15,6 +15,7 @@ import { LeagueInviteService } from './invite/LeagueInviteService';
 import { UUID } from 'crypto';
 import { LeagueInvite } from '../../domain/league/invite/LeagueInvite';
 import logger from '../../config/logger';
+import { CACHE_ENABLED } from '../../config/config';
 
 @singleton()
 export class LeagueStorage {
@@ -74,14 +75,17 @@ export class LeagueService {
   }
 
   async fetchLeague(leagueId: LeagueAttributes['leagueId']): Promise<League> {
-    const cachedLeague = this.leagueStorage.getLeague(leagueId);
-    if (cachedLeague) {
-      logger.debug(`League ${leagueId} found in cache`);
-      return cachedLeague;
+    if (CACHE_ENABLED) {
+      const cachedLeague = this.leagueStorage.getLeague(leagueId);
+      if (cachedLeague) {
+        logger.debug(`League ${leagueId} found in cache`);
+        return cachedLeague;
+      }
+      logger.debug(`League ${leagueId} not found in cache, fetching from DB`);
+    } else {
+      logger.debug(`Cache is disabled, fetching league from DB`);
     }
-    logger.debug(`League ${leagueId} not found in cache, fetching from DB`);
 
-    //
     const leagueData: LeagueAttributes | null =
       await LeagueRepository.getLeagueById(leagueId);
     if (!leagueData) {

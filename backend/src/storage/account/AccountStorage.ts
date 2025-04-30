@@ -1,8 +1,5 @@
-import { inject, injectable, singleton } from 'tsyringe';
+import { inject, singleton } from 'tsyringe';
 import { Account } from '../../domain/account/Account';
-import { UserAttributes } from '../../models/account/User';
-import { models } from '../../config/db';
-import validator from 'validator';
 import { AccountStorageHelper } from './AccountStorageHelper';
 
 @singleton()
@@ -14,6 +11,10 @@ export class AccountStorage {
     private accountStorageHelper: AccountStorageHelper
   ) {
     this.accounts = new Map<Account['accountId'], Account>();
+  }
+
+  clearStorage(): void {
+    this.accounts.clear();
   }
 
   /**

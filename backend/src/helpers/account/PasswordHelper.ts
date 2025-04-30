@@ -10,7 +10,7 @@ export class PasswordHelper {
    * @throws {BadRequestError} If the password is not strong enough
    */
   async hashPassword(password: string): Promise<string> {
-    if (this.validatePasswordStrength(password)) {
+    if (!this.validatePasswordStrength(password)) {
       throw new BadRequestError('Password is not strong enough');
     }
     const saltRounds = 10;
@@ -23,8 +23,19 @@ export class PasswordHelper {
    */
   validatePasswordStrength(password: string): boolean {
     //Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one special character
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    return passwordRegex.test(password);
+    const minLength = 8;
+    const hasLowercase = /[a-z]/.test(password);
+    const hasUppercase = /[A-Z]/.test(password);
+    const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+    const hasSpaces = /\s/.test(password);
+
+    return (
+      password != undefined &&
+      password.length >= minLength &&
+      hasLowercase &&
+      hasUppercase &&
+      hasSpecialChar &&
+      !hasSpaces
+    );
   }
 }

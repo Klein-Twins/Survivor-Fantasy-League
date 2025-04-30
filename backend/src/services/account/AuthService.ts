@@ -10,6 +10,7 @@ import { AccountService } from './AccountService';
 import { UserSessionService } from './UserSessionService';
 import { TokenHelper } from '../../helpers/account/TokenHelper';
 import logger from '../../config/logger';
+import { AccountStorage } from '../../storage/account/AccountStorage';
 
 @injectable()
 export class AuthService {
@@ -53,6 +54,8 @@ export class AuthService {
 
     const userSession: UserSession =
       await this.userSessionService.createAndStartNewUserSession(account);
+
+    container.resolve(AccountStorage).clearStorage();
 
     return { account, userSession };
   }

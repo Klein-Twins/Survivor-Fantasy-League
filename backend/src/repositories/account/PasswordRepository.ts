@@ -34,6 +34,16 @@ export class PasswordRepository {
     };
   }
 
+  async getPasswordHistory(
+    userId: UserAttributes['userId']
+  ): Promise<PasswordAttributes[]> {
+    const passwordHistory = await models.Password.findAll({
+      where: { userId },
+      order: [['passwordSeq', 'ASC']],
+    });
+    return passwordHistory;
+  }
+
   async savePassword(
     password: Password,
     userId: UserAttributes['userId'],
@@ -52,86 +62,5 @@ export class PasswordRepository {
       { transaction }
     );
     logger.debug(`Saved Password`);
-  }
-
-  async saveNewPassword(
-    {
-      password,
-      userId,
-    }: {
-      password: PasswordAttributes['password'];
-      userId: UserAttributes['userId'];
-    },
-    transaction: Transaction
-  ) {
-    const hashedPassword: string = await this.passwordHelper.hashPassword(
-      password
-    );
-
-    const passwordHistoryData = await this.findUserPasswordHistory(
-      userId,
-      transaction
-    );
-
-    if (passwordHistoryData.length > 0) {
-      await this.disableUserPasswords(userId, transaction);
-    }
-
-    const passwordSequence = await this.getNextPasswordSequence(
-      userId,
-      transaction
-    );
-
-    await models.Password.create(
-      {
-        password: hashedPassword,
-        userId,
-        passwordSeq: passwordSequence,
-        active: true,
-      },
-      { transaction }
-    );
-  }
-
-  private async findUserPasswordHistory(
-    userId: UserAttributes['userId'],
-    transaction?: Transaction
-  ): Promise<PasswordAttributes[]> {
-    const passwordHistoryData = await models.Password.findAll({
-      where: { userId },
-      transaction: transaction,
-    });
-    return passwordHistoryData;
-  }
-
-  private async disableUserPasswords(
-    userId: UserAttributes['userId'],
-    transaction?: Transaction
-  ) {
-    await models.Password.update(
-      { active: false },
-      {
-        where: { userId, active: true },
-        transaction: transaction,
-      }
-    );
-  }
-
-  private async getNextPasswordSequence(
-    userId: UserAttributes['userId'],
-    transaction?: Transaction
-  ): Promise<number> {
-    const passwordHistoryData = await models.Password.findAll({
-      where: { userId },
-      order: [['passwordSeq', 'DESC']],
-      limit: 1,
-      transaction: transaction,
-    });
-
-    if (passwordHistoryData.length > 0) {
-      return passwordHistoryData[0].passwordSeq + 1;
-    } else {
-      return 1;
-    }
   }
 }

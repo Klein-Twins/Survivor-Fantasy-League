@@ -16,7 +16,7 @@ type AccountData = UserAttributes & {
   passwords: PasswordAttributes[];
 };
 
-injectable();
+@injectable()
 export class AccountRepository {
   constructor(
     @inject(UserRepository) private userRepository: UserRepository,
@@ -44,9 +44,15 @@ export class AccountRepository {
   }): Promise<AccountData> {
     logger.debug(`Fetching account by ${field}: ${value} in DB.`);
 
+    let dbField: 'userName' | 'accountId' | 'profileId' | 'email' | 'userId' =
+      field;
+    if (field === 'accountId') {
+      dbField = 'userId';
+    }
+
     const account = (await models.User.findOne({
       where: {
-        [field]: value,
+        [dbField]: value,
       },
       include: [
         {
@@ -95,15 +101,6 @@ export class AccountRepository {
       },
       transaction
     );
-
-    await this.passwordRepository.saveNewPassword(
-      {
-        password: account.getActivePassword().getHashedPassword(),
-        userId: account.getAccountId(),
-      },
-      transaction
-    );
-
     logger.debug(`Saved ${account.toString()}`);
   }
 }

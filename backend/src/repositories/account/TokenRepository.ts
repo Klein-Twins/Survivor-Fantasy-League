@@ -17,6 +17,17 @@ export class TokenRepository {
     });
   }
 
+  async fetchTokensInUserSession(
+    userSessionId: TokenAttributes['userSessionId']
+  ): Promise<TokenAttributes[]> {
+    const tokens = await models.Tokens.findAll({
+      where: {
+        userSessionId,
+      },
+    });
+    return tokens;
+  }
+
   async saveTokenAttributes(
     attributes: TokenAttributes,
     transaction: Transaction
