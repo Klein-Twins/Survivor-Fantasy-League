@@ -1,130 +1,70 @@
 import { Transaction } from 'sequelize';
 import { Account } from '../../domain/account/Account';
 import logger from '../../config/logger';
-import { UUID } from 'crypto';
-import {
-  InternalServerError,
-  NotFoundError,
-  NotImplementedError,
-} from '../../utils/errors/errors';
-import validator from 'validator';
-import { UserAttributes } from '../../models/account/User';
-import { ProfileAttributes } from '../../models/account/Profile';
 import { UserRepository } from './UserRepository';
 import { ProfileRepository } from './ProfileRepository';
 import { PasswordRepository } from './PasswordRepository';
+import { UserAttributes } from '../../models/account/User';
+import { ProfileAttributes } from '../../models/account/Profile';
+import { models } from '../../config/db';
+import { NotFoundError } from '../../utils/errors/errors';
+import { inject, injectable } from 'tsyringe';
+import { PasswordAttributes } from '../../models/account/Password';
 
+type AccountData = UserAttributes & {
+  profile: ProfileAttributes;
+  passwords: PasswordAttributes[];
+};
+
+injectable();
 export class AccountRepository {
-  static async getAccountByField(
-    field: 'userName' | 'accountId' | 'profileId' | 'email',
-    value: string | UUID
-  ) {
-    logger.debug(`Getting account by ${field}: ${value}`);
-    let account: Account | null = null;
-    switch (field) {
-      case 'userName':
-        // account = await UserRepository.getUserByUserName(value as string);
-        throw new NotImplementedError(
-          'getUserByUserName is not implemented yet'
-        );
-        break;
-      case 'accountId':
-        account = await AccountRepository.getAccountById(value as UUID);
+  constructor(
+    @inject(UserRepository) private userRepository: UserRepository,
+    @inject(ProfileRepository) private profileRepository: ProfileRepository,
+    @inject(PasswordRepository) private passwordRepository: PasswordRepository
+  ) {}
 
-        break;
-      case 'profileId':
-        account = await AccountRepository.getAccountByProfileId(value as UUID);
-        break;
-      case 'email':
-        if (!validator.isEmail(value)) {
-          throw new InternalServerError('Invalid email format');
-        }
-        const email = value;
-        account = await AccountRepository.getAccountByEmail(email);
-        break;
-      default:
-        throw new Error('Invalid field');
+  /**
+   * @description Fetches the account data by a specific field.
+   * @param field The field to search by. - userName, accountId, profileId, email
+   * @param value The value to search for. - Account['userName'], Account['accountId'], Account['profileId'], Account['email']
+   * @throws NotFoundError if the account is not found.
+   * @returns The account data from the database. The Account data includes the profile data.
+   */
+  async fetchAccountDataByField({
+    field,
+    value,
+  }: {
+    field: 'userName' | 'accountId' | 'profileId' | 'email';
+    value:
+      | Account['userName']
+      | Account['accountId']
+      | Account['profileId']
+      | Account['email'];
+  }): Promise<AccountData> {
+    logger.debug(`Fetching account by ${field}: ${value} in DB.`);
+
+    const account = (await models.User.findOne({
+      where: {
+        [field]: value,
+      },
+      include: [
+        {
+          model: models.Profile,
+          as: 'profile',
+        },
+        {
+          model: models.Password,
+          as: 'passwords',
+          required: true,
+        },
+      ],
+    })) as unknown as AccountData;
+
+    if (!account) {
+      throw new NotFoundError(`Account not found by ${field}: ${value} in DB.`);
     }
-    return account;
-  }
-
-  private static async getAccountByProfileId(profileId: UUID) {
-    const userAttributes: UserAttributes | null =
-      await UserRepository.getUserByProfileId(profileId);
-
-    if (!userAttributes) {
-      throw new NotFoundError('User not found');
-    }
-
-    const profileAttributes: ProfileAttributes | null =
-      await ProfileRepository.getProfileByProfileId(userAttributes.profileId);
-    if (!profileAttributes) {
-      throw new NotFoundError('Profile not found');
-    }
-
-    const account = new Account({
-      accountId: userAttributes.userId,
-      email: userAttributes.email,
-      userName: userAttributes.userName,
-      accountRole: userAttributes.userRole,
-      firstName: profileAttributes.firstName,
-      lastName: profileAttributes.lastName,
-      profileId: userAttributes.profileId,
-    });
-
-    return account;
-  }
-
-  private static async getAccountById(id: UserAttributes['userId']) {
-    const userAttributes: UserAttributes | null =
-      await UserRepository.getUserByUserId(id);
-
-    if (!userAttributes) {
-      throw new NotFoundError('User not found');
-    }
-
-    const profileAttributes: ProfileAttributes | null =
-      await ProfileRepository.getProfileByProfileId(userAttributes.profileId);
-    if (!profileAttributes) {
-      throw new NotFoundError('Profile not found');
-    }
-
-    const account = new Account({
-      accountId: userAttributes.userId,
-      email: userAttributes.email,
-      userName: userAttributes.userName,
-      accountRole: userAttributes.userRole,
-      firstName: profileAttributes.firstName,
-      lastName: profileAttributes.lastName,
-      profileId: userAttributes.profileId,
-    });
-
-    return account;
-  }
-
-  private static async getAccountByEmail(email: string): Promise<Account> {
-    const userAttributes: UserAttributes | null =
-      await UserRepository.getUserByEmail(email);
-    if (!userAttributes) {
-      throw new NotFoundError('User not found');
-    }
-
-    const profileAttributes: ProfileAttributes | null =
-      await ProfileRepository.getProfileByProfileId(userAttributes.profileId);
-    if (!profileAttributes) {
-      throw new NotFoundError('Profile not found');
-    }
-
-    const account = new Account({
-      accountId: userAttributes.userId,
-      email: userAttributes.email,
-      userName: userAttributes.userName,
-      accountRole: userAttributes.userRole,
-      firstName: profileAttributes.firstName,
-      lastName: profileAttributes.lastName,
-      profileId: userAttributes.profileId,
-    });
-
+    logger.debug(`Fetched account by ${field}: ${value} in DB.`);
     return account;
   }
 
@@ -134,13 +74,9 @@ export class AccountRepository {
    * @param password The password to save.
    * @param transaction The transaction to use.
    */
-  static async saveAccount(
-    account: Account,
-    password: string,
-    transaction: Transaction
-  ): Promise<void> {
+  async saveAccount(account: Account, transaction: Transaction): Promise<void> {
     logger.debug(`Saving ${account.toString()}`);
-    await ProfileRepository.saveProfileAttributes(
+    await this.profileRepository.saveProfileAttributes(
       {
         firstName: account.getFirstName(),
         lastName: account.getLastName(),
@@ -149,7 +85,7 @@ export class AccountRepository {
       transaction
     );
 
-    await UserRepository.saveUserAttributes(
+    await this.userRepository.saveUserAttributes(
       {
         userId: account.getAccountId(),
         userName: account.getUserName(),
@@ -160,9 +96,9 @@ export class AccountRepository {
       transaction
     );
 
-    await PasswordRepository.saveNewPassword(
+    await this.passwordRepository.saveNewPassword(
       {
-        password,
+        password: account.getActivePassword().getHashedPassword(),
         userId: account.getAccountId(),
       },
       transaction

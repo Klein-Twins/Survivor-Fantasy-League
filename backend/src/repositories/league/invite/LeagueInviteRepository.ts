@@ -1,6 +1,6 @@
 import { models } from '../../../config/db';
 import { Account } from '../../../domain/account/Account';
-import { ProfileAttributes } from '../../../models/account/Profile';
+import { League } from '../../../domain/league/League';
 import {
   InviteStatus,
   LeagueInviteAttributes,
@@ -8,7 +8,18 @@ import {
 import { SeasonsAttributes } from '../../../models/season/Seasons';
 
 export class LeagueInviteRepository {
-  static async getLeagueInvites(
+  static async getPendingLeagueInvitesForLeague(league: League) {
+    const leagueId = league.getId();
+
+    return await models.LeagueInvites.findAll({
+      where: {
+        leagueId: leagueId,
+        status: InviteStatus.Pending,
+      },
+    });
+  }
+
+  static async getPendingLeagueInvites(
     seasonId: SeasonsAttributes['seasonId'],
     account: Account
   ): Promise<LeagueInviteAttributes[]> {

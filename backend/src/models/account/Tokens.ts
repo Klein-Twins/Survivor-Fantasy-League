@@ -1,12 +1,16 @@
 import { DataTypes, Model, Sequelize } from 'sequelize';
 import { UserAttributes } from './User';
+import { UserSessionAttributes } from '../userSession/userSessions';
+import logger from '../../config/logger';
 
 export type TokenType = 'access' | 'refresh';
 
 export interface TokenAttributes {
   token: string;
-  userId: UserAttributes['userId'];
+  userSessionId: UserSessionAttributes['id'];
   tokenType: TokenType;
+  seq: number;
+  issuedAt: Date;
   tokenExpiresTime: Date;
   isActive: boolean;
 }
@@ -14,12 +18,25 @@ export interface TokenAttributes {
 const TokensModel = (sequelize: Sequelize) => {
   class Tokens extends Model<TokenAttributes> implements TokenAttributes {
     public token!: TokenAttributes['token'];
-    public userId!: TokenAttributes['userId'];
+    public userSessionId!: TokenAttributes['userSessionId'];
+    public seq!: TokenAttributes['seq'];
     public tokenType!: TokenAttributes['tokenType'];
     public tokenExpiresTime!: TokenAttributes['tokenExpiresTime'];
     public isActive!: TokenAttributes['isActive'];
+    public issuedAt!: Date;
 
-    static associate(models: any) {}
+    static associate(models: any) {
+      if (models.UserSessions) {
+        this.belongsTo(models.UserSessions, {
+          foreignKey: 'userSessionId',
+          targetKey: 'id',
+          as: 'userSession',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error('Error associating Tokens with UserSessions');
+      }
+    }
   }
 
   Tokens.init(
@@ -29,10 +46,21 @@ const TokensModel = (sequelize: Sequelize) => {
         allowNull: true,
         field: 'TOKEN',
       },
-      userId: {
+      issuedAt: {
+        type: DataTypes.DATE,
+        allowNull: false,
+        field: 'ISSUED_AT',
+        defaultValue: DataTypes.NOW,
+      },
+      seq: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        field: 'SEQ',
+      },
+      userSessionId: {
         type: DataTypes.UUID,
         allowNull: false,
-        field: 'USER_ID',
+        field: 'USER_SESSION_ID',
       },
       tokenType: {
         type: DataTypes.ENUM('access', 'refresh'),

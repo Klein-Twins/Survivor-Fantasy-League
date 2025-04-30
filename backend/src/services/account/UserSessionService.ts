@@ -1,70 +1,68 @@
+import { inject, injectable } from 'tsyringe';
 import { Account } from '../../domain/account/Account';
-import { UserSession } from '../../domain/account/UserSession';
+import { UserSession, UserSessions } from '../../domain/account/UserSession';
 import { AccountRepository } from '../../repositories/account/AccountRepository';
 import { InternalServerError } from '../../utils/errors/errors';
 import { Tokens, TokenService } from './TokenService';
+import { Transaction } from 'sequelize';
+import { UserSessionRepository } from '../../repositories/account/UserSessionRepository';
+import { v4 } from 'uuid';
+import { UUID } from 'crypto';
 
+@injectable()
 export class UserSessionService {
-  static async fetchUserSessionByTokens({
-    accessToken,
-    refreshToken,
-  }: {
-    accessToken: string;
-    refreshToken: string;
-  }): Promise<UserSession> {
-    const tokens: Tokens = await TokenService.fetchTokens({
-      accessToken,
-      refreshToken,
+  constructor(
+    @inject(TokenService) private tokenService: TokenService,
+    @inject(UserSessionRepository)
+    private userSessionRepository: UserSessionRepository
+  ) {}
+
+  async createAndStartNewUserSession(account: Account): Promise<UserSession> {
+    const userSessionId = v4() as UUID;
+
+    const tokens = await this.tokenService.createTokens(account, userSessionId);
+
+    const userSession = new UserSession({
+      account: account,
+      id: userSessionId,
+      startTime: tokens.refreshToken.getIssuedAtTime(),
+      expectedEndTime: tokens.refreshToken.getTokenExpiresTime(),
     });
 
-    const account: Account = await AccountRepository.getAccountByField(
-      'accountId',
-      tokens.refreshToken.getPayload().userId
-    );
+    userSession.setActiveAccessToken(tokens.accessToken);
+    userSession.setActiveRefreshToken(tokens.refreshToken);
 
-    const userSession: UserSession = new UserSession({
-      account,
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-    });
+    account.setActiveUserSession(userSession);
 
     return userSession;
   }
 
-  static async saveStartUserSession(userSession: UserSession) {
-    const account: Account = userSession.getAccount();
-    const accessToken = userSession.getAccessToken();
-    const refreshToken = userSession.getRefreshToken();
-
-    if (!accessToken || !refreshToken) {
-      throw new InternalServerError(
-        'User session does not have tokens stored. Cannot save tokens to database to start a new session.'
-      );
+  async endUserSession(account: Account): Promise<UserSession> {
+    const userSession = account.getActiveUserSession();
+    if (!userSession) {
+      throw new InternalServerError('No active user session found');
     }
 
-    const tokens: Tokens = {
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    };
+    userSession.deactivateUserSession();
 
-    await TokenService.saveTokensForStartUserSession(account, tokens);
+    return userSession;
   }
 
-  static async saveEndUserSession(userSession: UserSession) {
-    const account: Account = userSession.getAccount();
-    const accessToken = userSession.getAccessToken();
-    const refreshToken = userSession.getRefreshToken();
-
-    if (!accessToken || !refreshToken) {
-      throw new InternalServerError(
-        'User session does not have tokens stored. Cannot save tokens to database to end a session.'
-      );
-    }
-
-    await TokenService.saveTokensForEndUserSession(
-      account,
-      accessToken,
-      refreshToken
+  async saveUserSession(
+    userSession: UserSession,
+    transaction: Transaction
+  ): Promise<void> {
+    await this.userSessionRepository.saveUserSessionAttributes(
+      {
+        id: userSession.getId(),
+        startTime: userSession.getStartTime(),
+        endTime: userSession.getEndTime(),
+        expectedEndTime: userSession.getExpectedEndTime(),
+        accountId: userSession.getAccount().getAccountId(),
+      },
+      transaction
     );
+
+    await this.tokenService.saveTokensFromUserSession(userSession, transaction);
   }
 }

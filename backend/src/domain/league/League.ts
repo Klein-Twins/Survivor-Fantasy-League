@@ -5,7 +5,6 @@ import { UUID } from 'crypto';
 import { ConflictError, NotFoundError } from '../../utils/errors/errors';
 import { League as LeagueDTO } from '../../generated-api';
 import { ProfileAttributes } from '../../models/account/Profile';
-import { Account } from '../account/Account';
 import { LeagueInvite } from './invite/LeagueInvite';
 
 export class League {
@@ -14,8 +13,7 @@ export class League {
   private name!: LeagueAttributes['name'];
   private leagueMembers!: LeagueMember[];
   private leagueOwner!: LeagueOwner;
-  //Map of accountId to Account
-  private invites: Map<UUID, LeagueInvite>;
+  private leagueInvites!: Map<UUID, LeagueInvite>;
 
   constructor({
     id = v4() as UUID,
@@ -30,7 +28,7 @@ export class League {
     this.seasonId = seasonId;
     this.name = name;
     this.leagueMembers = [];
-    this.invites = new Map<UUID, LeagueInvite>();
+    this.leagueInvites = new Map<UUID, LeagueInvite>();
   }
 
   getId(): LeagueAttributes['leagueId'] {
@@ -45,8 +43,14 @@ export class League {
   getLeagueMembers(): LeagueMember[] {
     return this.leagueMembers;
   }
-  getLeagueInvite(invitedAccountId: UUID): LeagueInvite | undefined {
-    return this.invites.get(invitedAccountId);
+  getLeagueOwner(): LeagueOwner {
+    return this.leagueOwner;
+  }
+  getLeagueInvites(): Map<UUID, LeagueInvite> {
+    return this.leagueInvites;
+  }
+  setLeagueInvites(leagueInvites: Map<UUID, LeagueInvite>): void {
+    this.leagueInvites = leagueInvites;
   }
 
   getLeagueMemberByProfileId(

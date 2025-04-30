@@ -3,9 +3,11 @@ import { AccountRole } from '../../generated-api';
 import { v4 } from 'uuid';
 import { Account as AccountDTO } from '../../generated-api';
 import bcrypt from 'bcrypt';
-import { PasswordRepository } from '../../repositories/account/PasswordRepository';
-import { UserSession } from './UserSession';
-import { TokenService } from '../../services/account/TokenService';
+import { UserSession, UserSessions } from './UserSession';
+import { Password, Passwords } from './Passwords';
+import { PasswordAttributes } from '../../models/account/Password';
+import { container } from 'tsyringe';
+import { UserSessionService } from '../../services/account/UserSessionService';
 
 export class Account {
   private accountId: UUID;
@@ -15,7 +17,8 @@ export class Account {
   private firstName: string;
   private lastName: string;
   private userName: string;
-  private currentUserSession: UserSession | null;
+  private userSessions: UserSessions;
+  private passwords: Passwords;
 
   constructor({
     accountId = v4() as UUID,
@@ -25,6 +28,7 @@ export class Account {
     firstName,
     lastName,
     userName,
+    passwordsAttributes,
   }: {
     accountId?: UUID;
     email: string;
@@ -33,6 +37,7 @@ export class Account {
     firstName: string;
     lastName: string;
     userName: string;
+    passwordsAttributes: Pick<PasswordAttributes, 'password' | 'passwordSeq'>[];
   }) {
     this.accountId = accountId;
     this.email = email;
@@ -41,14 +46,16 @@ export class Account {
     this.firstName = firstName;
     this.lastName = lastName;
     this.userName = userName;
-    this.currentUserSession = null;
+    this.passwords = new Passwords(passwordsAttributes);
+    this.userSessions = new UserSessions(this);
   }
 
   async authenticateAccount(password: string): Promise<boolean> {
-    const savedActivePassword = await PasswordRepository.getActivePassword(
-      this.accountId
+    const activePassword = this.getActivePassword();
+    const isSamePassword = await bcrypt.compare(
+      password,
+      activePassword.getHashedPassword()
     );
-    const isSamePassword = await bcrypt.compare(password, savedActivePassword);
     return isSamePassword;
   }
 
@@ -84,15 +91,25 @@ export class Account {
     return `${this.firstName} ${this.lastName}`;
   }
 
-  getCurrentUserSession(): UserSession | null {
-    return this.currentUserSession;
+  getActivePassword(): Password {
+    const activePassword = this.passwords.getActivePassword();
+    if (!activePassword) {
+      throw new Error('No active password found');
+    }
+    return activePassword;
   }
 
-  // async createUserSession(): Promise<UserSession> {
-  //   const { accessToken, refreshToken } = await TokenService.createTokens(this);
-  //   this.currentUserSession = new UserSession(accessToken, refreshToken);
-  //   return this.currentUserSession;
-  // }
+  getActiveUserSession(): UserSession | null {
+    return this.userSessions.getCurrentUserSession();
+  }
+
+  getUserSessions(): UserSessions {
+    return this.userSessions;
+  }
+
+  setActiveUserSession(userSession: UserSession) {
+    this.userSessions.setActiveUserSession(userSession);
+  }
 
   toString(): string {
     return `Account {

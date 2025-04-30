@@ -1,10 +1,9 @@
-import { injectable } from 'tsyringe';
+import { inject, injectable, singleton } from 'tsyringe';
 import { Account } from '../../domain/account/Account';
 import { League } from '../../domain/league/League';
 import { ProfileAttributes } from '../../models/account/Profile';
 import { LeagueAttributes } from '../../models/league/League';
 import { SeasonsAttributes } from '../../models/season/Seasons';
-import { AccountRepository } from '../../repositories/account/AccountRepository';
 import { AccountService } from '../account/AccountService';
 import { LeagueMemberService } from './LeagueMemberService';
 import sequelize from '../../config/db';
@@ -12,17 +11,47 @@ import { LeagueRepository } from '../../repositories/league/LeagueRepository';
 import { NotFoundError } from '../../utils/errors/errors';
 import { LeagueMember, LeagueOwner } from '../../domain/league/LeagueMember';
 import { LeagueMemberRole } from '../../generated-api';
+import { LeagueInviteService } from './invite/LeagueInviteService';
+import { UUID } from 'crypto';
+import { LeagueInvite } from '../../domain/league/invite/LeagueInvite';
+import logger from '../../config/logger';
+
+@singleton()
+export class LeagueStorage {
+  private leagues: Map<LeagueAttributes['leagueId'], League>;
+
+  constructor() {
+    this.leagues = new Map<LeagueAttributes['leagueId'], League>();
+  }
+
+  getLeague(leagueId: LeagueAttributes['leagueId']): League | undefined {
+    return this.leagues.get(leagueId);
+  }
+
+  setLeague(league: League): void {
+    this.leagues.set(league.getId(), league);
+  }
+}
 
 @injectable()
 export class LeagueService {
-  static async fetchLeagues({
+  constructor(
+    @inject(LeagueStorage) private leagueStorage: LeagueStorage,
+    @inject(AccountService) private accountService: AccountService,
+    @inject(LeagueInviteService)
+    private leagueInviteService: LeagueInviteService,
+    @inject(LeagueMemberService)
+    private leagueMemberService: LeagueMemberService
+  ) {}
+
+  async fetchLeagues({
     profileId,
     seasonId,
   }: {
     profileId: ProfileAttributes['profileId'];
     seasonId: SeasonsAttributes['seasonId'];
   }): Promise<League[]> {
-    const account: Account = await AccountRepository.getAccountByField(
+    const account: Account = await this.accountService.fetchAccount(
       'profileId',
       profileId
     );
@@ -44,9 +73,15 @@ export class LeagueService {
     return leagues;
   }
 
-  static async fetchLeague(
-    leagueId: LeagueAttributes['leagueId']
-  ): Promise<League> {
+  async fetchLeague(leagueId: LeagueAttributes['leagueId']): Promise<League> {
+    const cachedLeague = this.leagueStorage.getLeague(leagueId);
+    if (cachedLeague) {
+      logger.debug(`League ${leagueId} found in cache`);
+      return cachedLeague;
+    }
+    logger.debug(`League ${leagueId} not found in cache, fetching from DB`);
+
+    //
     const leagueData: LeagueAttributes | null =
       await LeagueRepository.getLeagueById(leagueId);
     if (!leagueData) {
@@ -60,7 +95,7 @@ export class LeagueService {
     });
 
     const leagueMembers: LeagueMember[] =
-      await LeagueMemberService.fetchLeagueMembers(league);
+      await this.leagueMemberService.fetchLeagueMembers(league);
 
     for (const leagueMember of leagueMembers) {
       if (leagueMember.getRole() === LeagueMemberRole.Owner) {
@@ -70,10 +105,17 @@ export class LeagueService {
       }
     }
 
+    const leagueInvites: Map<UUID, LeagueInvite> =
+      await this.leagueInviteService.fetchLeagueInvitesForLeague(league);
+    league.setLeagueInvites(leagueInvites);
+
+    this.leagueStorage.setLeague(league);
+    logger.debug(`League ${leagueId} cached successfully`);
+
     return league;
   }
 
-  static async createLeague({
+  async createLeague({
     profileId,
     seasonId,
     name,
@@ -87,24 +129,24 @@ export class LeagueService {
       name,
     });
 
-    const account: Account = await AccountRepository.getAccountByField(
+    const account: Account = await this.accountService.fetchAccount(
       'profileId',
       profileId
     );
 
-    const leagueOwner = LeagueMemberService.createLeagueOwner({
+    const leagueOwner = this.leagueMemberService.createLeagueOwner({
       account,
       league,
     });
 
     league.addLeagueOwner(leagueOwner);
 
-    await LeagueService.saveLeague(league);
+    await this.saveLeague(league);
 
     return league;
   }
 
-  static async saveLeague(league: League): Promise<void> {
+  async saveLeague(league: League): Promise<void> {
     const transaction = await sequelize.transaction();
 
     try {
@@ -118,7 +160,10 @@ export class LeagueService {
       );
 
       for (const leagueMember of league.getLeagueMembers()) {
-        await LeagueMemberService.saveLeagueMember(leagueMember, transaction);
+        await this.leagueMemberService.saveLeagueMember(
+          leagueMember,
+          transaction
+        );
       }
       await transaction.commit();
     } catch (error) {

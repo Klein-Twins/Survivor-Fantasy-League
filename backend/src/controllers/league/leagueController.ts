@@ -4,6 +4,7 @@ import { SeasonsAttributes } from '../../models/season/Seasons';
 import leagueControllerHelper from './leagueControllerHelper';
 import { LeagueService } from '../../services/league/LeagueService';
 import { CreateLeagueResponse } from '../../generated-api';
+import { container } from 'tsyringe';
 
 const leagueController = {
   createLeague,
@@ -28,7 +29,9 @@ async function getLeagues(req: Request, res: Response, next: NextFunction) {
       seasonId,
     });
 
-    const leagues = await LeagueService.fetchLeagues({
+    const leagueService = container.resolve(LeagueService);
+
+    const leagues = await leagueService.fetchLeagues({
       profileId: getLeagueRequest.pathParams.profileId,
       seasonId: getLeagueRequest.pathParams.seasonId,
     });
@@ -60,7 +63,9 @@ async function createLeague(req: Request, res: Response, next: NextFunction) {
         name,
       });
 
-    const league = await LeagueService.createLeague({
+    const leagueService = container.resolve(LeagueService);
+
+    const league = await leagueService.createLeague({
       profileId: createLeagueRequest.pathParams.profileId,
       seasonId: createLeagueRequest.pathParams.seasonId,
       name: createLeagueRequest.body.name,

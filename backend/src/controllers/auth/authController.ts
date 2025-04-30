@@ -8,6 +8,8 @@ import { AuthService } from '../../services/account/AuthService';
 import { UserSession } from '../../domain/account/UserSession';
 import authControllerHelper from './authControllerHelper';
 import { NODE_ENV } from '../../config/config';
+import { container } from 'tsyringe';
+import { Account } from '../../domain/account/Account';
 
 const authController = {
   signup,
@@ -29,30 +31,51 @@ async function signup(
       firstName,
       lastName
     );
-    const userSession: UserSession = await AuthService.signup({
+    const authService = container.resolve(AuthService);
+    const { account, userSession } = await authService.signup({
       email,
       password,
       userName,
       firstName,
       lastName,
     });
+
+    if (!userSession) {
+      throw new Error(
+        'Failed to start userSession. Account was created. Please try logging in again'
+      );
+    }
+
     const response: SignupUserResponse = {
       statusCode: 201,
       message: 'Account created successfully',
       success: true,
       responseData: {
-        account: userSession.getAccount().toDTO(),
+        account: account.toDTO(),
         userSession: userSession.toDTO(),
       },
     };
 
-    res.cookie('accessToken', userSession.getAccessToken()?.getToken(), {
+    const accessToken = userSession.getActiveAccessToken();
+    if (!accessToken) {
+      throw new Error(
+        'Failed to create access token. Please try logging in again'
+      );
+    }
+    const refreshToken = userSession.getActiveRefreshToken();
+    if (!refreshToken) {
+      throw new Error(
+        'Failed to create refresh token. Please try logging in again'
+      );
+    }
+
+    res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
     });
 
-    res.cookie('refreshToken', userSession.getRefreshToken()?.getToken(), {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
@@ -76,7 +99,8 @@ async function login(
       password
     );
 
-    const userSession: UserSession = await AuthService.login(loginRequestData);
+    const authService = container.resolve(AuthService);
+    const { userSession, account } = await authService.login(loginRequestData);
 
     const response: LoginUserResponse = {
       statusCode: 200,
@@ -88,13 +112,26 @@ async function login(
       },
     };
 
-    res.cookie('accessToken', userSession.getAccessToken()?.getToken(), {
+    const accessToken = userSession.getActiveAccessToken();
+    if (!accessToken) {
+      throw new Error(
+        'Failed to create access token. Please try logging in again'
+      );
+    }
+    const refreshToken = userSession.getActiveRefreshToken();
+    if (!refreshToken) {
+      throw new Error(
+        'Failed to create refresh token. Please try logging in again'
+      );
+    }
+
+    res.cookie('accessToken', accessToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
     });
 
-    res.cookie('refreshToken', userSession.getRefreshToken()?.getToken(), {
+    res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
       secure: NODE_ENV === 'production',
       sameSite: 'strict',
@@ -116,7 +153,8 @@ async function logout(
   try {
     authControllerHelper.validateLogoutRequest(accessToken, refreshToken);
 
-    const userSession: UserSession = await AuthService.logout({
+    const authService = container.resolve(AuthService);
+    const { userSession, account } = await authService.logout({
       accessToken,
       refreshToken,
     });

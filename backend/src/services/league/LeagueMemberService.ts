@@ -11,11 +11,14 @@ import { LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 import { NotFoundError } from '../../utils/errors/errors';
 import { AccountRepository } from '../../repositories/account/AccountRepository';
 import { LeagueMemberRole } from '../../generated-api';
+import { inject, injectable } from 'tsyringe';
+import { AccountService } from '../account/AccountService';
 
+@injectable()
 export class LeagueMemberService {
-  constructor() {}
+  constructor(@inject(AccountService) private accountService: AccountService) {}
 
-  static createLeagueOwner({
+  createLeagueOwner({
     account,
     league,
   }: {
@@ -29,7 +32,7 @@ export class LeagueMemberService {
     return leagueOwner;
   }
 
-  static async fetchLeagueMembers(league: League): Promise<LeagueMember[]> {
+  async fetchLeagueMembers(league: League): Promise<LeagueMember[]> {
     const leagueMemberIds: LeagueProfileAttributes['id'][] =
       await LeagueMemberRepository.getLeagueMemberIdsByLeagueId(league.getId());
 
@@ -53,7 +56,7 @@ export class LeagueMemberService {
     return leagueMembers;
   }
 
-  static async fetchLeagueMember({
+  async fetchLeagueMember({
     leagueMemberId,
     league,
   }: {
@@ -67,7 +70,7 @@ export class LeagueMemberService {
       throw new NotFoundError('League member not found');
     }
 
-    const account: Account = await AccountRepository.getAccountByField(
+    const account: Account = await this.accountService.fetchAccount(
       'profileId',
       leagueMemberData.profileId
     );
@@ -96,7 +99,7 @@ export class LeagueMemberService {
     return leagueMember;
   }
 
-  static async saveLeagueMember(
+  async saveLeagueMember(
     leagueMember: LeagueMember,
     transaction: Transaction
   ): Promise<void> {

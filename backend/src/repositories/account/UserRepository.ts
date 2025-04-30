@@ -1,16 +1,18 @@
 import { Transaction } from 'sequelize';
 import { UserAttributes } from '../../models/account/User';
 import { models } from '../../config/db';
+import { injectable } from 'tsyringe';
 
+@injectable()
 export class UserRepository {
-  static async getUserByEmail(email: string): Promise<UserAttributes | null> {
+  async getUserByEmail(email: string): Promise<UserAttributes | null> {
     const user = await models.User.findOne({
       where: { email },
     });
     return user ? user.get({ plain: true }) : null;
   }
 
-  static async getUserByUserId(
+  async getUserByUserId(
     userId: UserAttributes['userId']
   ): Promise<UserAttributes | null> {
     const user = await models.User.findOne({
@@ -19,7 +21,7 @@ export class UserRepository {
     return user ? user.get({ plain: true }) : null;
   }
 
-  static async getUserByProfileId(
+  async getUserByProfileId(
     profileId: UserAttributes['profileId']
   ): Promise<UserAttributes | null> {
     const user = await models.User.findOne({
@@ -28,7 +30,7 @@ export class UserRepository {
     return user ? user.get({ plain: true }) : null;
   }
 
-  static async saveUserAttributes(
+  async saveUserAttributes(
     attributes: UserAttributes,
     transaction: Transaction
   ) {

@@ -9,6 +9,7 @@ import {
   CreateAndSendLeagueInviteResponse,
   GetLeagueInvitesResponse,
 } from '../../../generated-api';
+import { container } from 'tsyringe';
 
 const leagueInviteController = {
   getLeagueInvites,
@@ -35,8 +36,10 @@ async function getLeagueInvites(
         seasonId: seasonIdPathParam,
       });
 
+    const leagueInviteService = container.resolve(LeagueInviteService);
+
     const leagueInvites: LeagueInvite[] =
-      await LeagueInviteService.getLeagueInvites({
+      await leagueInviteService.getLeagueInvites({
         profileId,
         seasonId,
       });
@@ -77,6 +80,9 @@ async function sendLeagueInvite(
         leagueId: leagueIdString,
       });
 
+    LeagueInviteService;
+
+    //@ts-ignore
     const response: CreateAndSendLeagueInviteResponse = {
       success: true,
       statusCode: 200,

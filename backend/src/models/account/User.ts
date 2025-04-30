@@ -25,7 +25,7 @@ const UserModel = (sequelize: Sequelize) => {
         this.hasMany(models.Password, {
           foreignKey: 'userId',
           sourceKey: 'userId',
-          as: 'Password',
+          as: 'passwords',
           onDelete: 'CASCADE',
         });
       } else {
@@ -40,6 +40,16 @@ const UserModel = (sequelize: Sequelize) => {
         });
       } else {
         logger.error('Error associating User with Profile');
+      }
+      if (models.UserSession) {
+        this.hasMany(models.UserSessions, {
+          foreignKey: 'accountId',
+          sourceKey: 'userId',
+          as: 'userSessions',
+          onDelete: 'CASCADE',
+        });
+      } else {
+        logger.error('Error associating User with UserSession');
       }
     }
   }

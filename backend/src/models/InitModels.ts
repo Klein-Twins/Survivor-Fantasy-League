@@ -30,6 +30,7 @@ import PickSolutionModel from './surveyAndPick/picks/PickSolutions';
 import TribalCouncilModel from './season/tribalCouncil/TribalCouncil';
 import TribalCouncilSurvivorsModel from './season/tribalCouncil/TribalCouncilSurvivors';
 import LeagueInviteModel from './league/LeagueInvites';
+import UserSessionModel from './userSession/userSessions';
 
 const initModels = (sequelize: Sequelize) => {
   logger.debug('Initializing models');
@@ -65,10 +66,11 @@ const initModels = (sequelize: Sequelize) => {
   const TribalCouncils = TribalCouncilModel(sequelize);
   const TribalCouncilSurvivors = TribalCouncilSurvivorsModel(sequelize);
   const LeagueInvites = LeagueInviteModel(sequelize);
+  const UserSessions = UserSessionModel(sequelize);
 
   logger.debug('Models initialized');
 
-  User.associate({ Password, Profile });
+  User.associate({ Password, Profile, UserSessions });
   Profile.associate({ User, LeagueProfile, LeagueInvites });
   Password.associate({ User });
   League.associate({
@@ -145,7 +147,7 @@ const initModels = (sequelize: Sequelize) => {
     PickSolutions,
   });
   //Todo add associations with tokens
-  Tokens.associate({});
+  Tokens.associate({ UserSessions });
   PickPoints.associate({ Picks });
   SurveySubmissions.associate({
     PickSubmissions,
@@ -168,6 +170,7 @@ const initModels = (sequelize: Sequelize) => {
     Episode,
     SeasonEliminations,
   });
+  UserSessions.associate({ User, Tokens });
 
   LeagueInvites.associate({ League, Profile });
 
@@ -207,6 +210,7 @@ const initModels = (sequelize: Sequelize) => {
     TribalCouncils,
     TribalCouncilSurvivors,
     LeagueInvites,
+    UserSessions,
   };
 };
 
