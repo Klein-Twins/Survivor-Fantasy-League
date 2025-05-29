@@ -12,7 +12,7 @@ import testLeagueSurveyData, {
 } from './survey/testLeagueSurveys';
 import { UUID } from 'crypto';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
-import { testProfileIds } from '../accountData/testAccountData';
+import { testProfileIds } from '../data/account/testAccountData';
 
 export type League = LeagueAttributes & {
   leagueMembers: LeagueMember[];

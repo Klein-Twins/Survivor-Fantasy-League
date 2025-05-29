@@ -8,6 +8,9 @@ import { Season, SeasonStorage } from '../domain/season/Season';
 import season48Data from './foundation/data/ssn/48/season48';
 import logger from '../config/logger';
 import stringifySafe from 'json-stringify-safe';
+import { NODE_ENV } from '../config/config';
+import accountProcessor from './dev/processing/accountProcessor';
+import testAccountData from './dev/data/account/accounts';
 const seedData = async () => {
   const season = seasonProcessor.processSeasonData(season48Data);
 
@@ -25,7 +28,12 @@ const seedData = async () => {
   const fetchedSeason = await seasonService.fetchSeasonById(48);
   logger.debug('');
   compareSeasonWithFetchedSeason(season, fetchedSeason, 10);
+
+  if (NODE_ENV !== 'production') {
+    await accountProcessor.processAccountsData(testAccountData);
+  }
 };
+
 function compareSeasonWithFetchedSeason(
   season: Season,
   fetchedSeason: Season,

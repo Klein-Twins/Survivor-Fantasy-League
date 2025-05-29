@@ -3,6 +3,7 @@ import { models } from '../../config/db';
 import { BadRequestError } from '../../utils/errors/errors';
 import { inject, injectable } from 'tsyringe';
 import { PasswordHelper } from './PasswordHelper';
+import { UUID } from 'crypto';
 
 @injectable()
 export class AccountHelper {
@@ -28,6 +29,20 @@ export class AccountHelper {
       where: { userName },
     }).then((user) => !!user);
     return !isUserNameTiedToAccount;
+  }
+
+  async isUserIdAvailable(userId: UUID): Promise<boolean> {
+    const isUserIdTiedToAccount = await models.User.findOne({
+      where: { userId },
+    }).then((user) => !!user);
+    return !isUserIdTiedToAccount;
+  }
+
+  async isProfileIdAvailable(profileId: UUID): Promise<boolean> {
+    const isProfileIdTiedToAccount = await models.Profile.findOne({
+      where: { profileId },
+    }).then((profile) => !!profile);
+    return !isProfileIdTiedToAccount;
   }
 
   validateEmail(email: string): boolean {

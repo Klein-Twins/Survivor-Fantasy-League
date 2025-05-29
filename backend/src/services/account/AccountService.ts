@@ -13,6 +13,8 @@ import { Passwords } from '../../domain/account/Passwords';
 import { UserSessions } from '../../domain/account/UserSession';
 import { UserSessionService } from './UserSessionService';
 import { CACHE_ENABLED } from '../../config/config';
+import { UUID } from 'crypto';
+import validator from 'validator';
 
 @injectable()
 export class AccountService {
@@ -30,12 +32,18 @@ export class AccountService {
     userName,
     firstName,
     lastName,
+    profileId,
+    userId,
+    accountRole = AccountRole.User,
   }: {
     email: string;
     password: string;
     userName: string;
     firstName: string;
     lastName: string;
+    profileId?: UUID;
+    userId?: UUID;
+    accountRole?: AccountRole;
   }): Promise<Account> {
     //Check if the email and username are available
     if ((await this.accountHelper.isEmailAvailable(email)) === false) {
@@ -43,6 +51,23 @@ export class AccountService {
     }
     if ((await this.accountHelper.isUserNameAvailable(userName)) === false) {
       throw new ConflictError('Username is already in use');
+    }
+
+    if (profileId) {
+      if (!validator.isUUID(profileId)) {
+        throw new ConflictError('Invalid profileId format');
+      }
+      if (!(await this.accountHelper.isProfileIdAvailable(profileId))) {
+        throw new ConflictError('ProfileId is already in use');
+      }
+    }
+    if (userId) {
+      if (!validator.isUUID(userId)) {
+        throw new ConflictError('Invalid userId format');
+      }
+      if (!(await this.accountHelper.isUserIdAvailable(userId))) {
+        throw new ConflictError('UserId is already in use');
+      }
     }
 
     this.accountHelper.validateCreateAccountInput({
@@ -55,10 +80,12 @@ export class AccountService {
 
     const account = new Account({
       email,
-      accountRole: AccountRole.User,
+      accountRole,
       firstName,
       lastName,
       userName,
+      profileId,
+      accountId: userId,
     });
 
     await this.passwordService.createPasswordForAccount(account, password, 1);

@@ -12,7 +12,7 @@ import { LeagueAttributes } from '../../../../models/league/League';
 import { ProfileAttributes } from '../../../../models/account/Profile';
 import testLeagueData from '../testLeagueData';
 import { LeagueProfileAttributes } from '../../../../models/league/LeagueProfile';
-import { testProfileIds } from '../../accountData/testAccountData';
+import { testProfileIds } from '../../data/account/testAccountData';
 
 export type EpisodeToLeagueMemberSurveysMap = Map<
   EpisodeAttributes['id'],

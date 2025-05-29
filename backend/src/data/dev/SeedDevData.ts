@@ -1,8 +1,8 @@
 import { models } from '../../config/db';
 
-import testPasswordData from './accountData/testPasswordData';
-import testProfileData from './accountData/testProfileData';
-import testUserData from './accountData/testUserData';
+import testPasswordData from './data/account/testPasswordData';
+import testProfileData from './data/account/testProfileData';
+import testUserData from './data/account/testUserData';
 import season48TestLeagues from './leagueData/leagues48';
 import testSurveyData from './leagueData/survey/testLeagueSurveys';
 import leagueProcessor from './processing/lge/leagueProcessor';
