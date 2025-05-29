@@ -9,8 +9,8 @@ import { BadRequestError, UnauthorizedError } from '../../utils/errors/errors';
 import { AccountService } from './AccountService';
 import { UserSessionService } from './UserSessionService';
 import { TokenHelper } from '../../helpers/account/TokenHelper';
-import logger from '../../config/logger';
 import { AccountStorage } from '../../storage/account/AccountStorage';
+import logger from '../../config/logger';
 
 @injectable()
 export class AuthService {
@@ -68,6 +68,13 @@ export class AuthService {
     const isAuthenticated = await account.authenticateAccount(password);
     if (!isAuthenticated) {
       throw new UnauthorizedError('Invalid email or password');
+    }
+
+    if (account.getUserSessions().getCurrentUserSession()) {
+      logger.warn(
+        'User already logged in with an active session. Ending previous session to create a new one.'
+      );
+      await this.userSessionService.endUserSession(account);
     }
 
     const userSession: UserSession =

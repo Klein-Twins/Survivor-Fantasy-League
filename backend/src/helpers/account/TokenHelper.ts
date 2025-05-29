@@ -81,4 +81,13 @@ export class TokenHelper {
       tokenPayload1.profileId === tokenPayload2.profileId
     );
   }
+
+  isTokenExpired(token: string, tokenType: TokenType): boolean {
+    jwt.verify(token, this.getTokenSecret(tokenType), (err) => {
+      if (err) {
+        return true; // Token is expired
+      }
+    });
+    return false; // Token is valid
+  }
 }

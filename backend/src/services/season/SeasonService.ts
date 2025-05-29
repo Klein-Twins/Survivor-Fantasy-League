@@ -22,6 +22,20 @@ export class SeasonService {
     @inject(TribeMemberService) private tribeMemberService: TribeMemberService
   ) {}
 
+  async fetchAllSeasons(): Promise<Season[]> {
+    const seasonsAttributes: SeasonsAttributes[] =
+      await this.seasonRepository.findAllSeasons();
+
+    const seasons: Season[] = [];
+
+    for (const seasonAttributes of seasonsAttributes) {
+      const season = await this.fetchSeasonById(seasonAttributes.seasonId);
+      seasons.push(season);
+    }
+
+    return seasons;
+  }
+
   async fetchSeasonById(
     seasonId: SeasonsAttributes['seasonId']
   ): Promise<Season> {

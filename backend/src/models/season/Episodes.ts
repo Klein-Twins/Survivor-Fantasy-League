@@ -15,7 +15,6 @@ export interface EpisodeTableAttributes {
   airDate: Date;
   description: string | null;
   type: EpisodeType;
-  isTribeSwitch?: boolean;
 }
 
 export type EpisodeAttributes = EpisodeDependenciesAttributes &
@@ -30,7 +29,6 @@ const EpisodeModel = (sequelize: Sequelize) => {
     public airDate!: EpisodeAttributes['airDate'];
     public description!: EpisodeAttributes['description'] | null;
     public type!: EpisodeAttributes['type'];
-    public isTribeSwitch!: EpisodeAttributes['isTribeSwitch'];
 
     static associate(models: any) {
       if (models.Seasons) {
@@ -162,12 +160,6 @@ const EpisodeModel = (sequelize: Sequelize) => {
         type: DataTypes.ENUM(...Object.values(EpisodeType)),
         allowNull: false,
         field: 'EPISODE_TYPE',
-      },
-      isTribeSwitch: {
-        type: DataTypes.BOOLEAN,
-        allowNull: false,
-        defaultValue: false,
-        field: 'IS_TRIBE_SWITCH',
       },
     },
     {

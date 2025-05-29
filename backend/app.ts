@@ -5,6 +5,9 @@ import path from 'path';
 import { swaggerSpec, swaggerUi } from './src/config/swagger.ts';
 import errorHandler from './src/middleware/errorHandlerMiddleware.ts';
 import routes from './src/routes/index.ts';
+import requestLogger from './src/middleware/requestLoggerMiddleware.ts';
+import { NODE_ENV } from './src/config/config.ts';
+import logger from './src/config/logger.ts';
 
 const corsOptions: cors.CorsOptions = {
   origin: 'http://localhost:5173', // Replace with frontend URL in production
@@ -20,7 +23,13 @@ app.use(cookieParser());
 // app.use(requestLogger);
 
 // Load routes
-app.use('/api', routes); // Mount all routes under '/api'
+if (NODE_ENV === 'test') {
+  logger.debug('Running in test environment, skipping request logger');
+  app.use('/api', routes);
+} else {
+  app.use('/api', requestLogger, routes); // Mount all routes under '/api'
+}
+
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.get('/swagger.json', (req, res) => {
   res.setHeader('Content-Type', 'application/json');

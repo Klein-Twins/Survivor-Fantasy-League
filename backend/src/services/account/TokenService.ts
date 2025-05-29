@@ -108,16 +108,16 @@ export class TokenService {
   //   return token;
   // }
 
-  async createTokens(
+  createTokens(
     account: Account,
     userSessionId: UserSessionAttributes['id']
-  ): Promise<Tokens> {
-    const accessToken: Token = await this.createToken(
+  ): Tokens {
+    const accessToken: Token = this.createToken(
       account,
       userSessionId,
       'access'
     );
-    const refreshToken: Token = await this.createToken(
+    const refreshToken: Token = this.createToken(
       account,
       userSessionId,
       'refresh'
@@ -128,12 +128,12 @@ export class TokenService {
     };
   }
 
-  async createToken(
+  createToken(
     account: Account,
     userSessionId: UserSessionAttributes['id'],
     tokenType: TokenType,
     transaction?: Transaction
-  ) {
+  ): Token {
     const payload: UserJwtPayload = {
       userId: account.getAccountId(),
       profileId: account.getProfileId(),

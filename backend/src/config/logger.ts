@@ -9,18 +9,16 @@ const levels = {
     warn: 1,
     info: 2,
     http: 3,
-    verbose: 4,
     debug: 5,
-    silly: 6,
+    apiOp: 5,
   },
   colors: {
     error: 'red',
     warn: 'yellow',
     info: 'green',
     http: 'magenta',
-    verbose: 'cyan',
     debug: 'blue',
-    silly: 'grey',
+    apiOp: 'green',
   },
 };
 
@@ -93,7 +91,7 @@ const customTimestamp = winston.format.printf(({ timestamp }) => {
   return formattedDate;
 });
 
-const logger = winston.createLogger({
+const winstonLogger = winston.createLogger({
   level: NODE_ENV === 'development' ? 'debug' : 'info',
   levels: levels.levels,
   transports: [
@@ -133,5 +131,20 @@ const logger = winston.createLogger({
 
 // Add colors to the console log
 winston.addColors(levels.colors);
+
+interface CustomLogger extends winston.Logger {
+  apiOp: (message: string) => void;
+  db: (message: string) => void;
+}
+
+const logger = winstonLogger as CustomLogger;
+
+logger.apiOp = (message: string) => {
+  logger.log('apiOp', message); // Use the custom level 'apiOp'
+};
+
+logger.db = (message: string) => {
+  logger.log('db', message); // Use the custom level 'db'
+};
 
 export default logger;

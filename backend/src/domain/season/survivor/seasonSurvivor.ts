@@ -8,7 +8,11 @@ import {
   SurvivorsTableAttributes,
 } from '../../../models/survivors/Survivors';
 import { DomainModel } from '../../DomainModel';
-import { Survivor as SurvivorDTO } from '../../../generated-api/';
+import {
+  SurvivorBasic as SurvivorBasicDTO,
+  Survivor as SurvivorDTO,
+  SurvivorEliminationType,
+} from '../../../generated-api/';
 
 type SeasonSurvivorDependencies = {
   seasonId: SeasonsAttributes['seasonId'];
@@ -62,7 +66,39 @@ export class SeasonSurvivor extends DomainModel<
   }
 
   toDTO(): SurvivorDTO {
-    throw new Error('Method not implemented.');
+    return {
+      id: this.id,
+      name: `${this.firstName} ${this.lastName}`,
+      seasonId: this.seasonId,
+      nickName: this.nickName || null,
+      fromCity: this.fromCity || null,
+      fromState: this.fromState,
+      fromCountry: this.fromCountry,
+      age: this.age,
+      description: this.description,
+      job: this.job,
+      firstName: this.firstName,
+      lastName: this.lastName,
+      finishStatus: {
+        isTorchSnuffed: false,
+        placement: null,
+        placementText: null,
+        dayEliminated: null,
+        juryPlacement: null,
+        juryPlacementText: null,
+        episodeIdEliminated: null,
+        eliminationType: undefined,
+      },
+    };
+  }
+
+  toBasicDTO(): SurvivorBasicDTO {
+    return {
+      id: this.id,
+      name: `${this.firstName} ${this.lastName}`,
+      firstName: this.firstName,
+      lastName: this.lastName,
+    };
   }
   getAttributes(): SurvivorsAttributes & SurvivorDetailsOnSeasonAttributes {
     return {

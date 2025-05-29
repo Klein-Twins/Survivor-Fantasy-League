@@ -11,6 +11,9 @@ export interface UserSessionAttributes {
   expectedEndTime: Date;
 }
 
+export const USERSESSION_TO_USER = 'user';
+export const USERSESSION_TO_TOKENS = 'tokens';
+
 const UserSessionModel = (sequelize: Sequelize) => {
   class UserSession
     extends Model<UserSessionAttributes>
@@ -27,7 +30,7 @@ const UserSessionModel = (sequelize: Sequelize) => {
         this.belongsTo(models.User, {
           foreignKey: 'accountId',
           targetKey: 'userId',
-          as: 'user',
+          as: USERSESSION_TO_USER,
           onDelete: 'CASCADE',
         });
       } else {
@@ -37,7 +40,7 @@ const UserSessionModel = (sequelize: Sequelize) => {
         this.hasMany(models.Tokens, {
           foreignKey: 'userSessionId',
           sourceKey: 'id',
-          as: 'tokens',
+          as: USERSESSION_TO_TOKENS,
           onDelete: 'CASCADE',
         });
       }

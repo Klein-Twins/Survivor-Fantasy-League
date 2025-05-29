@@ -13,8 +13,7 @@ import { NotImplementedError } from '../../../utils/errors/errors';
 @injectable()
 export class LeagueInviteService {
   constructor(
-    @inject(AccountService) private accountService: AccountService,
-    @inject(LeagueService) private leagueService: LeagueService
+    @inject(AccountService) private accountService: AccountService // @inject(LeagueService) private leagueService: LeagueService
   ) {}
 
   async fetchLeagueInvitesForLeague(
@@ -58,7 +57,7 @@ export class LeagueInviteService {
     invitedProfileId: ProfileAttributes['profileId'];
     leagueId: UUID;
   }): Promise<LeagueInvite> {
-    const league = await this.leagueService.fetchLeague(leagueId);
+    // const league = await this.leagueService.fetchLeague(leagueId);
     throw new NotImplementedError();
   }
 
@@ -69,6 +68,7 @@ export class LeagueInviteService {
     profileId: ProfileAttributes['profileId'];
     seasonId: SeasonsAttributes['seasonId'];
   }): Promise<LeagueInvite[]> {
+    throw new NotImplementedError();
     const account = await this.accountService.fetchAccount(
       'profileId',
       profileId
@@ -80,6 +80,7 @@ export class LeagueInviteService {
     const leagueInvites = new Map<UUID, LeagueInvite>();
 
     for (const leagueInviteData of leagueInvitesData) {
+      //@ts-ignore
       const league = await this.leagueService.fetchLeague(
         leagueInviteData.leagueId
       );
@@ -96,6 +97,7 @@ export class LeagueInviteService {
           ])
         );
       } else {
+        //@ts-ignore
         leagueInvite.addInviter(inviterLeagueMember);
       }
     }

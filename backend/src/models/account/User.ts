@@ -12,6 +12,10 @@ export interface UserAttributes {
   userRole: AccountRole;
 }
 
+export const USER_TO_PASSWORDS = 'passwords';
+export const USER_TO_PROFILE = 'profile';
+export const USER_TO_USERSESSIONS = 'userSessions';
+
 const UserModel = (sequelize: Sequelize) => {
   class User extends Model<UserAttributes> implements UserAttributes {
     public userId!: UserAttributes['userId'];
@@ -25,7 +29,7 @@ const UserModel = (sequelize: Sequelize) => {
         this.hasMany(models.Password, {
           foreignKey: 'userId',
           sourceKey: 'userId',
-          as: 'passwords',
+          as: USER_TO_PASSWORDS,
           onDelete: 'CASCADE',
         });
       } else {
@@ -35,21 +39,21 @@ const UserModel = (sequelize: Sequelize) => {
         this.belongsTo(models.Profile, {
           foreignKey: 'profileId',
           targetKey: 'profileId',
-          as: 'profile',
+          as: USER_TO_PROFILE,
           onDelete: 'CASCADE',
         });
       } else {
         logger.error('Error associating User with Profile');
       }
-      if (models.UserSession) {
+      if (models.UserSessions) {
         this.hasMany(models.UserSessions, {
           foreignKey: 'accountId',
           sourceKey: 'userId',
-          as: 'userSessions',
+          as: USER_TO_USERSESSIONS,
           onDelete: 'CASCADE',
         });
       } else {
-        logger.error('Error associating User with UserSession');
+        logger.error('Error associating User with UserSessions');
       }
     }
   }

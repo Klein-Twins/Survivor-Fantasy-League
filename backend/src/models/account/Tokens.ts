@@ -16,6 +16,8 @@ export interface TokenAttributes {
   tokenEndTime: Date | null;
 }
 
+export const TOKEN_TO_USERSESSION = 'userSession';
+
 const TokensModel = (sequelize: Sequelize) => {
   class Tokens extends Model<TokenAttributes> implements TokenAttributes {
     public token!: TokenAttributes['token'];
@@ -32,7 +34,7 @@ const TokensModel = (sequelize: Sequelize) => {
         this.belongsTo(models.UserSessions, {
           foreignKey: 'userSessionId',
           targetKey: 'id',
-          as: 'userSession',
+          as: TOKEN_TO_USERSESSION,
           onDelete: 'CASCADE',
         });
       } else {

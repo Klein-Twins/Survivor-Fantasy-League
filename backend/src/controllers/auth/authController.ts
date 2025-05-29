@@ -5,11 +5,16 @@ import {
   SignupUserResponse,
 } from '../../generated-api';
 import { AuthService } from '../../services/account/AuthService';
-import { UserSession } from '../../domain/account/UserSession';
 import authControllerHelper from './authControllerHelper';
 import { NODE_ENV } from '../../config/config';
 import { container } from 'tsyringe';
-import { Account } from '../../domain/account/Account';
+import { logApiRequestOnReceival } from '../../utils/api/requestReceivedLogging';
+import logger from '../../config/logger';
+import {
+  CustomError,
+  InternalServerError,
+  UnauthorizedError,
+} from '../../utils/errors/errors';
 
 const authController = {
   signup,
@@ -22,6 +27,8 @@ async function signup(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  console.log('Received signup request');
+  logApiRequestOnReceival('Signup', req);
   const { email, password, userName, firstName, lastName } = req.body;
   try {
     authControllerHelper.validateSignupRequest(
@@ -81,8 +88,12 @@ async function signup(
       sameSite: 'strict',
     });
 
+    logger.debug('AccessToken: ' + accessToken.getToken());
+    logger.debug('RefreshToken: ' + refreshToken.getToken());
+    console.log('Sending login response');
     res.status(201).json(response);
   } catch (error) {
+    console.log('Error during signup');
     next(error);
   }
 }
@@ -92,6 +103,7 @@ async function login(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  logApiRequestOnReceival('Login', req);
   const { email, password } = req.body;
   try {
     const loginRequestData = authControllerHelper.validateLoginRequest(
@@ -137,8 +149,22 @@ async function login(
       sameSite: 'strict',
     });
 
+    logger.debug('AccessToken: ' + accessToken.getToken());
+    logger.debug('RefreshToken: ' + refreshToken.getToken());
+
     res.status(200).json(response);
   } catch (error) {
+    if (
+      error instanceof CustomError &&
+      (error as CustomError).statusCode < 500
+    ) {
+      next(
+        new UnauthorizedError(
+          'Your torch has not been lit. Please check your credentials and try again, castaway.'
+        )
+      );
+    }
+
     next(error);
   }
 }
@@ -148,6 +174,7 @@ async function logout(
   res: Response,
   next: NextFunction
 ): Promise<void> {
+  logApiRequestOnReceival('Logout', req);
   const accessToken = req.cookies['accessToken'];
   const refreshToken = req.cookies['refreshToken'];
   try {
@@ -161,7 +188,7 @@ async function logout(
 
     const response: LogoutUserResponse = {
       statusCode: 200,
-      message: 'Logout successful',
+      message: 'Your torch has been extinguished for now...',
       success: true,
       responseData: {
         message: `Until your torch is lit again ${userSession

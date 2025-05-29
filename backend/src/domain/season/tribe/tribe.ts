@@ -4,13 +4,13 @@ import {
   TribeTableAttributes,
 } from '../../../models/season/Tribes';
 import { DomainModel } from '../../DomainModel';
-import { Episode } from '../episode/Episode';
 import { Tribe as TribeDTO } from '../../../generated-api/index';
 import {
   TribeMemberRoster,
   TribeMemberRosterOnEpisode,
 } from './TribeMemberRoster';
 import { EpisodeAttributes } from '../../../models/season/Episodes';
+import { Episode } from '../episode/Episode';
 
 type TribeDependencies = {
   seasonId: SeasonsAttributes['seasonId'];
@@ -88,7 +88,19 @@ export class Tribe extends DomainModel<
   }
 
   toDTO(): TribeDTO {
-    throw new Error('Method not implemented.');
+    return {
+      id: this.id,
+      name: this.name,
+      color: {
+        name: this.color,
+        hex: this.hexColor,
+      },
+      isMergeTribe: this.mergeTribe,
+      startingSurvivors: this.tribeMemberRoster
+        .getTribeMemberState(this.episodeStart.getEpisodeId())
+        .episodeStart.map((s) => s.toBasicDTO()),
+      episodeStarted: this.episodeStart.getEpisodeId(),
+    };
   }
   getAttributes(): TribeAttributes {
     return {

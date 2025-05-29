@@ -1,5 +1,4 @@
 import { inject, injectable } from 'tsyringe';
-import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { SeasonStorage } from '../../../domain/season/Season';
 import { Episode } from '../../../domain/season/episode/Episode';
 import { Tribe } from '../../../domain/season/tribe/Tribe';
@@ -107,7 +106,8 @@ export class TribeHelper {
         const tribeEpisodeEnd = tribe.getEpisodeEnd();
         const { id: tribeEpisodeStartId, number: tribeEpisodeStartNumber } =
           tribeEpisodeStart.getAttributes();
-        if (episode.getAttributes().isTribeSwitch) {
+
+        if (episode.getEpisodeEvents().getTribeSwitch()) {
           return false;
         }
 

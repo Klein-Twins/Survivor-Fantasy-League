@@ -928,6 +928,8 @@ paths:
                                       - name
                                       - color
                                       - startingSurvivors
+                                      - isMergeTribe
+                                      - episodeStarted
                                     properties:
                                       id:
                                         type: string
@@ -957,7 +959,7 @@ paths:
                                         example: false
                                       episodeStarted:
                                         type: string
-                                        nullable: true
+                                        nullable: false
                                         description: The id of the episode the tribe started in
                                         format: uuid
                                       startingSurvivors:
@@ -2049,6 +2051,8 @@ paths:
                                                             - name
                                                             - color
                                                             - startingSurvivors
+                                                            - isMergeTribe
+                                                            - episodeStarted
                                                           properties:
                                                             id:
                                                               type: string
@@ -2078,7 +2082,7 @@ paths:
                                                               example: false
                                                             episodeStarted:
                                                               type: string
-                                                              nullable: true
+                                                              nullable: false
                                                               description: The id of the episode the tribe started in
                                                               format: uuid
                                                             startingSurvivors:
@@ -2385,6 +2389,8 @@ paths:
                                                               - name
                                                               - color
                                                               - startingSurvivors
+                                                              - isMergeTribe
+                                                              - episodeStarted
                                                             properties:
                                                               id:
                                                                 type: string
@@ -2414,7 +2420,7 @@ paths:
                                                                 example: false
                                                               episodeStarted:
                                                                 type: string
-                                                                nullable: true
+                                                                nullable: false
                                                                 description: The id of the episode the tribe started in
                                                                 format: uuid
                                                               startingSurvivors:
@@ -2756,6 +2762,8 @@ paths:
                                                               - name
                                                               - color
                                                               - startingSurvivors
+                                                              - isMergeTribe
+                                                              - episodeStarted
                                                             properties:
                                                               id:
                                                                 type: string
@@ -2785,7 +2793,7 @@ paths:
                                                                 example: false
                                                               episodeStarted:
                                                                 type: string
-                                                                nullable: true
+                                                                nullable: false
                                                                 description: The id of the episode the tribe started in
                                                                 format: uuid
                                                               startingSurvivors:
@@ -3477,6 +3485,8 @@ paths:
                                     - name
                                     - color
                                     - startingSurvivors
+                                    - isMergeTribe
+                                    - episodeStarted
                                   properties:
                                     id:
                                       type: string
@@ -3506,7 +3516,7 @@ paths:
                                       example: false
                                     episodeStarted:
                                       type: string
-                                      nullable: true
+                                      nullable: false
                                       description: The id of the episode the tribe started in
                                       format: uuid
                                     startingSurvivors:
@@ -3877,6 +3887,8 @@ paths:
                               - name
                               - color
                               - startingSurvivors
+                              - isMergeTribe
+                              - episodeStarted
                             properties:
                               id:
                                 type: string
@@ -3906,7 +3918,7 @@ paths:
                                 example: false
                               episodeStarted:
                                 type: string
-                                nullable: true
+                                nullable: false
                                 description: The id of the episode the tribe started in
                                 format: uuid
                               startingSurvivors:

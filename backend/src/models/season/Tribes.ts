@@ -18,6 +18,13 @@ export interface TribeDependencyAttributes {
   episodeIdEnd: EpisodeAttributes['id'] | null;
 }
 
+export const TRIBE_TO_SEASON = 'season';
+export const TRIBE_TO_CHALLENGE_WINNERS = 'challengeWinners';
+export const TRIBE_TO_EPISODE_STARTED = 'episodeStarted';
+export const TRIBE_TO_EPISODE_ENDED = 'episodeEnded';
+export const TRIBE_TO_TRIBE_MEMBERS = 'tribeMembers';
+export const TRIBE_TO_TRIBAL_COUNCILS = 'tribalCouncils';
+
 export type TribeAttributes = TribeTableAttributes & TribeDependencyAttributes;
 export type TribeCreationAttributes = Omit<
   TribeAttributes,

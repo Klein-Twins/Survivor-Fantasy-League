@@ -15,6 +15,11 @@ export interface TribeMemberAttributes {
 
 type MembershipType = 'START' | 'CHANGE';
 
+export const TRIBEMEMBER_TO_TRIBE = 'tribe';
+export const TRIBEMEMBER_TO_EPISODE_STARTED = 'episodeStarted';
+export const TRIBEMEMBER_TO_EPISODE_ENDED = 'episodeEnded';
+export const TRIBEMEMBER_TO_SEASONSURVIVOR = 'survivor';
+
 const TribeMembersModel = (sequelize: Sequelize) => {
   class TribeMember
     extends Model<TribeMemberAttributes>

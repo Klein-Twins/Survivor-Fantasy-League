@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { sequelize } from '../src/config/db';
 import seedData from '../src/data/seedData';
 
@@ -9,13 +10,14 @@ jest.mock('../src/config/logger', () => ({
   verbose: jest.fn(),
   debug: jest.fn(),
   silly: jest.fn(),
+  apiOp: jest.fn(),
+  db: jest.fn(),
 }));
 
 beforeAll(async () => {
-  jest.spyOn(console, 'log').mockImplementation(() => {}); // Suppress console.log
-  jest.spyOn(console, 'error').mockImplementation(() => {}); // Suppress console.error
-  jest.spyOn(console, 'warn').mockImplementation(() => {}); // Suppress console.warn
-  jest.spyOn(console, 'info').mockImplementation(() => {}); // Suppress console.info
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  jest.spyOn(console, 'warn').mockImplementation(() => {});
+  jest.spyOn(console, 'info').mockImplementation(() => {});
 
   // Sync the database before tests (only in test environment)
   if (process.env.NODE_ENV === 'test') {

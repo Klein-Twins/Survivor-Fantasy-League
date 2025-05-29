@@ -4,7 +4,7 @@ import {
 } from '../../../models/season/Episodes';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { DomainModel } from '../../DomainModel';
-import { Episode as EpisodeDTO, EpisodeType } from '../../../generated-api/';
+import { Episode as EpisodeDTO, EpisodeType } from '../../../generated-api';
 import { EpisodeEvents } from './events/EpisodeEvents';
 
 export type EpisodeDependencies = {
@@ -25,7 +25,6 @@ export class Episode extends DomainModel<
   private airDate: EpisodeAttributes['airDate'];
   private description: EpisodeAttributes['description'];
   private type: EpisodeAttributes['type'];
-  private isTribeSwitch: EpisodeAttributes['isTribeSwitch'];
   private episodeEvents: EpisodeEvents;
 
   constructor({
@@ -36,7 +35,6 @@ export class Episode extends DomainModel<
     airDate,
     description,
     type,
-    isTribeSwitch = false,
   }: EpisodeTableAttributes &
     Omit<EpisodeDependencies, 'episodeEvents'> & {
       episodeEvents?: EpisodeEvents;
@@ -49,12 +47,22 @@ export class Episode extends DomainModel<
     this.airDate = airDate;
     this.description = description;
     this.type = type;
-    this.isTribeSwitch = isTribeSwitch;
     this.episodeEvents = new EpisodeEvents(this);
   }
 
   toDTO(): EpisodeDTO {
-    throw new Error('Method not implemented.');
+    return {
+      id: this.id,
+      seasonId: this.seasonId,
+      number: this.number,
+      airDate: this.airDate.toString(),
+      title: this.title,
+      description: this.description,
+      hasAired: new Date(this.airDate) <= new Date(),
+      episodeType: this.type,
+      isTribeSwitch: this.episodeEvents.getTribeSwitch(),
+      tribesState: {},
+    };
   }
 
   getEpisodeEvents(): EpisodeEvents {
@@ -78,7 +86,6 @@ export class Episode extends DomainModel<
       airDate: this.airDate,
       description: this.description,
       type: this.type,
-      isTribeSwitch: this.isTribeSwitch,
     };
   }
 }

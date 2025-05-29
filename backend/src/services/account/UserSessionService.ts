@@ -78,6 +78,28 @@ export class UserSessionService {
     return userSession;
   }
 
+  async refreshAccessTokenOnUserSession(
+    userSession: UserSession
+  ): Promise<UserSession> {
+    const newAccessToken = await this.tokenService.createToken(
+      userSession.getAccount(),
+      userSession.getId(),
+      'access'
+    );
+
+    userSession.setActiveAccessToken(newAccessToken);
+
+    const transaction = await sequelize.transaction();
+    try {
+      await this.saveUserSession(userSession, transaction);
+      await transaction.commit();
+      return userSession;
+    } catch (error) {
+      await transaction.rollback();
+      throw new InternalServerError('Failed to save user session: ' + error);
+    }
+  }
+
   async endUserSession(account: Account): Promise<UserSession> {
     const userSession = account.getActiveUserSession();
     if (!userSession) {

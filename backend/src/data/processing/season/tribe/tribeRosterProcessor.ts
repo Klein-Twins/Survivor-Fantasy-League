@@ -1,7 +1,7 @@
 import { container } from 'tsyringe';
 import { Episode } from '../../../../domain/season/episode/Episode';
 import { Season } from '../../../../domain/season/Season';
-import { TribeHelper } from '../../../../helpers/season/tribe/tribeHelper';
+import { TribeHelper } from '../../../../helpers/season/tribe/TribeHelper';
 import { TribeAttributes } from '../../../../models/season/Tribes';
 import { SurvivorsAttributes } from '../../../../models/survivors/Survivors';
 import { SeasonSurvivor } from '../../../../domain/season/survivor/SeasonSurvivor';
@@ -119,7 +119,7 @@ function populateTribeRosterAtEpisodeTribalCouncil(
     episode.getAttributes();
 
   if (
-    episode.getAttributes().isTribeSwitch ||
+    episode.getEpisodeEvents().getTribeSwitch() ||
     episode.getEpisodeEvents().getMerge()
   ) {
     return;

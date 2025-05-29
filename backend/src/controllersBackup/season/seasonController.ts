@@ -1,18 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import multer from 'multer';
 import {
-  CreateSeasonRequestBody,
-  CreateSeasonResponse,
-  CreateSeasonResponseData,
   GetSeasonsResponse,
   GetSeasonsResponseData,
 } from '../../generated-api';
-import {
-  BadRequestError,
-  NotImplementedError,
-} from '../../utils/errors/errors';
-import seasonHelper from '../../helpers/season/seasonHelper';
-import seasonService from '../../servicesBackup/season/seasonService';
+import { NotImplementedError } from '../../utils/errors/errors';
+import { container } from 'tsyringe';
+import { SeasonService } from '../../services/season/SeasonService';
+import { Season } from '../../domain/season/Season';
 
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -56,9 +51,10 @@ async function createSeason(req: Request, res: Response, next: NextFunction) {
 
 async function getSeasons(req: Request, res: Response, next: NextFunction) {
   try {
-    const seasons = await seasonService.getAllSeasons();
+    const seasonService = container.resolve(SeasonService);
+    const seasons: Season[] = await seasonService.fetchAllSeasons();
     const responseData: GetSeasonsResponseData = {
-      seasons,
+      seasons: seasons.map((season) => season.toDTO()),
     };
     const response: GetSeasonsResponse = {
       responseData,

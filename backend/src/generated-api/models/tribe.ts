@@ -52,7 +52,7 @@ export interface Tribe {
      * @memberof Tribe
      * @example false
      */
-    isMergeTribe?: boolean;
+    isMergeTribe: boolean;
 
     /**
      * The id of the episode the tribe started in
@@ -60,7 +60,7 @@ export interface Tribe {
      * @type {string}
      * @memberof Tribe
      */
-    episodeStarted?: string | null;
+    episodeStarted: string;
 
     /**
      * The survivors that started in the tribe

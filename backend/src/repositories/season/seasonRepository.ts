@@ -12,6 +12,10 @@ export class SeasonRepository {
     return await models.Seasons.findByPk(seasonId);
   }
 
+  async findAllSeasons(): Promise<SeasonsAttributes[]> {
+    return await models.Seasons.findAll();
+  }
+
   async saveSeasonAttributes(
     seasonAttributes: SeasonsAttributes,
     transaction: Transaction

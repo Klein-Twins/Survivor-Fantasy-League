@@ -7,7 +7,7 @@ import { SeasonStorage } from '../../../domain/season/Season';
 import { Episode } from '../../../domain/season/episode/Episode';
 import { TribeMemberRepository } from '../../../repositories/season/tribe/TribeMemberRepository';
 import { TribeMemberRosterOnEpisode } from '../../../domain/season/tribe/TribeMemberRoster';
-import { TribeHelper } from '../../../helpers/season/tribe/tribeHelper';
+import { TribeHelper } from '../../../helpers/season/tribe/TribeHelper';
 
 @injectable()
 export class TribeMemberService {

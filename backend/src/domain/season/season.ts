@@ -165,7 +165,19 @@ export class Season extends DomainModel<
   }
 
   toDTO(): SeasonDTO {
-    throw new Error('Method not implemented.');
+    return {
+      id: this.seasonId,
+      name: this.name,
+      startDate: this.startDate?.toString() || null,
+      endDate: this.endDate?.toString() || null,
+      location: this.location,
+      theme: this.theme,
+      isActive: this.isActive,
+      survivors: this.survivors.map((survivor) => survivor.toDTO()),
+      episodes: this.episodes.map((episode) => episode.toDTO()),
+      nextEpisode: null,
+      tribesInSeason: this.tribes.map((tribe) => tribe.toDTO()),
+    };
   }
 }
 

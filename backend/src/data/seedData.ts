@@ -1,3 +1,4 @@
+import 'reflect-metadata';
 import { container } from 'tsyringe';
 import seasonProcessor from './processing/season/seasonProcessor';
 import { SeasonService } from '../services/season/SeasonService';

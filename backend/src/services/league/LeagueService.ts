@@ -1,4 +1,4 @@
-import { inject, injectable, singleton } from 'tsyringe';
+import { container, inject, injectable, singleton } from 'tsyringe';
 import { Account } from '../../domain/account/Account';
 import { League } from '../../domain/league/League';
 import { ProfileAttributes } from '../../models/account/Profile';

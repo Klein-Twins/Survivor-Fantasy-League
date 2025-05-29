@@ -68,7 +68,7 @@ function validateCreateLeagueRequest({
 
   if (!validator.isLength(name, { min: 5, max: 50 })) {
     throw new BadRequestError(
-      'League name must be between 1 and 50 characters'
+      'League name must be between 5 and 50 characters'
     );
   }
   if (!validator.isAlphanumeric(name, 'en-US', { ignore: ' ' })) {

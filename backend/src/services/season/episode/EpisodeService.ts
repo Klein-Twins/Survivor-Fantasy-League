@@ -35,7 +35,6 @@ export class EpisodeService {
       airDate: episodeAttributes.airDate,
       description: episodeAttributes.description,
       type: episodeAttributes.type,
-      isTribeSwitch: episodeAttributes.isTribeSwitch,
     });
 
     this.seasonStorage

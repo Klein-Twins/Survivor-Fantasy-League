@@ -15,6 +15,14 @@ export interface SurvivorDetailsOnSeasonTableAttributes {
   job: string;
 }
 
+export const SURVIVORSEASON_TO_SURVIVOR = 'Survivor';
+export const SURVIVORSEASON_TO_SEASON = 'Season';
+export const SURVIVORSEASON_TO_ELIMINATIONS = 'eliminations';
+export const SURVIVORSEASON_TO_CHALLENGE_WINS = 'challengeWins';
+export const SURVIVORSEASON_TO_TRIBE = 'tribe';
+export const SURVIVORSEASON_TO_TRIBAL_COUNCIL_SURVIVORS =
+  'tribalCouncilSurvivors';
+
 export type SurvivorDetailsOnSeasonAttributes =
   SurvivorDetailsOnSeasonTableAttributes &
     SurvivorDetailsOnSeasonDependenciesAttributes;

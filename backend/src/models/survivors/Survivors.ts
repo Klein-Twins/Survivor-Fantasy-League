@@ -13,6 +13,8 @@ export interface SurvivorsTableAttributes {
   nickName: string | null;
 }
 
+export const SURVIVOR_TO_DETAILS_ON_SEASON = 'SurvivorDetailsOnSeason';
+
 export type SurvivorsAttributes = SurvivorsTableAttributes &
   SurvivorsDependenciesAttributes;
 
@@ -34,7 +36,7 @@ const SurvivorsModel = (sequelize: Sequelize) => {
         this.hasMany(models.SurvivorDetailsOnSeason, {
           foreignKey: 'id',
           sourceKey: 'id',
-          as: 'SurvivorDetailsOnSeason',
+          as: SURVIVOR_TO_DETAILS_ON_SEASON,
           onDelete: 'CASCADE',
         });
       }
