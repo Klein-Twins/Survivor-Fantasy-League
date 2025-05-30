@@ -39,7 +39,7 @@ async function getLeagueInvites(
     const leagueInviteService = container.resolve(LeagueInviteService);
 
     const leagueInvites: LeagueInvite[] =
-      await leagueInviteService.getLeagueInvites({
+      await leagueInviteService.getLeagueInvitesForProfile({
         profileId,
         seasonId,
       });

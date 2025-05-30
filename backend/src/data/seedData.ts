@@ -11,6 +11,8 @@ import stringifySafe from 'json-stringify-safe';
 import { NODE_ENV } from '../config/config';
 import accountProcessor from './dev/processing/accountProcessor';
 import testAccountData from './dev/data/account/accounts';
+import leagueProcessor from './dev/processing/leagueProcessor';
+import { leagueDataSeason48 } from './dev/data/league/ssn/48/leagueData';
 const seedData = async () => {
   const season = seasonProcessor.processSeasonData(season48Data);
 
@@ -31,6 +33,7 @@ const seedData = async () => {
 
   if (NODE_ENV !== 'production') {
     await accountProcessor.processAccountsData(testAccountData);
+    await leagueProcessor.processLeagues(leagueDataSeason48);
   }
 };
 

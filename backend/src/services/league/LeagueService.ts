@@ -1,4 +1,4 @@
-import { container, inject, injectable, singleton } from 'tsyringe';
+import { container, delay, inject, injectable, singleton } from 'tsyringe';
 import { Account } from '../../domain/account/Account';
 import { League } from '../../domain/league/League';
 import { ProfileAttributes } from '../../models/account/Profile';
@@ -16,6 +16,7 @@ import { UUID } from 'crypto';
 import { LeagueInvite } from '../../domain/league/invite/LeagueInvite';
 import logger from '../../config/logger';
 import { CACHE_ENABLED } from '../../config/config';
+import { LeagueProfileAttributes } from '../../models/league/LeagueProfile';
 
 @singleton()
 export class LeagueStorage {
@@ -39,7 +40,7 @@ export class LeagueService {
   constructor(
     @inject(LeagueStorage) private leagueStorage: LeagueStorage,
     @inject(AccountService) private accountService: AccountService,
-    @inject(LeagueInviteService)
+    @inject(delay(() => LeagueInviteService))
     private leagueInviteService: LeagueInviteService,
     @inject(LeagueMemberService)
     private leagueMemberService: LeagueMemberService
@@ -111,7 +112,6 @@ export class LeagueService {
 
     const leagueInvites: Map<UUID, LeagueInvite> =
       await this.leagueInviteService.fetchLeagueInvitesForLeague(league);
-    league.setLeagueInvites(leagueInvites);
 
     this.leagueStorage.setLeague(league);
     logger.debug(`League ${leagueId} cached successfully`);
@@ -123,14 +123,19 @@ export class LeagueService {
     profileId,
     seasonId,
     name,
+    leagueProfileId, //Meant for seeding purposes, can be null
+    leagueId, // Optional, used for seeding
   }: {
     profileId: ProfileAttributes['profileId'];
     seasonId: SeasonsAttributes['seasonId'];
     name: LeagueAttributes['name'];
+    leagueProfileId?: LeagueProfileAttributes['id'];
+    leagueId?: LeagueAttributes['leagueId'];
   }): Promise<League> {
     const league = new League({
       seasonId,
       name,
+      id: leagueId,
     });
 
     const account: Account = await this.accountService.fetchAccount(
@@ -141,6 +146,7 @@ export class LeagueService {
     const leagueOwner = this.leagueMemberService.createLeagueOwner({
       account,
       league,
+      leagueProfileId,
     });
 
     league.addLeagueOwner(leagueOwner);
@@ -169,6 +175,12 @@ export class LeagueService {
           transaction
         );
       }
+
+      await this.leagueInviteService.saveLeagueInvites(
+        league.getLeagueInvites(),
+        transaction
+      );
+
       await transaction.commit();
     } catch (error) {
       await transaction.rollback();

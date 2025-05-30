@@ -13,7 +13,7 @@
  */
 
 import { League } from './league';
-import { Profile } from './profile';
+import { LeagueInviteInviter } from './league-invite-inviter';
  /**
  * 
  *
@@ -29,17 +29,8 @@ export interface LeagueInvite {
     league: League;
 
     /**
-     * @type {Array<Profile>}
+     * @type {Array<LeagueInviteInviter>}
      * @memberof LeagueInvite
      */
-    inviterProfiles: Array<Profile>;
-
-    /**
-     * The unique ID of the league invite.
-     *
-     * @type {string}
-     * @memberof LeagueInvite
-     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
-     */
-    inviteId: string;
+    inviterProfiles: Array<LeagueInviteInviter>;
 }

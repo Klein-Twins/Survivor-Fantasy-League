@@ -5,14 +5,22 @@ components:
       required:
         - league
         - inviterProfiles
-        - inviteId
       properties:
         league:
           $ref: './league.yaml#/components/schemas/League'
         inviterProfiles:
           type: array
           items:
-            $ref: '../user/profile.yaml#/components/schemas/Profile'
+            $ref: '#/components/schemas/LeagueInviteInviter'
+
+    LeagueInviteInviter:
+      type: object
+      required:
+        - profile
+        - inviteId
+      properties:
+        profile:
+          $ref: '../user/profile.yaml#/components/schemas/Profile'
         inviteId:
           type: string
           description: The unique ID of the league invite.

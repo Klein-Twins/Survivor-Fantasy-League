@@ -44,6 +44,7 @@ export * from './image';
 export * from './invite-response';
 export * from './league';
 export * from './league-invite';
+export * from './league-invite-inviter';
 export * from './league-invite-profile-search-response';
 export * from './league-invite-profile-search-response-data';
 export * from './league-invite-profile-search-result';

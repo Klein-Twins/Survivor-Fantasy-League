@@ -12,25 +12,27 @@
  * Do not edit the class manually.
  */
 
-import { League } from './league';
-import { LeagueInviteInviter } from './league-invite-inviter';
+import { Profile } from './profile';
  /**
  * 
  *
  * @export
- * @interface LeagueInvite
+ * @interface LeagueInviteInviter
  */
-export interface LeagueInvite {
+export interface LeagueInviteInviter {
 
     /**
-     * @type {League}
-     * @memberof LeagueInvite
+     * @type {Profile}
+     * @memberof LeagueInviteInviter
      */
-    league: League;
+    profile: Profile;
 
     /**
-     * @type {Array<LeagueInviteInviter>}
-     * @memberof LeagueInvite
+     * The unique ID of the league invite.
+     *
+     * @type {string}
+     * @memberof LeagueInviteInviter
+     * @example 49e27bd8-dc24-4159-9630-e989025bf8fd
      */
-    inviterProfiles: Array<LeagueInviteInviter>;
+    inviteId: string;
 }

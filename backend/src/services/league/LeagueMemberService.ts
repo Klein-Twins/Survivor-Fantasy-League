@@ -21,13 +21,16 @@ export class LeagueMemberService {
   createLeagueOwner({
     account,
     league,
+    leagueProfileId,
   }: {
     account: Account;
     league: League;
+    leagueProfileId?: LeagueProfileAttributes['id']; // Optional, used for seeding
   }): LeagueOwner {
     const leagueOwner = new LeagueOwner({
       account,
       league,
+      id: leagueProfileId,
     });
     return leagueOwner;
   }
@@ -46,8 +49,8 @@ export class LeagueMemberService {
     }
 
     if (
-      leagueMembers.some(
-        (member) => member.getRole() !== LeagueMemberRole.Owner
+      !leagueMembers.some(
+        (member) => member.getRole() === LeagueMemberRole.Owner
       )
     ) {
       throw new NotFoundError('League owner not found');

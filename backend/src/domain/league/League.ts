@@ -6,6 +6,7 @@ import { ConflictError, NotFoundError } from '../../utils/errors/errors';
 import { League as LeagueDTO } from '../../generated-api';
 import { ProfileAttributes } from '../../models/account/Profile';
 import { LeagueInvite } from './invite/LeagueInvite';
+import { Account } from '../account/Account';
 
 export class League {
   private id: LeagueAttributes['leagueId'];
@@ -13,6 +14,7 @@ export class League {
   private name!: LeagueAttributes['name'];
   private leagueMembers!: LeagueMember[];
   private leagueOwner!: LeagueOwner;
+  //Map of invitedProfileId to LeagueInvite
   private leagueInvites!: Map<UUID, LeagueInvite>;
 
   constructor({
@@ -46,11 +48,55 @@ export class League {
   getLeagueOwner(): LeagueOwner {
     return this.leagueOwner;
   }
+
+  getLeagueInviteByProfileId(
+    invitedProfileId: ProfileAttributes['profileId']
+  ): LeagueInvite | undefined {
+    return this.leagueInvites.get(invitedProfileId);
+  }
+
   getLeagueInvites(): Map<UUID, LeagueInvite> {
     return this.leagueInvites;
   }
-  setLeagueInvites(leagueInvites: Map<UUID, LeagueInvite>): void {
-    this.leagueInvites = leagueInvites;
+  // setLeagueInvites(leagueInvites: Map<UUID, LeagueInvite>): void {
+  //   this.leagueInvites = leagueInvites;
+  // }
+  // addLeagueInvite(leagueInvite: LeagueInvite): void {
+  //   if (this.leagueInvites.has(leagueInvite.getId())) {
+  //     throw new ConflictError('League invite already exists');
+  //   }
+  //   this.leagueInvites.set(leagueInvite.getId(), leagueInvite);
+  // }
+
+  inviteProfileToLeague(
+    invitedAccount: Account,
+    inviter: LeagueMember,
+    inviteId: UUID = v4() as UUID
+  ): LeagueInvite {
+    const existingLeagueInvite = this.leagueInvites.get(
+      invitedAccount.getProfileId()
+    );
+    if (existingLeagueInvite) {
+      // If the league invite already exists, add the inviter to the existing invite
+      existingLeagueInvite.addInviter(inviter);
+      return existingLeagueInvite;
+    } else {
+      //If the league invite does not exist, create a new one
+      const leagueInvite = new LeagueInvite(this, invitedAccount, [
+        { inviterLeagueMember: inviter, inviteId },
+      ]);
+      this.leagueInvites.set(invitedAccount.getProfileId(), leagueInvite);
+      return leagueInvite;
+    }
+  }
+
+  removeLeagueInvite(leagueInvite: LeagueInvite): void {
+    if (
+      !this.leagueInvites.has(leagueInvite.getInvitedAccount().getProfileId())
+    ) {
+      throw new NotFoundError('League invite not found in league');
+    }
+    this.leagueInvites.delete(leagueInvite.getInvitedAccount().getProfileId());
   }
 
   getLeagueMemberByProfileId(

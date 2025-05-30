@@ -19,6 +19,10 @@ export interface LeagueInviteAttributes {
   message: string;
 }
 
+export const LEAGUEINVITES_TO_LEAGUE = 'league';
+export const LEAGUEINVITES_TO_INVITED_PROFILE = 'invitedProfile';
+export const LEAGUEINVITES_TO_INVITER_PROFILE = 'inviterProfile';
+
 const LeagueInviteModel = (sequelize: Sequelize) => {
   class LeagueInvite
     extends Model<LeagueInviteAttributes>
@@ -99,6 +103,12 @@ const LeagueInviteModel = (sequelize: Sequelize) => {
       sequelize,
       tableName: 'LGE_LEAGUE_INVITES',
       timestamps: true,
+      // indexes: [
+      //   {
+      //     unique: true,
+      //     fields: ['INVITED_PROFILE_ID', 'INVITER_PROFILE_ID', 'LEAGUE_ID'],
+      //   },
+      // ],
     }
   );
   return LeagueInvite;

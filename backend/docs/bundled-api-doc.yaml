@@ -1332,7 +1332,6 @@ paths:
                               required:
                                 - league
                                 - inviterProfiles
-                                - inviteId
                               properties:
                                 league:
                                   type: object
@@ -1406,23 +1405,29 @@ paths:
                                   items:
                                     type: object
                                     required:
-                                      - profileId
-                                      - userName
-                                      - firstName
-                                      - lastName
+                                      - profile
+                                      - inviteId
                                     properties:
-                                      profileId:
+                                      profile:
+                                        type: object
+                                        required:
+                                          - profileId
+                                          - userName
+                                          - firstName
+                                          - lastName
+                                        properties:
+                                          profileId:
+                                            type: string
+                                          userName:
+                                            type: string
+                                          firstName:
+                                            type: string
+                                          lastName:
+                                            type: string
+                                      inviteId:
                                         type: string
-                                      userName:
-                                        type: string
-                                      firstName:
-                                        type: string
-                                      lastName:
-                                        type: string
-                                inviteId:
-                                  type: string
-                                  description: The unique ID of the league invite.
-                                  example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                                        description: The unique ID of the league invite.
+                                        example: 49e27bd8-dc24-4159-9630-e989025bf8fd
                           numLeagueInvites:
                             type: integer
                             description: The number of league invites returned
