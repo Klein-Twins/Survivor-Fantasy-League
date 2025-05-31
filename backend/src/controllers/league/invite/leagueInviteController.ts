@@ -1,5 +1,4 @@
 import { NextFunction, Request, Response } from 'express';
-import { NotImplementedError } from '../../../utils/errors/errors';
 import { SeasonsAttributes } from '../../../models/season/Seasons';
 import { ProfileAttributes } from '../../../models/account/Profile';
 import leagueInviteControllerHelper from './leagueInviteControllerHelper';
