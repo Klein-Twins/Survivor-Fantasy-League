@@ -17,6 +17,8 @@ import { LeagueInvite } from '../../domain/league/invite/LeagueInvite';
 import logger from '../../config/logger';
 import { CACHE_ENABLED } from '../../config/config';
 import { LeagueProfileAttributes } from '../../models/league/LeagueProfile';
+import { SeasonHelper } from '../../helpers/season/SeasonHelper';
+import { NotFound } from '@aws-sdk/client-s3';
 
 @singleton()
 export class LeagueStorage {
@@ -43,7 +45,8 @@ export class LeagueService {
     @inject(delay(() => LeagueInviteService))
     private leagueInviteService: LeagueInviteService,
     @inject(LeagueMemberService)
-    private leagueMemberService: LeagueMemberService
+    private leagueMemberService: LeagueMemberService,
+    @inject(SeasonHelper) private seasonHelper: SeasonHelper
   ) {}
 
   async fetchLeagues({
@@ -132,6 +135,11 @@ export class LeagueService {
     leagueProfileId?: LeagueProfileAttributes['id'];
     leagueId?: LeagueAttributes['leagueId'];
   }): Promise<League> {
+    const doesSeasonExist = await this.seasonHelper.doesSeasonExist(seasonId);
+    if (!doesSeasonExist) {
+      throw new NotFoundError(`Season with ID ${seasonId} does not exist`);
+    }
+
     const league = new League({
       seasonId,
       name,

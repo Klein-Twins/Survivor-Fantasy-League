@@ -1,6 +1,11 @@
 import request from 'supertest';
 import app from '../../../app';
-import { Account, InviteResponse, League } from '../../../src/generated-api';
+import {
+  Account,
+  CreateAndSendLeagueInviteResponseData,
+  InviteResponse,
+  League,
+} from '../../../src/generated-api';
 import { validateSuccessApiResponse } from '../auth/testHelper';
 import { models } from '../../../src/config/db';
 import {
@@ -26,6 +31,27 @@ import { LeagueInvite } from '../../../src/domain/league/invite/LeagueInvite';
  *  leagueId: string;
  * }
  */
+
+export async function inviteToLeague({
+  inviterAccount,
+  invitedAccount,
+  leagueId,
+}: {
+  inviterAccount: Account;
+  invitedAccount: Account;
+  leagueId: UUID;
+}): Promise<CreateAndSendLeagueInviteResponseData> {
+  const inviteToLeagueResponseBody = await request(app)
+    .post(`/api/league/invite/${invitedAccount.profileId}/${48}`)
+    .send({
+      inviterProfileId: inviterAccount.profileId,
+      invitedProfileId: invitedAccount.profileId,
+      leagueId: leagueId,
+    })
+    .then((response) => response.body);
+
+  return inviteToLeagueResponseBody;
+}
 
 describe('POST /api/league/invite/{profileId}/{seasonId}', () => {
   describe('Should create a league invite successfully', () => {

@@ -1582,8 +1582,8 @@ paths:
               type: object
               required:
                 - leagueId
+                - invitedProfileId
                 - inviteResponse
-                - inviteId
               properties:
                 leagueId:
                   type: string
