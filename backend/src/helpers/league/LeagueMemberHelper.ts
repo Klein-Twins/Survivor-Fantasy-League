@@ -1,11 +1,13 @@
-import { inject, injectable } from 'tsyringe';
+import { delay, inject, injectable } from 'tsyringe';
 import { ProfileAttributes } from '../../models/account/Profile';
 import { LeagueAttributes } from '../../models/league/League';
 import { LeagueService } from '../../services/league/LeagueService';
 
 @injectable()
 export class LeagueMemberHelper {
-  constructor(@inject(LeagueService) private leagueService: LeagueService) {}
+  constructor(
+    @inject(delay(() => LeagueService)) private leagueService: LeagueService
+  ) {}
 
   async isProfileInLeague(
     profileId: ProfileAttributes['profileId'],

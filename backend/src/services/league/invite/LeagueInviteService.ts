@@ -30,7 +30,8 @@ import { LeagueMemberFactory } from '../../../factory/league/LeagueMemberFactory
 export class LeagueInviteService {
   constructor(
     @inject(AccountService) private accountService: AccountService, // @inject(LeagueService) private leagueService: LeagueService
-    @inject(LeagueMemberHelper) private leagueMemberHelper: LeagueMemberHelper,
+    @inject(delay(() => LeagueMemberHelper))
+    private leagueMemberHelper: LeagueMemberHelper,
     @inject(LeagueInviteHelper) private leagueInviteHelper: LeagueInviteHelper,
     @inject(delay(() => LeagueService)) private leagueService: LeagueService,
     @inject(LeagueMemberService)

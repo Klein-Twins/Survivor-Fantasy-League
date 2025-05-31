@@ -8,7 +8,6 @@ import {
   RespondToLeagueInviteResponseData,
 } from '../../generated-api';
 import { UUID } from 'crypto';
-import leagueInviteService from '../../servicesBackup/league/leagueInvite/leagueInviteService';
 import validator from 'validator';
 import { BadRequestError } from '../../utils/errors/errors';
 

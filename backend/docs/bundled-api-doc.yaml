@@ -1630,7 +1630,7 @@ paths:
                       responseData:
                         type: object
                         required:
-                          - inviteId
+                          - league
                           - inviteResponse
                         properties:
                           league:
@@ -1700,10 +1700,7 @@ paths:
                                       type: integer
                                       description: The total points of the user in the league
                                       example: 100
-                          inviteId:
-                            type: string
-                            description: The unique ID of the league invite.
-                            example: 49e27bd8-dc24-4159-9630-e989025bf8fd
+                            nullable: true
                           inviteResponse:
                             type: string
                             enum:

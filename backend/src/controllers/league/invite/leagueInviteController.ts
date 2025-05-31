@@ -8,6 +8,8 @@ import { LeagueInvite } from '../../../domain/league/invite/LeagueInvite';
 import {
   CreateAndSendLeagueInviteResponse,
   GetLeagueInvitesResponse,
+  InviteResponse,
+  RespondToLeagueInviteResponse,
 } from '../../../generated-api';
 import { container } from 'tsyringe';
 
@@ -80,7 +82,11 @@ async function sendLeagueInvite(
         leagueId: leagueIdString,
       });
 
-    LeagueInviteService;
+    await container.resolve(LeagueInviteService).sendLeagueInvite({
+      inviterProfileId: inviterProfileId,
+      invitedProfileId: invitedProfileId,
+      leagueId: leagueId,
+    });
 
     //@ts-ignore
     const response: CreateAndSendLeagueInviteResponse = {
@@ -88,6 +94,8 @@ async function sendLeagueInvite(
       statusCode: 200,
       message: 'League invite sent successfully',
     };
+
+    res.status(response.statusCode).json(response);
   } catch (error) {
     next(error);
   }
@@ -99,9 +107,35 @@ async function respondToLeagueInvite(
   next: NextFunction
 ): Promise<void> {
   try {
-    throw new NotImplementedError(
-      'respondToLeagueInvite is not implemented yet. Please check back later.'
-    );
+    const { invitedProfileId, leagueId, inviteResponse } =
+      leagueInviteControllerHelper.validateRespondToLeagueInvite({
+        leagueId: req.body.leagueId,
+        invitedProfileId: req.body.invitedProfileId,
+        inviteResponse: req.body.inviteResponse,
+      });
+
+    const leagueInvite = await container
+      .resolve(LeagueInviteService)
+      .respondToLeagueInvite({
+        leagueId: leagueId,
+        invitedProfileId: invitedProfileId,
+        inviteResponse: inviteResponse,
+      });
+
+    const response: RespondToLeagueInviteResponse = {
+      success: true,
+      statusCode: 200,
+      message:
+        inviteResponse === InviteResponse.Accept
+          ? 'Welcome to the league!'
+          : 'League invite declined',
+      responseData: {
+        league: leagueInvite.getLeague().toDTO(),
+        inviteResponse: inviteResponse,
+      },
+    };
+
+    res.status(response.statusCode).json(response);
   } catch (error) {
     next(error);
   }

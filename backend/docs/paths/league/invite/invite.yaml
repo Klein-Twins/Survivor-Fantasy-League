@@ -126,15 +126,12 @@ components:
     RespondToLeagueInviteResponseData:
       type: object
       required:
-        - inviteId
+        - league
         - inviteResponse
       properties:
         league:
+          nullable: true
           $ref: '../../../components/league/league.yaml#/components/schemas/League'
-        inviteId:
-          type: string
-          description: The unique ID of the league invite.
-          example: 49e27bd8-dc24-4159-9630-e989025bf8fd
         inviteResponse:
           $ref: '../../../components/league/leagueInvite.yaml#/components/schemas/InviteResponse'
 
@@ -165,8 +162,8 @@ components:
       type: object
       required:
         - leagueId
+        - invitedProfileId
         - inviteResponse
-        - inviteId
       properties:
         leagueId:
           type: string
