@@ -45,8 +45,8 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
           withCredentials: true,
           responseType: 'arraybuffer', // Enable this
           headers: {
-            Accept: 'image/jpeg',
-            'Content-Type': 'image/jpeg',
+            Accept: 'image/jpg',
+            'Content-Type': 'image/jpg',
           },
         });
         // const response = await axios.get(`http://localhost:3000/api/image/profile/${profileId}`, {
@@ -60,7 +60,7 @@ const ProfileImage: React.FC<ProfileImageProps> = ({
 
         // Cast response.data as ArrayBuffer
         const arrayBuffer = response.data as ArrayBuffer;
-        const blob = new Blob([arrayBuffer], { type: 'image/jpeg' });
+        const blob = new Blob([arrayBuffer], { type: 'image/jpg' });
         const url = URL.createObjectURL(blob);
         console.debug('Created URL:', url);
         setImageUrl(url);

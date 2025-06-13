@@ -16,7 +16,7 @@ const LeagueImage: React.FC<LeagueImageProps> = ({ leagueId, className }) => {
       try {
         setIsLoading(true);
         setError(false);
-        const response = await api.ImageServiceApi.getLeagueImage(leagueId, {
+        const response = await api.imageServiceApi.getLeagueImage(leagueId, {
           withCredentials: true,
           responseType: 'arraybuffer',
           headers: {
@@ -29,7 +29,6 @@ const LeagueImage: React.FC<LeagueImageProps> = ({ leagueId, className }) => {
         const url = URL.createObjectURL(blob);
         setImageUrl(url);
       } catch (error) {
-        console.error('Failed to load image:', error);
         setError(true);
       } finally {
         setIsLoading(false);

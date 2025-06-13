@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../store/store';
@@ -16,8 +16,10 @@ import { useApi } from '../hooks/useApi';
 import surveyService, {
   GetLeagueSurveyRequestParams,
 } from '../services/league/survey/surveyService';
-import SurveyStatus from '../components/league/survey/SurveyStatus';
 import SurveyPanel from '../components/league/survey/SurveyPanel';
+import LeagueContentSelection, {
+  LeagueContentTabSelection,
+} from '../components/league/LeagueContentSelection';
 
 const LeaguePage: React.FC = () => {
   const { leagueId } = useParams<{ leagueId: string }>();
@@ -29,11 +31,24 @@ const LeaguePage: React.FC = () => {
   if (!league) {
     return <NotInLeaguePage />;
   }
-
+  const [selectedTab, setSelectedTab] =
+    useState<LeagueContentTabSelection>('summary');
   return (
     <div className='container mx-auto flex-flex-col space-y-4'>
-      <LeaguePageHeader league={league} />
-      <LeaguePageMainContent league={league} account={account} />
+      <LeagueName
+        leagueName={league.name}
+        className='pt-4 text-3xl text-center font-bold'
+      />
+
+      <LeagueContentSelection
+        selectedTab={selectedTab}
+        onTabChange={setSelectedTab}
+      />
+      {selectedTab === 'summary' && <LeaguePageHeader league={league} />}
+      {selectedTab === 'leagueMembers' && <p> League Members</p>}
+      {selectedTab === 'surveys' && <p>Surveys</p>}
+
+      {/* <LeaguePageMainContent league={league} account={account} /> */}
     </div>
   );
 };
@@ -89,10 +104,6 @@ interface LeaguePageHeaderProps {
 const LeaguePageHeader: React.FC<LeaguePageHeaderProps> = ({ league }) => {
   return (
     <>
-      <LeagueName
-        leagueName={league.name}
-        className='pt-4 text-3xl text-center font-bold'
-      />
       <LeagueLeaderboard league={league} />
     </>
   );
